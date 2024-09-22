@@ -31,14 +31,14 @@ export default function Home() {
           </div>
         </div>
         <div className="flex flex-col gap-10 lg:justify-center lg:items-center w-full">
-          <div className="w-full lg:text-center font-oxygen lg:text-[40px] text-lg">
+          <div className="w-full lg:text-center font-oxygen lg:text-[40px] lg:leading-normal text-lg">
             Inserisci la tua email per ottenere accesso gratuito all’intera
             piattaforma
           </div>
 
           <input
             type="text"
-            className="font-oxygen text-black bg-[#1668D0]/50 placeholder-black placeholder:text-xl p-2 shadow-md max-w-48 lg:placeholder:text-3xl lg:text-3xl lg:px-4 lg:py-5 rounded-md"
+            className="font-oxygen text-black bg-[#1668D0]/50 placeholder-black placeholder:text-xl p-2 lg:min-w-96 shadow-md max-w-48 lg:placeholder:text-3xl lg:text-3xl lg:px-4 lg:py-5 rounded-md"
             placeholder="Email"
           />
         </div>

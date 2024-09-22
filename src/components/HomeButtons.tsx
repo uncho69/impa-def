@@ -1,7 +1,7 @@
 import { Button } from "./Button";
 
 const btnStyle =
-  "grow bg-accent leading-7 shadow text-2xl text-[#DDDCDC] font-oxygen flex items-center justify-center px-6 h-16 !rounded text-center no-underline";
+  "grow bg-accent leading-7 shrink shadow text-2xl text-[#DDDCDC] font-oxygen flex items-center justify-center px-6 h-16 rounded text-center no-underline";
 
 export function HomeButtons() {
   return (
@@ -14,7 +14,11 @@ export function HomeButtons() {
         <br />
         (wallets)
       </Button>
-      <Button href="/blockchain" local={true} className={btnStyle}>
+      <Button
+        href="/blockchain"
+        local={true}
+        className={`${btnStyle} !shrink-0`}
+      >
         Compra e<br />
         Vendi Crypto
       </Button>
