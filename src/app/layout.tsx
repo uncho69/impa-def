@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import "bootstrap/dist/css/bootstrap.min.css";
+// import "bootstrap/dist/css/bootstrap.min.css";
 import { Navbar } from "@/components/Navbar";
 import { Overpass, Roboto, Oxygen_Mono } from "next/font/google";
+import { Footer } from "@/components/Footer";
 
 const overpass = Overpass({
   variable: "--font-overpass",
@@ -12,7 +13,7 @@ const overpass = Overpass({
 const roboto = Roboto({
   variable: "--font-roboto",
   display: "swap",
-  weight: "400",
+  weight: ["400", "700", "900"],
   subsets: ["latin"],
 });
 const oxygen = Oxygen_Mono({
@@ -35,10 +36,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${overpass.variable} ${roboto.variable} ${oxygen.variable} antialiased font-overpass bg-background`}
+        className={`${overpass.variable} ${roboto.variable} ${oxygen.variable} antialiased font-overpass bg-background flex flex-col items-center`}
       >
         <Navbar />
-        {children}
+        <div className="w-full max-w-screen-2xl px-4">{children}</div>
+        <Footer />
       </body>
     </html>
   );
