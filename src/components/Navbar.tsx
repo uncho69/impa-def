@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "./Button";
-import Burger_Icon from "@/assets/Burger-Icon.png";
+import BurgerIcon from "@/assets/Burger-Icon.png";
 import Image from "next/image";
 
 const btnStyle =
@@ -17,22 +17,22 @@ export function Navbar() {
             </h1>
           </Link>
           <div className="hidden lg:flex justify-center gap-3 h-full">
-            <Button href="/blockchain" local={true} className={btnStyle}>
+            <Button href="/manuale" local={true} className={btnStyle}>
               Manuale <br /> A-Z
             </Button>
-            <Button className={btnStyle}>
+            <Button href="/" local={true} className={btnStyle}>
               Tieniti
               <br />
               Aggiornato
             </Button>
-            <Button className={btnStyle}>
+            <Button href="/" local={true} className={btnStyle}>
               Lavora
               <br />
               in Web3
             </Button>
           </div>
           <Button className="lg:hidden">
-            <Image src={Burger_Icon} alt="" />
+            <Image src={BurgerIcon} alt="" />
           </Button>
         </div>
       </nav>
