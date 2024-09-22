@@ -36,7 +36,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${overpass.variable} ${roboto.variable} ${oxygen.variable} antialiased font-overpass bg-background flex flex-col items-center`}
+        className={`${overpass.variable} ${roboto.variable} ${oxygen.variable} text-black antialiased font-overpass bg-background flex flex-col items-center`}
       >
         <Navbar />
         <div className="w-full max-w-screen-2xl px-4">{children}</div>
