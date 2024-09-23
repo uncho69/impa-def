@@ -9,34 +9,34 @@ export function HomeButtons() {
       <Button href="/blockchain" local={true} className={btnStyle}>
         Blockchains
       </Button>
-      <Button href="/blockchain" local={true} className={btnStyle}>
+      <Button href="/portafogli" local={true} className={btnStyle}>
         Portafogli
         <br />
         (wallets)
       </Button>
       <Button
-        href="/blockchain"
+        href="/compravendi"
         local={true}
         className={`${btnStyle} !shrink-0`}
       >
         Compra e<br />
         Vendi Crypto
       </Button>
-      <Button href="/blockchain" local={true} className={btnStyle}>
+      <Button href="/defi" local={true} className={btnStyle}>
         DeFi
       </Button>
-      <Button href="/blockchain" local={true} className={btnStyle}>
+      <Button href="/nft" local={true} className={btnStyle}>
         NFTs
       </Button>
-      <Button href="/blockchain" local={true} className={btnStyle}>
+      <Button href="/giochi" local={true} className={btnStyle}>
         Giochi
       </Button>
-      <Button href="/blockchain" local={true} className={btnStyle}>
+      <Button href="/carte" local={true} className={btnStyle}>
         Carte
         <br />
         Crypto
       </Button>
-      <Button href="/blockchain" local={true} className={btnStyle}>
+      <Button href="/strumenti" local={true} className={btnStyle}>
         Strumenti
       </Button>
     </div>

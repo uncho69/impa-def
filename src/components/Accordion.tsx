@@ -7,12 +7,14 @@ export function Accordion({
   buttonText,
   children,
   className,
+  defaultOpen = false,
 }: {
   buttonText: string;
   children: ReactNode;
   className?: string;
+  defaultOpen?: boolean;
 }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(defaultOpen);
   return (
     <div className={className}>
       <button
