@@ -14,15 +14,15 @@ export function SectionTutorial({
   faq?: { title: string; content: ReactNode }[];
 }) {
   return (
-    <div className="flex w-full gap-3 rounded-xl">
+    <div className="flex flex-wrap w-full gap-3 rounded-xl">
       {(video || tutorialLink) && (
-        <div className="flex flex-col h-100 w-1/2 gap-3">
+        <div className="flex flex-col lg:h-100 lg:w-1/2 w-full gap-3">
           {video && (
             <div className="bg-[#7571A3]/10 border border-[#C7EEE5] shadow-sm p-5 gap-5 flex flex-col">
               <p className="font-bold text-center w-full">Tutorial Video</p>
               <div className="rounded-xl overflow-hidden">
                 <iframe
-                  className="w-full min-h-80"
+                  className="w-full lg:min-h-80 min-h-52"
                   src={video}
                   allow="clipboard-write; encrypted-media; picture-in-picture;"
                   referrerPolicy="strict-origin-when-cross-origin"
@@ -43,7 +43,7 @@ export function SectionTutorial({
         </div>
       )}
       {faq?.length ? (
-        <div className="bg-[#7571A3]/10 border border-[#C7EEE5] shadow-sm w-1/2 p-5 gap-5 flex flex-col">
+        <div className="bg-[#7571A3]/10 border border-[#C7EEE5] shadow-sm lg:w-1/2 w-full p-5 gap-5 flex flex-col">
           <p className="font-bold">Domande Frequenti</p>
           {faq.map((item, i) => (
             <Accordion buttonText={item.title} key={`Accordion-${i}`}>

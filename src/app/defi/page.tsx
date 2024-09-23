@@ -35,7 +35,7 @@ export default function Defi() {
         xPage="https://x.com/varpippo"
       />
 
-      <div>
+      <div className="w-full">
         <TokenCard
           externalLink="https://www.ciao.it"
           xPage="https://x.com/varpippo"
