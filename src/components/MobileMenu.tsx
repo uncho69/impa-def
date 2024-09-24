@@ -3,12 +3,20 @@
 import { Button } from "./Button";
 import BurgerIcon from "@/assets/Burger-Icon.png";
 import Image from "next/image";
-import { useState } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+
+const btnModalStyle =
+  "bg-[#0D2F5A] leading-7 text-xl text-[#DDDCDC] h-[60px] font-oxygen items-center justify-center w-full rounded shadow-md text-center no-underline flex flex-grow";
 
 export function MobileMenu() {
   const [open, setOpen] = useState(false);
-  const btnModalStyle =
-    "bg-[#0D2F5A] leading-7 text-xl text-[#DDDCDC] h-[60px] font-oxygen items-center justify-center w-full rounded shadow-md text-center no-underline flex flex-grow";
+  const pathname = usePathname();
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
   return (
     <div className="lg:hidden relative">
       <Button
@@ -18,7 +26,7 @@ export function MobileMenu() {
         <Image src={BurgerIcon} alt="" />
       </Button>
       {open && (
-        <div className="absolute px-4 -right-7 top-20 w-[100vw]">
+        <div className="absolute px-4 -right-7 top-20 w-[100vw] z-30">
           <div className=" bg-[#0D2F5A]/90 flex w-full rounded-lg">
             <div className="grid grid-cols-2 gap-2 p-5 w-full">
               <Button href="/manuale" local={true} className={btnModalStyle}>
