@@ -25,6 +25,9 @@ export function HomeButtons() {
       <Button href="/defi" local={true} className={btnStyle}>
         DeFi
       </Button>
+      <Button href="/defi" local={true} className={btnStyle}>
+        Airdrops
+      </Button>
       <Button href="/nft" local={true} className={btnStyle}>
         NFTs
       </Button>
