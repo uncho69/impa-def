@@ -37,7 +37,7 @@ export function Navbar() {
               in Web3
             </Button>
           </div>
-          <div>
+          <div className="hidden lg-flex">
             <Button
               onClick={() => setOpen((prev) => !prev)}
               className="lg:hidden p-4 relative"

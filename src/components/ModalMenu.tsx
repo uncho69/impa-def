@@ -1,9 +1,10 @@
+"use client";
 import { Button } from "./Button";
 import { useState, useRef, useEffect } from "react";
 
 export function ModalMenu() {
   const [open, setOpen] = useState(false);
-  const modalRef = useRef<HTMLDivElement | null>(null);
+  const modalRef = useRef(null);
 
   const btnStyle =
     "grow bg-accent leading-7 shrink shadow text-2xl text-[#DDDCDC] font-oxygen hidden lg:flex items-center justify-center px-6 h-16 rounded text-center no-underline";
@@ -12,10 +13,7 @@ export function ModalMenu() {
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (
-        modalRef.current &&
-        !modalRef.current.contains(event.target as Node)
-      ) {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
         setOpen(false);
       }
     }
