@@ -41,6 +41,9 @@ export default function manuale() {
             "https://www.youtube.com/embed/DQFUUjlGFkU?si=de5KjASE23Yr-gts"
           }
           tutorialLink="./tutorial"
+          faq={[
+            { title: "domanda frequente 1", content: "risposta frequente 1" },
+          ]}
         />
       </SectionBody>
     </MobileContainer>

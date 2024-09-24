@@ -1,13 +1,17 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "./Button";
 import BurgerIcon from "@/assets/Burger-Icon.png";
 import Image from "next/image";
 import logo from "@/assets/imparodefi-logo-nobg.webp";
+import { useState } from "react";
 
 const btnStyle =
   "bg-[#2E466E47]/30 border-white/50 border leading-7 shadow text-2xl text-[#DDDCDC] font-oxygen flex items-center justify-center max-w-44 p-3 h-full !rounded text-center no-underline";
 
 export function Navbar() {
+  const [open, setOpen] = useState(false);
   return (
     <div className="w-full p-5 lg:p-0">
       <nav className="bg-gradient-to-b from-[#184278] to-[#A7CFBE] h-16 lg:h-28 w-full flex justify-center rounded-[20px] lg:rounded-none shadow-xl lg:!shadow">
@@ -33,9 +37,19 @@ export function Navbar() {
               in Web3
             </Button>
           </div>
-          <Button className="lg:hidden p-4">
-            <Image src={BurgerIcon} alt="" />
-          </Button>
+          <div>
+            <Button
+              onClick={() => setOpen((prev) => !prev)}
+              className="lg:hidden p-4 relative"
+            >
+              <Image src={BurgerIcon} alt="" />
+              {open && (
+                <div className=" bg-[#0D2F5A]/80 absolute top-20 flex w-11/12">
+                  ciao ciao ciao
+                </div>
+              )}
+            </Button>
+          </div>
         </div>
       </nav>
     </div>

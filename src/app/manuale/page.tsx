@@ -8,7 +8,7 @@ import { SectionTitle } from "@/components/SectionTitle";
 export default function manuale() {
   return (
     <MobileContainer>
-      <SectionTitle>Manuale A-Z</SectionTitle>
+      <SectionTitle main={true}>Manuale A-Z</SectionTitle>
       <SectionBody>
         <div>
           Cosa sono le criptovalute? Cos’è il metaverso, il mondo Web3, la DeFi

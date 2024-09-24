@@ -40,10 +40,10 @@ export function TokenCard({
   };
 
   return (
-    <div className="cursor-pointer relative lg:w-[400px] lg:h-auto w-1/2 bg-slate-200 ">
+    <div className="cursor-pointer relative lg:w-[400px] lg:h-[220px] w-1/2 bg-slate-200 ">
       <Link href={href} className="absolute w-full h-full" />
       {!data?.data ? (
-        <div className="w-full h-full flex items-center justify-center text-xl">
+        <div className="w-full h-full flex items-center justify-center text-xl animate-ping">
           Loading
         </div>
       ) : (

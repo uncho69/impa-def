@@ -8,17 +8,27 @@ export function SectionTutorial({
   video,
   tutorialLink,
   faq,
+  direction = "row",
 }: {
   video?: string;
   tutorialLink?: string;
   faq?: { title: string; content: ReactNode }[];
+  direction?: "row" | "column";
 }) {
   return (
-    <div className="flex flex-wrap w-full gap-3 rounded-xl">
+    <div
+      className={`${
+        direction === "column" ? "flex-col lg:min-w-[520px]" : ""
+      } flex flex-wrap lg:flex-nowrap w-full gap-3 lg:gap-8 rounded-xl`}
+    >
       {(video || tutorialLink) && (
-        <div className="flex flex-col lg:h-100 lg:w-1/2 w-full gap-3">
+        <div
+          className={`flex flex-col lg:h-100 ${
+            direction === "column" ? "" : "lg:basis-5/12"
+          } w-full gap-3`}
+        >
           {video && (
-            <div className="bg-[#7571A3]/10 border border-[#C7EEE5] shadow-sm p-5 gap-5 flex flex-col">
+            <div className="bg-[#7571A3]/10 border border-[#C7EEE5] shadow-sm p-5 gap-5 flex flex-col rounded-md">
               <p className="font-bold text-center w-full">Tutorial Video</p>
               <div className="rounded-xl overflow-hidden">
                 <iframe
@@ -34,7 +44,7 @@ export function SectionTutorial({
           {tutorialLink && (
             <Link
               href={tutorialLink}
-              className="bg-[#7571A3]/10 border border-[#C7EEE5] shadow-sm p-5 gap-5 flex justify-center items-center"
+              className="bg-[#7571A3]/10 border border-[#C7EEE5] shadow-sm p-5 gap-5 flex justify-center items-center rounded-md"
             >
               <p className="font-bold">Tutorial Scritto</p>
               <Image src={rightArrow} alt="" className="justify-self-end" />
@@ -43,7 +53,11 @@ export function SectionTutorial({
         </div>
       )}
       {faq?.length ? (
-        <div className="bg-[#7571A3]/10 border border-[#C7EEE5] shadow-sm lg:w-1/2 w-full p-5 gap-5 flex flex-col">
+        <div
+          className={`bg-[#7571A3]/10 border border-[#C7EEE5] ${
+            direction === "column" ? "" : "lg:basis-7/12"
+          } shadow-sm w-full p-5 lg:p-16 gap-5 flex flex-col rounded-md`}
+        >
           <p className="font-bold">Domande Frequenti</p>
           {faq.map((item, i) => (
             <Accordion buttonText={item.title} key={`Accordion-${i}`}>

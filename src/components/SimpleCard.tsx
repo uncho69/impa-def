@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Button } from "./Button";
 import Placeholder from "@/assets/placeholder.svg";
 import xLogo from "@/assets/x.svg";
-import exernalLinkIcon from "@/assets/external-link.svg";
+import externalLinkIcon from "@/assets/external-link.svg";
 import Link from "next/link";
 
 export function SimpleCard({
@@ -64,7 +64,7 @@ export function SimpleCard({
               className="pointer-events-auto flex items-center justify-between grow lg:text-3xl text-base bg-white rounded-md lg:p-5 p-2 font-bold"
             >
               Website
-              <Image src={exernalLinkIcon} alt="" className="lg:w-10 w-5" />
+              <Image src={externalLinkIcon} alt="" className="lg:w-10 w-5" />
             </Button>
           )}
           {xPage && (
