@@ -1,7 +1,6 @@
 import { TokenCard } from "@/components/TokenCard";
 import { SimpleCard } from "@/components/SimpleCard";
 import Placeholder from "@/assets/placeholder.svg";
-import bitcoinIcon from "@/assets/currency-bitcoin.svg";
 import { CardContainer } from "@/components/CardContainer";
 
 export default function Giochi() {
@@ -25,14 +24,14 @@ export default function Giochi() {
           xPage="https://x.com/varpippo"
           tokenId="bitcoin"
           year={2009}
-          icon={bitcoinIcon}
+          icon={Placeholder}
         />
         <TokenCard
           externalLink="https://www.ciao.it"
           xPage="https://x.com/varpippo"
           tokenId="bitcoin"
           year={2009}
-          icon={bitcoinIcon}
+          icon={Placeholder}
         />
       </CardContainer>
     </>
