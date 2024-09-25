@@ -5,6 +5,9 @@ import { SectionBody } from "@/components/SectionBody";
 // import VideoImage from "@/assets/Video.png";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
+import { CardContainer } from "@/components/CardContainer";
+import { SimpleCard } from "@/components/SimpleCard";
+import Placeholder from "@/assets/placeholder.svg";
 
 export default function Blockchain() {
   return (
@@ -115,15 +118,362 @@ export default function Blockchain() {
           di scalabilità di Layer 2:
         </p>
         <Accordion buttonText="Optimistic Rollups">
-          <p></p>
+          <p>
+            <strong>Optimistic Rollups</strong> sono una tecnologia di
+            scalabilità che consente di eseguire transazioni off-chain e
+            registrarle periodicamente sulla chain principale (Layer 1). Ecco
+            come funzionano:
+          </p>
+          <List ordered={true}>
+            <li>
+              <p>
+                <strong>Transazioni Off-Chain:</strong>
+              </p>
+              <List>
+                <li>
+                  Le transazioni sono elaborate off-chain in un ambiente Layer
+                  2, riducendo la congestione sulla chain principale e
+                  abbassando le commissioni di gas.
+                </li>
+              </List>
+            </li>
+            <li>
+              <p>
+                <strong>Validazione e Sfida:</strong>
+              </p>
+              <List>
+                <li>
+                  Le transazioni eseguite su un Optimistic Rollup sono
+                  considerate valide per impostazione predefinita
+                  (&quot;optimistic&quot;). I validatori inviano i risultati
+                  delle transazioni al Layer 1, dove altri partecipanti possono
+                  sfidare i risultati entro un certo periodo di tempo. Se viene
+                  trovata una frode, viene applicata una penalità.
+                </li>
+              </List>
+            </li>
+            <li>
+              <p>
+                <strong>Benefici:</strong>
+              </p>
+              <List>
+                <li>
+                  Elevata scalabilità con migliaia di transazioni al secondo
+                  (TPS).
+                </li>
+                <li>Costi di transazione significativamente ridotti.</li>
+                <li>Sicurezza mantenuta dalla chain principale.</li>
+              </List>
+            </li>
+          </List>
         </Accordion>
         <Accordion buttonText="ZK-Rollups (Zero-Knowledge Rollups)">
-          a
+          <List>
+            <li>
+              Simili agli Optimistic Rollups, i ZK-Rollups eseguono transazioni
+              off-chain, ma utilizzano prove crittografiche (Zero-Knowledge
+              Proofs) per garantire che le transazioni siano valide.
+            </li>
+            <li>
+              Offrono vantaggi in termini di sicurezza e efficienza poiché le
+              transazioni vengono verificate in batch con una singola prova di
+              validità.
+            </li>
+          </List>
         </Accordion>
-        <Accordion buttonText="State Channels">a</Accordion>
-        <Accordion buttonText="Plasma">a</Accordion>
-        <Accordion buttonText="Sidechains">a</Accordion>
-        <Accordion buttonText="Confronto e Utilizzo">a</Accordion>
+        <Accordion buttonText="State Channels">
+          <List>
+            <li>
+              Permettono a due o più partecipanti di creare un canale privato
+              per eseguire un numero illimitato di transazioni off-chain.
+            </li>
+            <li>
+              Solo il saldo finale viene registrato sulla chain principale,
+              riducendo il carico di lavoro e i costi di gas.
+            </li>
+            <li>
+              Esempi: Lightning Network (per Bitcoin), Raiden Network (per
+              Ethereum).
+            </li>
+          </List>
+        </Accordion>
+        <Accordion buttonText="Plasma">
+          <List>
+            <li>
+              Consiste in una serie di child chains (sotto-reti) che operano
+              indipendentemente dalla chain principale.
+            </li>
+            <li>
+              Le transazioni sono processate su queste sotto-reti e
+              periodicamente ancorate alla chain principale.
+            </li>
+            <li>
+              Plasma è altamente scalabile ma più complesso da implementare
+              rispetto ad altre soluzioni.
+            </li>
+          </List>
+        </Accordion>
+        <Accordion buttonText="Sidechains">
+          <List>
+            <li>
+              Blockchain indipendenti che funzionano in parallelo alla chain
+              principale.
+            </li>
+            <li>
+              Consentono trasferimenti di asset tra la chain principale e la
+              sidechain, migliorando la scalabilità senza sovraccaricare la
+              chain principale.
+            </li>
+            <li>Esempi: Polygon (precedentemente Matic), xDai.</li>
+          </List>
+        </Accordion>
+        <Accordion buttonText="Confronto e Utilizzo">
+          <List>
+            <li>
+              <strong>Optimistic Rollups:</strong> Utilizzati da piattaforme
+              come Optimism e Arbitrum, sono adatti per applicazioni che
+              richiedono alta scalabilità e transazioni a basso costo.
+            </li>
+            <li>
+              <strong>ZK-Rollups:</strong> Adatti per applicazioni che
+              richiedono maggiore sicurezza e privacy, come i DEX (exchange
+              decentralizzati).
+            </li>
+            <li>
+              <strong>State Channels e Plasma:</strong> Ideali per
+              microtransazioni e giochi blockchain.
+            </li>
+            <li>
+              <strong>Sidechains:</strong> Utilizzati per espandere
+              l&apos;ecosistema di applicazioni e dApps con esigenze specifiche.
+            </li>
+          </List>
+        </Accordion>
+      </SectionBody>
+      <SectionTitle>Lista Blockchain</SectionTitle>
+      <SectionBody>
+        <CardContainer>
+          <SimpleCard
+            icon={Placeholder}
+            title={"Bitcoin"}
+            subArray={[
+              { icon: Placeholder, text: "" },
+              { icon: Placeholder, text: "" },
+            ]}
+            href={"./blockchain/bitcoin"}
+            externalLink="https://bitcoin.org"
+            xPage="https://x.com/bitcoin"
+          />
+          <SimpleCard
+            icon={Placeholder}
+            title={"Ethereum"}
+            subArray={[
+              { icon: Placeholder, text: "" },
+              { icon: Placeholder, text: "" },
+            ]}
+            href={"./blockchain/ethereum"}
+            externalLink="https://ethereum.org/it/"
+            xPage="https://x.com/ethereum"
+          />
+          <SimpleCard
+            icon={Placeholder}
+            title={"Solana"}
+            subArray={[
+              { icon: Placeholder, text: "" },
+              { icon: Placeholder, text: "" },
+            ]}
+            href={"./blockchain/solana"}
+            externalLink="https://solana.com/"
+            xPage="https://x.com/solana"
+          />
+          <SimpleCard
+            icon={Placeholder}
+            title={"Arbitrum"}
+            subArray={[
+              { icon: Placeholder, text: "" },
+              { icon: Placeholder, text: "" },
+            ]}
+            href={"./blockchain/arbitrum"}
+            externalLink="https://arbitrum.foundation/"
+            xPage="https://x.com/arbitrum"
+          />
+          <SimpleCard
+            icon={Placeholder}
+            title={"Polygon"}
+            subArray={[
+              { icon: Placeholder, text: "" },
+              { icon: Placeholder, text: "" },
+            ]}
+            href={"./blockchain/polygon"}
+            externalLink="https://polygon.technology/"
+            xPage="https://x.com/0xPolygon"
+          />
+          <SimpleCard
+            icon={Placeholder}
+            title={"Base"}
+            subArray={[
+              { icon: Placeholder, text: "" },
+              { icon: Placeholder, text: "" },
+            ]}
+            href={"./blockchain/base"}
+            externalLink="https://www.base.org/"
+            xPage="https://x.com/base"
+          />
+          <SimpleCard
+            icon={Placeholder}
+            title={"Optimism"}
+            subArray={[
+              { icon: Placeholder, text: "" },
+              { icon: Placeholder, text: "" },
+            ]}
+            href={"./blockchain/optimism"}
+            externalLink="https://www.optimism.io/"
+            xPage="https://twitter.com/Optimism"
+          />
+          <SimpleCard
+            icon={Placeholder}
+            title={"Zora"}
+            subArray={[
+              { icon: Placeholder, text: "" },
+              { icon: Placeholder, text: "" },
+            ]}
+            href={"./blockchain/zora"}
+            externalLink="https://zora.co/"
+            xPage="https://x.com/ourZORA"
+          />
+          <SimpleCard
+            icon={Placeholder}
+            title={"Sanko"}
+            subArray={[
+              { icon: Placeholder, text: "" },
+              { icon: Placeholder, text: "" },
+            ]}
+            href={"./blockchain/sanko"}
+            externalLink="sanko.xyz"
+            xPage="https://x.com/SankoGameCorp"
+          />
+          <SimpleCard
+            icon={Placeholder}
+            title={"Hyperliquid"}
+            subArray={[
+              { icon: Placeholder, text: "" },
+              { icon: Placeholder, text: "" },
+            ]}
+            href={"./blockchain/hyperliquid"}
+            externalLink="https://hyperliquid.xyz/"
+            xPage="https://twitter.com/HyperliquidX"
+          />
+          <SimpleCard
+            icon={Placeholder}
+            title={"Scroll"}
+            subArray={[
+              { icon: Placeholder, text: "" },
+              { icon: Placeholder, text: "" },
+            ]}
+            href={"./blockchain/scroll"}
+            externalLink="https://scroll.io/"
+            xPage="https://x.com/Scroll_ZKP"
+          />
+          <SimpleCard
+            icon={Placeholder}
+            title={"Berachain"}
+            subArray={[
+              { icon: Placeholder, text: "" },
+              { icon: Placeholder, text: "" },
+            ]}
+            href={"./blockchain/berachain"}
+            externalLink="https://www.berachain.com/"
+            xPage="https://x.com/berachain"
+          />
+          <SimpleCard
+            icon={Placeholder}
+            title={"zkSync"}
+            subArray={[
+              { icon: Placeholder, text: "" },
+              { icon: Placeholder, text: "" },
+            ]}
+            href={"./blockchain/zksync"}
+            externalLink="https://zksync.io/"
+            xPage="https://x.com/zksync"
+          />
+          <SimpleCard
+            icon={Placeholder}
+            title={"Linea"}
+            subArray={[
+              { icon: Placeholder, text: "" },
+              { icon: Placeholder, text: "" },
+            ]}
+            href={"./blockchain/linea"}
+            externalLink="https://linea.build/"
+            xPage="https://x.com/LineaBuild"
+          />
+          <SimpleCard
+            icon={Placeholder}
+            title={"Layer3"}
+            subArray={[
+              { icon: Placeholder, text: "" },
+              { icon: Placeholder, text: "" },
+            ]}
+            href={"./blockchain/layer3"}
+            externalLink="https://layer3.xyz/"
+            xPage="https://x.com/layer3xyz"
+          />
+          <SimpleCard
+            icon={Placeholder}
+            title={"Hyperlane"}
+            subArray={[
+              { icon: Placeholder, text: "" },
+              { icon: Placeholder, text: "" },
+            ]}
+            href={"./blockchain/hyperlane"}
+            externalLink="https://www.hyperlane.xyz/"
+            xPage="https://x.com/hyperlane"
+          />
+          <SimpleCard
+            icon={Placeholder}
+            title={"Polygon zkEVM"}
+            subArray={[
+              { icon: Placeholder, text: "" },
+              { icon: Placeholder, text: "" },
+            ]}
+            href={"./blockchain/polygon_zkEVM"}
+            externalLink="https://polygon.technology/"
+            xPage="https://x.com/0xpolygondefi"
+          />
+          <SimpleCard
+            icon={Placeholder}
+            title={"Degen"}
+            subArray={[
+              { icon: Placeholder, text: "" },
+              { icon: Placeholder, text: "" },
+            ]}
+            href={"./blockchain/degen"}
+            externalLink="degen.tips"
+            xPage="https://x.com/degentokenbase"
+          />
+          <SimpleCard
+            icon={Placeholder}
+            title={"Blast"}
+            subArray={[
+              { icon: Placeholder, text: "" },
+              { icon: Placeholder, text: "" },
+            ]}
+            href={"./blockchain/blast"}
+            externalLink="blast.io"
+            xPage="https://x.com/Blast_L2"
+          />
+          <SimpleCard
+            icon={Placeholder}
+            title={"Avalanche"}
+            subArray={[
+              { icon: Placeholder, text: "" },
+              { icon: Placeholder, text: "" },
+            ]}
+            href={"./blockchain/avalanche"}
+            externalLink="https://www.avax.network/"
+            xPage="https://x.com/avax"
+          />
+        </CardContainer>
       </SectionBody>
     </MobileContainer>
   );

@@ -67,7 +67,10 @@ export default function manuale() {
         <p>
           Per scoprire di più sulle Blockchain, quali Blockchain esistono, le
           applicazioni al di sopra di esse, ed i wallet compatibili, visita la
-          pagina <Button variant="inline-text-button">Blockchains</Button>
+          pagina{" "}
+          <Button href="./blockchain" local={true} variant="inline-text-button">
+            Blockchains
+          </Button>
           <br />
           <br />
           Ogni Blockchain ha il proprio ecosistema di applicazioni, ed è

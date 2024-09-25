@@ -12,7 +12,7 @@ export function SimpleCard({
   icon = Placeholder,
   title,
   subArray,
-  subArrayTitle,
+  subArrayTitle = "Reti",
   externalLink,
   xPage,
   href = "/",
