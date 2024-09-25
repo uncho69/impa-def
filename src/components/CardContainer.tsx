@@ -17,7 +17,14 @@ export function CardContainer({ children }: { children: ReactNode[] }) {
         </div>
         <div
           className={`${
-            open ? "flex" : "hidden"
+            open ? "lg:flex hidden" : "hidden"
+          } flex-wrap lg:gap-5 gap-1 transition-all w-full`}
+        >
+          {children.slice(3, children.length)}
+        </div>
+        <div
+          className={`${
+            open ? "flex lg:hidden" : "hidden"
           } flex-wrap lg:gap-5 gap-1 transition-all w-full`}
         >
           {children.slice(2, children.length)}
