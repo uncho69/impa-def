@@ -6,16 +6,21 @@ import { SectionTitle } from "@/components/SectionTitle";
 export default function manuale() {
   return (
     <MobileContainer>
-      <SectionTitle main={true}>nomeblockchain</SectionTitle>
+      <SectionTitle main={true}>Polygon</SectionTitle>
       <SectionBody>
         <div>
           <h1 className="font-bold text-4xl">Tutorial</h1>
           <br />
           <List ordered={true}>
             <li>
-              <strong>text</strong>
+              <strong>lorem</strong>
               <List>
-                <li>subtext</li>
+                <li>
+                  Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                  Molestiae laborum blanditiis, non sint similique nihil sed
+                  fugiat nam, omnis explicabo harum inventore. Recusandae
+                  aspernatur, culpa eos laboriosam possimus pariatur non?
+                </li>
               </List>
             </li>
           </List>

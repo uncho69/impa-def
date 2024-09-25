@@ -1,5 +1,5 @@
-import { SimpleCard } from "@/components/SimpleCard";
 import { TokenCard } from "@/components/TokenCard";
+import { SimpleCard } from "@/components/SimpleCard";
 import Placeholder from "@/assets/placeholder.svg";
 import bitcoinIcon from "@/assets/currency-bitcoin.svg";
 import { CardContainer } from "@/components/CardContainer";

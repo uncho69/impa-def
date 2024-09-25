@@ -12,23 +12,21 @@ export function CardContainer({ children }: { children: ReactNode[] }) {
         <div className="flex lg:hidden flex-wrap gap-1 w-full">
           {children.slice(0, 2)}
         </div>
-
         <div className="hidden lg:flex flex-wrap gap-5 w-full">
           {children.slice(0, 3)}
         </div>
-
         <div
           className={`${
             open ? "flex" : "hidden"
           } flex-wrap lg:gap-5 gap-1 transition-all w-full`}
         >
-          {children.slice(3, children.length)}
+          {children.slice(2, children.length)}
         </div>
       </div>
 
       <div className="lg:hover:animate-pulse mx-auto">
         <p
-          className="flex items-center text-3xl cursor-pointer"
+          className="flex items-center lg:text-3xl text-2xl cursor-pointer"
           onClick={() => setOpen(!open)}
         >
           {open ? "Nascondi" : "Mostra tutte"}{" "}

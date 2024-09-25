@@ -14,8 +14,8 @@ export default function manuale() {
       <SectionTitle main={true}>Blockchain</SectionTitle>
       <SectionBody>
         <div>
-          <h1 className="font-bold text-4xl">blockchain</h1>
-          <p>text</p>
+          <h1 className="font-bold text-4xl">Fantom</h1>
+          <p>lorem</p>
           <Accordion buttonText="CARATTERISTICHE">
             <List ordered={true}>
               <li>
@@ -65,7 +65,7 @@ export default function manuale() {
           video={
             "https://www.youtube.com/embed/K4TOrB7at0Y?si=vOBf2_Kw_RkdMPph"
           }
-          tutorialLink="./tutorial"
+          tutorialLink="./fantom/tutorial"
           faq={[
             { title: "domanda frequente 1", content: "risposta frequente 1" },
           ]}
