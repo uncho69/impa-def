@@ -26,7 +26,7 @@ export function SimpleCard({
   href?: string;
 }) {
   return (
-    <div className="lg:w-[450px] relative lg:h-96 w-1/2 bg-slate-200">
+    <div className="lg:w-[450px] relative lg:h-96 w-[180px] bg-slate-200">
       <Link
         href={href}
         className="absolute w-full cursor-pointer h-full z-10"

@@ -7,17 +7,17 @@ import { SectionTutorial } from "@/components/SectionTutorial";
 export default function manuale() {
   return (
     <MobileContainer>
-      <SectionTitle>Blockchains</SectionTitle>
+      <SectionTitle main={true}>Blockchain</SectionTitle>
       <SectionBody>
         <div>
-          <h1 className="font-bold">Ethereum</h1>
+          <h1 className="font-bold text-4xl">Ethereum</h1>
           <p>
-            Ethereum è una blockchain programmabile che consente la creazione e
-            l&apos;esecuzione di smart contract e applicazioni decentralizzate
-            (dApp) senza intermediari. Fondata da Vitalik Buterin nel 2015,
-            Ethereum ha rivoluzionato il settore, superando il semplice
-            trasferimento di valore per abilitare un’intera economia digitale
-            decentralizzata.
+            <strong>Ethereum</strong> è una blockchain programmabile che
+            consente la creazione e l&apos;esecuzione di smart contract e
+            applicazioni decentralizzate (dApp) senza intermediari. Fondata da
+            Vitalik Buterin nel 2015, Ethereum ha rivoluzionato il settore,
+            superando il semplice trasferimento di valore per abilitare
+            un’intera economia digitale decentralizzata.
           </p>
           <br />
           <p>
