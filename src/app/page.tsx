@@ -1,6 +1,7 @@
 import { HomeButtons } from "@/components/HomeButtons";
 import Image from "next/image";
 import VideoImage from "@/assets/Video.png";
+import { Input } from "@/components/Input";
 
 export default function Home() {
   return (
@@ -35,12 +36,7 @@ export default function Home() {
             Inserisci la tua email per ottenere accesso gratuito all’intera
             piattaforma
           </div>
-
-          <input
-            type="text"
-            className="font-oxygen text-black bg-[#1668D0]/50 placeholder-black placeholder:text-xl p-2 lg:min-w-96 shadow-md max-w-48 lg:placeholder:text-3xl lg:text-3xl lg:px-4 lg:py-5 rounded-md"
-            placeholder="Email"
-          />
+          <Input />
         </div>
       </div>
     </div>
