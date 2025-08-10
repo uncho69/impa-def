@@ -24,7 +24,7 @@ export default function Account() {
       <div className="container-custom py-16">
         <div className="max-w-xl mx-auto bg-white rounded-xl shadow-sm border border-neutral-200 p-6">
           <h1 className="text-2xl font-bold mb-2">Non sei loggato</h1>
-          <p className="text-neutral-700">Accedi dalla pagina di registrazione per gestire l'account.</p>
+          <p className="text-neutral-700">Accedi dalla pagina di registrazione per gestire l&apos;account.</p>
         </div>
       </div>
     );
