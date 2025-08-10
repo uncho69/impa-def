@@ -77,7 +77,7 @@ function RegistratiInner() {
         async
         defer
         onLoad={() => {
-          // @ts-ignore
+          // @ts-expect-error turnstile callback assignment
           window.onTurnstile = onTurnstile;
         }}
       />
