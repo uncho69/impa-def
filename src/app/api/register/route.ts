@@ -3,8 +3,10 @@ import { generateCode, verifyCode } from "@/lib/otp";
 
 const ZAPIER_API_URI = process.env.ZAPIER_API_URI || "";
 
+type RegisterPayload = { email?: string; code?: string };
+
 export async function POST(request: Request) {
-  const { email, code } = await request.json();
+  const { email, code } = (await request.json()) as RegisterPayload;
   if (typeof email !== "string")
     return NextResponse.json(
       { message: "Invalid input type" },
@@ -33,7 +35,9 @@ export async function POST(request: Request) {
         method: "POST",
         body: JSON.stringify({ contact: { email, code: oneTimeCode, timestamp: Date.now() } }),
       });
-      const data = await result.json().catch(() => ({} as any));
+      const data: { status?: string } = await result
+        .json()
+        .catch(() => ({} as { status?: string }));
       if (data?.status !== "success") {
         return NextResponse.json(
           { message: "Impossibile inviare il codice" },
@@ -41,7 +45,7 @@ export async function POST(request: Request) {
         );
       }
       return NextResponse.json({ status: "code_sent" });
-    } catch (e) {
+    } catch {
       return NextResponse.json(
         { status: "code_sent", previewCode: oneTimeCode },
         { status: 200 }
@@ -50,7 +54,7 @@ export async function POST(request: Request) {
   }
 
   // Step 2: verifica codice
-  const ok = verifyCode(email, code);
+  const ok = verifyCode(email, String(code));
   if (!ok) {
     return NextResponse.json({ message: "Codice non valido o scaduto" }, { status: 400 });
   }

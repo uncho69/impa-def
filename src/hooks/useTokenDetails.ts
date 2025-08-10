@@ -22,12 +22,10 @@ type ApiResponse = {
 
 export function useTokenDetails(id: string) {
     const [details, setDetails] = useState<ApiResponse|undefined>();
-    let json: ApiResponse | undefined;
-    
     const getData = async () => {
         try {
             const result = await fetch(ENDPOINT + id);
-            json = (await result.json()) as ApiResponse | undefined;
+            const json = (await result.json()) as ApiResponse | undefined;
             if (!json) return;
             setDetails(json);
         } catch (e: unknown) {console.error(e)}

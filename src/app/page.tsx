@@ -63,7 +63,7 @@ export default function Home() {
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl font-bold mb-6">Resta aggiornato</h2>
             <p className="text-lg text-neutral-700 mb-8">
-              Inserisci la tua email per ottenere accesso gratuito all'intera piattaforma e ricevere aggiornamenti sul mondo Web3.
+              Inserisci la tua email per ottenere accesso gratuito all&apos;intera piattaforma e ricevere aggiornamenti sul mondo Web3.
             </p>
             
             <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">

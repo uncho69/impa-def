@@ -1,8 +1,9 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import { useState } from "react";
 
-export default function Registrati() {
+function RegistratiInner() {
   const router = useRouter();
   const search = useSearchParams();
   const next = search.get("next") || "/manuale";
@@ -32,8 +33,9 @@ export default function Registrati() {
         setCode(String(data.previewCode));
       }
       setPhase("code");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Errore inatteso";
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -55,8 +57,9 @@ export default function Registrati() {
       }
       document.cookie = `imparodefi_registered=1; path=/; max-age=${60 * 60 * 24 * 365}`;
       router.push(next);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Errore inatteso";
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -109,6 +112,14 @@ export default function Registrati() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function Registrati() {
+  return (
+    <Suspense fallback={<div className="container-custom py-16">Caricamento…</div>}>
+      <RegistratiInner />
+    </Suspense>
   );
 }
 

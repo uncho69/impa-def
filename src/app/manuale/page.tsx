@@ -1,9 +1,7 @@
 import { Accordion } from "@/components/Accordion";
 import { Button } from "@/components/Button";
 import { List } from "@/components/List";
-import { MobileContainer } from "@/components/MobileContainer";
-import { SectionBody } from "@/components/SectionBody";
-import { SectionTitle } from "@/components/SectionTitle";
+// Removed unused imports
 
 export default function manuale() {
   return (
