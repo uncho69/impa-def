@@ -1,11 +1,9 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useSession, signOut } from "next-auth/react";
 
 export function AuthStatus() {
   const [registered, setRegistered] = useState<boolean>(false);
-  const { data: session } = useSession();
 
   useEffect(() => {
     const hasCookie = document.cookie
@@ -24,18 +22,11 @@ export function AuthStatus() {
     return () => clearInterval(interval);
   }, []);
 
-  if (registered || session) {
+  if (registered) {
     return (
-      <>
-        <Link href="/account" className="btn-outline">
-          Account
-        </Link>
-        {session && (
-          <button onClick={() => signOut({ callbackUrl: "/" })} className="btn-outline">
-            Logout
-          </button>
-        )}
-      </>
+      <Link href="/account" className="btn-outline">
+        Account
+      </Link>
     );
   }
 
