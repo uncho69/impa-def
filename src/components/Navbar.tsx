@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import logo from "@/assets/imparodefi-logo-nobg.webp";
 import { MobileMenu } from "./MobileMenu";
+import { AuthStatus } from "./AuthStatus";
 
 export function Navbar() {
   return (
@@ -49,9 +50,7 @@ export function Navbar() {
             </div>
             
             <div className="flex space-x-3">
-              <Link href="/registrati?next=/manuale" className="btn-primary">
-                Manuale A-Z
-              </Link>
+              <AuthStatus />
               <Link href="/newsletter" className="btn-outline">
                 Newsletter
               </Link>

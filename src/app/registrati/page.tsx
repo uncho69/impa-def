@@ -4,6 +4,22 @@ import { Suspense } from "react";
 import { useEffect, useRef, useState } from "react";
 import Script from "next/script";
 
+declare global {
+  interface Window {
+    turnstile?: {
+      render: (
+        container: HTMLElement,
+        options: {
+          sitekey: string;
+          callback?: (token: string) => void;
+          [key: string]: unknown;
+        }
+      ) => void;
+    };
+    onTurnstileLoad?: () => void;
+  }
+}
+
 function RegistratiInner() {
   const router = useRouter();
   const search = useSearchParams();
@@ -39,22 +55,23 @@ function RegistratiInner() {
     }
   }
   useEffect(() => {
-    // Render esplicito del widget quando lo script è pronto
-    const tryRender = () => {
-      // @ts-expect-error turnstile global
-      const t = typeof window !== "undefined" ? window.turnstile : undefined;
-      if (!t || !containerRef.current || !siteKey) return;
-      const containerEl = containerRef.current as HTMLDivElement;
-      if ((containerEl as unknown as { dataset: DOMStringMap }).dataset.rendered) return;
-      t.render(containerRef.current, {
+    function renderWidget() {
+      if (!window.turnstile || !containerRef.current || !siteKey) return;
+      const el = containerRef.current;
+      el.innerHTML = ""; // reset eventuali
+      window.turnstile.render(el, {
         sitekey: siteKey,
         callback: (tok: string) => setToken(tok),
+        "expired-callback": () => setToken(null),
+        "error-callback": () => setToken(null),
       });
-      (containerEl as unknown as { dataset: DOMStringMap }).dataset.rendered = "1";
+    }
+    window.onTurnstileLoad = renderWidget;
+    // Se lo script è già presente
+    if (window.turnstile) renderWidget();
+    return () => {
+      window.onTurnstileLoad = undefined;
     };
-    const id = setInterval(tryRender, 300);
-    tryRender();
-    return () => clearInterval(id);
   }, [siteKey]);
 
   return (
@@ -76,7 +93,7 @@ function RegistratiInner() {
                 />
               </div>
               <div className="flex justify-center">
-                <div ref={containerRef} />
+                <div ref={containerRef} style={{ minHeight: 70 }} />
               </div>
               {error && <p className="text-red-600 text-sm">{error}</p>}
               <button type="submit" disabled={loading} className="btn-primary w-full">{loading ? "Invio..." : "Invia"}</button>
@@ -85,7 +102,7 @@ function RegistratiInner() {
           <p className="text-xs text-neutral-500 mt-4 text-center">Iscrivendoti accetti la nostra informativa sulla privacy.</p>
         </div>
       </div>
-      <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
+      <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileLoad" async defer />
     </div>
   );
 }
