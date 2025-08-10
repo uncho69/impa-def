@@ -23,7 +23,7 @@ declare global {
 function RegistratiInner() {
   const router = useRouter();
   const search = useSearchParams();
-  const next = search.get("next") || "/manuale";
+  const next = search?.get("next") || "/manuale";
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -78,7 +78,7 @@ function RegistratiInner() {
     <div className="min-h-screen bg-gradient-to-b from-primary-50 to-background py-16">
       <div className="container-custom">
         <div className="max-w-lg mx-auto bg-white rounded-xl shadow-sm border border-neutral-200 p-6 md:p-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-center mb-2">Crea il tuo accesso gratuito</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-center mb-2">Crea il tuo account</h1>
           <p className="text-neutral-700 text-center mb-6">Registrati con la tua email per iniziare subito.</p>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
