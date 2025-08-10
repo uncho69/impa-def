@@ -1,7 +1,7 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Script from "next/script";
 
 function RegistratiInner() {
@@ -12,6 +12,8 @@ function RegistratiInner() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY as string | undefined;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -36,9 +38,24 @@ function RegistratiInner() {
       setLoading(false);
     }
   }
-  function onTurnstile(tokenValue: string) {
-    setToken(tokenValue);
-  }
+  useEffect(() => {
+    // Render esplicito del widget quando lo script è pronto
+    const tryRender = () => {
+      // @ts-expect-error turnstile global
+      const t = typeof window !== "undefined" ? window.turnstile : undefined;
+      if (!t || !containerRef.current || !siteKey) return;
+      const containerEl = containerRef.current as HTMLDivElement;
+      if ((containerEl as unknown as { dataset: DOMStringMap }).dataset.rendered) return;
+      t.render(containerRef.current, {
+        sitekey: siteKey,
+        callback: (tok: string) => setToken(tok),
+      });
+      (containerEl as unknown as { dataset: DOMStringMap }).dataset.rendered = "1";
+    };
+    const id = setInterval(tryRender, 300);
+    tryRender();
+    return () => clearInterval(id);
+  }, [siteKey]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-primary-50 to-background py-16">
@@ -59,11 +76,7 @@ function RegistratiInner() {
                 />
               </div>
               <div className="flex justify-center">
-                <div
-                  className="cf-turnstile"
-                  data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
-                  data-callback="onTurnstile"
-                />
+                <div ref={containerRef} />
               </div>
               {error && <p className="text-red-600 text-sm">{error}</p>}
               <button type="submit" disabled={loading} className="btn-primary w-full">{loading ? "Invio..." : "Invia"}</button>
@@ -72,15 +85,7 @@ function RegistratiInner() {
           <p className="text-xs text-neutral-500 mt-4 text-center">Iscrivendoti accetti la nostra informativa sulla privacy.</p>
         </div>
       </div>
-      <Script
-        src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-        async
-        defer
-        onLoad={() => {
-          // @ts-expect-error turnstile callback assignment
-          window.onTurnstile = onTurnstile;
-        }}
-      />
+      <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
     </div>
   );
 }
