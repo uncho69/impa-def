@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
-import { generateCode, verifyCode } from "@/lib/otp";
 
 const ZAPIER_API_URI = process.env.ZAPIER_API_URI || "";
+const TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY || "";
 
-type RegisterPayload = { email?: string; code?: string };
+type RegisterPayload = { email?: string; token?: string };
 
 export async function POST(request: Request) {
-  const { email, code } = (await request.json()) as RegisterPayload;
+  const { email, token } = (await request.json()) as RegisterPayload;
   if (typeof email !== "string")
     return NextResponse.json(
       { message: "Invalid input type" },
@@ -23,39 +23,46 @@ export async function POST(request: Request) {
     );
   }
 
-  // Step 1: richiesta invio codice
-  if (!code) {
-    const oneTimeCode = generateCode(email);
-    // Se non è configurato Zapier, abilita fallback di sviluppo
-    if (!ZAPIER_API_URI) {
-      return NextResponse.json({ status: "code_sent", previewCode: oneTimeCode });
-    }
+  // Verifica Turnstile token
+  if (!TURNSTILE_SECRET_KEY) {
+    return NextResponse.json(
+      { message: "Captcha non configurato" },
+      { status: 500 }
+    );
+  }
+  if (typeof token !== "string" || token.length < 10) {
+    return NextResponse.json({ message: "Captcha mancante" }, { status: 400 });
+  }
+
+  const form = new URLSearchParams();
+  form.append("secret", TURNSTILE_SECRET_KEY);
+  form.append("response", token);
+
+  const cfRes = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+    method: "POST",
+    body: form,
+    headers: { "content-type": "application/x-www-form-urlencoded" },
+  });
+  const verification = (await cfRes.json()) as { success?: boolean; "error-codes"?: string[] };
+  if (!verification.success) {
+    return NextResponse.json(
+      { message: "Captcha non valido", errors: verification["error-codes"] },
+      { status: 400 }
+    );
+  }
+
+  // Facoltativo: invia il contatto a Zapier (senza OTP)
+  if (ZAPIER_API_URI) {
     try {
-      const result = await fetch(ZAPIER_API_URI, {
+      await fetch(ZAPIER_API_URI, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contact: { email, code: oneTimeCode, timestamp: Date.now() } }),
+        body: JSON.stringify({ contact: { email, timestamp: Date.now() } }),
       });
-      // Considera qualunque 2xx come successo (Zapier Catch Hook non restituisce necessariamente un JSON "status")
-      if (!result.ok) {
-        return NextResponse.json(
-          { message: "Impossibile inviare il codice" },
-          { status: 502 }
-        );
-      }
-      return NextResponse.json({ status: "code_sent" });
     } catch {
-      return NextResponse.json(
-        { status: "code_sent", previewCode: oneTimeCode },
-        { status: 200 }
-      );
+      // ignora errori Zapier, non bloccare la registrazione
     }
   }
 
-  // Step 2: verifica codice
-  const ok = verifyCode(email, String(code));
-  if (!ok) {
-    return NextResponse.json({ message: "Codice non valido o scaduto" }, { status: 400 });
-  }
   return NextResponse.json({ status: "verified" });
 }
