@@ -22,7 +22,7 @@ import avaIcon from "@/assets/avalanche-avax-logo.svg";
 
 export function BlockchainCardList() {
   return (
-    <CardContainer>
+    <CardContainer gateOnExpand={true}>
       <SimpleCard
         icon={btcIcon}
         title={"Bitcoin"}

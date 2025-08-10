@@ -1,8 +1,10 @@
 export function Footer() {
+  const year = new Date().getFullYear();
   return (
-    <footer className="bg-[#77A6C0] w-full p-5 text-center font-roboto lg:text-xl lg:mt-20 mt-5">
-      ImparoDeFi @ 2024. <br />
-      All rights reserved.
+    <footer className="w-full border-t border-neutral-200 bg-white/60 backdrop-blur">
+      <div className="container-custom py-8 text-center">
+        <p className="text-neutral-600 text-sm">ImparoDeFi © {year}. All rights reserved.</p>
+      </div>
     </footer>
   );
 }

@@ -60,6 +60,9 @@ export function MobileMenu() {
               <Button href="/giochi" local={true} className={btnModalStyle}>
                 Giochi
               </Button>
+              <Button href="/supporto" local={true} className={btnModalStyle}>
+                Assistenza
+              </Button>
               <Button href="/strumenti" local={true} className={btnModalStyle}>
                 Strumenti
               </Button>

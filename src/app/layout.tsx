@@ -2,24 +2,27 @@ import type { Metadata } from "next";
 import "./globals.css";
 // import "bootstrap/dist/css/bootstrap.min.css";
 import { Navbar } from "@/components/Navbar";
-import { Overpass, Roboto, Oxygen_Mono } from "next/font/google";
+import { Inter, Montserrat, Source_Code_Pro } from "next/font/google";
 import { Footer } from "@/components/Footer";
 
-const overpass = Overpass({
-  variable: "--font-overpass",
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
   display: "swap",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
 });
-const roboto = Roboto({
-  variable: "--font-roboto",
+
+const inter = Inter({
+  variable: "--font-inter",
   display: "swap",
-  weight: ["400", "700", "900"],
+  weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
 });
-const oxygen = Oxygen_Mono({
-  variable: "--font-oxygen",
+
+const sourceCode = Source_Code_Pro({
+  variable: "--font-source-code",
   display: "swap",
-  weight: "400",
+  weight: ["400", "500", "600"],
   subsets: ["latin"],
 });
 
@@ -34,11 +37,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${overpass.variable} ${roboto.variable} ${oxygen.variable} text-black antialiased font-overpass bg-background flex flex-col items-center`}
-      >
+      <body className={`${montserrat.variable} ${inter.variable} ${sourceCode.variable} text-neutral-900 antialiased font-montserrat bg-background flex flex-col items-center min-h-screen`}>
         <Navbar />
-        <div className="w-full max-w-screen-2xl px-4 min-h-lvh">{children}</div>
+        <main className="w-full flex-grow">{children}</main>
         <Footer />
       </body>
     </html>

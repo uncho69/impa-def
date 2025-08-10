@@ -26,28 +26,25 @@ export function SimpleCard({
   href?: string;
 }) {
   return (
-    <div className="lg:w-[450px] relative lg:h-96 w-[175px] bg-slate-200">
-      <Link
-        href={href}
-        className="absolute w-full cursor-pointer h-full z-10"
-      />
-      <div className="z-20 pointer-events-none  relative w-full h-full  border-solid border-[1px] shadow-md border-slate-300 lg:p-8 lg:gap-10 px-4 py-3 gap-5  flex flex-col rounded-md">
-        <div className="flex gap-4 items-center">
-          <Image src={icon} alt={title} className="lg:w-20 w-6" />
-          <p className="font-oxygen lg:text-3xl text-lg">{title}</p>
+    <div className="relative card flex-none w-full md:w-[360px]">
+      <Link href={href} className="absolute inset-0 z-10" />
+      <div className="card-content pointer-events-none items-start text-left gap-4 md:gap-6">
+        <div className="flex gap-3 md:gap-4 items-center">
+          <Image src={icon} alt={title} className="w-10 h-10 md:w-12 md:h-12" />
+          <p className="text-xl md:text-2xl font-semibold text-neutral-900">{title}</p>
         </div>
         {subArray?.length ? (
           <div className="flex flex-col gap-2">
             {subArrayTitle && (
-              <p className="font-oxygen lg:text-xl text-sm">{subArrayTitle}</p>
+              <p className="text-sm md:text-base text-neutral-600">{subArrayTitle}</p>
             )}
-            <div className="flex lg:gap-2 gap-1 items-center">
+            <div className="flex gap-2 items-center">
               {subArray.map((item, i) => (
                 <Image
                   key={`subArray-${i}`}
                   src={item.icon}
                   alt={item.text}
-                  className="lg:w-10 w-4"
+                  className="w-5 md:w-6"
                 />
               ))}
             </div>
@@ -55,16 +52,16 @@ export function SimpleCard({
         ) : (
           ""
         )}
-        <div className="flex justify-between lg:gap-5 gap-1  mt-auto">
+        <div className="flex justify-between gap-3 mt-4 w-full">
           {externalLink && (
             <Button
               href={externalLink}
               onLinkClick={(e) => e.stopPropagation()}
               target="_blank"
-              className="pointer-events-auto flex items-center justify-between grow lg:text-3xl text-base bg-white rounded-md lg:p-5 p-2 font-bold"
+              className="pointer-events-auto btn bg-white border border-neutral-200 text-neutral-900 px-4 py-3 grow justify-between"
             >
               Website
-              <Image src={externalLinkIcon} alt="" className="lg:w-10 w-5" />
+              <Image src={externalLinkIcon} alt="" className="w-5 md:w-6" />
             </Button>
           )}
           {xPage && (
@@ -72,9 +69,9 @@ export function SimpleCard({
               href={xPage}
               onLinkClick={(e) => e.stopPropagation()}
               target="_blank"
-              className="pointer-events-auto bg-white rounded-md lg:p-5 p-2 lg:size-auto size-10 flex items-center justify-center"
+              className="pointer-events-auto btn bg-white border border-neutral-200 px-4 py-3"
             >
-              <Image src={xLogo} alt="" className="lg:w-10 w-5" />
+              <Image src={xLogo} alt="" className="w-5 md:w-6" />
             </Button>
           )}
         </div>

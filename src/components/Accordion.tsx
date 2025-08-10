@@ -19,16 +19,16 @@ export function Accordion({
     <div className={className}>
       <button
         onClick={() => setOpen((prev) => !prev)}
-        className="flex font-bold items-center gap-1"
+        className="w-full flex items-center gap-2 text-left font-semibold text-neutral-900"
       >
         <Image
           src={caretDown}
           alt=""
-          className={`${open ? "" : "-rotate-90"} transition lg:w-10 w-5`}
+          className={`${open ? "" : "-rotate-90"} transition lg:w-6 w-5 opacity-70`}
         />
-        <p className="lg:mt-2 mt-1 text-start">{buttonText}</p>
+        <span className="text-lg md:text-xl">{buttonText}</span>
       </button>
-      {open && <div>{children}</div>}
+      {open && <div className="mt-3 text-neutral-700">{children}</div>}
     </div>
   );
 }

@@ -1,8 +1,8 @@
 import { ReactNode } from "react";
 
-const sectionStyle =
-  "lg:bg-[#94C0CC]/30 lg:shadow-md font-oxygen lg:font-overpass text-base lg:text-2xl lg:rounded-md flex flex-col gap-4 lg:p-5 w-full";
+const bodyClass =
+  "bg-white rounded-xl shadow-sm border border-neutral-200 p-5 md:p-6 text-neutral-800 flex flex-col gap-4";
 
 export function SectionBody({ children }: { children?: ReactNode }) {
-  return <div className={sectionStyle}>{children}</div>;
+  return <section className={bodyClass}>{children}</section>;
 }
