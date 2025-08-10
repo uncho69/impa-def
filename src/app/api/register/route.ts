@@ -33,15 +33,14 @@ export async function POST(request: Request) {
     try {
       const result = await fetch(ZAPIER_API_URI, {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ contact: { email, code: oneTimeCode, timestamp: Date.now() } }),
       });
-      const data: { status?: string } = await result
-        .json()
-        .catch(() => ({} as { status?: string }));
-      if (data?.status !== "success") {
+      // Considera qualunque 2xx come successo (Zapier Catch Hook non restituisce necessariamente un JSON "status")
+      if (!result.ok) {
         return NextResponse.json(
           { message: "Impossibile inviare il codice" },
-          { status: 500 }
+          { status: 502 }
         );
       }
       return NextResponse.json({ status: "code_sent" });

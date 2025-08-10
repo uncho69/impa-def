@@ -27,11 +27,7 @@ function RegistratiInner() {
         const data = await res.json().catch(() => ({}));
         throw new Error(data?.message || "Registrazione non riuscita");
       }
-      const data = await res.json();
-      if (data?.previewCode) {
-        // Mostra il codice di prova in sviluppo
-        setCode(String(data.previewCode));
-      }
+      // Non precompiliamo più il codice in UI: verrà inviato via email.
       setPhase("code");
     } catch (err) {
       const message = err instanceof Error ? err.message : "Errore inatteso";
