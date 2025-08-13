@@ -33,6 +33,7 @@ export function useTokenDetails(id: string) {
     
     useEffect(() => {
         getData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
 
     return details;
