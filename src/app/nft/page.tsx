@@ -1,6 +1,7 @@
 import { MobileContainer } from "@/components/MobileContainer";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 import { Button } from "@/components/Button";
@@ -9,170 +10,172 @@ import { SimpleCard } from "@/components/SimpleCard";
 
 export default function NFT() {
   return (
-    <MobileContainer>
-      <SectionTitle main={true}>NFTs</SectionTitle>
-      <SectionBody>
-        <div className="space-y-6">
-          <p className="text-neutral-700">
-            Gli <b>NFT</b> (Non-Fungible Token) sono un tipo di asset digitale
-            unico che utilizza la tecnologia blockchain per rappresentare la
-            propriet&agrave; o la prova di autenticit&agrave; di un oggetto specifico. A
-            differenza delle criptovalute tradizionali, che sono fungibili e
-            intercambiabili, gli NFT sono distinti e non intercambiabili, e si
-            prestano bene per arte digitale, collezionabili, musica, video e
-            altri contenuti esclusivi.
-          </p>
-
-          <div className="bg-neutral-50 rounded-xl p-5 border border-neutral-200">
-            <h3 className="font-semibold mb-3">Caratteristiche principali</h3>
-            <List>
-              <li>
-                <b>Unicit&agrave;</b>: ogni NFT &egrave; unico o parte di una quantit&agrave;
-                limitata. Due NFT non sono mai identici.
-              </li>
-              <li>
-                <b>Propriet&agrave;</b>: la blockchain registra il possesso; quando
-                acquisti un NFT ottieni una prova verificabile di propriet&agrave;.
-              </li>
-              <li>
-                <b>Immutabilit&agrave;</b>: una volta registrato su blockchain, un NFT
-                non pu&ograve; essere modificato o duplicato.
-              </li>
-              <li>
-                <b>Interoperabilit&agrave;</b>: trasferibili tra piattaforme che
-                supportano gli standard (es. ERC-721/1155 su Ethereum).
-              </li>
-            </List>
-          </div>
-
-          <Accordion buttonText={"Utilizzi comuni degli NFT"}>
-            <div className="p-5">
-              <List>
-                <li>
-                  <b>Arte Digitale</b>: opere vendute su piattaforme come OpenSea,
-                  Rarible e Foundation.
-                </li>
-                <li>
-                  <b>Collezionabili</b>: carte, giochi e memorabilia (es. CryptoPunks,
-                  NBA Top Shot).
-                </li>
-                <li>
-                  <b>Giochi</b>: oggetti unici in-game (armi, skin, terreni).
-                </li>
-                <li>
-                  <b>Musica e Media</b>: opere originali e accessi esclusivi.
-                </li>
-                <li>
-                  <b>Propriet&agrave; virtuale</b>: terreni e spazi in mondi come
-                  Decentraland e The Sandbox.
-                </li>
-              </List>
-            </div>
-          </Accordion>
-
-          <Accordion buttonText={"Come funzionano"}>
-            <div className="p-5">
-              <List>
-                <li>
-                  <b>Creazione (minting)</b>: registrazione del token su
-                  blockchain e collegamento al contenuto che rappresenta.
-                </li>
-                <li>
-                  <b>Acquisto e vendita</b>: su marketplace specializzati;
-                  possibile comprare, fare offerte o partecipare ad aste.
-                </li>
-                <li>
-                  <b>Portafogli digitali</b>: conservati in wallet compatibili
-                  (es. MetaMask, Trust Wallet, Ledger).
-                </li>
-                <li>
-                  <b>Prove di propriet&agrave;</b>: verificabili pubblicamente sulla
-                  blockchain.
-                </li>
-              </List>
-            </div>
-          </Accordion>
-
-          <Accordion buttonText={"Ethereum Name Service (ENS) NFTs"}>
-            <p className="p-5">
-              <b>ENS</b> &egrave; un protocollo su Ethereum che assegna nomi leggibili
-              all&apos;uomo a indirizzi e contenuti decentralizzati. Ogni dominio ENS
-              &egrave; rappresentato come NFT: la propriet&agrave; &egrave; unica e trasferibile,
-              con possibilit&agrave; di rinnovo periodico.
+    <ProtectedRoute title="NFTs">
+      <MobileContainer>
+        <SectionTitle main={true}>NFTs</SectionTitle>
+        <SectionBody>
+          <div className="space-y-6">
+            <p className="text-neutral-700">
+              Gli <b>NFT</b> (Non-Fungible Token) sono un tipo di asset digitale
+              unico che utilizza la tecnologia blockchain per rappresentare la
+              propriet&agrave; o la prova di autenticit&agrave; di un oggetto specifico. A
+              differenza delle criptovalute tradizionali, che sono fungibili e
+              intercambiabili, gli NFT sono distinti e non intercambiabili, e si
+              prestano bene per arte digitale, collezionabili, musica, video e
+              altri contenuti esclusivi.
             </p>
-          </Accordion>
 
-          <Accordion buttonText={"Marketplace principali"}>
-            <div className="p-5 space-y-3">
-              <p>
-                Gli NFT si comprano e vendono su marketplace specializzati.
-                Esempi:
-              </p>
+            <div className="bg-neutral-50 rounded-xl p-5 border border-neutral-200">
+              <h3 className="font-semibold mb-3">Caratteristiche principali</h3>
               <List>
-                <li>OpenSea</li>
-                <li>Rarible</li>
-                <li>SuperRare</li>
-                <li>Magic Eden</li>
-                <li>Blur</li>
+                <li>
+                  <b>Unicit&agrave;</b>: ogni NFT &egrave; unico o parte di una quantit&agrave;
+                  limitata. Due NFT non sono mai identici.
+                </li>
+                <li>
+                  <b>Propriet&agrave;</b>: la blockchain registra il possesso; quando
+                  acquisti un NFT ottieni una prova verificabile di propriet&agrave;.
+                </li>
+                <li>
+                  <b>Immutabilit&agrave;</b>: una volta registrato su blockchain, un NFT
+                  non pu&ograve; essere modificato o duplicato.
+                </li>
+                <li>
+                  <b>Interoperabilit&agrave;</b>: trasferibili tra piattaforme che
+                  supportano gli standard (es. ERC-721/1155 su Ethereum).
+                </li>
               </List>
-              <p className="text-neutral-700">
-                Verifica sempre la <b>collezione ufficiale</b> e l&apos;indirizzo del
-                contratto. Attenzione a link, bot e siti fake.
+            </div>
+
+            <Accordion buttonText={"Utilizzi comuni degli NFT"}>
+              <div className="p-5">
+                <List>
+                  <li>
+                    <b>Arte Digitale</b>: opere vendute su piattaforme come OpenSea,
+                    Rarible e Foundation.
+                  </li>
+                  <li>
+                    <b>Collezionabili</b>: carte, giochi e memorabilia (es. CryptoPunks,
+                    NBA Top Shot).
+                  </li>
+                  <li>
+                    <b>Giochi</b>: oggetti unici in-game (armi, skin, terreni).
+                  </li>
+                  <li>
+                    <b>Musica e Media</b>: opere originali e accessi esclusivi.
+                  </li>
+                  <li>
+                    <b>Propriet&agrave; virtuale</b>: terreni e spazi in mondi come
+                    Decentraland e The Sandbox.
+                  </li>
+                </List>
+              </div>
+            </Accordion>
+
+            <Accordion buttonText={"Come funzionano"}>
+              <div className="p-5">
+                <List>
+                  <li>
+                    <b>Creazione (minting)</b>: registrazione del token su
+                    blockchain e collegamento al contenuto che rappresenta.
+                  </li>
+                  <li>
+                    <b>Acquisto e vendita</b>: su marketplace specializzati;
+                    possibile comprare, fare offerte o partecipare ad aste.
+                  </li>
+                  <li>
+                    <b>Portafogli digitali</b>: conservati in wallet compatibili
+                    (es. MetaMask, Trust Wallet, Ledger).
+                  </li>
+                  <li>
+                    <b>Prove di propriet&agrave;</b>: verificabili pubblicamente sulla
+                    blockchain.
+                  </li>
+                </List>
+              </div>
+            </Accordion>
+
+            <Accordion buttonText={"Ethereum Name Service (ENS) NFTs"}>
+              <p className="p-5">
+                <b>ENS</b> &egrave; un protocollo su Ethereum che assegna nomi leggibili
+                all&apos;uomo a indirizzi e contenuti decentralizzati. Ogni dominio ENS
+                &egrave; rappresentato come NFT: la propriet&agrave; &egrave; unica e trasferibile,
+                con possibilit&agrave; di rinnovo periodico.
               </p>
+            </Accordion>
+
+            <Accordion buttonText={"Marketplace principali"}>
+              <div className="p-5 space-y-3">
+                <p>
+                  Gli NFT si comprano e vendono su marketplace specializzati.
+                  Esempi:
+                </p>
+                <List>
+                  <li>OpenSea</li>
+                  <li>Rarible</li>
+                  <li>SuperRare</li>
+                  <li>Magic Eden</li>
+                  <li>Blur</li>
+                </List>
+                <p className="text-neutral-700">
+                  Verifica sempre la <b>collezione ufficiale</b> e l&apos;indirizzo del
+                  contratto. Attenzione a link, bot e siti fake.
+                </p>
+              </div>
+            </Accordion>
+
+            {/* Piattaforme per comprare/vendere/creare NFT (da Notion: view) */}
+            <div className="bg-neutral-50 rounded-xl p-5 border border-neutral-200">
+              <h3 className="font-semibold mb-4">Piattaforme NFT</h3>
+              <CardContainer>
+                {[
+                  { title: "OpenSea", external: "https://opensea.io/" },
+                  { title: "Blur", external: "https://blur.io/" },
+                  { title: "Magic Eden", external: "https://magiceden.io/" },
+                  { title: "SuperRare", external: "https://superrare.com/" },
+                  { title: "Zora", external: "https://zora.co/" },
+                ].map((p) => (
+                  <SimpleCard key={p.title} title={p.title} href="#" externalLink={p.external} />
+                ))}
+              </CardContainer>
             </div>
-          </Accordion>
 
-          {/* Piattaforme per comprare/vendere/creare NFT (da Notion: view) */}
-          <div className="bg-neutral-50 rounded-xl p-5 border border-neutral-200">
-            <h3 className="font-semibold mb-4">Piattaforme NFT</h3>
-            <CardContainer>
-              {[
-                { title: "OpenSea", external: "https://opensea.io/" },
-                { title: "Blur", external: "https://blur.io/" },
-                { title: "Magic Eden", external: "https://magiceden.io/" },
-                { title: "SuperRare", external: "https://superrare.com/" },
-                { title: "Zora", external: "https://zora.co/" },
-              ].map((p) => (
-                <SimpleCard key={p.title} title={p.title} href="#" externalLink={p.external} />
-              ))}
-            </CardContainer>
-          </div>
+            {/* Lista Collezioni NFT (da Notion: view) */}
+            <div className="bg-neutral-50 rounded-xl p-5 border border-neutral-200">
+              <h3 className="font-semibold mb-4">Collezioni NFT popolari</h3>
+              <CardContainer>
+                {[
+                  { title: "CryptoPunks", external: "https://www.larvalabs.com/cryptopunks" },
+                  { title: "Milady", external: "https://miladymaker.net/" },
+                  { title: "Pudgy Penguins", external: "https://www.pudgypenguins.com/" },
+                  { title: "Redacted Remilio Babies", external: "https://remilio.org/" },
+                  { title: "Tubby Cats", external: "https://tubbycats.xyz/" },
+                ].map((c) => (
+                  <SimpleCard key={c.title} title={c.title} href="#" externalLink={c.external} />
+                ))}
+              </CardContainer>
+            </div>
 
-          {/* Lista Collezioni NFT (da Notion: view) */}
-          <div className="bg-neutral-50 rounded-xl p-5 border border-neutral-200">
-            <h3 className="font-semibold mb-4">Collezioni NFT popolari</h3>
-            <CardContainer>
-              {[
-                { title: "CryptoPunks", external: "https://www.larvalabs.com/cryptopunks" },
-                { title: "Milady", external: "https://miladymaker.net/" },
-                { title: "Pudgy Penguins", external: "https://www.pudgypenguins.com/" },
-                { title: "Redacted Remilio Babies", external: "https://remilio.org/" },
-                { title: "Tubby Cats", external: "https://tubbycats.xyz/" },
-              ].map((c) => (
-                <SimpleCard key={c.title} title={c.title} href="#" externalLink={c.external} />
-              ))}
-            </CardContainer>
-          </div>
-
-          <div className="mt-2 p-6 bg-white rounded-xl shadow-sm">
-            <p className="text-lg text-neutral-700 mb-3">
-              Vuoi prima capire le basi di blockchain e wallet?
-            </p>
-            <div className="flex flex-wrap gap-3">
-              <Button href="/blockchain" local={true} className="btn btn-outline">
-                Blockchain
-              </Button>
-              <Button href="/defi" local={true} className="btn btn-outline">
-                DeFi
-              </Button>
-              <Button href="/manuale" local={true} className="btn btn-outline">
-                Manuale A-Z
-              </Button>
+            <div className="mt-2 p-6 bg-white rounded-xl shadow-sm">
+              <p className="text-lg text-neutral-700 mb-3">
+                Vuoi prima capire le basi di blockchain e wallet?
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <Button href="/blockchain" local={true} className="btn btn-outline">
+                  Blockchain
+                </Button>
+                <Button href="/defi" local={true} className="btn btn-outline">
+                  DeFi
+                </Button>
+                <Button href="/manuale" local={true} className="btn btn-outline">
+                  Manuale A-Z
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
-      </SectionBody>
-    </MobileContainer>
+        </SectionBody>
+      </MobileContainer>
+    </ProtectedRoute>
   );
 }
 
