@@ -51,9 +51,6 @@ export function Navbar() {
             
             <div className="flex space-x-3">
               <AuthStatus />
-              <Link href="/newsletter" className="btn-outline">
-                Newsletter
-              </Link>
             </div>
           </div>
           

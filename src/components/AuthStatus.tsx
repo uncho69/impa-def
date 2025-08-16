@@ -7,6 +7,7 @@ function AuthStatusClerk() {
   if (isSignedIn) {
     return (
       <div className="flex items-center gap-2">
+        <Link href="/account" className="btn-outline">Account</Link>
         <UserButton afterSignOutUrl="/" />
       </div>
     );
