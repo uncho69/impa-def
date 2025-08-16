@@ -19,7 +19,7 @@ export default function manuale() {
           <div className="container-custom">
             <div className="bg-white rounded-xl shadow-sm p-6 md:p-8">
               <p className="text-neutral-700 mb-6">
-                Cosa sono le criptovalute? Cos'è il metaverso, il mondo Web3, la DeFi e l'economia digitale?
+                Cosa sono le criptovalute? Cos&apos;è il metaverso, il mondo Web3, la DeFi e l&apos;economia digitale?
               </p>
               <p className="text-neutral-700 mb-6">
                 Per iniziare, dovete sapere che a noi interessa usare questo mondo digitale per gli enormi vantaggi e benefici che comporta, come ad esempio:

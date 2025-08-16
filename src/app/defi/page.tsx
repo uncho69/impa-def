@@ -64,7 +64,7 @@ export default function Defi() {
               <li>
                 <strong>Lending e Borrowing</strong>: Sono piattaforme di prestiti
                 che permettono agli utenti di depositare i loro token e guadagnare
-                un rendimento in base ai tassi d'interesse pagati dall'exchange,
+                un rendimento in base ai tassi d&apos;interesse pagati dall&apos;exchange,
                 che provengono da chi li prende in prestito e paga un interesse
                 più alto. Si possono quindi prestare le proprie criptovalute e
                 guadagnare interessi, o prendere in prestito criptovalute offrendo
