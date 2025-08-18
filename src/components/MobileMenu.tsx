@@ -5,6 +5,7 @@ import BurgerIcon from "@/assets/Burger-Icon.png";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { SignInButton, SignUpButton, useUser } from "@clerk/nextjs";
 
 const btnModalStyle =
   "bg-[#0D2F5A] leading-7 text-xl text-[#DDDCDC] h-[60px] font-oxygen items-center justify-center w-full rounded shadow-md text-center no-underline flex flex-grow";
@@ -12,6 +13,7 @@ const btnModalStyle =
 export function MobileMenu() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const { isSignedIn } = useUser();
 
   useEffect(() => {
     setOpen(false);
@@ -27,60 +29,43 @@ export function MobileMenu() {
       </Button>
       {open && (
         <div className="absolute px-4 -right-7 top-20 w-[100vw] z-30">
-          <div className=" bg-[#0D2F5A]/90 flex w-full rounded-lg">
+          <div className="bg-[#0D2F5A]/90 flex w-full rounded-lg">
             <div className="grid grid-cols-2 gap-2 p-5 w-full">
-              <Button href="/manuale" local={true} className={btnModalStyle}>
-                Strumenti
-              </Button>
-              <Button href="/wallets" local={true} className={btnModalStyle}>
-                Portafogli
-                <br />
-                (Wallets)
-              </Button>
               <Button href="/blockchain" local={true} className={btnModalStyle}>
-                Blockchains
-              </Button>
-              <Button
-                href="/compravendi"
-                local={true}
-                className={`${btnModalStyle} !shrink-0`}
-              >
-                Compra e<br />
-                Vendi Crypto
+                Blockchain
               </Button>
               <Button href="/defi" local={true} className={btnModalStyle}>
                 DeFi
-              </Button>
-              <Button href="/defi" local={true} className={btnModalStyle}>
-                Airdrops
               </Button>
               <Button href="/nft" local={true} className={btnModalStyle}>
                 NFTs
               </Button>
               <Button href="/giochi" local={true} className={btnModalStyle}>
-                Giochi
+                GameFi
               </Button>
               <Button href="/supporto" local={true} className={btnModalStyle}>
                 Assistenza
               </Button>
-              <Button href="/strumenti" local={true} className={btnModalStyle}>
-                Strumenti
-              </Button>
-              <Button href="/carte" local={true} className={btnModalStyle}>
-                Carte
-                <br />
-                Crypto
-              </Button>
-              <Button href="/aggiornami" local={true} className={btnModalStyle}>
-                Tieniti
-                <br />
-                Aggiornato
-              </Button>
-              <Button href="/strumenti" local={true} className={btnModalStyle}>
-                Lavora in
-                <br />
-                Web3
-              </Button>
+              
+              {/* Pulsanti di autenticazione */}
+              {isSignedIn ? (
+                <Button href="/account" local={true} className={btnModalStyle}>
+                  Account
+                </Button>
+              ) : (
+                <>
+                  <SignInButton mode="modal">
+                    <button className={btnModalStyle}>
+                      Accedi
+                    </button>
+                  </SignInButton>
+                  <SignUpButton mode="modal">
+                    <button className={btnModalStyle}>
+                      Registrati
+                    </button>
+                  </SignUpButton>
+                </>
+              )}
             </div>
           </div>
         </div>
