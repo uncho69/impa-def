@@ -1,14 +1,12 @@
 "use client";
 
 import { Button } from "./Button";
-import BurgerIcon from "@/assets/Burger-Icon.png";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SignInButton, SignUpButton, useUser } from "@clerk/nextjs";
 
 const btnModalStyle =
-  "bg-[#0D2F5A] leading-7 text-xl text-[#DDDCDC] h-[60px] font-oxygen items-center justify-center w-full rounded shadow-md text-center no-underline flex flex-grow";
+  "bg-white text-primary-600 border-2 border-primary-200 hover:bg-primary-50 hover:border-primary-300 leading-6 text-base font-medium items-center justify-center w-full rounded-lg shadow-sm text-center no-underline flex flex-grow transition-all duration-200";
 
 export function MobileMenu() {
   const [open, setOpen] = useState(false);
@@ -21,16 +19,30 @@ export function MobileMenu() {
 
   return (
     <div className="lg:hidden relative">
-      <Button
+      <button
         onClick={() => setOpen((prev) => !prev)}
-        className="flex items-center justify-center size-12"
+        className="flex items-center justify-center size-12 text-primary-600 hover:text-primary-700 transition-colors"
+        aria-label="Menu mobile"
       >
-        <Image src={BurgerIcon} alt="" />
-      </Button>
+        <svg 
+          className="w-6 h-6" 
+          fill="none" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24"
+        >
+          <path 
+            strokeLinecap="round" 
+            strokeLinejoin="round" 
+            strokeWidth={2} 
+            d="M4 6h16M4 12h16M4 18h16" 
+          />
+        </svg>
+      </button>
+      
       {open && (
         <div className="absolute px-4 -right-7 top-20 w-[100vw] z-30">
-          <div className="bg-[#0D2F5A]/90 flex w-full rounded-lg">
-            <div className="grid grid-cols-2 gap-2 p-5 w-full">
+          <div className="bg-white/95 backdrop-blur-lg border border-neutral-200 rounded-xl shadow-xl">
+            <div className="grid grid-cols-2 gap-3 p-6 w-full">
               <Button href="/blockchain" local={true} className={btnModalStyle}>
                 Blockchain
               </Button>
