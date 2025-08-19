@@ -26,9 +26,9 @@ export function SimpleCard({
   href?: string;
 }) {
   return (
-    <div className="relative card flex-none w-full md:w-[360px]">
+    <div className="relative card flex-none w-full max-w-[360px]">
       <Link href={href} className="absolute inset-0 z-10" />
-      <div className="card-content pointer-events-none items-start text-left gap-4 md:gap-6">
+      <div className="card-content pointer-events-none items-start text-left gap-4 md:gap-6 p-6">
         <div className="flex gap-3 md:gap-4 items-center">
           <Image src={icon} alt={title} className="w-10 h-10 md:w-12 md:h-12" />
           <p className="text-xl md:text-2xl font-semibold text-neutral-900">{title}</p>

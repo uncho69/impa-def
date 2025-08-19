@@ -17,7 +17,7 @@ export function CardContainer({
   return (
     <div className="lg:mx-auto -mx-5">
       <div className="flex flex-col items-center w-full">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full place-items-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full place-items-center px-4">
           {children.slice(0, open ? children.length : 3)}
         </div>
 
