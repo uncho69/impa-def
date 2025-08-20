@@ -55,6 +55,9 @@ export function MobileMenu() {
               <Button href="/giochi" local={true} className={btnModalStyle}>
                 GameFi
               </Button>
+              <Button href="/wallet" local={true} className={btnModalStyle}>
+                Wallet
+              </Button>
               <Button href="/supporto" local={true} className={btnModalStyle}>
                 Assistenza
               </Button>

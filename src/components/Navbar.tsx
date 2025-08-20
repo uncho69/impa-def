@@ -44,6 +44,9 @@ export function Navbar() {
               <Link href="/giochi" className="text-neutral-700 hover:text-primary-600 transition-colors font-medium">
                 GameFi
               </Link>
+              <Link href="/wallet" className="text-neutral-700 hover:text-primary-600 transition-colors font-medium">
+                Wallet
+              </Link>
               <Link href="/supporto" className="text-neutral-700 hover:text-primary-600 transition-colors font-medium">
                 Assistenza
               </Link>

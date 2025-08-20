@@ -57,6 +57,32 @@ export default function Home() {
         </div>
       </section>
       
+      {/* Esplora il mondo Web3 Section */}
+      <section className="py-16 bg-white">
+        <div className="container-custom">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl font-bold mb-12 text-neutral-900">
+              Esplora il mondo Web3
+            </h2>
+            
+            <div className="grid grid-cols-2 gap-6 max-w-2xl mx-auto">
+              <Link href="/blockchain" className="btn-outline text-lg py-4 hover:scale-105 transition-transform">
+                Blockchain
+              </Link>
+              <Link href="/defi" className="btn-outline text-lg py-4 hover:scale-105 transition-transform">
+                DeFi
+              </Link>
+              <Link href="/nft" className="btn-outline text-lg py-4 hover:scale-105 transition-transform">
+                NFTs
+              </Link>
+              <Link href="/wallet" className="btn-outline text-lg py-4 hover:scale-105 transition-transform">
+                Wallet
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+      
       {/* Newsletter Section */}
       <section className="py-16 bg-neutral-50">
         <div className="container-custom">
