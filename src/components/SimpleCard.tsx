@@ -58,7 +58,7 @@ export function SimpleCard({
               href={externalLink}
               onLinkClick={(e) => e.stopPropagation()}
               target="_blank"
-              className="pointer-events-auto btn bg-white border border-neutral-200 text-neutral-900 px-4 py-3 grow justify-between"
+              className="pointer-events-auto btn bg-white border border-neutral-200 text-neutral-900 px-4 py-3 grow justify-between relative z-20"
             >
               Website
               <Image src={externalLinkIcon} alt="" className="w-5 md:w-6" />
@@ -69,7 +69,7 @@ export function SimpleCard({
               href={xPage}
               onLinkClick={(e) => e.stopPropagation()}
               target="_blank"
-              className="pointer-events-auto btn bg-white border border-neutral-200 px-4 py-3"
+              className="pointer-events-auto btn bg-white border border-neutral-200 px-4 py-3 relative z-20"
             >
               <Image src={xLogo} alt="" className="w-5 md:w-6" />
             </Button>

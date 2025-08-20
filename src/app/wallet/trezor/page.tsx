@@ -1,4 +1,7 @@
 
+import trezorIcon from "@/assets/trezor-icon.png";
+import { Accordion } from "@/components/Accordion";
+import { List } from "@/components/List";
 
 export default function TrezorPage() {
   return (
@@ -7,9 +10,7 @@ export default function TrezorPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <div className="flex justify-center mb-6">
-            <div className="w-24 h-24 bg-white rounded-lg flex items-center justify-center border-2 border-neutral-200">
-              <span className="text-red-500 text-4xl font-bold">🔒</span>
-            </div>
+            <img src={trezorIcon.src} alt="Trezor" className="w-24 h-24" />
           </div>
           <h1 className="text-4xl lg:text-5xl font-bold text-neutral-900 mb-6">
             Trezor
@@ -102,165 +103,66 @@ export default function TrezorPage() {
 
         {/* Sezioni Espandibili */}
         <div className="space-y-6">
-          {/* Trezor One */}
-          <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden">
-            <div className="p-6 border-b border-neutral-200">
-              <h3 className="text-xl font-semibold text-neutral-900 flex items-center gap-3">
-                <span className="text-primary-600">▼</span>
-                Trezor One
-              </h3>
-            </div>
-            <div className="p-6">
+            <Accordion buttonText="Trezor One">
               <p className="text-neutral-600 mb-4">
                 Il Trezor One è uno dei primi hardware wallet disponibili sul mercato e rimane uno dei più popolari grazie al suo equilibrio tra sicurezza e prezzo accessibile.
               </p>
               <h4 className="text-lg font-semibold text-neutral-900 mb-3">Caratteristiche:</h4>
-              <ul className="space-y-2 text-neutral-600">
-                <li className="flex items-start gap-3">
-                  <span className="text-neutral-900 mt-1">•</span>
-                  <span>Supporta oltre 1.000 criptovalute e token.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-neutral-900 mt-1">•</span>
-                  <span>Schermo OLED per la verifica delle transazioni.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-neutral-900 mt-1">•</span>
-                  <span>Protezione tramite un PIN e la frase di recupero (seed phrase) di 24 parole.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-neutral-900 mt-1">•</span>
-                  <span>Connessione tramite cavo USB.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-neutral-900 mt-1">•</span>
-                  <span>Funzionalità di autenticazione a due fattori (U2F).</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-neutral-900 mt-1">•</span>
-                  <span>Facile da usare con l&apos;interfaccia Trezor Wallet su web.</span>
-                </li>
-              </ul>
-            </div>
-          </div>
+              <List>
+                <li>Supporta oltre 1.000 criptovalute e token.</li>
+                <li>Schermo OLED per la verifica delle transazioni.</li>
+                <li>Protezione tramite un PIN e la frase di recupero (seed phrase) di 24 parole.</li>
+                <li>Connessione tramite cavo USB.</li>
+                <li>Funzionalità di autenticazione a due fattori (U2F).</li>
+                <li>Facile da usare con l&apos;interfaccia Trezor Wallet su web.</li>
+              </List>
+            </Accordion>
 
-          {/* Trezor Model T */}
-          <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden">
-            <div className="p-6 border-b border-neutral-200">
-              <h3 className="text-xl font-semibold text-neutral-900 flex items-center gap-3">
-                <span className="text-primary-600">▼</span>
-                Trezor Model T
-              </h3>
-            </div>
-            <div className="p-6">
+            <Accordion buttonText="Trezor Model T">
               <p className="text-neutral-600 mb-4">
                 Il Trezor Model T è la versione più avanzata del Trezor One, con funzionalità aggiuntive e una maggiore capacità di memoria. È ideale per utenti che gestiscono un portafoglio di criptovalute più diversificato.
               </p>
               <h4 className="text-lg font-semibold text-neutral-900 mb-3">Caratteristiche:</h4>
-              <ul className="space-y-2 text-neutral-600">
-                <li className="flex items-start gap-3">
-                  <span className="text-neutral-900 mt-1">•</span>
-                  <span>Supporta oltre 1.000 criptovalute e token.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-neutral-900 mt-1">•</span>
-                  <span>Schermo touchscreen a colori per una navigazione e verifica delle transazioni più intuitiva.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-neutral-900 mt-1">•</span>
-                  <span>Protezione tramite un PIN e la frase di recupero (seed phrase) di 12 o 24 parole.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-neutral-900 mt-1">•</span>
-                  <span>Connessione tramite cavo USB-C.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-neutral-900 mt-1">•</span>
-                  <span>Funzionalità di autenticazione a due fattori (U2F).</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-neutral-900 mt-1">•</span>
-                  <span>Supporto per Shamir Backup, una tecnica di backup delle chiavi di sicurezza migliorata.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-neutral-900 mt-1">•</span>
-                  <span>Facilità di integrazione con applicazioni di terze parti come password manager.</span>
-                </li>
-              </ul>
-            </div>
-          </div>
+              <List>
+                <li>Supporta oltre 1.000 criptovalute e token.</li>
+                <li>Schermo touchscreen a colori per una navigazione e verifica delle transazioni più intuitiva.</li>
+                <li>Protezione tramite un PIN e la frase di recupero (seed phrase) di 12 o 24 parole.</li>
+                <li>Connessione tramite cavo USB-C.</li>
+                <li>Funzionalità di autenticazione a due fattori (U2F).</li>
+                <li>Supporto per Shamir Backup, una tecnica di backup delle chiavi di sicurezza migliorata.</li>
+                <li>Facilità di integrazione con applicazioni di terze parti come password manager.</li>
+              </List>
+            </Accordion>
 
-          {/* Trezor Suite */}
-          <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden">
-            <div className="p-6 border-b border-neutral-200">
-              <h3 className="text-xl font-semibold text-neutral-900 flex items-center gap-3">
-                <span className="text-primary-600">▼</span>
-                Trezor Suite
-              </h3>
-            </div>
-            <div className="p-6">
+            <Accordion buttonText="Trezor Suite">
               <p className="text-neutral-600 mb-4">
                 Trezor Suite è un&apos;applicazione software sviluppata da SatoshiLabs per gestire le criptovalute sui dispositivi Trezor. È disponibile sia come applicazione desktop (Windows, macOS, Linux) che come applicazione web.
               </p>
               <h4 className="text-lg font-semibold text-neutral-900 mb-3">Caratteristiche:</h4>
-              <ul className="space-y-2 text-neutral-600">
-                <li className="flex items-start gap-3">
-                  <span className="text-neutral-900 mt-1">•</span>
-                  <span>Interfaccia user-friendly per la gestione e il monitoraggio delle criptovalute.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-neutral-900 mt-1">•</span>
-                  <span>Funzionalità di acquisto, vendita e scambio di criptovalute integrate.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-neutral-900 mt-1">•</span>
-                  <span>Supporto per l&apos;installazione e l&apos;aggiornamento delle applicazioni crittografiche sui dispositivi Trezor.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-neutral-900 mt-1">•</span>
-                  <span>Funzionalità avanzate di sicurezza e privacy.</span>
-                </li>
-              </ul>
-            </div>
-          </div>
+              <List>
+                <li>Interfaccia user-friendly per la gestione e il monitoraggio delle criptovalute.</li>
+                <li>Funzionalità di acquisto, vendita e scambio di criptovalute integrate.</li>
+                <li>Supporto per l&apos;installazione e l&apos;aggiornamento delle applicazioni crittografiche sui dispositivi Trezor.</li>
+                <li>Funzionalità avanzate di sicurezza e privacy.</li>
+              </List>
+            </Accordion>
 
-          {/* Sicurezza e Vantaggi */}
-          <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden">
-            <div className="p-6 border-b border-neutral-200">
-              <h3 className="text-xl font-semibold text-neutral-900 flex items-center gap-3">
-                <span className="text-primary-600 border border-primary-600 rounded px-2">▼</span>
-                Sicurezza e Vantaggi
-              </h3>
-            </div>
-            <div className="p-6">
-              <ul className="space-y-3 text-neutral-600">
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Protezione delle Chiavi Private:</strong> Le chiavi private sono memorizzate in modo sicuro all&apos;interno del dispositivo Trezor e non lasciano mai il dispositivo, proteggendo gli utenti anche se il computer o il telefono sono compromessi.
-                  </div>
+            <Accordion buttonText="Sicurezza e Vantaggi">
+              <List>
+                <li>
+                  <strong>Protezione delle Chiavi Private:</strong> Le chiavi private sono memorizzate in modo sicuro all&apos;interno del dispositivo Trezor e non lasciano mai il dispositivo, proteggendo gli utenti anche se il computer o il telefono sono compromessi.
                 </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Autenticazione a Due Fattori:</strong> Trezor supporta l&apos;autenticazione a due fattori per proteggere ulteriormente gli account online.
-                  </div>
+                <li>
+                  <strong>Autenticazione a Due Fattori:</strong> Trezor supporta l&apos;autenticazione a due fattori per proteggere ulteriormente gli account online.
                 </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Supporto Multivaluta:</strong> Trezor supporta una vasta gamma di criptovalute, rendendolo una scelta versatile per la gestione di diversi asset digitali.
-                  </div>
+                <li>
+                  <strong>Supporto Multivaluta:</strong> Trezor supporta una vasta gamma di criptovalute, rendendolo una scelta versatile per la gestione di diversi asset digitali.
                 </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Shamir Backup:</strong> Disponibile sul Trezor Model T, Shamir Backup offre un metodo sicuro per il backup delle chiavi private, suddividendole in più parti che possono essere conservate separatamente.
-                  </div>
+                <li>
+                  <strong>Shamir Backup:</strong> Disponibile sul Trezor Model T, Shamir Backup offre un metodo sicuro per il backup delle chiavi private, suddividendole in più parti che possono essere conservate separatamente.
                 </li>
-              </ul>
-            </div>
-          </div>
+              </List>
+            </Accordion>
         </div>
       </div>
     </div>

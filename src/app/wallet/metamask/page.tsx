@@ -1,4 +1,6 @@
 import metamaskIcon from "@/assets/metamask-icon.svg";
+import { Accordion } from "@/components/Accordion";
+import { List } from "@/components/List";
 
 export default function MetaMaskPage() {
   return (
@@ -98,132 +100,60 @@ export default function MetaMaskPage() {
           </p>
         </div>
 
-        {/* Sezioni Espandibili */}
-        <div className="space-y-6">
-          {/* Portafoglio di Criptovalute */}
-          <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden">
-            <div className="p-6 border-b border-neutral-200">
-              <h3 className="text-xl font-semibold text-neutral-900 flex items-center gap-3">
-                <span className="text-primary-600">▼</span>
-                Portafoglio di Criptovalute
-              </h3>
-            </div>
-            <div className="p-6">
-              <ul className="space-y-3 text-neutral-600">
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Supporto Multi-Chain:</strong> Oltre a Ethereum, MetaMask supporta altre blockchain compatibili con Ethereum Virtual Machine (EVM), come Binance Smart Chain, Polygon, Avalanche e altre.
-                  </div>
+                  {/* Sezioni Espandibili */}
+          <div className="space-y-6">
+            <Accordion buttonText="Portafoglio di Criptovalute">
+              <List>
+                <li>
+                  <strong>Supporto Multi-Chain:</strong> Oltre a Ethereum, MetaMask supporta altre blockchain compatibili con Ethereum Virtual Machine (EVM), come Binance Smart Chain, Polygon, Avalanche e altre.
                 </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Gestione delle Criptovalute:</strong> Consente agli utenti di inviare, ricevere e memorizzare criptovalute come ETH, token ERC-20 e token ERC-721 (NFT).
-                  </div>
+                <li>
+                  <strong>Gestione delle Criptovalute:</strong> Consente agli utenti di inviare, ricevere e memorizzare criptovalute come ETH, token ERC-20 e token ERC-721 (NFT).
                 </li>
-              </ul>
-            </div>
-          </div>
+              </List>
+            </Accordion>
 
-          {/* Interazione con dApp */}
-          <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden">
-            <div className="p-6 border-b border-neutral-200">
-              <h3 className="text-xl font-semibold text-neutral-900 flex items-center gap-3">
-                <span className="text-primary-600 border border-primary-600 rounded px-2">▼</span>
-                Interazione con dApp
-              </h3>
-            </div>
-            <div className="p-6">
-              <ul className="space-y-3 text-neutral-600">
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Integrazione Semplice:</strong> MetaMask facilita l&apos;accesso a una vasta gamma di applicazioni decentralizzate direttamente dal browser, inclusi scambi decentralizzati (DEX), piattaforme DeFi, marketplace NFT e giochi basati su blockchain.
-                  </div>
+                      <Accordion buttonText="Interazione con dApp">
+              <List>
+                <li>
+                  <strong>Integrazione Semplice:</strong> MetaMask facilita l&apos;accesso a una vasta gamma di applicazioni decentralizzate direttamente dal browser, inclusi scambi decentralizzati (DEX), piattaforme DeFi, marketplace NFT e giochi basati su blockchain.
                 </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Autorizzazione delle Transazioni:</strong> Gli utenti possono autorizzare e gestire le transazioni dApp in modo sicuro direttamente dall&apos;estensione MetaMask.
-                  </div>
+                <li>
+                  <strong>Autorizzazione delle Transazioni:</strong> Gli utenti possono autorizzare e gestire le transazioni dApp in modo sicuro direttamente dall&apos;estensione MetaMask.
                 </li>
-              </ul>
-            </div>
-          </div>
+              </List>
+            </Accordion>
 
-          {/* Sicurezza e Privacy */}
-          <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden">
-            <div className="p-6 border-b border-neutral-200">
-              <h3 className="text-xl font-semibold text-neutral-900 flex items-center gap-3">
-                <span className="text-primary-600">▼</span>
-                Sicurezza e Privacy
-              </h3>
-            </div>
-            <div className="p-6">
-              <ul className="space-y-3 text-neutral-600">
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Autocustodia:</strong> Gli utenti mantengono il controllo completo delle loro chiavi private, che sono memorizzate localmente sul dispositivo.
-                  </div>
+            <Accordion buttonText="Sicurezza e Privacy">
+              <List>
+                <li>
+                  <strong>Autocustodia:</strong> Gli utenti mantengono il controllo completo delle loro chiavi private, che sono memorizzate localmente sul dispositivo.
                 </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Frase di Recupero:</strong> MetaMask fornisce una frase di recupero (seed phrase) di 12 parole per il backup e il ripristino dell&apos;account.
-                  </div>
+                <li>
+                  <strong>Frase di Recupero:</strong> MetaMask fornisce una frase di recupero (seed phrase) di 12 parole per il backup e il ripristino dell&apos;account.
                 </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Autenticazione:</strong> Protezione tramite password e supporto per l&apos;autenticazione a due fattori (2FA) attraverso estensioni di terze parti.
-                  </div>
+                <li>
+                  <strong>Autenticazione:</strong> Protezione tramite password e supporto per l&apos;autenticazione a due fattori (2FA) attraverso estensioni di terze parti.
                 </li>
-              </ul>
-            </div>
-          </div>
+              </List>
+            </Accordion>
 
-          {/* Compatibilità con Browser e Mobile */}
-          <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden">
-            <div className="p-6 border-b border-neutral-200">
-              <h3 className="text-xl font-semibold text-neutral-900 flex items-center gap-3">
-                <span className="text-primary-600">▼</span>
-                Compatibilità con Browser e Mobile
-              </h3>
-            </div>
-            <div className="p-6">
-              <ul className="space-y-3 text-neutral-600">
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Estensione del Browser:</strong> Disponibile per Chrome, Firefox, Brave e Edge.
-                  </div>
+            <Accordion buttonText="Compatibilità con Browser e Mobile">
+              <List>
+                <li>
+                  <strong>Estensione del Browser:</strong> Disponibile per Chrome, Firefox, Brave e Edge.
                 </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>App Mobile:</strong> MetaMask è disponibile anche come app mobile per iOS e Android, offrendo le stesse funzionalità della versione browser.
-                  </div>
+                <li>
+                  <strong>App Mobile:</strong> MetaMask è disponibile anche come app mobile per iOS e Android, offrendo le stesse funzionalità della versione browser.
                 </li>
-              </ul>
-            </div>
-          </div>
+              </List>
+            </Accordion>
 
-          {/* Integrazione con Hardware Wallet */}
-          <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden">
-            <div className="p-6 border-b border-neutral-200">
-              <h3 className="text-xl font-semibold text-neutral-900 flex items-center gap-3">
-                <span className="text-primary-600 border border-primary-600 rounded px-2">▼</span>
-                Integrazione con Hardware Wallet
-              </h3>
-            </div>
-            <div className="p-6">
+            <Accordion buttonText="Integrazione con Hardware Wallet">
               <p className="text-neutral-600">
                 Supporto per Trezor e Ledger: MetaMask può essere utilizzato in combinazione con hardware wallet come Trezor e Ledger per una sicurezza aggiuntiva.
               </p>
-            </div>
-          </div>
+            </Accordion>
         </div>
       </div>
     </div>

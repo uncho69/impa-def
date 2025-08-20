@@ -1,4 +1,7 @@
 
+import rainbowIcon from "@/assets/rainbow-icon.png";
+import { Accordion } from "@/components/Accordion";
+import { List } from "@/components/List";
 
 export default function RainbowPage() {
   return (
@@ -7,9 +10,7 @@ export default function RainbowPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <div className="flex justify-center mb-6">
-            <div className="w-24 h-24 bg-gradient-to-r from-red-500 via-orange-500 via-yellow-500 via-green-500 via-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-              <span className="text-white text-4xl font-bold">🌈</span>
-            </div>
+            <img src={rainbowIcon.src} alt="Rainbow" className="w-24 h-24" />
           </div>
           <h1 className="text-4xl lg:text-5xl font-bold text-neutral-900 mb-6">
             Rainbow
@@ -101,130 +102,58 @@ export default function RainbowPage() {
 
         {/* Sezioni Espandibili */}
         <div className="space-y-6">
-          {/* Supporto Multi-Chain */}
-          <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden">
-            <div className="p-6 border-b border-neutral-200">
-              <h3 className="text-xl font-semibold text-neutral-900 flex items-center gap-3">
-                <span className="text-primary-600">▼</span>
-                Supporto Multi-Chain
-              </h3>
-            </div>
-            <div className="p-6">
-              <ul className="space-y-3 text-neutral-600">
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Blockchain Supportate:</strong> Principalmente Ethereum, con supporto per altri asset basati su questa blockchain.
-                  </div>
+            <Accordion buttonText="Supporto Multi-Chain">
+              <List>
+                <li>
+                  <strong>Blockchain Supportate:</strong> Principalmente Ethereum, con supporto per altri asset basati su questa blockchain.
                 </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Gestione Unificata:</strong> Permette di gestire tutte le tue criptovalute e NFT in un unico portafoglio senza dover cambiare tra diverse reti.
-                  </div>
+                <li>
+                  <strong>Gestione Unificata:</strong> Permette di gestire tutte le tue criptovalute e NFT in un unico portafoglio senza dover cambiare tra diverse reti.
                 </li>
-              </ul>
-            </div>
-          </div>
+              </List>
+            </Accordion>
 
-          {/* Sicurezza Avanzata */}
-          <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden">
-            <div className="p-6 border-b border-neutral-200">
-              <h3 className="text-xl font-semibold text-neutral-900 flex items-center gap-3">
-                <span className="text-primary-600">▼</span>
-                Sicurezza Avanzata
-              </h3>
-            </div>
-            <div className="p-6">
-              <ul className="space-y-3 text-neutral-600">
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Autocustodia:</strong> Gli utenti hanno il controllo completo delle loro chiavi private, che sono generate e memorizzate localmente sui dispositivi degli utenti.
-                  </div>
+            <Accordion buttonText="Sicurezza Avanzata">
+              <List>
+                <li>
+                  <strong>Autocustodia:</strong> Gli utenti hanno il controllo completo delle loro chiavi private, che sono generate e memorizzate localmente sui dispositivi degli utenti.
                 </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Rilevamento di Scam:</strong> Rileva e segnala transazioni sospette o potenzialmente pericolose.
-                  </div>
+                <li>
+                  <strong>Rilevamento di Scam:</strong> Rileva e segnala transazioni sospette o potenzialmente pericolose.
                 </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Backup Sicuro:</strong> Opzioni di backup su iCloud per iOS e Google Drive per Android, oltre alla possibilità di annotare manualmente la frase di recupero su un pezzo di carta.
-                  </div>
+                <li>
+                  <strong>Backup Sicuro:</strong> Opzioni di backup su iCloud per iOS e Google Drive per Android, oltre alla possibilità di annotare manualmente la frase di recupero su un pezzo di carta.
                 </li>
-              </ul>
-            </div>
-          </div>
+              </List>
+            </Accordion>
 
-          {/* Interfaccia User-Friendly */}
-          <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden">
-            <div className="p-6 border-b border-neutral-200">
-              <h3 className="text-xl font-semibold text-neutral-900 flex items-center gap-3">
-                <span className="text-primary-600">▼</span>
-                Interfaccia User-Friendly
-              </h3>
-            </div>
-            <div className="p-6">
-              <ul className="space-y-3 text-neutral-600">
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Facilità d&apos;Uso:</strong> Un&apos;interfaccia semplice e intuitiva che rende la gestione delle criptovalute e degli NFT accessibile anche ai principianti.
-                  </div>
+            <Accordion buttonText="Interfaccia User-Friendly">
+              <List>
+                <li>
+                  <strong>Facilità d&apos;Uso:</strong> Un&apos;interfaccia semplice e intuitiva che rende la gestione delle criptovalute e degli NFT accessibile anche ai principianti.
                 </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Open Source:</strong> Il codice di Rainbow è open source, permettendo alla comunità di controllare e migliorare continuamente la sicurezza e l&apos;affidabilità del portafoglio.
-                  </div>
+                <li>
+                  <strong>Open Source:</strong> Il codice di Rainbow è open source, permettendo alla comunità di controllare e migliorare continuamente la sicurezza e l&apos;affidabilità del portafoglio.
                 </li>
-              </ul>
-            </div>
-          </div>
+              </List>
+            </Accordion>
 
-          {/* Funzionalità per NFT */}
-          <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden">
-            <div className="p-6 border-b border-neutral-200">
-              <h3 className="text-xl font-semibold text-neutral-900 flex items-center gap-3">
-                <span className="text-primary-600">▼</span>
-                Funzionalità per NFT
-              </h3>
-            </div>
-            <div className="p-6">
-              <ul className="space-y-3 text-neutral-600">
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Gestione Completa degli NFT:</strong> Visualizza, elenca, brucia e nasconde NFT direttamente dal portafoglio.
-                  </div>
+            <Accordion buttonText="Funzionalità per NFT">
+              <List>
+                <li>
+                  <strong>Gestione Completa degli NFT:</strong> Visualizza, elenca, brucia e nasconde NFT direttamente dal portafoglio.
                 </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Accesso ai Mercati NFT:</strong> Accesso integrato ai principali mercati NFT per acquistare e vendere NFT facilmente.
-                  </div>
+                <li>
+                  <strong>Accesso ai Mercati NFT:</strong> Accesso integrato ai principali mercati NFT per acquistare e vendere NFT facilmente.
                 </li>
-              </ul>
-            </div>
-          </div>
+              </List>
+            </Accordion>
 
-          {/* Integrazione con Hardware Wallet */}
-          <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden">
-            <div className="p-6 border-b border-neutral-200">
-              <h3 className="text-xl font-semibold text-neutral-900 flex items-center gap-3">
-                <span className="text-primary-600">▼</span>
-                Integrazione con Hardware Wallet
-              </h3>
-            </div>
-            <div className="p-6">
+            <Accordion buttonText="Integrazione con Hardware Wallet">
               <p className="text-neutral-600">
                 Supporto per Trezor e Ledger: Rainbow si integra con hardware wallet come Trezor e Ledger per una sicurezza aggiuntiva.
               </p>
-            </div>
-          </div>
+            </Accordion>
         </div>
       </div>
     </div>

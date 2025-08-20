@@ -2,6 +2,11 @@ import { CardContainer } from "@/components/CardContainer";
 import { SimpleCard } from "@/components/SimpleCard";
 import Placeholder from "@/assets/placeholder.svg";
 import metamaskIcon from "@/assets/metamask-icon.svg";
+import phantomIcon from "@/assets/phantom-icon.png";
+import rainbowIcon from "@/assets/rainbow-icon.png";
+import rabbyIcon from "@/assets/rabby-icon.png";
+import trezorIcon from "@/assets/trezor-icon.png";
+import ledgerIcon from "@/assets/ledger-icon.png";
 
 export default function WalletPage() {
   return (
@@ -13,6 +18,26 @@ export default function WalletPage() {
           </h1>
           <p className="text-xl text-neutral-600 max-w-3xl mx-auto">
             Scopri i migliori wallet per gestire le tue criptovalute in modo sicuro e decentralizzato
+          </p>
+        </div>
+
+        {/* Sezione Informazioni Generali */}
+        <div className="bg-white rounded-2xl shadow-lg p-8 border border-neutral-200 mb-16">
+          <h3 className="text-2xl font-bold text-neutral-900 mb-6">
+            Cos&apos;è il Wallet Non-Custodial?
+          </h3>
+          <p className="text-neutral-600 mb-6 leading-relaxed">
+            Il portafoglio (&quot;wallet&quot;) non-custodial è un portafoglio virtuale utilizzato per ricevere, inviare, e conservare le criptovalute. Viene indicato anche come &quot;self-custody wallet&quot;, che significa &quot;a custodia personale&quot;. Può essere scaricato su mobile o aggiunto come browser extension sul pc, o in forma di hardware wallet (dispositivo fisico).
+          </p>
+          
+          <h4 className="text-xl font-semibold text-neutral-900 mb-4">
+            Che vantaggi offre?
+          </h4>
+          <p className="text-neutral-600 mb-4 leading-relaxed">
+            A differenza degli exchange, o delle banche, dove l&apos;intestatario del conto può vedersi il conto bloccato/congelato, o dove la banca/exchange può andare fallita e l&apos;utente perdere i propri risparmi, il wallet non-custodial offre all&apos;utente il <strong>pieno controllo delle chiavi private e dei fondi in esso custoditi</strong>, senza coinvolgere soggetti esterni.
+          </p>
+          <p className="text-neutral-600 leading-relaxed">
+            Con il wallet non-custodial, è l&apos;utente stesso ad avere la piena responsabilità delle proprie chiavi private e pertanto deve prendere le precauzioni necessarie per non perdere irrimediabilmente la possibilità di accedere alle proprie monete.
           </p>
         </div>
 
@@ -34,33 +59,33 @@ export default function WalletPage() {
               xPage="https://x.com/MetaMask"
             />
             <SimpleCard
-              icon={Placeholder}
+                                   icon={phantomIcon}
               title="Phantom"
               subArray={[
-                { icon: Placeholder, text: "" },
-                { icon: Placeholder, text: "" },
+                { icon: phantomIcon, text: "" },
+                { icon: phantomIcon, text: "" },
               ]}
               href="./wallet/phantom"
               externalLink="https://phantom.app/"
               xPage="https://x.com/phantom"
             />
             <SimpleCard
-              icon={Placeholder}
+                                   icon={rainbowIcon}
               title="Rainbow"
               subArray={[
-                { icon: Placeholder, text: "" },
-                { icon: Placeholder, text: "" },
+                { icon: rainbowIcon, text: "" },
+                { icon: rainbowIcon, text: "" },
               ]}
               href="./wallet/rainbow"
               externalLink="https://rainbow.me/"
               xPage="https://x.com/rainbowdotme"
             />
             <SimpleCard
-              icon={Placeholder}
+                                   icon={rabbyIcon}
               title="Rabby"
               subArray={[
-                { icon: Placeholder, text: "" },
-                { icon: Placeholder, text: "" },
+                { icon: rabbyIcon, text: "" },
+                { icon: rabbyIcon, text: "" },
               ]}
               href="./wallet/rabby"
               externalLink="https://rabby.io/"
@@ -74,51 +99,33 @@ export default function WalletPage() {
           <h2 className="text-3xl font-bold text-neutral-900 mb-8 text-center">
             Hardware Wallets
           </h2>
-          <CardContainer>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-4 max-w-4xl mx-auto">
             <SimpleCard
-              icon={Placeholder}
+                                   icon={trezorIcon}
               title="Trezor"
               subArray={[
-                { icon: Placeholder, text: "" },
-                { icon: Placeholder, text: "" },
+                { icon: trezorIcon, text: "" },
+                { icon: trezorIcon, text: "" },
               ]}
               href="./wallet/trezor"
               externalLink="https://trezor.io/"
               xPage="https://x.com/Trezor"
             />
             <SimpleCard
-              icon={Placeholder}
+                                   icon={ledgerIcon}
               title="Ledger"
               subArray={[
-                { icon: Placeholder, text: "" },
-                { icon: Placeholder, text: "" },
+                { icon: ledgerIcon, text: "" },
+                { icon: ledgerIcon, text: "" },
               ]}
               href="./wallet/ledger"
               externalLink="https://shop.ledger.com/"
               xPage="https://x.com/Ledger"
             />
-          </CardContainer>
+          </div>
         </div>
 
-        {/* Sezione Informazioni Generali */}
-        <div className="bg-white rounded-2xl shadow-lg p-8 border border-neutral-200">
-          <h3 className="text-2xl font-bold text-neutral-900 mb-6">
-            Cos&apos;è il Wallet Non-Custodial?
-          </h3>
-          <p className="text-neutral-600 mb-6 leading-relaxed">
-            Il portafoglio (&quot;wallet&quot;) non-custodial è un portafoglio virtuale utilizzato per ricevere, inviare, e conservare le criptovalute. Viene indicato anche come &quot;self-custody wallet&quot;, che significa &quot;a custodia personale&quot;. Può essere scaricato su mobile o aggiunto come browser extension sul pc, o in forma di hardware wallet (dispositivo fisico).
-          </p>
-          
-          <h4 className="text-xl font-semibold text-neutral-900 mb-4">
-            Che vantaggi offre?
-          </h4>
-          <p className="text-neutral-600 mb-4 leading-relaxed">
-            A differenza degli exchange, o delle banche, dove l&apos;intestatario del conto può vedersi il conto bloccato/congelato, o dove la banca/exchange può andare fallita e l&apos;utente perdere i propri risparmi, il wallet non-custodial offre all&apos;utente il <strong>pieno controllo delle chiavi private e dei fondi in esso custoditi</strong>, senza coinvolgere soggetti esterni.
-          </p>
-          <p className="text-neutral-600 leading-relaxed">
-            Con il wallet non-custodial, è l&apos;utente stesso ad avere la piena responsabilità delle proprie chiavi private e pertanto deve prendere le precauzioni necessarie per non perdere irrimediabilmente la possibilità di accedere alle proprie monete.
-          </p>
-        </div>
+
       </div>
     </div>
   );

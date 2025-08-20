@@ -1,4 +1,8 @@
 
+import phantomIcon from "@/assets/phantom-icon.png";
+import { Accordion } from "@/components/Accordion";
+import { List } from "@/components/List";
+
 
 export default function PhantomPage() {
   return (
@@ -7,9 +11,7 @@ export default function PhantomPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <div className="flex justify-center mb-6">
-            <div className="w-24 h-24 bg-purple-500 rounded-full flex items-center justify-center">
-              <span className="text-white text-4xl font-bold">👻</span>
-            </div>
+            <img src={phantomIcon.src} alt="Phantom" className="w-24 h-24" />
           </div>
           <h1 className="text-4xl lg:text-5xl font-bold text-neutral-900 mb-6">
             Phantom
@@ -98,117 +100,54 @@ export default function PhantomPage() {
           </p>
         </div>
 
-        {/* Sezioni Espandibili */}
-        <div className="space-y-6">
-          {/* Supporto Multichain */}
-          <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden">
-            <div className="p-6 border-b border-neutral-200">
-              <h3 className="text-xl font-semibold text-neutral-900 flex items-center gap-3">
-                <span className="text-primary-600">▼</span>
-                Supporto Multichain
-              </h3>
-            </div>
-            <div className="p-6">
-              <ul className="space-y-3 text-neutral-600">
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Blockchain Supportate:</strong> Solana, Ethereum e Polygon.
-                  </div>
+                  {/* Sezioni Espandibili */}
+          <div className="space-y-6">
+            <Accordion buttonText="Supporto Multichain">
+              <List>
+                <li>
+                  <strong>Blockchain Supportate:</strong> Solana, Ethereum e Polygon.
                 </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Gestione Unificata:</strong> Permette di gestire tutte le criptovalute e gli NFT in un unico portafoglio senza dover cambiare tra diverse reti.
-                  </div>
+                <li>
+                  <strong>Gestione Unificata:</strong> Permette di gestire tutte le criptovalute e gli NFT in un unico portafoglio senza dover cambiare tra diverse reti.
                 </li>
-              </ul>
-            </div>
-          </div>
+              </List>
+            </Accordion>
 
-          {/* Sicurezza Avanzata */}
-          <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden">
-            <div className="p-6 border-b border-neutral-200">
-              <h3 className="text-xl font-semibold text-neutral-900 flex items-center gap-3">
-                <span className="text-primary-600">▼</span>
-                Sicurezza Avanzata
-              </h3>
-            </div>
-            <div className="p-6">
-              <ul className="space-y-3 text-neutral-600">
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Autocustodia:</strong> Gli utenti hanno il controllo completo delle loro chiavi private e Phantom non accede ai fondi degli utenti.
-                  </div>
+            <Accordion buttonText="Sicurezza Avanzata">
+              <List>
+                <li>
+                  <strong>Autocustodia:</strong> Gli utenti hanno il controllo completo delle loro chiavi private e Phantom non accede ai fondi degli utenti.
                 </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Rilevamento di Scam:</strong> Rileva istantaneamente e segnala transazioni sospette o malevoli.
-                  </div>
+                <li>
+                  <strong>Rilevamento di Scam:</strong> Rileva istantaneamente e segnala transazioni sospette o malevoli.
                 </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Integrazione con Hardware Wallet:</strong> Supporto per l&apos;integrazione con hardware wallet come Ledger per una sicurezza aggiuntiva.
-                  </div>
+                <li>
+                  <strong>Integrazione con Hardware Wallet:</strong> Supporto per l&apos;integrazione con hardware wallet come Ledger per una sicurezza aggiuntiva.
                 </li>
-              </ul>
-            </div>
-          </div>
+              </List>
+            </Accordion>
 
-          {/* Funzionalità per NFT */}
-          <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden">
-            <div className="p-6 border-b border-neutral-200">
-              <h3 className="text-xl font-semibold text-neutral-900 flex items-center gap-3">
-                <span className="text-primary-600">▼</span>
-                Funzionalità per NFT
-              </h3>
-            </div>
-            <div className="p-6">
-              <ul className="space-y-3 text-neutral-600">
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Gestione Completa degli NFT:</strong> Visualizza, elenca, brucia e nasconde NFT direttamente dal portafoglio.
-                  </div>
+            <Accordion buttonText="Funzionalità per NFT">
+              <List>
+                <li>
+                  <strong>Gestione Completa degli NFT:</strong> Visualizza, elenca, brucia e nasconde NFT direttamente dal portafoglio.
                 </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Mercati NFT:</strong> Accesso integrato ai principali mercati NFT per acquistare e vendere NFT facilmente.
-                  </div>
+                <li>
+                  <strong>Mercati NFT:</strong> Accesso integrato ai principali mercati NFT per acquistare e vendere NFT facilmente.
                 </li>
-              </ul>
-            </div>
-          </div>
+              </List>
+            </Accordion>
 
-          {/* Token Swap e Stake */}
-          <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden">
-            <div className="p-6 border-b border-neutral-200">
-              <h3 className="text-xl font-semibold text-neutral-900 flex items-center gap-3">
-                <span className="text-primary-600">▼</span>
-                Token Swap e Stake
-              </h3>
-            </div>
-            <div className="p-6">
-              <ul className="space-y-3 text-neutral-600">
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Swapping Veloce e Economico:</strong> Permette di scambiare token rapidamente con basse commissioni direttamente dal portafoglio.
-                  </div>
+            <Accordion buttonText="Token Swap e Stake">
+              <List>
+                <li>
+                  <strong>Swapping Veloce e Economico:</strong> Permette di scambiare token rapidamente con basse commissioni direttamente dal portafoglio.
                 </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Staking:</strong> Gli utenti possono mettere in staking i loro token per guadagnare ricompense direttamente dal portafoglio.
-                  </div>
+                <li>
+                  <strong>Staking:</strong> Gli utenti possono mettere in staking i loro token per guadagnare ricompense direttamente dal portafoglio.
                 </li>
-              </ul>
-            </div>
-          </div>
+              </List>
+            </Accordion>
         </div>
       </div>
     </div>

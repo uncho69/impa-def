@@ -1,4 +1,7 @@
 
+import rabbyIcon from "@/assets/rabby-icon.png";
+import { Accordion } from "@/components/Accordion";
+import { List } from "@/components/List";
 
 export default function RabbyPage() {
   return (
@@ -7,9 +10,7 @@ export default function RabbyPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <div className="flex justify-center mb-6">
-            <div className="w-24 h-24 bg-purple-500 rounded-lg flex items-center justify-center">
-              <span className="text-white text-4xl font-bold">🐰</span>
-            </div>
+            <img src={rabbyIcon.src} alt="Rabby" className="w-24 h-24" />
           </div>
           <h1 className="text-4xl lg:text-5xl font-bold text-neutral-900 mb-6">
             Rabby
@@ -106,113 +107,50 @@ export default function RabbyPage() {
 
         {/* Sezioni Espandibili */}
         <div className="space-y-6">
-          {/* Supporto per Vari Asset */}
-          <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden">
-            <div className="p-6 border-b border-neutral-200">
-              <h3 className="text-xl font-semibold text-neutral-900 flex items-center gap-3">
-                <span className="text-primary-600">▼</span>
-                Supporto per Vari Asset
-              </h3>
-            </div>
-            <div className="p-6">
+            <Accordion buttonText="Supporto per Vari Asset">
               <p className="text-neutral-600">
                 Rabby Wallet supporta un&apos;ampia gamma di criptovalute, consentendo agli utenti di gestire diverse valute digitali all&apos;interno di un&apos;unica interfaccia user-friendly.
               </p>
-            </div>
-          </div>
+            </Accordion>
 
-          {/* Sicurezza Avanzata */}
-          <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden">
-            <div className="p-6 border-b border-neutral-200">
-              <h3 className="text-xl font-semibold text-neutral-900 flex items-center gap-3">
-                <span className="text-primary-600">▼</span>
-                Sicurezza Avanzata
-              </h3>
-            </div>
-            <div className="p-6">
-              <ul className="space-y-3 text-neutral-600">
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Transazioni Simulate:</strong> Rabby Wallet include una funzionalità di simulazione delle transazioni che informa gli utenti sulle possibili implicazioni delle loro operazioni prima di confermarle. Questo aiuta a prevenire errori costosi e a proteggere contro transazioni fraudolente.
-                  </div>
+            <Accordion buttonText="Sicurezza Avanzata">
+              <List>
+                <li>
+                  <strong>Transazioni Simulate:</strong> Rabby Wallet include una funzionalità di simulazione delle transazioni che informa gli utenti sulle possibili implicazioni delle loro operazioni prima di confermarle. Questo aiuta a prevenire errori costosi e a proteggere contro transazioni fraudolente.
                 </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Avvisi di Sicurezza:</strong> Il portafoglio avvisa gli utenti di possibili transazioni di scam, come attacchi di dusting o transazioni di asset falsi, e di altri problemi di sicurezza prima della conferma finale delle transazioni.
-                  </div>
+                <li>
+                  <strong>Avvisi di Sicurezza:</strong> Il portafoglio avvisa gli utenti di possibili transazioni di scam, come attacchi di dusting o transazioni di asset falsi, e di altri problemi di sicurezza prima della conferma finale delle transazioni.
                 </li>
-              </ul>
-            </div>
-          </div>
+              </List>
+            </Accordion>
 
-          {/* Interfaccia User-Friendly */}
-          <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden">
-            <div className="p-6 border-b border-neutral-200">
-              <h3 className="text-xl font-semibold text-neutral-900 flex items-center gap-3">
-                <span className="text-primary-600">▼</span>
-                Interfaccia User-Friendly
-              </h3>
-            </div>
-            <div className="p-6">
+            <Accordion buttonText="Interfaccia User-Friendly">
               <p className="text-neutral-600">
                 Progettato per essere semplice da utilizzare sia per i principianti che per gli utenti esperti, Rabby Wallet rende la gestione delle criptovalute e le interazioni con le dApp intuitive e senza problemi.
               </p>
-            </div>
-          </div>
+            </Accordion>
 
-          {/* Funzionalità di Swap e Gas Top-Up */}
-          <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden">
-            <div className="p-6 border-b border-neutral-200">
-              <h3 className="text-xl font-semibold text-neutral-900 flex items-center gap-3">
-                <span className="text-primary-600">▼</span>
-                Funzionalità di Swap e Gas Top-Up
-              </h3>
-            </div>
-            <div className="p-6">
-              <ul className="space-y-3 text-neutral-600">
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Token Swap:</strong> Rabby Wallet permette di scambiare token direttamente all&apos;interno del portafoglio, collegandosi a diversi exchange decentralizzati e centralizzati per completare gli swap senza dover uscire dall&apos;app.
-                  </div>
+            <Accordion buttonText="Funzionalità di Swap e Gas Top-Up">
+              <List>
+                <li>
+                  <strong>Token Swap:</strong> Rabby Wallet permette di scambiare token direttamente all&apos;interno del portafoglio, collegandosi a diversi exchange decentralizzati e centralizzati per completare gli swap senza dover uscire dall&apos;app.
                 </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Gas Top-Up:</strong> Gli utenti possono acquistare token gas per una rete specifica utilizzando altri asset sulla stessa rete o su altre reti, rendendo facile ricaricare il proprio wallet senza dover utilizzare exchange esterni.
-                  </div>
+                <li>
+                  <strong>Gas Top-Up:</strong> Gli utenti possono acquistare token gas per una rete specifica utilizzando altri asset sulla stessa rete o su altre reti, rendendo facile ricaricare il proprio wallet senza dover utilizzare exchange esterni.
                 </li>
-              </ul>
-            </div>
-          </div>
+              </List>
+            </Accordion>
 
-          {/* Compatibilità Multi-Piattaforma */}
-          <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden">
-            <div className="p-6 border-b border-neutral-200">
-              <h3 className="text-xl font-semibold text-neutral-900 flex items-center gap-3">
-                <span className="text-primary-600">▼</span>
-                Compatibilità Multi-Piattaforma
-              </h3>
-            </div>
-            <div className="p-6">
-              <ul className="space-y-3 text-neutral-600">
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Estensione del Browser:</strong> Disponibile come estensione per i principali browser come Chrome, Firefox, e Brave.
-                  </div>
+            <Accordion buttonText="Compatibilità Multi-Piattaforma">
+              <List>
+                <li>
+                  <strong>Estensione del Browser:</strong> Disponibile come estensione per i principali browser come Chrome, Firefox, e Brave.
                 </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <div>
-                    <strong>Applicazione Mobile:</strong> Rabby Wallet è disponibile anche per dispositivi mobili Android, mentre la versione per iOS è ancora in fase di revisione. È importante verificare di scaricare l&apos;app dal sito ufficiale per evitare versioni false.
-                  </div>
+                <li>
+                  <strong>Applicazione Mobile:</strong> Rabby Wallet è disponibile anche per dispositivi mobili Android, mentre la versione per iOS è ancora in fase di revisione. È importante verificare di scaricare l&apos;app dal sito ufficiale per evitare versioni false.
                 </li>
-              </ul>
-            </div>
-          </div>
+              </List>
+            </Accordion>
         </div>
       </div>
     </div>
