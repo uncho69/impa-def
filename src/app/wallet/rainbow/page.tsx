@@ -1,4 +1,5 @@
 
+import Image from "next/image";
 import rainbowIcon from "@/assets/rainbow-icon.png";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
@@ -7,153 +8,105 @@ export default function RainbowPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-primary-50 to-background">
       <div className="container-custom py-12">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="flex justify-center mb-6">
-            <img src={rainbowIcon.src} alt="Rainbow" className="w-24 h-24" />
-          </div>
-          <h1 className="text-4xl lg:text-5xl font-bold text-neutral-900 mb-6">
-            Rainbow
-          </h1>
-        </div>
-
-        {/* Informazioni Principali */}
-        <div className="bg-white rounded-2xl shadow-lg p-8 border border-neutral-200 mb-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="w-6 h-6 bg-neutral-200 rounded flex items-center justify-center">
-                  <span className="text-neutral-600 text-sm">📋</span>
-                </div>
-                <span className="text-neutral-600 font-medium">Tags:</span>
-                <div className="flex gap-2">
-                  <span className="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm">
-                    Portafoglio &apos;Wallet&apos; Non-custodial (Extension)
-                  </span>
-                  <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
-                    Airdrop
-                  </span>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-3">
-                <div className="w-6 h-6 bg-neutral-200 rounded flex items-center justify-center">
-                  <span className="text-neutral-600 text-sm">🔗</span>
-                </div>
-                <span className="text-neutral-600 font-medium">Profilo Twitter/X:</span>
-                <a href="https://x.com/rainbowdotme" target="_blank" rel="noopener noreferrer" className="text-primary-600 underline">
-                  x.com/rainbowdotme
-                </a>
-              </div>
-              
-              <div className="flex items-center gap-3">
-                <div className="w-6 h-6 bg-neutral-200 rounded flex items-center justify-center">
-                  <span className="text-neutral-600 text-sm">🔗</span>
-                </div>
-                <span className="text-neutral-600 font-medium">Sito Web:</span>
-                <a href="https://rainbow.me/" target="_blank" rel="noopener noreferrer" className="text-primary-600 underline">
-                  rainbow.me/
-                </a>
-              </div>
+        <div className="max-w-4xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-12">
+            <div className="flex justify-center mb-6">
+              <Image src={rainbowIcon} alt="Rainbow" width={96} height={96} />
             </div>
-            
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="w-6 h-6 bg-neutral-200 rounded flex items-center justify-center">
-                  <span className="text-neutral-600 text-sm">🔗</span>
+            <h1 className="text-4xl font-bold mb-4 text-neutral-900">Rainbow</h1>
+            <p className="text-xl text-neutral-600">
+              Il wallet più colorato e user-friendly per Ethereum
+            </p>
+          </div>
+
+          {/* Contenuto principale */}
+          <div className="space-y-8">
+            <div className="bg-white rounded-2xl p-8 shadow-lg border border-neutral-100">
+              <h2 className="text-2xl font-bold mb-4 text-neutral-900">Cos'è Rainbow?</h2>
+              <p className="text-neutral-700 leading-relaxed mb-4">
+                Rainbow è un wallet mobile non-custodial progettato per offrire la migliore esperienza utente possibile nell'ecosistema Ethereum. Con la sua interfaccia colorata e intuitiva, rende l'uso delle criptovalute accessibile a tutti.
+              </p>
+              <p className="text-neutral-700 leading-relaxed">
+                Disponibile solo per iOS e Android, Rainbow si concentra sulla semplicità d'uso senza compromettere la sicurezza.
+              </p>
+            </div>
+
+            <div className="bg-white rounded-2xl p-8 shadow-lg border border-neutral-100">
+              <h2 className="text-2xl font-bold mb-4 text-neutral-900">Caratteristiche principali</h2>
+              <ul className="space-y-3 text-neutral-700">
+                <li className="flex items-start gap-3">
+                  <div className="w-2 h-2 bg-primary-500 rounded-full mt-2 flex-shrink-0"></div>
+                  <span>Interfaccia colorata e moderna</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <div className="w-2 h-2 bg-primary-500 rounded-full mt-2 flex-shrink-0"></div>
+                  <span>Supporto completo per Ethereum e token ERC-20</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <div className="w-2 h-2 bg-primary-500 rounded-full mt-2 flex-shrink-0"></div>
+                  <span>Gestione NFT integrata</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <div className="w-2 h-2 bg-primary-500 rounded-full mt-2 flex-shrink-0"></div>
+                  <span>Integrazione con dApp Ethereum</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <div className="w-2 h-2 bg-primary-500 rounded-full mt-2 flex-shrink-0"></div>
+                  <span>Design mobile-first</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="bg-white rounded-2xl p-8 shadow-lg border border-neutral-100">
+              <h2 className="text-2xl font-bold mb-4 text-neutral-900">Come iniziare</h2>
+              <div className="space-y-4">
+                <div className="flex items-start gap-4">
+                  <div className="w-8 h-8 bg-primary-500 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">1</div>
+                  <div>
+                    <h3 className="font-semibold text-neutral-900 mb-2">Scarica l'app</h3>
+                    <p className="text-neutral-700">Scarica Rainbow dall'App Store o Google Play</p>
+                  </div>
                 </div>
-                <span className="text-neutral-600 font-medium">Token/NFT:</span>
-                <span className="text-neutral-400">Empty</span>
-              </div>
-              
-              <div className="flex items-center gap-3">
-                <div className="w-6 h-6 bg-neutral-200 rounded flex items-center justify-center">
-                  <span className="text-neutral-600 text-sm">📅</span>
+                <div className="flex items-start gap-4">
+                  <div className="w-8 h-8 bg-primary-500 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">2</div>
+                  <div>
+                    <h3 className="font-semibold text-neutral-900 mb-2">Crea un wallet</h3>
+                    <p className="text-neutral-700">Segui la procedura guidata per creare un nuovo wallet</p>
+                  </div>
                 </div>
-                <span className="text-neutral-600 font-medium">Last Updated:</span>
-                <span className="text-neutral-900">May 29, 2024</span>
-              </div>
-              
-              <div className="flex items-start gap-3">
-                <div className="w-6 h-6 bg-neutral-200 rounded flex items-center justify-center mt-1">
-                  <span className="text-neutral-600 text-sm">📋</span>
+                <div className="flex items-start gap-4">
+                  <div className="w-8 h-8 bg-primary-500 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">3</div>
+                  <div>
+                    <h3 className="font-semibold text-neutral-900 mb-2">Salva la seed phrase</h3>
+                    <p className="text-neutral-700">Scrivi e conserva in sicurezza le 12 parole di recupero</p>
+                  </div>
                 </div>
-                <div>
-                  <span className="text-neutral-600 font-medium block mb-2">Blockchain Supported:</span>
-                  <div className="flex flex-wrap gap-2">
-                    <span className="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm">Ethereum</span>
-                    <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">Arbitrum</span>
-                    <span className="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm">Optimism</span>
-                    <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm">Polygon</span>
-                    <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">Base</span>
+                <div className="flex items-start gap-4">
+                  <div className="w-8 h-8 bg-primary-500 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">4</div>
+                  <div>
+                    <h3 className="font-semibold text-neutral-900 mb-2">Inizia a usare</h3>
+                    <p className="text-neutral-700">Ora puoi ricevere, inviare e gestire i tuoi asset Ethereum</p>
                   </div>
                 </div>
               </div>
             </div>
+
+            <div className="bg-white rounded-2xl p-8 shadow-lg border border-neutral-100">
+              <h2 className="text-2xl font-bold mb-4 text-neutral-900">Vantaggi di Rainbow</h2>
+              <div className="space-y-4 text-neutral-700">
+                <p>
+                  <strong>Semplicità:</strong> Rainbow è progettato per essere il più semplice possibile da usare, perfetto per principianti.
+                </p>
+                <p>
+                  <strong>Bellezza:</strong> L'interfaccia è curata nei minimi dettagli, rendendo l'esperienza piacevole e coinvolgente.
+                </p>
+                <p>
+                  <strong>Performance:</strong> Ottimizzato per dispositivi mobili, offre transazioni veloci e responsive.
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
-
-        {/* Descrizione */}
-        <div className="bg-white rounded-2xl shadow-lg p-8 border border-neutral-200 mb-8">
-          <p className="text-neutral-600 leading-relaxed text-lg">
-            Rainbow Wallet è un portafoglio di criptovalute non-custodial progettato per Ethereum e altri asset basati su Ethereum. Con una forte attenzione alla sicurezza e alla privacy, Rainbow è noto per la sua interfaccia user-friendly e le sue funzionalità avanzate che lo rendono ideale sia per i nuovi utenti che per gli esperti di criptovalute.
-          </p>
-        </div>
-
-        {/* Sezioni Espandibili */}
-        <div className="space-y-6">
-            <Accordion buttonText="Supporto Multi-Chain">
-              <List>
-                <li>
-                  <strong>Blockchain Supportate:</strong> Principalmente Ethereum, con supporto per altri asset basati su questa blockchain.
-                </li>
-                <li>
-                  <strong>Gestione Unificata:</strong> Permette di gestire tutte le tue criptovalute e NFT in un unico portafoglio senza dover cambiare tra diverse reti.
-                </li>
-              </List>
-            </Accordion>
-
-            <Accordion buttonText="Sicurezza Avanzata">
-              <List>
-                <li>
-                  <strong>Autocustodia:</strong> Gli utenti hanno il controllo completo delle loro chiavi private, che sono generate e memorizzate localmente sui dispositivi degli utenti.
-                </li>
-                <li>
-                  <strong>Rilevamento di Scam:</strong> Rileva e segnala transazioni sospette o potenzialmente pericolose.
-                </li>
-                <li>
-                  <strong>Backup Sicuro:</strong> Opzioni di backup su iCloud per iOS e Google Drive per Android, oltre alla possibilità di annotare manualmente la frase di recupero su un pezzo di carta.
-                </li>
-              </List>
-            </Accordion>
-
-            <Accordion buttonText="Interfaccia User-Friendly">
-              <List>
-                <li>
-                  <strong>Facilità d&apos;Uso:</strong> Un&apos;interfaccia semplice e intuitiva che rende la gestione delle criptovalute e degli NFT accessibile anche ai principianti.
-                </li>
-                <li>
-                  <strong>Open Source:</strong> Il codice di Rainbow è open source, permettendo alla comunità di controllare e migliorare continuamente la sicurezza e l&apos;affidabilità del portafoglio.
-                </li>
-              </List>
-            </Accordion>
-
-            <Accordion buttonText="Funzionalità per NFT">
-              <List>
-                <li>
-                  <strong>Gestione Completa degli NFT:</strong> Visualizza, elenca, brucia e nasconde NFT direttamente dal portafoglio.
-                </li>
-                <li>
-                  <strong>Accesso ai Mercati NFT:</strong> Accesso integrato ai principali mercati NFT per acquistare e vendere NFT facilmente.
-                </li>
-              </List>
-            </Accordion>
-
-            <Accordion buttonText="Integrazione con Hardware Wallet">
-              <p className="text-neutral-600">
-                Supporto per Trezor e Ledger: Rainbow si integra con hardware wallet come Trezor e Ledger per una sicurezza aggiuntiva.
-              </p>
-            </Accordion>
         </div>
       </div>
     </div>
