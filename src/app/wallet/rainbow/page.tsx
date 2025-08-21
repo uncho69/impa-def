@@ -1,8 +1,6 @@
 
 import Image from "next/image";
 import rainbowIcon from "@/assets/rainbow-icon.png";
-import { Accordion } from "@/components/Accordion";
-import { List } from "@/components/List";
 
 export default function RainbowPage() {
   return (
@@ -23,12 +21,12 @@ export default function RainbowPage() {
           {/* Contenuto principale */}
           <div className="space-y-8">
             <div className="bg-white rounded-2xl p-8 shadow-lg border border-neutral-100">
-              <h2 className="text-2xl font-bold mb-4 text-neutral-900">Cos'è Rainbow?</h2>
+              <h2 className="text-2xl font-bold mb-4 text-neutral-900">Cos&apos;è Rainbow?</h2>
               <p className="text-neutral-700 leading-relaxed mb-4">
-                Rainbow è un wallet mobile non-custodial progettato per offrire la migliore esperienza utente possibile nell'ecosistema Ethereum. Con la sua interfaccia colorata e intuitiva, rende l'uso delle criptovalute accessibile a tutti.
+                Rainbow è un wallet mobile non-custodial progettato per offrire la migliore esperienza utente possibile nell&apos;ecosistema Ethereum. Con la sua interfaccia colorata e intuitiva, rende l&apos;uso delle criptovalute accessibile a tutti.
               </p>
               <p className="text-neutral-700 leading-relaxed">
-                Disponibile solo per iOS e Android, Rainbow si concentra sulla semplicità d'uso senza compromettere la sicurezza.
+                Disponibile solo per iOS e Android, Rainbow si concentra sulla semplicità d&apos;uso senza compromettere la sicurezza.
               </p>
             </div>
 
@@ -64,8 +62,8 @@ export default function RainbowPage() {
                 <div className="flex items-start gap-4">
                   <div className="w-8 h-8 bg-primary-500 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">1</div>
                   <div>
-                    <h3 className="font-semibold text-neutral-900 mb-2">Scarica l'app</h3>
-                    <p className="text-neutral-700">Scarica Rainbow dall'App Store o Google Play</p>
+                    <h3 className="font-semibold text-neutral-900 mb-2">Scarica l&apos;app</h3>
+                    <p className="text-neutral-700">Scarica Rainbow dall&apos;App Store o Google Play</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
@@ -99,7 +97,7 @@ export default function RainbowPage() {
                   <strong>Semplicità:</strong> Rainbow è progettato per essere il più semplice possibile da usare, perfetto per principianti.
                 </p>
                 <p>
-                  <strong>Bellezza:</strong> L'interfaccia è curata nei minimi dettagli, rendendo l'esperienza piacevole e coinvolgente.
+                  <strong>Bellezza:</strong> L&apos;interfaccia è curata nei minimi dettagli, rendendo l&apos;esperienza piacevole e coinvolgente.
                 </p>
                 <p>
                   <strong>Performance:</strong> Ottimizzato per dispositivi mobili, offre transazioni veloci e responsive.

@@ -1,8 +1,6 @@
 
 import Image from "next/image";
 import rabbyIcon from "@/assets/rabby-icon.png";
-import { Accordion } from "@/components/Accordion";
-import { List } from "@/components/List";
 
 export default function RabbyPage() {
   return (
@@ -23,7 +21,7 @@ export default function RabbyPage() {
           {/* Contenuto principale */}
           <div className="space-y-8">
             <div className="bg-white rounded-2xl p-8 shadow-lg border border-neutral-100">
-              <h2 className="text-2xl font-bold mb-4 text-neutral-900">Cos'è Rabby?</h2>
+              <h2 className="text-2xl font-bold mb-4 text-neutral-900">Cos&apos;è Rabby?</h2>
               <p className="text-neutral-700 leading-relaxed mb-4">
                 Rabby è un wallet non-custodial progettato specificamente per gli utenti DeFi e trading. Offre funzionalità avanzate di sicurezza e analisi delle transazioni per proteggere gli utenti da truffe e errori.
               </p>
@@ -64,8 +62,8 @@ export default function RabbyPage() {
                 <div className="flex items-start gap-4">
                   <div className="w-8 h-8 bg-primary-500 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">1</div>
                   <div>
-                    <h3 className="font-semibold text-neutral-900 mb-2">Scarica l'estensione</h3>
-                    <p className="text-neutral-700">Vai su rabby.io e scarica l'estensione per il tuo browser</p>
+                    <h3 className="font-semibold text-neutral-900 mb-2">Scarica l&apos;estensione</h3>
+                    <p className="text-neutral-700">Vai su rabby.io e scarica l&apos;estensione per il tuo browser</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
@@ -102,7 +100,7 @@ export default function RabbyPage() {
                   <strong>Compatibilità:</strong> Funziona con MetaMask e altri wallet esistenti senza perdere le tue configurazioni.
                 </p>
                 <p>
-                  <strong>Analisi:</strong> Fornisce informazioni dettagliate su ogni transazione prima dell'esecuzione.
+                  <strong>Analisi:</strong> Fornisce informazioni dettagliate su ogni transazione prima dell&apos;esecuzione.
                 </p>
               </div>
             </div>

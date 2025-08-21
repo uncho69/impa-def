@@ -1,9 +1,6 @@
 
 import Image from "next/image";
 import phantomIcon from "@/assets/phantom-icon.png";
-import { Accordion } from "@/components/Accordion";
-import { List } from "@/components/List";
-
 
 export default function PhantomPage() {
   return (
@@ -17,16 +14,16 @@ export default function PhantomPage() {
             </div>
             <h1 className="text-4xl font-bold mb-4 text-neutral-900">Phantom</h1>
             <p className="text-xl text-neutral-600">
-              Il wallet più popolare per l'ecosistema Solana
+              Il wallet più popolare per l&apos;ecosistema Solana
             </p>
           </div>
 
           {/* Contenuto principale */}
           <div className="space-y-8">
             <div className="bg-white rounded-2xl p-8 shadow-lg border border-neutral-100">
-              <h2 className="text-2xl font-bold mb-4 text-neutral-900">Cos'è Phantom?</h2>
+              <h2 className="text-2xl font-bold mb-4 text-neutral-900">Cos&apos;è Phantom?</h2>
               <p className="text-neutral-700 leading-relaxed mb-4">
-                Phantom è un wallet non-custodial progettato specificamente per l'ecosistema Solana. Offre un'esperienza utente intuitiva e moderna per gestire SOL, token SPL e NFT.
+                Phantom è un wallet non-custodial progettato specificamente per l&apos;ecosistema Solana. Offre un&apos;esperienza utente intuitiva e moderna per gestire SOL, token SPL e NFT.
               </p>
               <p className="text-neutral-700 leading-relaxed">
                 Disponibile come estensione per browser e app mobile, Phantom è diventato il wallet di riferimento per gli utenti Solana.
@@ -65,8 +62,8 @@ export default function PhantomPage() {
                 <div className="flex items-start gap-4">
                   <div className="w-8 h-8 bg-primary-500 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">1</div>
                   <div>
-                    <h3 className="font-semibold text-neutral-900 mb-2">Scarica l'estensione</h3>
-                    <p className="text-neutral-700">Vai su phantom.app e scarica l'estensione per il tuo browser</p>
+                    <h3 className="font-semibold text-neutral-900 mb-2">Scarica l&apos;estensione</h3>
+                    <p className="text-neutral-700">Vai su phantom.app e scarica l&apos;estensione per il tuo browser</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">

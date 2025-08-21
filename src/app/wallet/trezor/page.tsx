@@ -1,8 +1,6 @@
 
 import Image from "next/image";
 import trezorIcon from "@/assets/trezor-icon.png";
-import { Accordion } from "@/components/Accordion";
-import { List } from "@/components/List";
 
 export default function TrezorPage() {
   return (
@@ -23,7 +21,7 @@ export default function TrezorPage() {
           {/* Contenuto principale */}
           <div className="space-y-8">
             <div className="bg-white rounded-2xl p-8 shadow-lg border border-neutral-100">
-              <h2 className="text-2xl font-bold mb-4 text-neutral-900">Cos'è Trezor?</h2>
+              <h2 className="text-2xl font-bold mb-4 text-neutral-900">Cos&apos;è Trezor?</h2>
               <p className="text-neutral-700 leading-relaxed mb-4">
                 Trezor è il primo hardware wallet mai creato, sviluppato da SatoshiLabs nel 2014. È un dispositivo fisico che mantiene le tue chiavi private offline, offrendo il massimo livello di sicurezza per i tuoi asset digitali.
               </p>

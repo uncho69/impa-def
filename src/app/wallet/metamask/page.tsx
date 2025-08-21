@@ -1,7 +1,5 @@
 import Image from "next/image";
 import metamaskIcon from "@/assets/metamask-icon.svg";
-import { Accordion } from "@/components/Accordion";
-import { List } from "@/components/List";
 
 export default function MetaMaskPage() {
   return (
@@ -22,7 +20,7 @@ export default function MetaMaskPage() {
           {/* Contenuto principale */}
           <div className="space-y-8">
             <div className="bg-white rounded-2xl p-8 shadow-lg border border-neutral-100">
-              <h2 className="text-2xl font-bold mb-4 text-neutral-900">Cos'è MetaMask?</h2>
+              <h2 className="text-2xl font-bold mb-4 text-neutral-900">Cos&apos;è MetaMask?</h2>
               <p className="text-neutral-700 leading-relaxed mb-4">
                 MetaMask è un wallet software che permette agli utenti di interagire con la blockchain Ethereum e altre reti compatibili. È disponibile come estensione per browser e come app mobile.
               </p>
@@ -63,8 +61,8 @@ export default function MetaMaskPage() {
                 <div className="flex items-start gap-4">
                   <div className="w-8 h-8 bg-primary-500 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">1</div>
                   <div>
-                    <h3 className="font-semibold text-neutral-900 mb-2">Scarica l'estensione</h3>
-                    <p className="text-neutral-700">Vai su metamask.io e scarica l'estensione per il tuo browser</p>
+                    <h3 className="font-semibold text-neutral-900 mb-2">Scarica l&apos;estensione</h3>
+                    <p className="text-neutral-700">Vai su metamask.io e scarica l&apos;estensione per il tuo browser</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
@@ -98,7 +96,7 @@ export default function MetaMaskPage() {
                   <strong>Importante:</strong> MetaMask non ha mai accesso alle tue chiavi private. Queste sono crittografate e memorizzate localmente sul tuo dispositivo.
                 </p>
                 <p>
-                  <strong>Seed Phrase:</strong> Le 12 parole di recupero sono l'unico modo per ripristinare il tuo wallet. Non condividerle mai con nessuno e conservale in un posto sicuro.
+                  <strong>Seed Phrase:</strong> Le 12 parole di recupero sono l&apos;unico modo per ripristinare il tuo wallet. Non condividerle mai con nessuno e conservale in un posto sicuro.
                 </p>
                 <p>
                   <strong>Phishing:</strong> Fai sempre attenzione ai siti che chiedono di inserire la tua seed phrase. MetaMask non richiederà mai queste informazioni.
