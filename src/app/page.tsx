@@ -1,77 +1,58 @@
 import Link from "next/link";
-import { Button } from "@/components/Button";
-import { CardContainer } from "@/components/CardContainer";
-import { SimpleCard } from "@/components/SimpleCard";
-import { HomeButtons } from "@/components/HomeButtons";
-import { RichSectionTitle } from "@/components/RichSectionTitle";
-import { SectionBody } from "@/components/SectionBody";
-import { SectionTitle } from "@/components/SectionTitle";
-import { SectionTutorial } from "@/components/SectionTutorial";
-import { TokenCard } from "@/components/TokenCard";
-import { Footer } from "@/components/Footer";
-import { Navbar } from "@/components/Navbar";
-import { MobileContainer } from "@/components/MobileContainer";
-import { MobileMenu } from "@/components/MobileMenu";
-import { ModalMenu } from "@/components/ModalMenu";
-import { AuthStatus } from "@/components/AuthStatus";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
-import { Accordion } from "@/components/Accordion";
-import { List } from "@/components/List";
+import Image from "next/image";
+import VideoImage from "@/assets/Video.png";
 
-// Import delle icone
-import imparoDefiLogo from "@/assets/imparodefi-logo-nobg.webp";
-import ethereumIcon from "@/assets/ethereum-icon.svg";
-import bitcoinIcon from "@/assets/bitcoin-icon.svg";
-import solanaIcon from "@/assets/solana-sol-logo.svg";
-import polygonIcon from "@/assets/polygon-matic-logo.svg";
-import arbitrumIcon from "@/assets/arbitrum-arb-logo.svg";
-import optimismIcon from "@/assets/optimism-ethereum-op-logo.svg";
-import baseIcon from "@/assets/base-logo.svg";
-import avalancheIcon from "@/assets/avalanche-avax-logo.svg";
-import zksyncIcon from "@/assets/zkSync-logo.png";
-import scrollIcon from "@/assets/Scroll-Logo.svg";
-import lineaIcon from "@/assets/linea-logo.svg";
-import polygonZkIcon from "@/assets/polygon-matic-logo.svg";
-import berachainIcon from "@/assets/berachain-logo.png";
-import blastIcon from "@/assets/blast-logo.webp";
-import degenIcon from "@/assets/degen-base-degen-logo.svg";
-import zoraIcon from "@/assets/zora-logo.png";
-import sankoIcon from "@/assets/placeholder.svg";
-import hyperlaneIcon from "@/assets/hyperlane-logo.svg";
-import hyperliquidIcon from "@/assets/hyperliquid-logo.png";
-import layer3Icon from "@/assets/layer3-logo.png";
-import externalLinkIcon from "@/assets/external-link.svg";
-
-export default function HomePage() {
+export default function Home() {
   return (
-    <div className="min-h-screen bg-background">
-      {/* Navbar */}
-      <Navbar />
-
+    <div className="w-full">
       {/* Hero Section */}
-      <section className="relative py-20 lg:py-32 bg-gradient-to-b from-primary-50 to-white overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(120,119,198,0.1),transparent_50%)]"></div>
+      <section className="relative overflow-hidden bg-gradient-to-b from-primary-50 to-background py-16 md:py-24">
+        <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
         <div className="container-custom relative z-10">
-          <div className="max-w-6xl mx-auto text-center">
-            <div className="flex justify-center mb-8">
-              <img
-                src={imparoDefiLogo.src}
-                alt="ImparoDeFi Logo"
-                className="w-32 h-32 lg:w-40 lg:h-40"
-              />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+            <div className="max-w-2xl">
+              <h1 className="animate-slide-down mb-6 tracking-tight">
+                <span className="gradient-text text-4xl md:text-5xl lg:text-6xl">
+                  Il tuo accesso al mondo Web3
+                </span>
+              </h1>
+              
+              <p className="text-lg md:text-xl text-neutral-700 mb-8 animate-slide-down [animation-delay:200ms]">
+                Blockchain, DeFi, NFTs, memecoins, metaversi: tutto questo è Web3.
+                Le opportunità sono infinite, ma anche le trappole.
+                ImparoDeFi è la tua guida sicura per navigare questo nuovo mondo.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 animate-slide-up [animation-delay:400ms]">
+                <Link href="/registrati?next=/manuale" className="btn-primary">
+                  Inizia Subito
+                </Link>
+                <Link href="/newsletter" className="btn-outline">
+                  Iscriviti alla Newsletter
+                </Link>
+              </div>
             </div>
-            <h1 className="text-4xl lg:text-6xl font-bold mb-6 text-neutral-900 leading-tight">
-              Impara il{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-secondary-600">
-                Web3
-              </span>{" "}
-              in modo semplice
-            </h1>
-            <p className="text-xl lg:text-2xl text-neutral-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-              La tua guida sicura nel mondo delle criptovalute, DeFi e blockchain.
-              Curata da veri esperti per principianti e avanzati.
-            </p>
-            <HomeButtons />
+            
+            <div className="animate-fade-in [animation-delay:600ms]">
+              <div className="relative overflow-hidden rounded-2xl shadow-hard">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-2xl blur opacity-30 animate-pulse-slow"></div>
+                <div className="relative rounded-2xl overflow-hidden">
+                  <Image
+                    src={VideoImage}
+                    alt="ImparoDeFi Video Intro"
+                    className="w-full h-auto object-cover rounded-2xl transform hover:scale-105 transition-transform duration-700"
+                    priority
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="rounded-full bg-white/20 backdrop-blur-sm w-20 h-20 flex items-center justify-center shadow-lg border border-white/30 hover:scale-105 transition-transform cursor-pointer group">
+                      <svg className="h-10 w-10 text-white group-hover:text-primary-500 transition-colors" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -218,124 +199,30 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* Categorie Principali */}
-      <section className="py-20 bg-gradient-to-b from-white to-neutral-50">
+      
+      {/* Newsletter Section */}
+      <section className="py-16 bg-neutral-50">
         <div className="container-custom">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold mb-6 text-neutral-900">
-                Esplora il mondo Web3
-              </h2>
-              <p className="text-xl text-neutral-600 max-w-3xl mx-auto">
-                Scegli la categoria che ti interessa e inizia il tuo percorso di apprendimento
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {/* Blockchain */}
-              <SimpleCard
-                title="Blockchain"
-                description="Impara le fondamenta delle blockchain, dai concetti base alle tecnologie avanzate"
-                icon={ethereumIcon}
-                href="/blockchain"
-                externalLink="https://ethereum.org"
-                externalLinkText="Website"
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-3xl font-bold mb-6">Resta aggiornato</h2>
+            <p className="text-lg text-neutral-700 mb-8">
+              Inserisci la tua email per ottenere accesso gratuito all&apos;intera piattaforma e ricevere aggiornamenti sul mondo Web3.
+            </p>
+            
+            <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+              <input
+                type="email"
+                placeholder="La tua email"
+                className="input-field flex-grow"
+                required
               />
-
-              {/* DeFi */}
-              <SimpleCard
-                title="DeFi"
-                description="Scopri la finanza decentralizzata e come guadagnare con i tuoi asset digitali"
-                icon={ethereumIcon}
-                href="/defi"
-                externalLink="https://defipulse.com"
-                externalLinkText="Website"
-              />
-
-              {/* NFT */}
-              <SimpleCard
-                title="NFT"
-                description="Entra nel mondo degli NFT e scopri come creare, comprare e vendere collezioni digitali"
-                icon={ethereumIcon}
-                href="/nft"
-                externalLink="https://opensea.io"
-                externalLinkText="Website"
-              />
-
-              {/* Gaming */}
-              <SimpleCard
-                title="Gaming"
-                description="Esplora il gaming blockchain e come guadagnare giocando"
-                icon={ethereumIcon}
-                href="/giochi"
-                externalLink="https://axieinfinity.com"
-                externalLinkText="Website"
-              />
-
-              {/* Exchange */}
-              <SimpleCard
-                title="Exchange"
-                description="Impara a fare trading di criptovalute in modo sicuro e consapevole"
-                icon={ethereumIcon}
-                href="/exchange"
-                externalLink="https://coinbase.com"
-                externalLinkText="Website"
-              />
-
-              {/* Wallet */}
-              <SimpleCard
-                title="Wallet"
-                description="Scopri come gestire in sicurezza le tue criptovalute e chiavi private"
-                icon={ethereumIcon}
-                href="/wallet"
-                externalLink="https://metamask.io"
-                externalLinkText="Website"
-              />
-            </div>
+              <button type="submit" className="btn-primary whitespace-nowrap">
+                Iscriviti Ora
+              </button>
+            </form>
           </div>
         </div>
       </section>
-
-      {/* Tutorial Section */}
-      <section className="py-20 bg-white">
-        <div className="container-custom">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold mb-6 text-neutral-900">
-                Inizia Subito
-              </h2>
-              <p className="text-xl text-neutral-600 max-w-3xl mx-auto">
-                Tutorial pratici per iniziare il tuo viaggio nel Web3
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              <SectionTutorial
-                title="Primi Passi"
-                description="Guida completa per principianti assoluti"
-                href="/manuale"
-                icon="🚀"
-              />
-              <SectionTutorial
-                title="Wallet Setup"
-                description="Configura il tuo primo wallet in sicurezza"
-                href="/wallet"
-                icon="💼"
-              />
-              <SectionTutorial
-                title="Prima Transazione"
-                description="Impara a fare la tua prima transazione"
-                href="/blockchain/ethereum"
-                icon="💸"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <Footer />
     </div>
   );
 }
