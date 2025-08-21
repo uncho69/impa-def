@@ -32,22 +32,22 @@ export function Navbar() {
           
           <div className="hidden lg:flex items-center space-x-8">
             <div className="flex space-x-6">
-              <Link href="/blockchain" className="text-neutral-700 hover:text-primary-600 transition-colors font-medium">
+              <Link href="/blockchain" className="text-neutral-700 hover:text-primary-600 transition-colors font-medium text-sm">
                 Blockchain
               </Link>
-              <Link href="/defi" className="text-neutral-700 hover:text-primary-600 transition-colors font-medium">
+              <Link href="/defi" className="text-neutral-700 hover:text-primary-600 transition-colors font-medium text-sm">
                 DeFi
               </Link>
-              <Link href="/nft" className="text-neutral-700 hover:text-primary-600 transition-colors font-medium">
+              <Link href="/nft" className="text-neutral-700 hover:text-primary-600 transition-colors font-medium text-sm">
                 NFTs
               </Link>
-              <Link href="/giochi" className="text-neutral-700 hover:text-primary-600 transition-colors font-medium">
+              <Link href="/giochi" className="text-neutral-700 hover:text-primary-600 transition-colors font-medium text-sm">
                 GameFi
               </Link>
-              <Link href="/wallet" className="text-neutral-700 hover:text-primary-600 transition-colors font-medium">
+              <Link href="/wallet" className="text-neutral-700 hover:text-primary-600 transition-colors font-medium text-sm">
                 Wallet
               </Link>
-              <Link href="/supporto" className="text-neutral-700 hover:text-primary-600 transition-colors font-medium">
+              <Link href="/supporto" className="text-neutral-700 hover:text-primary-600 transition-colors font-medium text-sm">
                 Assistenza
               </Link>
             </div>

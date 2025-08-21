@@ -1,5 +1,6 @@
 import { CardContainer } from "@/components/CardContainer";
 import { SimpleCard } from "@/components/SimpleCard";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Placeholder from "@/assets/placeholder.svg";
 import metamaskIcon from "@/assets/metamask-icon.svg";
 import phantomIcon from "@/assets/phantom-icon.png";
@@ -10,7 +11,8 @@ import ledgerIcon from "@/assets/ledger-icon.png";
 
 export default function WalletPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-primary-50 to-background">
+    <ProtectedRoute title="Wallet">
+      <div className="min-h-screen bg-gradient-to-b from-primary-50 to-background">
       <div className="container-custom py-12">
         <div className="text-center mb-12">
           <h1 className="text-4xl lg:text-5xl font-bold text-neutral-900 mb-6">
@@ -128,5 +130,6 @@ export default function WalletPage() {
 
       </div>
     </div>
+    </ProtectedRoute>
   );
 }
