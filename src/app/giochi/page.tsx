@@ -7,6 +7,13 @@ import { List } from "@/components/List";
 import { CardContainer } from "@/components/CardContainer";
 import { SimpleCard } from "@/components/SimpleCard";
 
+// Import delle icone reali dei giochi
+import axieIcon from "@/assets/axie-icon.png";
+import bigtimeIcon from "@/assets/bigtime-icon.png";
+import decentralandIcon from "@/assets/decentraland-icon.png";
+import illuviumIcon from "@/assets/illuvium-icon.png";
+import sandboxIcon from "@/assets/sandbox-icon.png";
+
 export default function Giochi() {
   return (
     <ProtectedRoute title="GameFi">
@@ -123,13 +130,13 @@ export default function Giochi() {
               <h3 className="font-semibold mb-4">Piattaforme GameFi principali</h3>
               <CardContainer>
                 {[
-                  { title: "Axie Infinity", external: "https://axieinfinity.com/" },
-                  { title: "The Sandbox", external: "https://www.sandbox.game/" },
-                  { title: "Decentraland", external: "https://decentraland.org/" },
-                  { title: "Illuvium", external: "https://illuvium.io/" },
-                  { title: "Big Time", external: "https://bigtime.gg/" },
+                  { title: "Axie Infinity", external: "https://axieinfinity.com/", icon: axieIcon },
+                  { title: "The Sandbox", external: "https://www.sandbox.game/", icon: sandboxIcon },
+                  { title: "Decentraland", external: "https://decentraland.org/", icon: decentralandIcon },
+                  { title: "Illuvium", external: "https://illuvium.io/", icon: illuviumIcon },
+                  { title: "Big Time", external: "https://bigtime.gg/", icon: bigtimeIcon },
                 ].map((p) => (
-                  <SimpleCard key={p.title} title={p.title} href="#" externalLink={p.external} />
+                  <SimpleCard key={p.title} title={p.title} href="#" externalLink={p.external} icon={p.icon} />
                 ))}
               </CardContainer>
             </div>

@@ -58,17 +58,14 @@ export default function Home() {
       </section>
 
       {/* Perché ImparoDeFi Section - Design Innovativo */}
-      <section className="py-24 bg-white relative overflow-hidden">
+      <section className="py-16 bg-white relative overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.05)_0%,transparent_50%),radial-gradient(circle_at_70%_80%,rgba(16,185,129,0.05)_0%,transparent_50%)]"></div>
         
         <div className="container-custom relative z-10">
           {/* Header */}
-          <div className="text-center mb-20">
-            <div className="inline-block px-6 py-2 bg-gradient-to-r from-primary-100 to-secondary-100 rounded-full mb-6">
-              <span className="text-primary-700 font-semibold text-sm">La Nostra Missione</span>
-            </div>
-            <h2 className="text-5xl font-bold mb-6 text-neutral-900">
+          <div className="text-center mb-16">
+            <h2 className="gradient-text text-5xl font-bold mb-6">
               Perché ImparoDeFi?
             </h2>
           </div>
