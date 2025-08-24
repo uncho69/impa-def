@@ -1,5 +1,5 @@
 import { MobileContainer } from "@/components/MobileContainer";
-import { SectionTitle } from "@/components/SectionTitle";
+import { PageTitle } from "@/components/PageTitle";
 import { SectionBody } from "@/components/SectionBody";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
@@ -21,8 +21,10 @@ import blurIcon from "@/assets/blur-icon.png";
 export default function Giochi() {
   return (
     <ProtectedRoute title="GameFi">
+      <PageTitle description="L'intersezione tra gaming e finanza decentralizzata">
+        GameFi
+      </PageTitle>
       <MobileContainer>
-        <SectionTitle showBackToHome={true}>GameFi</SectionTitle>
         <SectionBody>
           <div className="space-y-6">
             <p className="text-neutral-700">

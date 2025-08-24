@@ -1,4 +1,5 @@
 import { MobileContainer } from "@/components/MobileContainer";
+import { PageTitle } from "@/components/PageTitle";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
@@ -30,8 +31,10 @@ import lidoIcon from "@/assets/placeholder.svg";
 export default function Defi() {
   return (
     <ProtectedRoute title="DeFi">
+      <PageTitle description="La finanza decentralizzata aperta a tutti, senza intermediari">
+        DeFi
+      </PageTitle>
       <MobileContainer>
-        <SectionTitle showBackToHome={true}>DeFi</SectionTitle>
         <SectionBody>
           La finanza decentralizzata, o DeFi, è un sistema finanziario che
           funziona su blockchain, principalmente grazie agli smart-contract e

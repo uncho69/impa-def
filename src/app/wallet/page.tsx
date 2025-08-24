@@ -2,6 +2,7 @@ import { CardContainer } from "@/components/CardContainer";
 import { SimpleCard } from "@/components/SimpleCard";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { BackToHome } from "@/components/BackToHome";
+import { ExploreWeb3 } from "@/components/ExploreWeb3";
 import Placeholder from "@/assets/placeholder.svg";
 import metamaskIcon from "@/assets/metamask-icon.svg";
 import phantomIcon from "@/assets/phantom-icon.png";
@@ -131,6 +132,9 @@ export default function WalletPage() {
           </div>
         </div>
 
+        <div className="container-custom py-8">
+          <ExploreWeb3 />
+        </div>
 
       </div>
     </div>

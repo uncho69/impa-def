@@ -1,23 +1,20 @@
-import { MobileContainer } from "@/components/MobileContainer";
-import { SectionTitle } from "@/components/SectionTitle";
-import { SectionBody } from "@/components/SectionBody";
+import { PageLayout } from "@/components/PageLayout";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 // import Image from "next/image";
 // import VideoImage from "@/assets/Video.png";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 import { BlockchainCardList } from "@/components/BlockchainCardList";
+import { ExploreWeb3 } from "@/components/ExploreWeb3";
 
 export default function Blockchain() {
   return (
     <ProtectedRoute title="Blockchain">
-      <MobileContainer>
-        <SectionTitle showBackToHome={true}>Blockchain</SectionTitle>
-        <SectionBody>
-          {/* <div className="flex items-center justify-center">
-            <Image src={VideoImage} alt="" />
-          </div> */}
-          <div>
+      <PageLayout 
+        title="Blockchain" 
+        description="Scopri la tecnologia che sta rivoluzionando il modo di trasferire e memorizzare dati"
+      >
+        <div className="bg-white rounded-2xl shadow-lg p-8 border border-neutral-200 mb-8">
             <p>
               La <b>blockchain</b> è una tecnologia rivoluzionaria che sta
               trasformando il modo in cui memorizziamo e trasferiamo dati in
@@ -104,10 +101,10 @@ export default function Blockchain() {
                 </li>
               </List>
             </Accordion>
-          </div>
-        </SectionBody>
-        <SectionTitle>Cosa sono le Layer2 (L2)</SectionTitle>
-        <SectionBody>
+        </div>
+
+        <div className="bg-white rounded-2xl shadow-lg p-8 border border-neutral-200 mb-8">
+          <h2 className="text-3xl font-bold gradient-text mb-6">Cosa sono le Layer2 (L2)</h2>
           <p>
             <b>Layer 2</b> è un termine che si riferisce a soluzioni di
             scalabilità costruite sopra una blockchain Layer 1 come Ethereum.
@@ -249,12 +246,15 @@ export default function Blockchain() {
               </li>
             </List>
           </Accordion>
-        </SectionBody>
-        <SectionTitle>Lista Blockchain</SectionTitle>
-        <SectionBody>
+        </div>
+
+        <div className="bg-white rounded-2xl shadow-lg p-8 border border-neutral-200 mb-8">
+          <h2 className="text-3xl font-bold gradient-text mb-6">Lista Blockchain</h2>
           <BlockchainCardList />
-        </SectionBody>
-      </MobileContainer>
+        </div>
+        
+        <ExploreWeb3 />
+      </PageLayout>
     </ProtectedRoute>
   );
 }

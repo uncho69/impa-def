@@ -1,5 +1,5 @@
 import { MobileContainer } from "@/components/MobileContainer";
-import { SectionTitle } from "@/components/SectionTitle";
+import { PageTitle } from "@/components/PageTitle";
 import { SectionBody } from "@/components/SectionBody";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
@@ -23,8 +23,10 @@ import tubbycatsIcon from "@/assets/tubbycats-icon.png";
 export default function NFT() {
   return (
     <ProtectedRoute title="NFTs">
+      <PageTitle description="Scopri il mondo dei token non fungibili e le loro applicazioni">
+        NFTs
+      </PageTitle>
       <MobileContainer>
-        <SectionTitle showBackToHome={true}>NFTs</SectionTitle>
         <SectionBody>
           <div className="space-y-6">
             <p className="text-neutral-700">
