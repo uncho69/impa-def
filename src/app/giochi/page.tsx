@@ -9,10 +9,14 @@ import { SimpleCard } from "@/components/SimpleCard";
 
 // Import delle icone reali dei giochi
 import axieIcon from "@/assets/axie-icon.png";
-import bigtimeIcon from "@/assets/bigtime-icon.png";
 import decentralandIcon from "@/assets/decentraland-icon.png";
-import illuviumIcon from "@/assets/illuvium-icon.png";
 import sandboxIcon from "@/assets/sandbox-icon.png";
+
+// Import delle icone dei marketplace
+import openseaIcon from "@/assets/opensea-icon.png";
+import looksrareIcon from "@/assets/looksrare-icon.png";
+import magicedenIcon from "@/assets/magiceden-icon.png";
+import blurIcon from "@/assets/blur-icon.png";
 
 export default function Giochi() {
   return (
@@ -53,7 +57,7 @@ export default function Giochi() {
                     <b>Giochi di strategia</b>: Axie Infinity, Gods Unchained
                   </li>
                   <li>
-                    <b>Giochi di ruolo</b>: Illuvium, Big Time
+                    <b>Giochi di ruolo</b>: The Sandbox, Decentraland
                   </li>
                   <li>
                     <b>Giochi di simulazione</b>: The Sandbox, Decentraland
@@ -133,8 +137,6 @@ export default function Giochi() {
                   { title: "Axie Infinity", external: "https://axieinfinity.com/", icon: axieIcon },
                   { title: "The Sandbox", external: "https://www.sandbox.game/", icon: sandboxIcon },
                   { title: "Decentraland", external: "https://decentraland.org/", icon: decentralandIcon },
-                  { title: "Illuvium", external: "https://illuvium.io/", icon: illuviumIcon },
-                  { title: "Big Time", external: "https://bigtime.gg/", icon: bigtimeIcon },
                 ].map((p) => (
                   <SimpleCard key={p.title} title={p.title} href="#" externalLink={p.external} icon={p.icon} />
                 ))}
@@ -146,13 +148,12 @@ export default function Giochi() {
               <h3 className="font-semibold mb-4">Marketplace per asset GameFi</h3>
               <CardContainer>
                 {[
-                  { title: "OpenSea", external: "https://opensea.io/" },
-                  { title: "Magic Eden", external: "https://magiceden.io/" },
-                  { title: "Blur", external: "https://blur.io/" },
-                  { title: "X2Y2", external: "https://x2y2.io/" },
-                  { title: "LooksRare", external: "https://looksrare.org/" },
+                  { title: "OpenSea", external: "https://opensea.io/", icon: openseaIcon },
+                  { title: "Magic Eden", external: "https://magiceden.io/", icon: magicedenIcon },
+                  { title: "Blur", external: "https://blur.io/", icon: blurIcon },
+                  { title: "LooksRare", external: "https://looksrare.org/", icon: looksrareIcon },
                 ].map((p) => (
-                  <SimpleCard key={p.title} title={p.title} href="#" externalLink={p.external} />
+                  <SimpleCard key={p.title} title={p.title} href="#" externalLink={p.external} icon={p.icon} />
                 ))}
               </CardContainer>
             </div>

@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { ModalMenu } from "./ModalMenu";
 
 const titleClass =
-  "text-2xl md:text-3xl font-bold tracking-tight text-neutral-900";
+  "text-2xl md:text-3xl font-bold tracking-tight gradient-text";
 
 export function SectionTitle({
   children,

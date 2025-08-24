@@ -8,6 +8,18 @@ import { Button } from "@/components/Button";
 import { CardContainer } from "@/components/CardContainer";
 import { SimpleCard } from "@/components/SimpleCard";
 
+// Import delle icone dei marketplace NFT
+import openseaIcon from "@/assets/opensea-icon.png";
+import blurIcon from "@/assets/blur-icon.png";
+import magicedenIcon from "@/assets/magiceden-icon.png";
+
+// Import delle icone delle collezioni NFT popolari
+import cpunksIcon from "@/assets/cpunks-icon.png";
+import miladyIcon from "@/assets/milady-icon.png";
+import pudgypenguinsIcon from "@/assets/pudgypenguins-icon.png";
+import remilioIcon from "@/assets/remilio-icon.png";
+import tubbycatsIcon from "@/assets/tubbycats-icon.png";
+
 export default function NFT() {
   return (
     <ProtectedRoute title="NFTs">
@@ -129,13 +141,13 @@ export default function NFT() {
               <h3 className="font-semibold mb-4">Piattaforme NFT</h3>
               <CardContainer>
                 {[
-                  { title: "OpenSea", external: "https://opensea.io/" },
-                  { title: "Blur", external: "https://blur.io/" },
-                  { title: "Magic Eden", external: "https://magiceden.io/" },
+                  { title: "OpenSea", external: "https://opensea.io/", icon: openseaIcon },
+                  { title: "Blur", external: "https://blur.io/", icon: blurIcon },
+                  { title: "Magic Eden", external: "https://magiceden.io/", icon: magicedenIcon },
                   { title: "SuperRare", external: "https://superrare.com/" },
                   { title: "Zora", external: "https://zora.co/" },
                 ].map((p) => (
-                  <SimpleCard key={p.title} title={p.title} href="#" externalLink={p.external} />
+                  <SimpleCard key={p.title} title={p.title} href="#" externalLink={p.external} icon={p.icon} />
                 ))}
               </CardContainer>
             </div>
@@ -145,13 +157,13 @@ export default function NFT() {
               <h3 className="font-semibold mb-4">Collezioni NFT popolari</h3>
               <CardContainer>
                 {[
-                  { title: "CryptoPunks", external: "https://www.larvalabs.com/cryptopunks" },
-                  { title: "Milady", external: "https://miladymaker.net/" },
-                  { title: "Pudgy Penguins", external: "https://www.pudgypenguins.com/" },
-                  { title: "Redacted Remilio Babies", external: "https://remilio.org/" },
-                  { title: "Tubby Cats", external: "https://tubbycats.xyz/" },
+                  { title: "CryptoPunks", external: "https://www.larvalabs.com/cryptopunks", icon: cpunksIcon },
+                  { title: "Milady", external: "https://miladymaker.net/", icon: miladyIcon },
+                  { title: "Pudgy Penguins", external: "https://www.pudgypenguins.com/", icon: pudgypenguinsIcon },
+                  { title: "Redacted Remilio Babies", external: "https://remilio.org/", icon: remilioIcon },
+                  { title: "Tubby Cats", external: "https://tubbycats.xyz/", icon: tubbycatsIcon },
                 ].map((c) => (
-                  <SimpleCard key={c.title} title={c.title} href="#" externalLink={c.external} />
+                  <SimpleCard key={c.title} title={c.title} href="#" externalLink={c.external} icon={c.icon} />
                 ))}
               </CardContainer>
             </div>

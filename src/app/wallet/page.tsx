@@ -15,7 +15,7 @@ export default function WalletPage() {
       <div className="min-h-screen bg-gradient-to-b from-primary-50 to-background">
       <div className="container-custom py-12">
         <div className="text-center mb-12">
-          <h1 className="text-4xl lg:text-5xl font-bold text-neutral-900 mb-6">
+          <h1 className="text-4xl lg:text-5xl font-bold gradient-text mb-6">
             Portafogli Non-Custodial
           </h1>
           <p className="text-xl text-neutral-600 max-w-3xl mx-auto">
@@ -25,14 +25,14 @@ export default function WalletPage() {
 
         {/* Sezione Informazioni Generali */}
         <div className="bg-white rounded-2xl shadow-lg p-8 border border-neutral-200 mb-16">
-          <h3 className="text-2xl font-bold text-neutral-900 mb-6">
+          <h3 className="text-2xl font-bold gradient-text mb-6">
             Cos&apos;è il Wallet Non-Custodial?
           </h3>
           <p className="text-neutral-600 mb-6 leading-relaxed">
             Il portafoglio (&quot;wallet&quot;) non-custodial è un portafoglio virtuale utilizzato per ricevere, inviare, e conservare le criptovalute. Viene indicato anche come &quot;self-custody wallet&quot;, che significa &quot;a custodia personale&quot;. Può essere scaricato su mobile o aggiunto come browser extension sul pc, o in forma di hardware wallet (dispositivo fisico).
           </p>
           
-          <h4 className="text-xl font-semibold text-neutral-900 mb-4">
+          <h4 className="text-xl font-semibold gradient-text mb-4">
             Che vantaggi offre?
           </h4>
           <p className="text-neutral-600 mb-4 leading-relaxed">
@@ -45,7 +45,7 @@ export default function WalletPage() {
 
         {/* Sezione Portafogli Software */}
         <div className="mb-16">
-          <h2 className="text-3xl font-bold text-neutral-900 mb-8 text-center">
+          <h2 className="text-3xl font-bold gradient-text mb-8 text-center">
             Portafogli Software
           </h2>
           <CardContainer>
@@ -98,7 +98,7 @@ export default function WalletPage() {
 
         {/* Sezione Hardware Wallets */}
         <div className="mb-16">
-          <h2 className="text-3xl font-bold text-neutral-900 mb-8 text-center">
+          <h2 className="text-3xl font-bold gradient-text mb-8 text-center">
             Hardware Wallets
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-4 max-w-4xl mx-auto">

@@ -9,6 +9,24 @@ import { SimpleCard } from "@/components/SimpleCard";
 import Placeholder from "@/assets/placeholder.svg";
 import { SectionTutorial } from "@/components/SectionTutorial";
 
+// Import icone delle DEX
+import hyperliquidIcon from "@/assets/hyperliquid-icon.png";
+import uniswapIcon from "@/assets/uniswap-icon.png";
+import orbiterIcon from "@/assets/orbiterfinance-icon.png";
+import jumperIcon from "@/assets/placeholder.svg";
+import camelotIcon from "@/assets/placeholder.svg";
+import curveIcon from "@/assets/placeholder.svg";
+import raydiumIcon from "@/assets/placeholder.svg";
+import jupiterIcon from "@/assets/placeholder.svg";
+import balancerIcon from "@/assets/placeholder.svg";
+import syncswapIcon from "@/assets/placeholder.svg";
+import stargateIcon from "@/assets/placeholder.svg";
+import debridgeIcon from "@/assets/placeholder.svg";
+import layerzeroIcon from "@/assets/placeholder.svg";
+import yearnIcon from "@/assets/placeholder.svg";
+import compoundIcon from "@/assets/placeholder.svg";
+import lidoIcon from "@/assets/placeholder.svg";
+
 export default function Defi() {
   return (
     <ProtectedRoute title="DeFi">
@@ -162,113 +180,211 @@ export default function Defi() {
             <br />
             <CardContainer>
               <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
+                title={"Hyperliquid"}
+                icon={hyperliquidIcon}
+                subArray={[
+                  { icon: Placeholder, text: "Hyperliquid L1" },
+                  { icon: Placeholder, text: "Perpetuals" }
+                ]}
                 subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
+                externalLink="https://app.hyperliquid.xyz/"
+                xPage="https://x.com/HyperliquidX"
+                href="/defi/hyperliquid"
               />
               <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
+                title={"Uniswap"}
+                icon={uniswapIcon}
+                subArray={[
+                  { icon: Placeholder, text: "Ethereum" },
+                  { icon: Placeholder, text: "Arbitrum" },
+                  { icon: Placeholder, text: "Optimism" },
+                  { icon: Placeholder, text: "Polygon" },
+                  { icon: Placeholder, text: "Base" }
+                ]}
                 subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
+                externalLink="https://app.uniswap.org/swap"
+                xPage="https://x.com/Uniswap"
+                href="/defi/uniswap"
               />
               <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
+                title={"Orbiter Finance"}
+                icon={orbiterIcon}
+                subArray={[
+                  { icon: Placeholder, text: "Ethereum" },
+                  { icon: Placeholder, text: "Arbitrum" },
+                  { icon: Placeholder, text: "Optimism" },
+                  { icon: Placeholder, text: "zkSync" }
+                ]}
                 subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
+                externalLink="https://www.orbiter.finance/"
+                xPage="https://x.com/Orbiter_Finance"
+                href="/defi/orbiter"
               />
               <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
+                title={"Jumper"}
+                icon={jumperIcon}
+                subArray={[
+                  { icon: Placeholder, text: "Multi-Chain" },
+                  { icon: Placeholder, text: "Bridge" },
+                  { icon: Placeholder, text: "Swap" }
+                ]}
+                subArrayTitle="Tipo"
+                externalLink="https://jumper.exchange/"
+                xPage="https://x.com/JumperExchange"
+                href="/defi/jumper"
               />
               <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
+                title={"Stargate"}
+                icon={stargateIcon}
+                subArray={[
+                  { icon: Placeholder, text: "Ethereum" },
+                  { icon: Placeholder, text: "Arbitrum" },
+                  { icon: Placeholder, text: "Optimism" },
+                  { icon: Placeholder, text: "Polygon" }
+                ]}
                 subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
+                externalLink="https://stargate.finance/"
+                xPage="https://x.com/StargateFinance"
+                href="/defi/stargate"
               />
               <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
+                title={"deBridge"}
+                icon={debridgeIcon}
+                subArray={[
+                  { icon: Placeholder, text: "Cross-Chain" },
+                  { icon: Placeholder, text: "Bridge" }
+                ]}
+                subArrayTitle="Tipo"
+                externalLink="https://debridge.finance/"
+                xPage="https://x.com/deBridgeFinance"
+                href="/defi/debridge"
               />
               <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
+                title={"Camelot"}
+                icon={camelotIcon}
+                subArray={[
+                  { icon: Placeholder, text: "Arbitrum" },
+                  { icon: Placeholder, text: "Sanko" },
+                  { icon: Placeholder, text: "XAI" }
+                ]}
                 subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
+                externalLink="https://app.camelot.exchange/"
+                xPage="https://x.com/CamelotDEX"
+                href="/defi/camelot"
               />
               <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
+                title={"Curve"}
+                icon={curveIcon}
+                subArray={[
+                  { icon: Placeholder, text: "Ethereum" },
+                  { icon: Placeholder, text: "Arbitrum" },
+                  { icon: Placeholder, text: "Optimism" },
+                  { icon: Placeholder, text: "Polygon" }
+                ]}
                 subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
+                externalLink="https://curve.fi/"
+                xPage="https://x.com/CurveFinance"
+                href="/defi/curve"
               />
               <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
+                title={"Jupiter"}
+                icon={jupiterIcon}
+                subArray={[
+                  { icon: Placeholder, text: "Solana" }
+                ]}
                 subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
+                externalLink="https://jup.ag/"
+                xPage="https://x.com/JupiterExchange"
+                href="/defi/jupiter"
               />
               <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
+                title={"Raydium"}
+                icon={raydiumIcon}
+                subArray={[
+                  { icon: Placeholder, text: "Solana" }
+                ]}
                 subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
+                externalLink="https://raydium.io/"
+                xPage="https://x.com/RaydiumProtocol"
+                href="/defi/raydium"
               />
               <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
+                title={"Balancer"}
+                icon={balancerIcon}
+                subArray={[
+                  { icon: Placeholder, text: "Ethereum" },
+                  { icon: Placeholder, text: "Arbitrum" },
+                  { icon: Placeholder, text: "Polygon" }
+                ]}
                 subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
+                externalLink="https://balancer.fi/"
+                xPage="https://x.com/Balancer"
+                href="/defi/balancer"
               />
               <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
+                title={"SyncSwap"}
+                icon={syncswapIcon}
+                subArray={[
+                  { icon: Placeholder, text: "zkSync" },
+                  { icon: Placeholder, text: "Linea" },
+                  { icon: Placeholder, text: "Scroll" }
+                ]}
                 subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
+                externalLink="https://syncswap.xyz/"
+                xPage="https://twitter.com/syncswap"
+                href="/defi/syncswap"
               />
               <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
+                title={"Yearn Finance"}
+                icon={yearnIcon}
+                subArray={[
+                  { icon: Placeholder, text: "Ethereum" },
+                  { icon: Placeholder, text: "Yield Farming" }
+                ]}
+                subArrayTitle="Tipo"
+                externalLink="https://yearn.fi/"
+                xPage="https://x.com/yearnfi"
+                href="/defi/yearn"
               />
               <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
+                title={"Compound"}
+                icon={compoundIcon}
+                subArray={[
+                  { icon: Placeholder, text: "Ethereum" },
+                  { icon: Placeholder, text: "Lending" }
+                ]}
+                subArrayTitle="Tipo"
+                externalLink="https://compound.finance/"
+                xPage="https://x.com/compoundfinance"
+                href="/defi/compound"
               />
               <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
+                title={"Lido Finance"}
+                icon={lidoIcon}
+                subArray={[
+                  { icon: Placeholder, text: "Ethereum" },
+                  { icon: Placeholder, text: "Staking" }
+                ]}
+                subArrayTitle="Tipo"
+                externalLink="https://lido.fi/"
+                xPage="https://x.com/LidoFinance"
+                href="/defi/lido"
+              />
+              <SimpleCard
+                title={"LayerZero"}
+                icon={layerzeroIcon}
+                subArray={[
+                  { icon: Placeholder, text: "Omnichain" },
+                  { icon: Placeholder, text: "Protocol" }
+                ]}
+                subArrayTitle="Tipo"
+                externalLink="https://layerzero.network/"
+                xPage="https://x.com/LayerZero_Labs"
+                href="/defi/layerzero"
               />
             </CardContainer>
           </Accordion>
-          <strong>Prestiti e Rendimenti</strong>
+          <h2 className="text-3xl font-bold gradient-text mb-6 mt-8">Prestiti e Rendimenti</h2>
           <Accordion buttonText="Cosa sono" defaultOpen={true}>
             Le piattaforme decentralizzate di prestiti e rendimenti permettono
             agli utenti di prestare o prendere in prestito criptovalute in modo
