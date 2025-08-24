@@ -22,7 +22,7 @@ export default function Giochi() {
   return (
     <ProtectedRoute title="GameFi">
       <MobileContainer>
-        <SectionTitle main={true}>GameFi</SectionTitle>
+        <SectionTitle showBackToHome={true}>GameFi</SectionTitle>
         <SectionBody>
           <div className="space-y-6">
             <p className="text-neutral-700">

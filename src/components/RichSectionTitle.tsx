@@ -8,20 +8,18 @@ import placeholder from "@/assets/placeholder.svg";
 
 export function RichSectionTitle({
   children,
-  main = false,
   externalLink,
   xPage,
   icon = placeholder,
 }: {
   children: ReactNode;
-  main?: boolean;
   externalLink?: string;
   xPage?: string;
   icon?: string;
 }) {
   return (
     <div className="bg-foreground lg:bg-inherit rounded-md lg:p-0 p-6 flex flex-col lg:flex-row h-44 lg:h-auto">
-      <SectionTitle main={main}>
+      <SectionTitle>
         <div className="flex lg:items-center flex-col lg:flex-row lg:justify-evenly lg:gap-16 gap-6 h-full">
           <div className="flex items-center gap-6">
             <Image src={icon} alt="" className="lg:hidden w-16" />

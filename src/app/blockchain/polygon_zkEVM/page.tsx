@@ -11,7 +11,7 @@ import { SimpleCard } from "@/components/SimpleCard";
 export default function manuale() {
   return (
     <MobileContainer>
-      <SectionTitle main={true}>Blockchain</SectionTitle>
+      <SectionTitle>Blockchain</SectionTitle>
       <SectionBody>
         <h1 className="font-bold text-4xl">Polygon zkEVM</h1>
         <p>

@@ -12,7 +12,7 @@ export default function Blockchain() {
   return (
     <ProtectedRoute title="Blockchain">
       <MobileContainer>
-        <SectionTitle main={true}>Blockchain</SectionTitle>
+        <SectionTitle showBackToHome={true}>Blockchain</SectionTitle>
         <SectionBody>
           {/* <div className="flex items-center justify-center">
             <Image src={VideoImage} alt="" />

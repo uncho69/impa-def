@@ -7,7 +7,7 @@ import Link from "next/link";
 export default function manuale() {
   return (
     <MobileContainer>
-      <SectionTitle main={true}>Linea</SectionTitle>
+      <SectionTitle>Linea</SectionTitle>
       <SectionBody>
         <div>
           <h1 className="font-bold text-4xl">Tutorial</h1>

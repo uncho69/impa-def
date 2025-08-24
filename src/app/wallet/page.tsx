@@ -1,6 +1,7 @@
 import { CardContainer } from "@/components/CardContainer";
 import { SimpleCard } from "@/components/SimpleCard";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { BackToHome } from "@/components/BackToHome";
 import Placeholder from "@/assets/placeholder.svg";
 import metamaskIcon from "@/assets/metamask-icon.svg";
 import phantomIcon from "@/assets/phantom-icon.png";
@@ -14,6 +15,9 @@ export default function WalletPage() {
     <ProtectedRoute title="Wallet">
       <div className="min-h-screen bg-gradient-to-b from-primary-50 to-background">
       <div className="container-custom py-12">
+        <div className="flex justify-end mb-6">
+          <BackToHome />
+        </div>
         <div className="text-center mb-12">
           <h1 className="text-4xl lg:text-5xl font-bold gradient-text mb-6">
             Portafogli Non-Custodial

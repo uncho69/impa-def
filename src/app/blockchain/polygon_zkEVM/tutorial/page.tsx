@@ -6,7 +6,7 @@ import { SectionTitle } from "@/components/SectionTitle";
 export default function manuale() {
   return (
     <MobileContainer>
-      <SectionTitle main={true}>Polygon zkEVM</SectionTitle>
+      <SectionTitle>Polygon zkEVM</SectionTitle>
       <SectionBody>
         <div>
           <h1 className="font-bold text-4xl">Tutorial</h1>

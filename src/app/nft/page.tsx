@@ -24,7 +24,7 @@ export default function NFT() {
   return (
     <ProtectedRoute title="NFTs">
       <MobileContainer>
-        <SectionTitle main={true}>NFTs</SectionTitle>
+        <SectionTitle showBackToHome={true}>NFTs</SectionTitle>
         <SectionBody>
           <div className="space-y-6">
             <p className="text-neutral-700">

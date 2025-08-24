@@ -14,7 +14,7 @@ export default function Uniswap() {
         <div className="flex items-center gap-4 mb-6">
           <Image src={uniswapIcon} alt="Uniswap" width={64} height={64} />
           <div>
-            <SectionTitle main={true}>Uniswap</SectionTitle>
+            <SectionTitle>Uniswap</SectionTitle>
             <div className="flex flex-wrap gap-2 mt-2">
               <span className="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm font-medium">
                 DEX

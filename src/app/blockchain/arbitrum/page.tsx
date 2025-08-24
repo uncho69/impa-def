@@ -11,7 +11,7 @@ import Placeholder from "@/assets/placeholder.svg";
 export default function manuale() {
   return (
     <MobileContainer>
-      <SectionTitle main={true}>Blockchain</SectionTitle>
+      <SectionTitle>Blockchain</SectionTitle>
       <SectionBody>
         <div>
           <h1 className="font-bold text-4xl">Arbitrum</h1>

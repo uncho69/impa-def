@@ -14,7 +14,7 @@ export default function Hyperliquid() {
         <div className="flex items-center gap-4 mb-6">
           <Image src={hyperliquidIcon} alt="Hyperliquid" width={64} height={64} />
           <div>
-            <SectionTitle main={true}>Hyperliquid</SectionTitle>
+            <SectionTitle>Hyperliquid</SectionTitle>
             <div className="flex flex-wrap gap-2 mt-2">
               <span className="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm font-medium">
                 DEX

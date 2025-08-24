@@ -6,7 +6,7 @@ import Link from "next/link";
 export default function Supporto() {
   return (
     <MobileContainer>
-      <SectionTitle main={true}>Assistenza</SectionTitle>
+      <SectionTitle showBackToHome={true}>Assistenza</SectionTitle>
       <SectionBody>
         <p className="text-neutral-700">
           Hai bisogno di aiuto con ImparoDeFi? Qui trovi risposte rapide e i canali per contattarci.

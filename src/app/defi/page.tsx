@@ -31,7 +31,7 @@ export default function Defi() {
   return (
     <ProtectedRoute title="DeFi">
       <MobileContainer>
-        <SectionTitle main={true}>DeFi</SectionTitle>
+        <SectionTitle showBackToHome={true}>DeFi</SectionTitle>
         <SectionBody>
           La finanza decentralizzata, o DeFi, è un sistema finanziario che
           funziona su blockchain, principalmente grazie agli smart-contract e

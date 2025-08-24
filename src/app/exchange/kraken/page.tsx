@@ -11,7 +11,7 @@ export default function Blockchain() {
   return (
     <div className="flex flex-col lg:gap-6 gap-2">
       <RichSectionTitle
-        main={true}
+       
         externalLink="https://www.kraken.com/"
         xPage="https://x.com/krakenfx"
       >

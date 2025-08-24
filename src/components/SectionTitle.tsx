@@ -1,20 +1,20 @@
 import { ReactNode } from "react";
-import { ModalMenu } from "./ModalMenu";
+import { BackToHome } from "./BackToHome";
 
 const titleClass =
   "text-2xl md:text-3xl font-bold tracking-tight gradient-text";
 
 export function SectionTitle({
   children,
-  main = false,
+  showBackToHome = false,
 }: {
   children?: ReactNode;
-  main?: boolean;
+  showBackToHome?: boolean;
 }) {
   return (
     <div className="flex items-center justify-between w-full">
       <h2 className={titleClass}>{children}</h2>
-      {main && <ModalMenu />}
+      {showBackToHome && <BackToHome />}
     </div>
   );
 }

@@ -14,7 +14,7 @@ export default function SyncSwap() {
         <div className="flex items-center gap-4 mb-6">
           <Image src={Placeholder} alt="SyncSwap" width={64} height={64} />
           <div>
-            <SectionTitle main={true}>SyncSwap</SectionTitle>
+            <SectionTitle>SyncSwap</SectionTitle>
             <div className="flex flex-wrap gap-2 mt-2">
               <span className="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm font-medium">
                 DEX
