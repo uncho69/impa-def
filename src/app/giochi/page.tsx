@@ -6,6 +6,7 @@ import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 import { CardContainer } from "@/components/CardContainer";
 import { SimpleCard } from "@/components/SimpleCard";
+import { ExploreWeb3 } from "@/components/ExploreWeb3";
 
 // Import delle icone reali dei giochi
 import axieIcon from "@/assets/axie-icon.png";
@@ -160,24 +161,10 @@ export default function Giochi() {
               </CardContainer>
             </div>
 
-            <div className="mt-2 p-6 bg-white rounded-xl shadow-sm">
-              <p className="text-lg text-neutral-700 mb-3">
-                Prima di iniziare con GameFi, assicurati di conoscere le basi:
-              </p>
-              <div className="flex flex-wrap gap-3">
-                <a href="/blockchain" className="btn btn-outline">
-                  Blockchain
-                </a>
-                <a href="/defi" className="btn btn-outline">
-                  DeFi
-                </a>
-                <a href="/nft" className="btn btn-outline">
-                  NFTs
-                </a>
-              </div>
-            </div>
+            
           </div>
         </SectionBody>
+        <ExploreWeb3 />
       </MobileContainer>
     </ProtectedRoute>
   );

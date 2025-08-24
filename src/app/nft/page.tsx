@@ -4,9 +4,10 @@ import { SectionBody } from "@/components/SectionBody";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
-import { Button } from "@/components/Button";
+// import { Button } from "@/components/Button";
 import { CardContainer } from "@/components/CardContainer";
 import { SimpleCard } from "@/components/SimpleCard";
+import { ExploreWeb3 } from "@/components/ExploreWeb3";
 
 // Import delle icone dei marketplace NFT
 import openseaIcon from "@/assets/opensea-icon.png";
@@ -170,24 +171,10 @@ export default function NFT() {
               </CardContainer>
             </div>
 
-            <div className="mt-2 p-6 bg-white rounded-xl shadow-sm">
-              <p className="text-lg text-neutral-700 mb-3">
-                Vuoi prima capire le basi di blockchain e wallet?
-              </p>
-              <div className="flex flex-wrap gap-3">
-                <Button href="/blockchain" local={true} className="btn btn-outline">
-                  Blockchain
-                </Button>
-                <Button href="/defi" local={true} className="btn btn-outline">
-                  DeFi
-                </Button>
-                <Button href="/manuale" local={true} className="btn btn-outline">
-                  Manuale A-Z
-                </Button>
-              </div>
-            </div>
+            
           </div>
         </SectionBody>
+        <ExploreWeb3 />
       </MobileContainer>
     </ProtectedRoute>
   );

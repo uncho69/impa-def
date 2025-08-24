@@ -8,7 +8,8 @@ import { List } from "@/components/List";
 import { CardContainer } from "@/components/CardContainer";
 import { SimpleCard } from "@/components/SimpleCard";
 import Placeholder from "@/assets/placeholder.svg";
-import { SectionTutorial } from "@/components/SectionTutorial";
+// import { SectionTutorial } from "@/components/SectionTutorial";
+import { ExploreWeb3 } from "@/components/ExploreWeb3";
 
 // Import icone delle DEX
 import hyperliquidIcon from "@/assets/hyperliquid-icon.png";
@@ -741,9 +742,8 @@ export default function Defi() {
             </CardContainer>
           </Accordion>
         </SectionBody>
-        <SectionBody>
-          <SectionTutorial></SectionTutorial>
-        </SectionBody>
+        
+        <ExploreWeb3 />
       </MobileContainer>
     </ProtectedRoute>
   );
