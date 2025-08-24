@@ -43,6 +43,9 @@ export function MobileMenu() {
         <div className="absolute px-4 -right-7 top-20 w-[100vw] z-30">
           <div className="bg-white/95 backdrop-blur-lg border border-neutral-200 rounded-xl shadow-xl">
             <div className="grid grid-cols-2 gap-3 p-6 w-full">
+              <Button href="/manuale" local={true} className={btnModalStyle}>
+                Manuale
+              </Button>
               <Button href="/blockchain" local={true} className={btnModalStyle}>
                 Blockchain
               </Button>

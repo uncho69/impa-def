@@ -32,6 +32,9 @@ export function Navbar() {
           
           <div className="hidden lg:flex items-center space-x-8">
             <div className="flex space-x-6">
+              <Link href="/manuale" className="gradient-text hover:opacity-80 transition-opacity font-bold text-sm">
+                Manuale
+              </Link>
               <Link href="/blockchain" className="gradient-text hover:opacity-80 transition-opacity font-bold text-sm">
                 Blockchain
               </Link>
