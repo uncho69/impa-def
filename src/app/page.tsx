@@ -228,9 +228,9 @@ export default function Home() {
       <section className="py-16 bg-neutral-50 relative overflow-hidden">
         <div className="container-custom relative z-10">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl font-bold mb-6 transform hover:scale-105 transition-transform duration-300">Resta aggiornato</h2>
+            <h2 className="text-3xl font-bold mb-6 transform hover:scale-105 transition-transform duration-300 gradient-text">Resta aggiornato</h2>
             <p className="text-lg text-neutral-700 mb-8">
-              Inserisci la tua email per ottenere accesso gratuito all&apos;intera piattaforma e ricevere aggiornamenti sul mondo Web3.
+              Inserisci la tua email per ricevere aggiornamenti esclusivi sulla piattaforma e le ultime novità dal mondo Web3.
             </p>
             
             <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
