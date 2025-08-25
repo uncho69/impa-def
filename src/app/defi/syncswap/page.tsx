@@ -1,7 +1,6 @@
 import { MobileContainer } from "@/components/MobileContainer";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 
 import Image from "next/image";
