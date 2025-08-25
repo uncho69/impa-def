@@ -1,8 +1,11 @@
+"use client";
+
 import Link from "next/link";
-import Image from "next/image";
-import VideoImage from "@/assets/Video.png";
+import { useVideoAutoplay } from "@/hooks/useVideoAutoplay";
 
 export default function Home() {
+  const videoRef = useVideoAutoplay();
+  
   return (
     <div className="w-full">
       {/* Hero Section - Enhanced with 3D Effects */}
@@ -27,9 +30,6 @@ export default function Home() {
                 <Link href="/registrati?next=/manuale" className="btn-primary transform hover:scale-105 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                   Inizia Subito
                 </Link>
-                <Link href="/newsletter" className="btn-outline transform hover:scale-105 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-2 hover:border-primary-500">
-                  Iscriviti alla Newsletter
-                </Link>
               </div>
             </div>
             
@@ -37,19 +37,19 @@ export default function Home() {
               <div className="relative overflow-hidden rounded-2xl shadow-hard transition-all duration-700">
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-2xl blur opacity-30 animate-pulse-slow group-hover:opacity-50 transition-opacity"></div>
                 <div className="relative rounded-2xl overflow-hidden">
-                  <Image
-                    src={VideoImage}
-                    alt="ImparoDeFi Video Intro"
-                    className="w-full h-auto object-cover rounded-2xl transition-transform duration-700"
-                    priority
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="rounded-full bg-white/20 backdrop-blur-sm w-20 h-20 flex items-center justify-center shadow-lg border border-white/30 transition-transform cursor-pointer group-hover:bg-white/30 group-hover:shadow-2xl">
-                      <svg className="h-10 w-10 text-white group-hover:text-primary-500 transition-colors" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M8 5v14l11-7z" />
-                      </svg>
-                    </div>
-                  </div>
+                  <video
+                    ref={videoRef}
+                    className="w-full h-auto object-cover rounded-2xl transition-transform duration-700 cursor-pointer"
+                    controls={false}
+                    autoPlay={true}
+                    muted
+                    loop
+                    playsInline
+                    preload="auto"
+                  >
+                    <source src="/videos/imparodefividlanding.mp4" type="video/mp4" />
+                    Il tuo browser non supporta il tag video.
+                  </video>
                 </div>
               </div>
             </div>
@@ -224,29 +224,7 @@ export default function Home() {
         </div>
       </section>
       
-      {/* Newsletter Section - Enhanced */}
-      <section className="py-16 bg-neutral-50 relative overflow-hidden">
-        <div className="container-custom relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
-                            <h2 className="text-3xl font-bold mb-6 gradient-text">Resta aggiornato</h2>
-            <p className="text-lg text-neutral-700 mb-8">
-              Inserisci la tua email per ricevere aggiornamenti esclusivi sulla piattaforma e le ultime novità dal mondo Web3.
-            </p>
-            
-            <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-              <input
-                type="email"
-                placeholder="La tua email"
-                className="input-field flex-grow transform hover:scale-105 focus:scale-105 transition-all duration-300 focus:shadow-lg focus:border-primary-500"
-                required
-              />
-              <button type="submit" className="btn-primary whitespace-nowrap transform hover:scale-105 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                Iscriviti Ora
-              </button>
-            </form>
-          </div>
-        </div>
-      </section>
+      
     </div>
   );
 }
