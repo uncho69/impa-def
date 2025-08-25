@@ -15,7 +15,7 @@ const nextConfig = {
       "frame-ancestors 'none'",
       "child-src https://auth.privy.io https://verify.walletconnect.com https://verify.walletconnect.org",
       "frame-src https://auth.privy.io https://verify.walletconnect.com https://verify.walletconnect.org https://challenges.cloudflare.com",
-      "connect-src 'self' https://auth.privy.io wss://relay.walletconnect.com wss://relay.walletconnect.org wss://www.walletlink.org https://*.rpc.privy.systems https://explorer-api.walletconnect.com",
+      "connect-src 'self' https://auth.privy.io https://config.privy.io https://*.privy.io wss://relay.walletconnect.com wss://relay.walletconnect.org wss://www.walletlink.org https://*.rpc.privy.systems https://explorer-api.walletconnect.com",
       "worker-src 'self'",
       "manifest-src 'self'",
     ].join('; ');
@@ -34,7 +34,7 @@ const nextConfig = {
       "frame-ancestors 'self'",
       "child-src 'self' https://auth.privy.io https://verify.walletconnect.com https://verify.walletconnect.org",
       "frame-src 'self' https://auth.privy.io https://verify.walletconnect.com https://verify.walletconnect.org https://challenges.cloudflare.com",
-      "connect-src 'self' http://localhost:3000 ws://localhost:3000 https://auth.privy.io wss://relay.walletconnect.com wss://relay.walletconnect.org wss://www.walletlink.org https://*.rpc.privy.systems https://explorer-api.walletconnect.com",
+      "connect-src 'self' http://localhost:3000 ws://localhost:3000 https://auth.privy.io https://config.privy.io https://*.privy.io wss://relay.walletconnect.com wss://relay.walletconnect.org wss://www.walletlink.org https://*.rpc.privy.systems https://explorer-api.walletconnect.com",
       "worker-src 'self' blob:",
       "manifest-src 'self'",
     ].join('; ');
