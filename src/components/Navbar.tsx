@@ -4,6 +4,7 @@ import logo from "@/assets/imparodefi-logo-nobg.webp";
 import { MobileMenu } from "./MobileMenu";
 import { AuthStatus } from "./AuthStatus";
 
+
 export function Navbar() {
   return (
     <header className="sticky top-0 z-50 w-full backdrop-blur-lg bg-background/80 border-b border-neutral-200">

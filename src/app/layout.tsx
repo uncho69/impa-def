@@ -6,6 +6,7 @@ import { ClerkProvider, SignedIn, SignedOut, SignInButton, SignUpButton, UserBut
 import { Inter, Montserrat, Source_Code_Pro } from "next/font/google";
 import { Footer } from "@/components/Footer";
 
+
 const montserrat = Montserrat({
   variable: "--font-montserrat",
   display: "swap",

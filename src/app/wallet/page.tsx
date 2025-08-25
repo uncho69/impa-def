@@ -20,7 +20,7 @@ export default function WalletPage() {
           <BackToHome />
         </div>
         <div className="text-center mb-12">
-          <h1 className="text-4xl lg:text-5xl font-bold gradient-text mb-6">
+          <h1 className="text-4xl lg:text-5xl font-bold gradient-text mb-6 py-2">
             Portafogli Non-Custodial
           </h1>
           <p className="text-xl text-neutral-600 max-w-3xl mx-auto">
@@ -65,8 +65,8 @@ export default function WalletPage() {
               externalLink="https://metamask.io/"
               xPage="https://x.com/MetaMask"
             />
-            <SimpleCard
-                                   icon={phantomIcon}
+                        <SimpleCard
+              icon={phantomIcon}
               title="Phantom"
               subArray={[
                 { icon: phantomIcon, text: "" },
@@ -75,17 +75,6 @@ export default function WalletPage() {
               href="./wallet/phantom"
               externalLink="https://phantom.app/"
               xPage="https://x.com/phantom"
-            />
-            <SimpleCard
-                                   icon={rainbowIcon}
-              title="Rainbow"
-              subArray={[
-                { icon: rainbowIcon, text: "" },
-                { icon: rainbowIcon, text: "" },
-              ]}
-              href="./wallet/rainbow"
-              externalLink="https://rainbow.me/"
-              xPage="https://x.com/rainbowdotme"
             />
             <SimpleCard
                                    icon={rabbyIcon}
@@ -97,6 +86,17 @@ export default function WalletPage() {
               href="./wallet/rabby"
               externalLink="https://rabby.io/"
               xPage="https://x.com/Rabby_io"
+            />
+            <SimpleCard
+                                   icon={rainbowIcon}
+              title="Rainbow"
+              subArray={[
+                { icon: rainbowIcon, text: "" },
+                { icon: rainbowIcon, text: "" },
+              ]}
+              href="./wallet/rainbow"
+              externalLink="https://rainbow.me/"
+              xPage="https://x.com/rainbowdotme"
             />
           </CardContainer>
         </div>
