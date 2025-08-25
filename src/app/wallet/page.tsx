@@ -1,6 +1,6 @@
 import { CardContainer } from "@/components/CardContainer";
 import { SimpleCard } from "@/components/SimpleCard";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { PrivyProtectedRoute } from "@/components/PrivyProtectedRoute";
 import { BackToHome } from "@/components/BackToHome";
 import { ExploreWeb3 } from "@/components/ExploreWeb3";
 import Placeholder from "@/assets/placeholder.svg";
@@ -13,7 +13,7 @@ import ledgerIcon from "@/assets/ledger-icon.png";
 
 export default function WalletPage() {
   return (
-    <ProtectedRoute title="Wallet">
+    <PrivyProtectedRoute title="Wallet">
       <div className="min-h-screen bg-gradient-to-b from-primary-50 to-background">
       <div className="container-custom py-12">
         <div className="flex justify-end mb-6">
@@ -138,6 +138,6 @@ export default function WalletPage() {
 
       </div>
     </div>
-    </ProtectedRoute>
+    </PrivyProtectedRoute>
   );
 }

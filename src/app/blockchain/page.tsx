@@ -1,5 +1,5 @@
 import { PageLayout } from "@/components/PageLayout";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { PrivyProtectedRoute } from "@/components/PrivyProtectedRoute";
 // import Image from "next/image";
 // import VideoImage from "@/assets/Video.png";
 import { Accordion } from "@/components/Accordion";
@@ -9,7 +9,7 @@ import { ExploreWeb3 } from "@/components/ExploreWeb3";
 
 export default function Blockchain() {
   return (
-    <ProtectedRoute title="Blockchain">
+    <PrivyProtectedRoute title="Blockchain">
       <PageLayout 
         title="Blockchain" 
         description="Scopri la tecnologia che sta rivoluzionando il modo di trasferire e memorizzare dati"
@@ -255,6 +255,6 @@ export default function Blockchain() {
         
         <ExploreWeb3 />
       </PageLayout>
-    </ProtectedRoute>
+    </PrivyProtectedRoute>
   );
 }

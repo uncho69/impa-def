@@ -3,7 +3,7 @@
 import { Button } from "./Button";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { SignInButton, SignUpButton, useUser } from "@clerk/nextjs";
+import { usePrivy } from '@privy-io/react-auth';
 
 const btnModalStyle =
   "bg-white text-primary-600 border-2 border-primary-200 hover:bg-primary-50 hover:border-primary-300 leading-6 text-base font-medium items-center justify-center w-full rounded-lg shadow-sm text-center no-underline flex flex-grow transition-all duration-200";
@@ -11,7 +11,7 @@ const btnModalStyle =
 export function MobileMenu() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
-  const { isSignedIn } = useUser();
+  const { authenticated, login, logout, ready } = usePrivy();
 
   useEffect(() => {
     setOpen(false);
@@ -65,24 +65,17 @@ export function MobileMenu() {
                 Assistenza
               </Button>
               
-              {/* Pulsanti di autenticazione */}
-              {isSignedIn ? (
-                <Button href="/account" local={true} className={btnModalStyle}>
-                  Account
-                </Button>
-              ) : (
-                <>
-                  <SignInButton mode="modal">
-                    <button className={btnModalStyle}>
-                      Accedi
-                    </button>
-                  </SignInButton>
-                  <SignUpButton mode="modal">
-                    <button className={btnModalStyle}>
-                      Registrati
-                    </button>
-                  </SignUpButton>
-                </>
+              {/* Pulsanti di autenticazione (Privy) */}
+              {ready && (
+                authenticated ? (
+                  <button onClick={logout} className={btnModalStyle}>
+                    Logout
+                  </button>
+                ) : (
+                  <button onClick={login} className={btnModalStyle}>
+                    Accedi
+                  </button>
+                )
               )}
             </div>
           </div>

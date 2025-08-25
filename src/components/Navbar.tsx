@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import logo from "@/assets/imparodefi-logo-nobg.webp";
 import { MobileMenu } from "./MobileMenu";
-import { AuthStatus } from "./AuthStatus";
+import { PrivyAuthStatus } from "./PrivyAuthStatus";
 
 
 export function Navbar() {
@@ -57,7 +57,7 @@ export function Navbar() {
             </div>
             
             <div className="flex space-x-3">
-              <AuthStatus />
+              <PrivyAuthStatus />
             </div>
           </div>
           
