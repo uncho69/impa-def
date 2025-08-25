@@ -8,8 +8,7 @@ import Placeholder from "@/assets/placeholder.svg";
 
 export default function Curve() {
   return (
-    <ProtectedRoute title="Curve">
-      <MobileContainer>
+    <MobileContainer>
         <div className="flex items-center gap-4 mb-6">
           <Image src={Placeholder} alt="Curve" width={64} height={64} />
           <div>
@@ -129,6 +128,5 @@ export default function Curve() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
   );
 }

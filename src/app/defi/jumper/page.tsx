@@ -8,8 +8,7 @@ import Placeholder from "@/assets/placeholder.svg";
 
 export default function Jumper() {
   return (
-    <ProtectedRoute title="Jumper">
-      <MobileContainer>
+    <MobileContainer>
         <div className="flex items-center gap-4 mb-6">
           <Image src={Placeholder} alt="Jumper" width={64} height={64} />
           <div>
@@ -137,6 +136,5 @@ export default function Jumper() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
   );
 }

@@ -8,8 +8,7 @@ import Placeholder from "@/assets/placeholder.svg";
 
 export default function Jupiter() {
   return (
-    <ProtectedRoute title="Jupiter">
-      <MobileContainer>
+    <MobileContainer>
         <div className="flex items-center gap-4 mb-6">
           <Image src={Placeholder} alt="Jupiter" width={64} height={64} />
           <div>
@@ -85,6 +84,5 @@ export default function Jupiter() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
   );
 }

@@ -8,8 +8,7 @@ import Placeholder from "@/assets/placeholder.svg";
 
 export default function Balancer() {
   return (
-    <ProtectedRoute title="Balancer">
-      <MobileContainer>
+    <MobileContainer>
         <div className="flex items-center gap-4 mb-6">
           <Image src={Placeholder} alt="Balancer" width={64} height={64} />
           <div>
@@ -90,6 +89,5 @@ export default function Balancer() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
   );
 }

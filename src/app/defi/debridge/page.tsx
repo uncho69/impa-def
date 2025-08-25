@@ -8,8 +8,7 @@ import Placeholder from "@/assets/placeholder.svg";
 
 export default function DeBridge() {
   return (
-    <ProtectedRoute title="deBridge">
-      <MobileContainer>
+    <MobileContainer>
         <div className="flex items-center gap-4 mb-6">
           <Image src={Placeholder} alt="deBridge" width={64} height={64} />
           <div>
@@ -140,6 +139,5 @@ export default function DeBridge() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
   );
 }

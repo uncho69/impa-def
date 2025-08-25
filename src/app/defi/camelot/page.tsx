@@ -8,8 +8,7 @@ import Placeholder from "@/assets/placeholder.svg";
 
 export default function Camelot() {
   return (
-    <ProtectedRoute title="Camelot">
-      <MobileContainer>
+    <MobileContainer>
         <div className="flex items-center gap-4 mb-6">
           <Image src={Placeholder} alt="Camelot" width={64} height={64} />
           <div>
@@ -158,6 +157,5 @@ export default function Camelot() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
   );
 }

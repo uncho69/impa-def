@@ -8,8 +8,7 @@ import Placeholder from "@/assets/placeholder.svg";
 
 export default function Lido() {
   return (
-    <ProtectedRoute title="Lido Finance">
-      <MobileContainer>
+    <MobileContainer>
         <div className="flex items-center gap-4 mb-6">
           <Image src={Placeholder} alt="Lido Finance" width={64} height={64} />
           <div>
@@ -140,6 +139,5 @@ export default function Lido() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
   );
 }

@@ -8,8 +8,7 @@ import hyperliquidIcon from "@/assets/hyperliquid-icon.png";
 
 export default function Hyperliquid() {
   return (
-    <ProtectedRoute title="Hyperliquid">
-      <MobileContainer>
+    <MobileContainer>
         <div className="flex items-center gap-4 mb-6">
           <Image src={hyperliquidIcon} alt="Hyperliquid" width={64} height={64} />
           <div>
@@ -141,6 +140,5 @@ export default function Hyperliquid() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
   );
 }

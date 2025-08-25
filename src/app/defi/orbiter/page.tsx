@@ -8,8 +8,7 @@ import orbiterIcon from "@/assets/orbiterfinance-icon.png";
 
 export default function Orbiter() {
   return (
-    <ProtectedRoute title="Orbiter Finance">
-      <MobileContainer>
+    <MobileContainer>
         <div className="flex items-center gap-4 mb-6">
           <Image src={orbiterIcon} alt="Orbiter Finance" width={64} height={64} />
           <div>
@@ -142,6 +141,5 @@ export default function Orbiter() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
   );
 }

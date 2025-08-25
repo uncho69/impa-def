@@ -8,8 +8,7 @@ import Placeholder from "@/assets/placeholder.svg";
 
 export default function Stargate() {
   return (
-    <ProtectedRoute title="Stargate Finance">
-      <MobileContainer>
+    <MobileContainer>
         <div className="flex items-center gap-4 mb-6">
           <Image src={Placeholder} alt="Stargate Finance" width={64} height={64} />
           <div>
@@ -145,6 +144,5 @@ export default function Stargate() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
   );
 }

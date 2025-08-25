@@ -8,8 +8,7 @@ import Placeholder from "@/assets/placeholder.svg";
 
 export default function Raydium() {
   return (
-    <ProtectedRoute title="Raydium">
-      <MobileContainer>
+    <MobileContainer>
         <div className="flex items-center gap-4 mb-6">
           <Image src={Placeholder} alt="Raydium" width={64} height={64} />
           <div>
@@ -81,6 +80,5 @@ export default function Raydium() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
   );
 }
