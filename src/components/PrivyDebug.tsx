@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { usePrivy } from '@privy-io/react-auth';
 
 export function PrivyDebug() {
-  const { ready, authenticated, user, login, logout } = usePrivy();
+  const { ready, authenticated, user } = usePrivy();
 
   useEffect(() => {
     // eslint-disable-next-line no-console

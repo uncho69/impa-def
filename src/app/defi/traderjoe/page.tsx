@@ -8,8 +8,7 @@ import Placeholder from "@/assets/placeholder.svg";
 
 export default function TraderJoe() {
   return (
-    <ProtectedRoute title="Trader Joe">
-      <MobileContainer>
+    <MobileContainer>
         <div className="flex items-center gap-4 mb-6">
           <Image src={Placeholder} alt="Trader Joe" width={64} height={64} />
           <div>
@@ -86,6 +85,5 @@ export default function TraderJoe() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
   );
 }

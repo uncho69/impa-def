@@ -8,8 +8,7 @@ import uniswapIcon from "@/assets/uniswap-icon.png";
 
 export default function Uniswap() {
   return (
-    <ProtectedRoute title="Uniswap">
-      <MobileContainer>
+    <MobileContainer>
         <div className="flex items-center gap-4 mb-6">
           <Image src={uniswapIcon} alt="Uniswap" width={64} height={64} />
           <div>
@@ -162,6 +161,5 @@ export default function Uniswap() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
   );
 }

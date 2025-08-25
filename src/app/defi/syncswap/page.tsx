@@ -8,8 +8,7 @@ import Placeholder from "@/assets/placeholder.svg";
 
 export default function SyncSwap() {
   return (
-    <ProtectedRoute title="SyncSwap">
-      <MobileContainer>
+    <MobileContainer>
         <div className="flex items-center gap-4 mb-6">
           <Image src={Placeholder} alt="SyncSwap" width={64} height={64} />
           <div>
@@ -84,6 +83,5 @@ export default function SyncSwap() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
   );
 }
