@@ -11,7 +11,7 @@ interface PrivyProtectedRouteProps {
 }
 
 export function PrivyProtectedRoute({ children, title }: PrivyProtectedRouteProps) {
-  const { authenticated, ready, login } = usePrivy();
+  const { authenticated, ready } = usePrivy();
   const [showFallback, setShowFallback] = useState(false);
 
   useEffect(() => {
