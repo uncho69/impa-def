@@ -4,7 +4,17 @@ import Link from "next/link";
 import Image from "next/image";
 import logo from "@/assets/imparodefi-logo-nobg.webp";
 import { MobileMenu } from "./MobileMenu";
-import { PrivyAuthStatus } from "./PrivyAuthStatus";
+import dynamic from "next/dynamic";
+
+const PrivyAuthStatus = dynamic(() => import("./PrivyAuthStatus").then(m => m.PrivyAuthStatus), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center space-x-4">
+      <div className="animate-pulse bg-neutral-200 rounded-full w-8 h-8" />
+      <div className="animate-pulse bg-neutral-200 rounded-full w-20 h-4" />
+    </div>
+  ),
+});
 
 
 export function Navbar() {
