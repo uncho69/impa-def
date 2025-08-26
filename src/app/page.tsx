@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { useVideoAutoplay } from "@/hooks/useVideoAutoplay";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Home() {
   const videoRef = useVideoAutoplay();
+  const { t } = useLanguage();
   
   return (
     <div className="w-full">
@@ -16,19 +18,17 @@ export default function Home() {
             <div className="max-w-2xl">
               <h1 className="animate-slide-down mb-6 tracking-tight">
                 <span className="gradient-text text-4xl md:text-5xl lg:text-6xl">
-                  Il tuo accesso al mondo Web3
+                  {t('home.title')}
                 </span>
               </h1>
               
               <p className="text-lg md:text-xl text-neutral-700 mb-8 animate-slide-down [animation-delay:200ms]">
-                Blockchain, DeFi, NFTs, memecoins, metaversi: tutto questo è Web3.
-                Le opportunità sono infinite, ma anche le trappole.
-                ImparoDeFi è la tua guida sicura per navigare questo nuovo mondo.
+                {t('home.subtitle')}
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 animate-slide-up [animation-delay:400ms]">
                 <Link href="/registrati?next=/manuale" className="btn-primary transform hover:scale-105 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                  Inizia Subito
+                  {t('home.startNow')}
                 </Link>
               </div>
             </div>
@@ -69,7 +69,7 @@ export default function Home() {
           {/* Header with Enhanced Animation */}
           <div className="text-center mb-16">
             <h2 className="gradient-text text-5xl font-bold mb-6">
-              Perché ImparoDeFi?
+              {t('home.whyImparoDefi')}
             </h2>
           </div>
 
@@ -78,7 +78,7 @@ export default function Home() {
             {/* Introduzione - Enhanced 3D Card */}
             <div className="bg-gradient-to-br from-primary-50 to-secondary-50 rounded-3xl p-10 mb-16 border border-primary-100 relative group">
               {/* Animated Border */}
-                              <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-primary-400 via-secondary-400 to-primary-400 opacity-0"></div>
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-primary-400 via-secondary-400 to-primary-400 opacity-0"></div>
               <div className="absolute inset-[2px] rounded-3xl bg-gradient-to-br from-primary-50 to-secondary-50"></div>
               
               <div className="relative z-10">
@@ -89,17 +89,11 @@ export default function Home() {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="text-3xl font-bold mb-6 text-primary-700 group-hover:text-primary-800 transition-colors">Introduzione</h3>
+                    <h3 className="text-3xl font-bold mb-6 text-primary-700 group-hover:text-primary-800 transition-colors">{t('home.introduction')}</h3>
                     <div className="space-y-4 text-neutral-700 leading-relaxed text-lg">
-                      <p>
-                        I problemi di fiducia sono il motivo per cui le blockchain sono state create; è stato Bitcoin, e la mancanza di fiducia dei suoi creatori nei confronti dei sistemi monetari tradizionali sostenuti dai governi (fiat: USD, EUR, JPY, ecc.) ad accendere per la prima volta la fiamma di questa rivoluzione decentralizzata.
-                      </p>
-                      <p>
-                        Come sappiamo, la blockchain di Bitcoin, soprattutto all&apos;epoca, era ancora limitata a essere principalmente un buon deposito di valore, sotto forma di valuta BTC, che i miner potevano produrre nei loro garage e guadagnare qualcosa. Non durò a lungo (la parte del garage), poiché presto si scoprì che le ricompense (i blocchi) erano limitate: man mano che venivano utilizzate sempre più GPU per il mining, non era più possibile farlo con i normali computer di casa, ma bisognava allestire strutture più grandi e complesse per minare BTC.
-                      </p>
-                      <p>
-                        Le tecnologie Web3 hanno la capacità di migliorare la vita delle persone quando funzionano correttamente e quando gli utenti sanno cosa stanno facendo. Sfortunatamente, il settore ha avuto una barriera d&apos;ingresso relativamente alta per chi non è esperto di tecnologia, le persone comuni.
-                      </p>
+                      <p>{t('home.introductionText1')}</p>
+                      <p>{t('home.introductionText2')}</p>
+                      <p>{t('home.introductionText3')}</p>
                     </div>
                   </div>
                 </div>
@@ -121,32 +115,30 @@ export default function Home() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
                       </svg>
                     </div>
-                    <h3 className="text-2xl font-bold text-red-600 group-hover:text-red-700 transition-colors">Il Problema</h3>
+                    <h3 className="text-2xl font-bold text-red-600 group-hover:text-red-700 transition-colors">{t('home.theProblem')}</h3>
                   </div>
                   <div className="space-y-4 text-neutral-700 leading-relaxed">
-                    <p>
-                      Quando una persona nuova nel mondo Web3 cerca di capire di più sull&apos;ecosistema per eventualmente entrarvi, si trova di fronte a:
-                    </p>
+                    <p>{t('home.theProblemText')}</p>
                     <div className="grid grid-cols-1 gap-2">
                       <div className="flex items-center gap-3 p-3 bg-red-50 rounded-lg">
                         <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                        <span>Migliaia di criptovalute</span>
+                        <span>{t('home.problem1')}</span>
                       </div>
                       <div className="flex items-center gap-3 p-3 bg-red-50 rounded-lg">
                         <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                        <span>Centinaia di blockchain</span>
+                        <span>{t('home.problem2')}</span>
                       </div>
                       <div className="flex items-center gap-3 p-3 bg-red-50 rounded-lg">
                         <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                        <span>Migliaia di NFT</span>
+                        <span>{t('home.problem3')}</span>
                       </div>
                       <div className="flex items-center gap-3 p-3 bg-red-50 rounded-lg">
                         <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                        <span>Difficoltà a orientarsi tra le blockchain</span>
+                        <span>{t('home.problem4')}</span>
                       </div>
                       <div className="flex items-center gap-3 p-3 bg-red-50 rounded-lg">
                         <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                        <span>Truffatori e rischi di phishing</span>
+                        <span>{t('home.problem5')}</span>
                       </div>
                     </div>
                   </div>
@@ -166,20 +158,16 @@ export default function Home() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                       </svg>
                     </div>
-                    <h3 className="text-2xl font-bold text-green-600 group-hover:text-green-700 transition-colors">La Nostra Soluzione</h3>
+                    <h3 className="text-2xl font-bold text-green-600 group-hover:text-green-700 transition-colors">{t('home.ourSolution')}</h3>
                   </div>
                   <div className="space-y-4 text-neutral-700 leading-relaxed">
-                    <p>
-                      Imparodefi consentirà ai nuovi aspiranti utenti Web3 di imparare esclusivamente da progetti realmente validi, selezionati dalle persone migliori per questo compito: veri esperti Web3 forgiati &quot;sul campo&quot;.
-                    </p>
+                    <p>{t('home.solutionText1')}</p>
                     <div className="bg-green-50 border border-green-200 rounded-xl p-4">
                       <p className="text-green-800 font-semibold text-center">
-                        Curazione fatta da veri esperti Web3
+                        {t('home.curationText')}
                       </p>
                     </div>
-                    <p>
-                      Gli esperti Web3 si trovano in comunità di nicchia; dal DeFi agli NFT, pochi gruppi si distinguono. Ogni comunità è governata da un token (o NFT), e i possessori di questi asset dimostrano reale coinvolgimento avendo speso i propri soldi per ottenerli.
-                    </p>
+                    <p>{t('home.solutionText2')}</p>
                   </div>
                 </div>
               </div>
@@ -188,7 +176,7 @@ export default function Home() {
             {/* Governance e Tokenomics - Enhanced Full Width */}
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-3xl p-10 border border-blue-100 relative group">
               {/* Animated Border */}
-                              <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-400 via-indigo-400 to-blue-400 opacity-0"></div>
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-400 via-indigo-400 to-blue-400 opacity-0"></div>
               <div className="absolute inset-[2px] rounded-3xl bg-gradient-to-r from-blue-50 to-indigo-50"></div>
               
               <div className="relative z-10">
@@ -198,24 +186,16 @@ export default function Home() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
-                  <h3 className="text-3xl font-bold text-blue-700 group-hover:text-blue-800 transition-colors">Governance e Tokenomics</h3>
+                  <h3 className="text-3xl font-bold text-blue-700 group-hover:text-blue-800 transition-colors">{t('home.governance')}</h3>
                 </div>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                   <div className="space-y-4 text-neutral-700 leading-relaxed">
-                    <p>
-                      I possessori degli NFT Shroomiez saranno inizialmente coloro che guideranno il progetto, votando quali progetti aggiungere, rimuovere o mantenere su Imparodefi.
-                    </p>
-                    <p>
-                      In futuro, gli smart contract potranno essere aggiornati tramite una funzione integrata per consentire l&apos;aggiunta o la rimozione di contratti token dalla piattaforma di governance di Imparodefi, permettendo a qualsiasi altra comunità di contribuire.
-                    </p>
+                    <p>{t('home.governanceText1')}</p>
+                    <p>{t('home.governanceText2')}</p>
                   </div>
                   <div className="space-y-4 text-neutral-700 leading-relaxed">
-                    <p>
-                      Gli elettori in whitelist decidono anche come distribuire il budget di ciascuna epoch di Imparodefi tra i progetti approvati. L&apos;allocazione sarà poi suddivisa equamente tra i Creator Pool e i Promoter Pool.
-                    </p>
-                    <p>
-                      Questa funzione potrà cambiare in futuro, consentendo agli elettori in whitelist di votare sulla percentuale di distribuzione dei premi tra i due pool per ciascun progetto.
-                    </p>
+                    <p>{t('home.governanceText3')}</p>
+                    <p>{t('home.governanceText4')}</p>
                   </div>
                 </div>
               </div>

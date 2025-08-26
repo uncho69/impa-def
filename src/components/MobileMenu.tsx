@@ -4,6 +4,8 @@ import { Button } from "./Button";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { usePrivy } from '@privy-io/react-auth';
+import LanguageToggle from "./LanguageToggle";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const btnModalStyle =
   "bg-white text-primary-600 border-2 border-primary-200 hover:bg-primary-50 hover:border-primary-300 leading-6 text-base font-medium items-center justify-center w-full rounded-lg shadow-sm text-center no-underline flex flex-grow transition-all duration-200";
@@ -12,6 +14,7 @@ export function MobileMenu() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const { authenticated, login, logout, ready } = usePrivy();
+  const { t } = useLanguage();
 
   useEffect(() => {
     setOpen(false);
@@ -44,36 +47,41 @@ export function MobileMenu() {
           <div className="bg-white/95 backdrop-blur-lg border border-neutral-200 rounded-xl shadow-xl">
             <div className="grid grid-cols-2 gap-3 p-6 w-full">
               <Button href="/manuale" local={true} className={btnModalStyle}>
-                Manuale
+                {t('nav.manuale')}
               </Button>
               <Button href="/blockchain" local={true} className={btnModalStyle}>
-                Blockchain
+                {t('nav.blockchain')}
               </Button>
               <Button href="/defi" local={true} className={btnModalStyle}>
-                DeFi
+                {t('nav.defi')}
               </Button>
               <Button href="/nft" local={true} className={btnModalStyle}>
-                NFTs
+                {t('nav.nft')}
               </Button>
               <Button href="/giochi" local={true} className={btnModalStyle}>
-                GameFi
+                {t('nav.giochi')}
               </Button>
               <Button href="/wallet" local={true} className={btnModalStyle}>
-                Wallet
+                {t('nav.wallet')}
               </Button>
               <Button href="/supporto" local={true} className={btnModalStyle}>
-                Assistenza
+                {t('nav.supporto')}
               </Button>
+              
+              {/* Toggle lingua */}
+              <div className="col-span-2 flex justify-center">
+                <LanguageToggle />
+              </div>
               
               {/* Pulsanti di autenticazione (Privy) */}
               {ready && (
                 authenticated ? (
                   <button onClick={logout} className={btnModalStyle}>
-                    Logout
+                    {t('auth.logout')}
                   </button>
                 ) : (
                   <button onClick={login} className={btnModalStyle}>
-                    Accedi
+                    {t('auth.accedi')}
                   </button>
                 )
               )}

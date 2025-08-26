@@ -3,6 +3,7 @@ import "./globals.css";
 // import "bootstrap/dist/css/bootstrap.min.css";
 import { Navbar } from "@/components/Navbar";
 import { PrivyProvider } from "@/components/PrivyProvider";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 import { Inter, Montserrat, Source_Code_Pro } from "next/font/google";
 import { Footer } from "@/components/Footer";
 
@@ -40,11 +41,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${montserrat.variable} ${inter.variable} ${sourceCode.variable} text-neutral-900 antialiased font-montserrat bg-background flex flex-col items-center min-h-screen`}>
-        <PrivyProvider>
-          <Navbar />
-          <main className="w-full flex-grow">{children}</main>
-          <Footer />
-        </PrivyProvider>
+        <LanguageProvider>
+          <PrivyProvider>
+            <Navbar />
+            <main className="w-full flex-grow">{children}</main>
+            <Footer />
+          </PrivyProvider>
+        </LanguageProvider>
       </body>
     </html>
   );
