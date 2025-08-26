@@ -49,14 +49,22 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
 
   const t = (key: string): string => {
     const keys = key.split('.');
-    let value: any = translations[language];
+    let value: unknown = translations[language];
     
     for (const k of keys) {
       if (value && typeof value === 'object' && k in value) {
-        value = value[k];
+        value = (value as Record<string, unknown>)[k];
       } else {
         // Fallback alla lingua italiana se la chiave non esiste
-        value = keys.reduce((obj, k) => obj?.[k], translations.it);
+        let fallbackValue: unknown = translations.it;
+        for (const fallbackKey of keys) {
+          if (fallbackValue && typeof fallbackValue === 'object' && fallbackKey in fallbackValue) {
+            fallbackValue = (fallbackValue as Record<string, unknown>)[fallbackKey];
+          } else {
+            break;
+          }
+        }
+        value = fallbackValue;
         break;
       }
     }
