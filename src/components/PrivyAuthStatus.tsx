@@ -4,9 +4,11 @@ import { usePrivy } from '@privy-io/react-auth';
 import { Button } from './Button';
 import { useEffect, useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { usePrivyReady } from '@/hooks/usePrivyReady';
 
 export function PrivyAuthStatus() {
-  const { login, logout, authenticated, user, ready } = usePrivy();
+  const { login, logout } = usePrivy();
+  const { ready, isFullyReady, authenticated, user, forceReset } = usePrivyReady();
   const [showFallback, setShowFallback] = useState(false);
   const { t } = useLanguage();
 
@@ -44,9 +46,24 @@ export function PrivyAuthStatus() {
     );
   }
 
+  // Se Privy non è completamente pronto, mostra un bottone disabilitato visivamente
+  if (!isFullyReady) {
+    return (
+      <div className="flex items-center space-x-4">
+        <button 
+          className="btn btn-primary opacity-50 cursor-not-allowed"
+          disabled
+          onClick={forceReset} // Permette di forzare il reset se necessario
+        >
+          {t('auth.accedi')}
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="flex items-center space-x-4">
-      <Button onClick={ready ? login : undefined} className="btn btn-primary">
+      <Button onClick={login} className="btn btn-primary">
         {t('auth.accedi')}
       </Button>
     </div>
