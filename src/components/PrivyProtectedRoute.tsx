@@ -1,6 +1,7 @@
 "use client";
 
 import { usePrivy } from '@privy-io/react-auth';
+import { useEffect, useState } from 'react';
 import { ReactNode } from 'react';
 import { PrivyAuthStatus } from './PrivyAuthStatus';
 
@@ -10,9 +11,19 @@ interface PrivyProtectedRouteProps {
 }
 
 export function PrivyProtectedRoute({ children, title }: PrivyProtectedRouteProps) {
-  const { authenticated, ready } = usePrivy();
+  const { authenticated, ready, login } = usePrivy();
+  const [showFallback, setShowFallback] = useState(false);
 
-  if (!ready) {
+  useEffect(() => {
+    if (!ready) {
+      const t = setTimeout(() => setShowFallback(true), 2500);
+      return () => clearTimeout(t);
+    } else {
+      setShowFallback(false);
+    }
+  }, [ready]);
+
+  if (!ready && !showFallback) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-primary-50 to-background flex items-center justify-center">
         <div className="text-center">
