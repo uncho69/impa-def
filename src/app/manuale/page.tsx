@@ -31,8 +31,8 @@ export default function manuale() {
               </p>
             </div>
           
-          <Accordion buttonText={"Cos'è una Blockchain?"} className="text-xl font-semibold py-5 px-6">
-            <p className="lg:p-5 p-3">
+          <Accordion buttonText={"Cos'è una Blockchain?"} className="mb-4">
+            <p className="p-5">
               Una blockchain è una tecnologia che funziona come un registro
               digitale distribuito su una rete di computer. Ogni dato o
               transazione inserito viene organizzato in blocchi collegati tra loro
@@ -67,6 +67,7 @@ export default function manuale() {
 
           <Accordion
             buttonText={"Cosa sono le applicazioni decentralizzate (DeFi)"}
+            className="mb-4"
           >
             <p className="p-5">
               Le applicazioni decentralizzate (o dApp) sono programmi che
