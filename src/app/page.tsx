@@ -24,27 +24,30 @@ export default function Home() {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 animate-slide-up [animation-delay:400ms]">
-                <Link href="/registrati?next=/manuale" className="btn-primary transform hover:scale-105 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <Link href="/registrati?next=/manuale" className="cssbuttons-io-button">
                   Inizia Subito
-                </Link>
-                <Link href="/newsletter" className="btn-outline transform hover:scale-105 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-2 hover:border-primary-500">
-                  Iscriviti alla Newsletter
+                  <div className="icon">
+                    <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M0 0h24v24H0z" fill="none"></path>
+                      <path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z" fill="currentColor"></path>
+                    </svg>
+                  </div>
                 </Link>
               </div>
             </div>
             
             <div className="animate-fade-in [animation-delay:600ms] group">
-              <div className="relative overflow-hidden rounded-2xl shadow-hard transform group-hover:scale-105 transition-all duration-700">
+              <div className="relative overflow-hidden rounded-2xl shadow-hard transition-all duration-700">
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-2xl blur opacity-30 animate-pulse-slow group-hover:opacity-50 transition-opacity"></div>
                 <div className="relative rounded-2xl overflow-hidden">
                   <Image
                     src={VideoImage}
                     alt="ImparoDeFi Video Intro"
-                    className="w-full h-auto object-cover rounded-2xl transform group-hover:scale-110 transition-transform duration-700"
+                    className="w-full h-auto object-cover rounded-2xl transition-transform duration-700"
                     priority
                   />
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="rounded-full bg-white/20 backdrop-blur-sm w-20 h-20 flex items-center justify-center shadow-lg border border-white/30 hover:scale-110 transition-transform cursor-pointer group-hover:bg-white/30 group-hover:shadow-2xl">
+                    <div className="rounded-full bg-white/20 backdrop-blur-sm w-20 h-20 flex items-center justify-center shadow-lg border border-white/30 transition-transform cursor-pointer group-hover:bg-white/30 group-hover:shadow-2xl">
                       <svg className="h-10 w-10 text-white group-hover:text-primary-500 transition-colors" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M8 5v14l11-7z" />
                       </svg>
@@ -68,7 +71,7 @@ export default function Home() {
         <div className="container-custom relative z-10">
           {/* Header with Enhanced Animation */}
           <div className="text-center mb-16">
-            <h2 className="gradient-text text-5xl font-bold mb-6 transform hover:scale-105 transition-transform duration-300">
+            <h2 className="gradient-text text-5xl font-bold mb-6 transition-transform duration-300">
               Perché ImparoDeFi?
             </h2>
           </div>
@@ -76,14 +79,11 @@ export default function Home() {
           {/* Main Content - Enhanced 3D Layout */}
           <div className="max-w-6xl mx-auto">
             {/* Introduzione - Enhanced 3D Card */}
-            <div className="bg-gradient-to-br from-primary-50 to-secondary-50 rounded-3xl p-10 mb-16 border border-primary-100 transform hover:scale-[1.02] hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 relative group">
-              {/* Animated Border */}
-              <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-primary-400 via-secondary-400 to-primary-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm"></div>
-              <div className="absolute inset-[2px] rounded-3xl bg-gradient-to-br from-primary-50 to-secondary-50"></div>
+            <div className="bg-gradient-to-br from-primary-50 to-secondary-50 rounded-3xl p-10 mb-16 border border-primary-100 transition-all duration-500 relative group">
               
               <div className="relative z-10">
                 <div className="flex items-start gap-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-2xl flex items-center justify-center flex-shrink-0 transform group-hover:rotate-12 group-hover:scale-110 transition-all duration-300 shadow-lg group-hover:shadow-xl">
+                  <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all duration-300 shadow-lg">
                     <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -109,14 +109,11 @@ export default function Home() {
             {/* Il Problema e La Soluzione - Enhanced Side by Side */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
               {/* Il Problema - Enhanced 3D Card */}
-              <div className="bg-white rounded-3xl p-8 shadow-xl border border-red-100 hover:shadow-2xl transition-all duration-500 transform hover:scale-[1.03] hover:-translate-y-3 group relative">
-                {/* Animated Border */}
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-red-400 to-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm"></div>
-                <div className="absolute inset-[2px] rounded-3xl bg-white"></div>
+              <div className="bg-white rounded-3xl p-8 shadow-xl border border-red-100 transition-all duration-500 group relative">
                 
                 <div className="relative z-10">
                   <div className="flex items-center gap-4 mb-6">
-                    <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-xl flex items-center justify-center transform group-hover:rotate-12 group-hover:scale-110 transition-all duration-300 shadow-lg group-hover:shadow-xl">
+                    <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-xl flex items-center justify-center transition-all duration-300 shadow-lg">
                       <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
                       </svg>
@@ -128,23 +125,23 @@ export default function Home() {
                       Quando una persona nuova nel mondo Web3 cerca di capire di più sull&apos;ecosistema per eventualmente entrarvi, si trova di fronte a:
                     </p>
                     <div className="grid grid-cols-1 gap-2">
-                      <div className="flex items-center gap-3 p-3 bg-red-50 rounded-lg transform hover:scale-105 hover:bg-red-100 transition-all duration-200">
+                      <div className="flex items-center gap-3 p-3 bg-red-50 rounded-lg hover:bg-red-100 transition-all duration-200">
                         <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
                         <span>Migliaia di criptovalute</span>
                       </div>
-                      <div className="flex items-center gap-3 p-3 bg-red-50 rounded-lg transform hover:scale-105 hover:bg-red-100 transition-all duration-200">
+                      <div className="flex items-center gap-3 p-3 bg-red-50 rounded-lg hover:bg-red-100 transition-all duration-200">
                         <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
                         <span>Centinaia di blockchain</span>
                       </div>
-                      <div className="flex items-center gap-3 p-3 bg-red-50 rounded-lg transform hover:scale-105 hover:bg-red-100 transition-all duration-200">
+                      <div className="flex items-center gap-3 p-3 bg-red-50 rounded-lg hover:bg-red-100 transition-all duration-200">
                         <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
                         <span>Migliaia di NFT</span>
                       </div>
-                      <div className="flex items-center gap-3 p-3 bg-red-50 rounded-lg transform hover:scale-105 hover:bg-red-100 transition-all duration-200">
+                      <div className="flex items-center gap-3 p-3 bg-red-50 rounded-lg hover:bg-red-100 transition-all duration-200">
                         <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
                         <span>Difficoltà a orientarsi tra le blockchain</span>
                       </div>
-                      <div className="flex items-center gap-3 p-3 bg-red-50 rounded-lg transform hover:scale-105 hover:bg-red-100 transition-all duration-200">
+                      <div className="flex items-center gap-3 p-3 bg-red-50 rounded-lg hover:bg-red-100 transition-all duration-200">
                         <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
                         <span>Truffatori e rischi di phishing</span>
                       </div>
@@ -154,14 +151,11 @@ export default function Home() {
               </div>
               
               {/* La Nostra Soluzione - Enhanced 3D Card */}
-              <div className="bg-white rounded-3xl p-8 shadow-xl border border-green-100 hover:shadow-2xl transition-all duration-500 transform hover:scale-[1.03] hover:-translate-y-3 group relative">
-                {/* Animated Border */}
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-green-400 to-green-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm"></div>
-                <div className="absolute inset-[2px] rounded-3xl bg-white"></div>
+              <div className="bg-white rounded-3xl p-8 shadow-xl border border-green-100 transition-all duration-500 group relative">
                 
                 <div className="relative z-10">
                   <div className="flex items-center gap-4 mb-6">
-                    <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center transform group-hover:rotate-12 group-hover:scale-110 transition-all duration-300 shadow-lg group-hover:shadow-xl">
+                    <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center transition-all duration-300 shadow-lg">
                       <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                       </svg>
@@ -172,7 +166,7 @@ export default function Home() {
                     <p>
                       Imparodefi consentirà ai nuovi aspiranti utenti Web3 di imparare esclusivamente da progetti realmente validi, selezionati dalle persone migliori per questo compito: veri esperti Web3 forgiati &quot;sul campo&quot;.
                     </p>
-                    <div className="bg-green-50 border border-green-200 rounded-xl p-4 transform hover:scale-105 hover:bg-green-100 transition-all duration-300 group-hover:shadow-lg">
+                    <div className="bg-green-50 border border-green-200 rounded-xl p-4 hover:bg-green-100 transition-all duration-300 group-hover:shadow-lg">
                       <p className="text-green-800 font-semibold text-center">
                         Curazione fatta da veri esperti Web3
                       </p>
@@ -186,14 +180,11 @@ export default function Home() {
             </div>
 
             {/* Governance e Tokenomics - Enhanced Full Width */}
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-3xl p-10 border border-blue-100 transform hover:scale-[1.01] hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 relative group">
-              {/* Animated Border */}
-              <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-400 via-indigo-400 to-blue-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm"></div>
-              <div className="absolute inset-[2px] rounded-3xl bg-gradient-to-r from-blue-50 to-indigo-50"></div>
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-3xl p-10 border border-blue-100 transition-all duration-500 relative group">
               
               <div className="relative z-10">
                 <div className="flex items-center gap-6 mb-8">
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center transform group-hover:rotate-12 group-hover:scale-110 transition-all duration-300 shadow-lg group-hover:shadow-xl">
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center transition-all duration-300 shadow-lg">
                     <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -220,30 +211,6 @@ export default function Home() {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-      
-      {/* Newsletter Section - Enhanced */}
-      <section className="py-16 bg-neutral-50 relative overflow-hidden">
-        <div className="container-custom relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl font-bold mb-6 transform hover:scale-105 transition-transform duration-300 gradient-text">Resta aggiornato</h2>
-            <p className="text-lg text-neutral-700 mb-8">
-              Inserisci la tua email per ricevere aggiornamenti esclusivi sulla piattaforma e le ultime novità dal mondo Web3.
-            </p>
-            
-            <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-              <input
-                type="email"
-                placeholder="La tua email"
-                className="input-field flex-grow transform hover:scale-105 focus:scale-105 transition-all duration-300 focus:shadow-lg focus:border-primary-500"
-                required
-              />
-              <button type="submit" className="btn-primary whitespace-nowrap transform hover:scale-105 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                Iscriviti Ora
-              </button>
-            </form>
           </div>
         </div>
       </section>
