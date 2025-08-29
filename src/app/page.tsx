@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import VideoImage from "@/assets/Video.png";
+import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 
 export default function Home() {
   return (
@@ -17,11 +18,13 @@ export default function Home() {
                 </span>
               </h1>
               
-              <p className="text-lg md:text-xl text-neutral-700 mb-8 animate-slide-down [animation-delay:200ms]">
-                Blockchain, DeFi, NFTs, memecoins, metaversi: tutto questo è Web3.
-                Le opportunità sono infinite, ma anche le trappole.
-                ImparoDeFi è la tua guida sicura per navigare questo nuovo mondo.
-              </p>
+              <div className="mb-8 animate-slide-down [animation-delay:200ms]">
+                <TextGenerateEffect 
+                  words="Blockchain, DeFi, NFTs, memecoins, metaversi: tutto questo è Web3. Le opportunità sono infinite, ma anche le trappole. ImparoDeFi è la tua guida sicura per navigare questo nuovo mondo."
+                  className="text-lg md:text-xl text-black font-normal"
+                  duration={0.8}
+                />
+              </div>
               
               <div className="flex flex-col sm:flex-row gap-4 animate-slide-up [animation-delay:400ms]">
                 <Link href="/registrati?next=/manuale" className="cssbuttons-io-button">
