@@ -1,10 +1,29 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import logo from "@/assets/imparodefi-logo-nobg.webp";
 import { MobileMenu } from "./MobileMenu";
 import { AuthStatus } from "./AuthStatus";
+import { useState, useEffect, useRef } from "react";
 
 export function Navbar() {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
     <header className="sticky top-0 z-50 w-full backdrop-blur-lg bg-background/80 border-b border-neutral-200">
       <div className="w-full px-4 md:px-8 lg:px-12 mx-auto">
@@ -41,18 +60,39 @@ export function Navbar() {
               <Link href="/defi" className="gradient-text hover:opacity-80 transition-opacity font-bold text-sm">
                 DeFi
               </Link>
-              <Link href="/nft" className="gradient-text hover:opacity-80 transition-opacity font-bold text-sm">
-                NFTs
+              <Link href="/memecoins" className="gradient-text hover:opacity-80 transition-opacity font-bold text-sm">
+                Memecoins
               </Link>
-              <Link href="/giochi" className="gradient-text hover:opacity-80 transition-opacity font-bold text-sm">
-                GameFi
+              <Link href="/airdrops" className="gradient-text hover:opacity-80 transition-opacity font-bold text-sm">
+                Airdrops
               </Link>
               <Link href="/wallet" className="gradient-text hover:opacity-80 transition-opacity font-bold text-sm">
                 Wallet
               </Link>
-              <Link href="/supporto" className="gradient-text hover:opacity-80 transition-opacity font-bold text-sm">
-                Assistenza
-              </Link>
+              
+              {/* Dropdown Menu */}
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  className="gradient-text hover:opacity-80 transition-opacity font-bold text-sm flex items-center gap-1"
+                >
+                  <span className="text-xl">+</span>
+                </button>
+                
+                {isDropdownOpen && (
+                  <div className="absolute top-full right-0 mt-2 w-48 bg-white border border-blue-200 rounded-lg shadow-lg py-2 z-50">
+                    <Link href="/nft" className="block px-4 py-2 text-sm font-bold text-blue-700 hover:bg-blue-50 transition-colors">
+                      NFTs
+                    </Link>
+                    <Link href="/giochi" className="block px-4 py-2 text-sm font-bold text-blue-700 hover:bg-blue-50 transition-colors">
+                      GameFi
+                    </Link>
+                    <Link href="/supporto" className="block px-4 py-2 text-sm font-bold text-blue-700 hover:bg-blue-50 transition-colors">
+                      Assistenza
+                    </Link>
+                  </div>
+                )}
+              </div>
             </div>
             
             <div className="flex space-x-3">

@@ -12,7 +12,7 @@ export function SimpleCard({
   icon = Placeholder,
   title,
   subArray,
-  subArrayTitle = "Reti",
+  subArrayTitle = "Prezzo:\nMarket Cap:",
   externalLink,
   xPage,
   href = "/",
@@ -36,7 +36,11 @@ export function SimpleCard({
         {subArray?.length ? (
           <div className="flex flex-col gap-2">
             {subArrayTitle && (
-              <p className="text-sm md:text-base text-neutral-600">{subArrayTitle}</p>
+              <div className="text-sm md:text-base text-neutral-600">
+                {subArrayTitle.split('\n').map((line, index) => (
+                  <div key={index} className="mb-1">{line}</div>
+                ))}
+              </div>
             )}
             <div className="flex gap-2 items-center">
               {subArray.map((item, i) => (

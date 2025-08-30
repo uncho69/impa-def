@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import VideoImage from "@/assets/Video.png";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
+import { HyperText } from "@/components/magicui/hyper-text";
 
 export default function Home() {
   return (
