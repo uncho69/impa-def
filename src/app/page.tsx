@@ -21,7 +21,7 @@ export default function Home() {
               <div className="mb-8 animate-slide-down [animation-delay:200ms]">
                 <TextGenerateEffect 
                   words="Blockchain, DeFi, NFTs, memecoins, metaversi: tutto questo è Web3. Le opportunità sono infinite, ma anche le trappole. ImparoDeFi è la tua guida sicura per navigare questo nuovo mondo."
-                  className="text-lg md:text-xl text-black font-normal"
+                  className="text-lg md:text-xl font-normal"
                   duration={0.8}
                 />
               </div>
