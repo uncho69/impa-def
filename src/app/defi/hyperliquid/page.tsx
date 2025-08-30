@@ -8,7 +8,7 @@ import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 import Image from "next/image";
 import hyperliquidIcon from "@/assets/hyperliquid-icon.png";
-import { useState } from "react";
+
 
 export default function Hyperliquid() {
   
@@ -111,7 +111,7 @@ export default function Hyperliquid() {
           
           {/* 4 Video Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-            {videos.map((video, index) => (
+            {videos.map((video) => (
               <div key={video.id} className="bg-white rounded-lg shadow-md overflow-hidden">
                 <div className="aspect-video bg-gray-100">
                   <iframe
