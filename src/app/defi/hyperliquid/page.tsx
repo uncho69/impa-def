@@ -8,6 +8,7 @@ import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 import Image from "next/image";
 import hyperliquidIcon from "@/assets/hyperliquid-icon.png";
+import { ClientTweetCard } from "@/components/magicui/client-tweet-card";
 
 
 export default function Hyperliquid() {
@@ -147,7 +148,42 @@ export default function Hyperliquid() {
           </div>
         </div>
 
-
+        {/* Contenuti X Section */}
+        <div className="mb-6">
+          <div className="flex items-center gap-3 mb-4">
+            <h3 className="text-2xl font-semibold text-blue-600">Contenuti X</h3>
+            <div className="relative group">
+              <div className="w-5 h-5 border-2 border-blue-400 rounded-full flex items-center justify-center cursor-help hover:border-blue-500 hover:bg-blue-50 transition-all duration-200">
+                <svg className="w-3 h-3 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/>
+                </svg>
+              </div>
+              <div className="absolute left-full top-1/2 transform -translate-y-1/2 ml-3 px-4 py-3 bg-white border border-gray-200 text-gray-800 text-sm rounded-xl shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-20 w-80">
+                <div className="font-medium text-gray-900 mb-2">💡 Informazioni</div>
+                <div className="text-gray-600 leading-relaxed">Contenuti ufficiali da X (Twitter) di Hyperliquid e della community</div>
+                <div className="absolute top-1/2 right-full w-0 h-0 border-r-8 border-t-8 border-b-8 border-transparent border-r-white"></div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Tweet Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+            <ClientTweetCard id="1959874702056567022" />
+            <ClientTweetCard id="1957473371106754579" />
+            <ClientTweetCard id="1956187895779176514" />
+            <ClientTweetCard id="1947178777244803543" />
+          </div>
+          
+          {/* Show More Button */}
+          <div className="flex justify-center">
+            <button className="flex items-center gap-2 px-4 py-2 text-blue-600 hover:text-blue-700 transition-colors duration-200">
+              <span className="text-sm font-medium">Mostra più contenuti X</span>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+          </div>
+        </div>
 
         <SectionTitle>Caratteristiche Principali</SectionTitle>
         <SectionBody>
