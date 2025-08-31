@@ -12,7 +12,6 @@ export const ClientTweetCard = ({
   id,
   apiUrl,
   fallback = <TweetSkeleton />,
-  components,
   fetchOptions,
   onError,
   ...props
@@ -21,9 +20,9 @@ export const ClientTweetCard = ({
 
   if (isLoading) return fallback;
   if (error || !data) {
-    const NotFound = components?.TweetNotFound || TweetNotFound;
+    const NotFound = TweetNotFound;
     return <NotFound error={onError ? onError(error) : error} />;
   }
 
-  return <MagicTweet tweet={data} components={components} {...props} />;
+  return <MagicTweet tweet={data} {...props} />;
 };

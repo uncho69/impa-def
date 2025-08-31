@@ -4,7 +4,6 @@ import {
   enrichTweet,
   type EnrichedTweet,
   type TweetProps,
-  type TwitterComponents,
 } from "react-tweet";
 import { getTweet, type Tweet } from "react-tweet/api";
 
@@ -228,12 +227,10 @@ export const TweetMedia = ({ tweet }: { tweet: EnrichedTweet }) => {
 
 export const MagicTweet = ({
   tweet,
-  components,
   className,
   ...props
 }: {
   tweet: Tweet;
-  components?: TwitterComponents;
   className?: string;
 }) => {
   const enrichedTweet = enrichTweet(tweet);
