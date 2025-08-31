@@ -211,11 +211,11 @@ export const TweetMedia = ({ tweet }: { tweet: EnrichedTweet }) => {
       )}
       {!tweet.video &&
         !tweet.photos &&
-        // @ts-ignore
+        // @ts-expect-error - Twitter card API types are incomplete
         tweet?.card?.binding_values?.thumbnail_image_large?.image_value.url && (
           <img
             src={
-              // @ts-ignore
+              // @ts-expect-error - Twitter card API types are incomplete
               tweet.card.binding_values.thumbnail_image_large.image_value.url
             }
             className="h-64 rounded-xl border object-cover shadow-sm"
@@ -257,7 +257,6 @@ export const MagicTweet = ({
  */
 export const TweetCard = async ({
   id,
-  components,
   fallback = <TweetSkeleton />,
   onError,
   ...props
@@ -275,7 +274,7 @@ export const TweetCard = async ({
     : undefined;
 
   if (!tweet) {
-    const NotFound = components?.TweetNotFound || TweetNotFound;
+    const NotFound = TweetNotFound;
     return <NotFound {...props} />;
   }
 
