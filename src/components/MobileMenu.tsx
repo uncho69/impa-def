@@ -52,11 +52,11 @@ export function MobileMenu() {
               <Button href="/defi" local={true} className={btnModalStyle}>
                 DeFi
               </Button>
-              <Button href="/nft" local={true} className={btnModalStyle}>
-                NFTs
+              <Button href="/memecoins" local={true} className={btnModalStyle}>
+                Memecoins
               </Button>
-              <Button href="/giochi" local={true} className={btnModalStyle}>
-                GameFi
+              <Button href="/airdrops" local={true} className={btnModalStyle}>
+                Airdrops
               </Button>
               <Button href="/wallet" local={true} className={btnModalStyle}>
                 Wallet

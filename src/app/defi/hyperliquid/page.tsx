@@ -147,6 +147,8 @@ export default function Hyperliquid() {
           </div>
         </div>
 
+
+
         <SectionTitle>Caratteristiche Principali</SectionTitle>
         <SectionBody>
           <Accordion buttonText="Perpetual Futures" defaultOpen={true}>
