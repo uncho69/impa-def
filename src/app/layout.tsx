@@ -52,6 +52,38 @@ export default function RootLayout({
           </header>
           <main className="w-full flex-grow">{children}</main>
           <Footer />
+          
+          {/* AI Chat Widget */}
+          <script src="https://id-bot-eight.vercel.app/defi-mentor-widget.js"></script>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                DefiMentor.CONFIG = {
+                  demoMode: true,
+                  position: 'bottom-right',
+                  theme: 'imparodefi'
+                };
+                
+                // Nasconde il widget su mobile, lo mostra solo su desktop
+                const style = document.createElement('style');
+                style.textContent = \`
+                  @media (max-width: 768px) {
+                    /* Nasconde il widget su mobile */
+                    [data-defi-mentor-widget],
+                    .defi-mentor-widget,
+                    #defi-mentor-widget,
+                    iframe[src*="defi-mentor"],
+                    div[class*="defi-mentor"],
+                    div[class*="chat-widget"],
+                    div[class*="ai-widget"] {
+                      display: none !important;
+                    }
+                  }
+                \`;
+                document.head.appendChild(style);
+              `,
+            }}
+          />
         </body>
       </html>
     </ClerkProvider>
