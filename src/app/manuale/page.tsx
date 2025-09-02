@@ -1,17 +1,15 @@
 import { Accordion } from "@/components/Accordion";
 import { Button } from "@/components/Button";
 import { List } from "@/components/List";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { PageLayout } from "@/components/PageLayout";
 // Removed unused imports
 
 export default function manuale() {
   return (
-    <ProtectedRoute title="Manuale A-Z">
-      <PageLayout 
-        title="Manuale A-Z" 
-        description="Guida completa al mondo Web3, crypto e DeFi dalla A alla Z"
-      >
+    <PageLayout 
+      title="Manuale A-Z" 
+      description="Guida completa al mondo Web3, crypto e DeFi dalla A alla Z"
+    >
         <div className="bg-white rounded-2xl shadow-lg p-8 border border-neutral-200 mb-8">
               <p className="text-neutral-700 mb-6">
                 Cosa sono le criptovalute? Cos&apos;è il metaverso, il mondo Web3, la DeFi e l&apos;economia digitale?
@@ -98,7 +96,6 @@ export default function manuale() {
               <Button href="/wallet" local={true} className="btn btn-outline">Wallet</Button>
             </div>
         </div>
-      </PageLayout>
-    </ProtectedRoute>
+    </PageLayout>
   );
 }
