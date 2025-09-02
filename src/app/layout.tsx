@@ -52,25 +52,6 @@ export default function RootLayout({
           </header>
           <main className="w-full flex-grow">{children}</main>
           <Footer />
-          
-          {/* AI Chat Widget */}
-          <script src="https://id-bot-eight.vercel.app/defi-mentor-widget.js"></script>
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `
-                DefiMentor.CONFIG = {
-                  demoMode: true,
-                  position: 'bottom-right',
-                  theme: 'imparodefi',
-                  mobile: {
-                    responsive: true,
-                    fullscreen: false,
-                    position: 'bottom-right'
-                  }
-                };
-              `,
-            }}
-          />
         </body>
       </html>
     </ClerkProvider>
