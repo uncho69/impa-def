@@ -61,7 +61,12 @@ export default function RootLayout({
                 DefiMentor.CONFIG = {
                   demoMode: true,
                   position: 'bottom-right',
-                  theme: 'imparodefi'
+                  theme: 'imparodefi',
+                  mobile: {
+                    responsive: true,
+                    fullscreen: false,
+                    position: 'bottom-right'
+                  }
                 };
               `,
             }}
