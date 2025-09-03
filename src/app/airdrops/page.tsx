@@ -8,6 +8,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 import { SimpleCard } from "@/components/SimpleCard";
+import { ExploreWeb3 } from "@/components/ExploreWeb3";
 import { useState } from "react";
 
 // Import delle immagini per i progetti di airdrop
@@ -495,6 +496,8 @@ export default function Airdrops() {
           </div>
         </SectionBody>
       </MobileContainer>
+      
+      <ExploreWeb3 />
     </ProtectedRoute>
   );
 }

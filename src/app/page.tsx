@@ -1,6 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
-import VideoImage from "@/assets/Video.png";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 
 
@@ -44,19 +42,15 @@ export default function Home() {
               <div className="relative overflow-hidden rounded-2xl shadow-hard transition-all duration-700">
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-2xl blur opacity-30 animate-pulse-slow group-hover:opacity-50 transition-opacity"></div>
                 <div className="relative rounded-2xl overflow-hidden">
-                  <Image
-                    src={VideoImage}
-                    alt="ImparoDeFi Video Intro"
+                  <video
+                    src="/imparodefi-promo.mp4"
+                    controls
                     className="w-full h-auto object-cover rounded-2xl transition-transform duration-700"
-                    priority
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="rounded-full bg-white/20 backdrop-blur-sm w-20 h-20 flex items-center justify-center shadow-lg border border-white/30 transition-transform cursor-pointer group-hover:bg-white/30 group-hover:shadow-2xl">
-                      <svg className="h-10 w-10 text-white group-hover:text-primary-500 transition-colors" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M8 5v14l11-7z" />
-                      </svg>
-                    </div>
-                  </div>
+                    preload="metadata"
+                    style={{ minHeight: '400px', aspectRatio: '16/9' }}
+                  >
+                    Il tuo browser non supporta il video.
+                  </video>
                 </div>
               </div>
             </div>

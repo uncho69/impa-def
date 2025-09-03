@@ -10,6 +10,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 import { SimpleCard } from "@/components/SimpleCard";
+import { ExploreWeb3 } from "@/components/ExploreWeb3";
 
 // Import delle immagini dei memecoins
 import floppaIcon from "@/assets/floppa-icon.png";
@@ -352,6 +353,8 @@ export default function Memecoins() {
                   </div>
                 </SectionBody>
               </MobileContainer>
+              
+              <ExploreWeb3 />
             </ProtectedRoute>
           );
         }

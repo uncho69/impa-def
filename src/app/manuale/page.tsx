@@ -85,17 +85,7 @@ export default function manuale() {
               NFT e molto altro.
             </p>
           </Accordion>
-          
-          <div className="mt-8 bg-primary-50/30 p-6 rounded-xl">
-            <h3 className="text-xl font-bold mb-4">Esplora il mondo Web3</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Button href="/blockchain" local={true} className="btn btn-outline">Blockchain</Button>
-              <Button href="/defi" local={true} className="btn btn-outline">DeFi</Button>
-              <Button href="/nft" local={true} className="btn btn-outline">NFTs</Button>
-              <Button href="/giochi" local={true} className="btn btn-outline">GameFi</Button>
-              <Button href="/wallet" local={true} className="btn btn-outline">Wallet</Button>
-            </div>
-        </div>
+
     </PageLayout>
   );
 }
