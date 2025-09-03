@@ -20,6 +20,7 @@ export function SimpleCard({
   website,
   xProfile,
   tokenNFT,
+  description,
 }: {
   icon?: StaticImageData;
   title: string;
@@ -32,6 +33,7 @@ export function SimpleCard({
   website?: string;
   xProfile?: string;
   tokenNFT?: string;
+  description?: string;
 }) {
   return (
     <div className="relative card flex-none w-full max-w-[360px]">
@@ -57,6 +59,11 @@ export function SimpleCard({
           )}
           <p className="text-xl md:text-2xl font-semibold text-neutral-900">{title}</p>
         </div>
+        {description && (
+          <div className="text-sm gradient-text leading-relaxed">
+            {description}
+          </div>
+        )}
         {subArray && subArray.length > 0 ? (
           <div className="flex flex-col gap-2">
             {subArrayTitle && (

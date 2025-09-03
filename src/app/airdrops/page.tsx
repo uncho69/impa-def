@@ -35,14 +35,23 @@ export default function Airdrops() {
   const [showAllProjects, setShowAllProjects] = useState(false);
 
   // Array con tutti i 34 progetti di potenziali airdrop
-  const allProjects = [
+  const allProjects: Array<{
+    title: string;
+    image: any;
+    website: string;
+    xProfile: string;
+    tokenNFT: string;
+    description: string;
+    href?: string;
+  }> = [
     {
       title: "Base",
       image: baseLogo,
       website: "https://base.org/",
       xProfile: "https://x.com/base",
       tokenNFT: "https://www.coingecko.com/en/coins/base",
-      description: "Layer 2 di Ethereum sviluppata da Coinbase, progettata per offrire una piattaforma sicura, scalabile e conveniente per le applicazioni decentralizzate."
+      description: "Layer 2 di Ethereum sviluppata da Coinbase, progettata per offrire una piattaforma sicura, scalabile e conveniente per le applicazioni decentralizzate.",
+      href: "/airdrops/base"
     },
     {
       title: "Hyperliquid",
@@ -50,7 +59,8 @@ export default function Airdrops() {
       website: "https://hyperliquid.xyz/",
       xProfile: "https://x.com/HyperliquidX",
       tokenNFT: "https://www.coingecko.com/en/coins/purr-2",
-      description: "Exchange decentralizzato focalizzato sui perpetual futures, operante sulla blockchain Hyperliquid L1 con trading veloce e trasparente."
+      description: "Exchange decentralizzato focalizzato sui perpetual futures, operante sulla blockchain Hyperliquid L1 con trading veloce e trasparente.",
+      href: "/airdrops/hyperliquid"
     },
     {
       title: "Jumper",
@@ -58,7 +68,8 @@ export default function Airdrops() {
       website: "https://jumper.exchange/",
       xProfile: "https://x.com/JumperExchange",
       tokenNFT: "#",
-      description: "Piattaforma di bridging e swapping multi-chain, alimentata da LI.FI, che permette trasferimenti di token fluidi tra diverse blockchain."
+      description: "Piattaforma di bridging e swapping multi-chain, alimentata da LI.FI, che permette trasferimenti di token fluidi tra diverse blockchain.",
+      href: "/airdrops/jumper"
     },
     {
       title: "Scroll",
@@ -66,7 +77,8 @@ export default function Airdrops() {
       website: "https://scroll.io/",
       xProfile: "https://x.com/Scroll_ZKP",
       tokenNFT: "#",
-      description: "Soluzione Layer 2 per Ethereum che utilizza la tecnologia zkEVM per migliorare la scalabilità e ridurre i costi di transazione."
+      description: "Soluzione Layer 2 per Ethereum che utilizza la tecnologia zkEVM per migliorare la scalabilità e ridurre i costi di transazione.",
+      href: "/airdrops/scroll"
     },
     {
       title: "Orbiter",
@@ -74,7 +86,8 @@ export default function Airdrops() {
       website: "https://www.orbiter.finance/",
       xProfile: "https://x.com/Orbiter_Finance",
       tokenNFT: "#",
-      description: "Protocollo di bridging decentralizzato che facilita le transazioni cross-chain all'interno dell'ecosistema Ethereum."
+      description: "Protocollo di bridging decentralizzato che facilita le transazioni cross-chain all'interno dell'ecosistema Ethereum.",
+      href: "/airdrops/orbiter"
     },
     {
       title: "deBridge",
@@ -82,7 +95,8 @@ export default function Airdrops() {
       website: "https://debridge.finance/",
       xProfile: "https://x.com/deBridgeFinance",
       tokenNFT: "#",
-      description: "Protocollo di interoperabilità cross-chain che permette trasferimenti di messaggi arbitrari e valore tra diverse blockchain."
+      description: "Protocollo di interoperabilità cross-chain che permette trasferimenti di messaggi arbitrari e valore tra diverse blockchain.",
+      href: "/airdrops/debridge"
     },
     {
       title: "Polymarket",
@@ -90,7 +104,8 @@ export default function Airdrops() {
       website: "https://polymarket.com/",
       xProfile: "https://x.com/Polymarket",
       tokenNFT: "#",
-      description: "Piattaforma di mercati predittivi basata su Polygon, dove gli utenti possono scommettere su vari eventi futuri."
+      description: "Piattaforma di mercati predittivi basata su Polygon, dove gli utenti possono scommettere su vari eventi futuri.",
+      href: "/airdrops/polymarket"
     },
     {
       title: "Relay Bridge",
@@ -98,7 +113,8 @@ export default function Airdrops() {
       website: "https://relay.link/",
       xProfile: "https://x.com/ReservoirProtocol",
       tokenNFT: "#",
-      description: "Bridge sviluppato da Reservoir che utilizza un singolo relayer per eseguire immediatamente gli ordini sulla rete di destinazione."
+      description: "Bridge sviluppato da Reservoir che utilizza un singolo relayer per eseguire immediatamente gli ordini sulla rete di destinazione.",
+      href: "/airdrops/relay-bridge"
     },
     {
       title: "Metamask",
@@ -106,7 +122,8 @@ export default function Airdrops() {
       website: "https://metamask.io/",
       xProfile: "https://x.com/MetaMask",
       tokenNFT: "#",
-      description: "Portafoglio non-custodial più popolare per Ethereum e varie soluzioni Layer 2, con supporto per browser e mobile."
+      description: "Portafoglio non-custodial più popolare per Ethereum e varie soluzioni Layer 2, con supporto per browser e mobile.",
+      href: "/airdrops/metamask"
     },
     {
       title: "PropellerSwap",
@@ -114,7 +131,8 @@ export default function Airdrops() {
       website: "https://propellerswap.com/",
       xProfile: "#",
       tokenNFT: "#",
-      description: "Exchange decentralizzato che offre trading di token con funzionalità avanzate e commissioni competitive."
+      description: "Exchange decentralizzato che offre trading di token con funzionalità avanzate e commissioni competitive.",
+      href: "/airdrops/propellerswap"
     },
     {
       title: "Phantom",
@@ -122,7 +140,8 @@ export default function Airdrops() {
       website: "https://phantom.app/",
       xProfile: "https://x.com/phantom",
       tokenNFT: "#",
-      description: "Portafoglio non-custodial per Solana e Ethereum, progettato per essere user-friendly e sicuro per la gestione di criptovalute."
+      description: "Portafoglio non-custodial per Solana e Ethereum, progettato per essere user-friendly e sicuro per la gestione di criptovalute.",
+      href: "/airdrops/phantom"
     },
     {
       title: "Berachain",
@@ -130,7 +149,8 @@ export default function Airdrops() {
       website: "https://berachain.com/",
       xProfile: "https://x.com/berachain",
       tokenNFT: "#",
-      description: "Blockchain Layer 1 basata su Cosmos, focalizzata su DeFi con un consenso 'proof of liquidity' per migliorare l'efficienza del capitale."
+      description: "Blockchain Layer 1 basata su Cosmos, focalizzata su DeFi con un consenso 'proof of liquidity' per migliorare l'efficienza del capitale.",
+      href: "/airdrops/berachain"
     },
     {
       title: "OpenSea",
@@ -138,7 +158,8 @@ export default function Airdrops() {
       website: "https://opensea.io/",
       xProfile: "https://x.com/opensea",
       tokenNFT: "#",
-      description: "Marketplace leader per NFT, fondato nel 2017, che ha abilitato la creazione, vendita e scoperta di oggetti digitali unici."
+      description: "Marketplace leader per NFT, fondato nel 2017, che ha abilitato la creazione, vendita e scoperta di oggetti digitali unici.",
+      href: "/airdrops/opensea"
     },
     {
       title: "Beramarket",
@@ -146,7 +167,8 @@ export default function Airdrops() {
       website: "https://beramarket.com/",
       xProfile: "#",
       tokenNFT: "#",
-      description: "Marketplace NFT su Berachain che offre trading di NFT con funzionalità avanzate e integrazione con l'ecosistema Berachain."
+      description: "Marketplace NFT su Berachain che offre trading di NFT con funzionalità avanzate e integrazione con l'ecosistema Berachain.",
+      href: "/airdrops/beramarket"
     },
     {
       title: "Warpcast",
@@ -154,7 +176,8 @@ export default function Airdrops() {
       website: "https://warpcast.com/",
       xProfile: "https://x.com/warpcast",
       tokenNFT: "#",
-      description: "Client per il protocollo Farcaster, una piattaforma social decentralizzata basata su blockchain."
+      description: "Client per il protocollo Farcaster, una piattaforma social decentralizzata basata su blockchain.",
+      href: "/airdrops/warpcast"
     },
     {
       title: "Syncswap",
@@ -162,7 +185,8 @@ export default function Airdrops() {
       website: "https://syncswap.xyz/",
       xProfile: "https://x.com/syncswap",
       tokenNFT: "#",
-      description: "Exchange decentralizzato su zkSync Era che offre trading di token con commissioni basse e transazioni veloci."
+      description: "Exchange decentralizzato su zkSync Era che offre trading di token con commissioni basse e transazioni veloci.",
+      href: "/airdrops/syncswap"
     },
     {
       title: "Polygon zkEVM",
@@ -170,7 +194,8 @@ export default function Airdrops() {
       website: "https://polygon.technology/polygon-zkevm",
       xProfile: "https://x.com/0xPolygon",
       tokenNFT: "https://www.coingecko.com/en/coins/polygon",
-      description: "Soluzione Layer 2 per Ethereum che utilizza la tecnologia zero-knowledge rollup per migliorare la scalabilità."
+      description: "Soluzione Layer 2 per Ethereum che utilizza la tecnologia zero-knowledge rollup per migliorare la scalabilità.",
+      href: "/airdrops/polygon-zkevm"
     },
     {
       title: "Degen",
@@ -178,7 +203,8 @@ export default function Airdrops() {
       website: "https://degen.tips/",
       xProfile: "https://x.com/degentips",
       tokenNFT: "#",
-      description: "Ecosistema su Base progettato per supportare applicazioni decentralizzate e integrare DEGEN come token nativo."
+      description: "Ecosistema su Base progettato per supportare applicazioni decentralizzate e integrare DEGEN come token nativo.",
+      href: "/airdrops/degen"
     },
     {
       title: "Rainbow",
@@ -186,7 +212,8 @@ export default function Airdrops() {
       website: "https://rainbow.me/",
       xProfile: "https://x.com/rainbowdotme",
       tokenNFT: "#",
-      description: "Portafoglio mobile per Ethereum e Layer 2, progettato per essere bello, sicuro e facile da usare."
+      description: "Portafoglio mobile per Ethereum e Layer 2, progettato per essere bello, sicuro e facile da usare.",
+      href: "/airdrops/rainbow"
     },
     {
       title: "Gitcoin",
@@ -194,7 +221,8 @@ export default function Airdrops() {
       website: "https://www.gitcoin.co/",
       xProfile: "https://x.com/gitcoin",
       tokenNFT: "https://www.coingecko.com/en/coins/gitcoin",
-      description: "Piattaforma per il finanziamento di beni pubblici open source attraverso il Quadratic Funding e altri meccanismi."
+      description: "Piattaforma per il finanziamento di beni pubblici open source attraverso il Quadratic Funding e altri meccanismi.",
+      href: "/airdrops/gitcoin"
     },
     {
       title: "Linea",
@@ -202,7 +230,8 @@ export default function Airdrops() {
       website: "https://linea.build/",
       xProfile: "https://x.com/LineaBuild",
       tokenNFT: "#",
-      description: "Blockchain Layer 2 di Consensys che utilizza la tecnologia zk-rollup per offrire transazioni rapide, economiche e sicure."
+      description: "Blockchain Layer 2 di Consensys che utilizza la tecnologia zk-rollup per offrire transazioni rapide, economiche e sicure.",
+      href: "/airdrops/linea"
     },
     {
       title: "Getgrass",
@@ -210,7 +239,8 @@ export default function Airdrops() {
       website: "https://getgrass.io/",
       xProfile: "https://x.com/getgrass_io",
       tokenNFT: "#",
-      description: "Piattaforma DePIN che permette di guadagnare token contribuendo alla rete con risorse computazionali."
+      description: "Piattaforma DePIN che permette di guadagnare token contribuendo alla rete con risorse computazionali.",
+      href: "/airdrops/getgrass"
     },
     {
       title: "Zora",
@@ -218,7 +248,8 @@ export default function Airdrops() {
       website: "https://zora.co/",
       xProfile: "https://x.com/ourZORA",
       tokenNFT: "#",
-      description: "Piattaforma per la creazione su internet libera e preziosa, permettendo agli artisti di monetizzare il loro lavoro."
+      description: "Piattaforma per la creazione su internet libera e preziosa, permettendo agli artisti di monetizzare il loro lavoro.",
+      href: "/airdrops/zora"
     },
     {
       title: "Hyperlane",
@@ -226,7 +257,8 @@ export default function Airdrops() {
       website: "https://hyperlane.xyz/",
       xProfile: "https://x.com/hyperlane_xyz",
       tokenNFT: "#",
-      description: "Protocollo per l'interoperabilità tra blockchain con quest per potenziali airdrop e trasferimenti cross-chain."
+      description: "Protocollo per l'interoperabilità tra blockchain con quest per potenziali airdrop e trasferimenti cross-chain.",
+      href: "/airdrops/hyperlane"
     },
     {
       title: "Layer3",
@@ -234,7 +266,8 @@ export default function Airdrops() {
       website: "https://layer3.xyz/",
       xProfile: "https://x.com/layer3xyz",
       tokenNFT: "#",
-      description: "Piattaforma per quest e gamification in Web3, che permette agli utenti di guadagnare token completando attività."
+      description: "Piattaforma per quest e gamification in Web3, che permette agli utenti di guadagnare token completando attività.",
+      href: "/airdrops/layer3"
     },
     {
       title: "Moonwell",
@@ -242,7 +275,8 @@ export default function Airdrops() {
       website: "https://moonwell.fi/",
       xProfile: "https://x.com/MoonwellFi",
       tokenNFT: "#",
-      description: "Protocollo di prestito e prestito decentralizzato costruito su Base, Moonbeam e Moonriver."
+      description: "Protocollo di prestito e prestito decentralizzato costruito su Base, Moonbeam e Moonriver.",
+      href: "/airdrops/moonwell"
     },
     {
       title: "Zerion",
@@ -250,7 +284,8 @@ export default function Airdrops() {
       website: "https://zerion.io/",
       xProfile: "https://x.com/zerion",
       tokenNFT: "#",
-      description: "Piattaforma che offre un portafoglio non-custodial specializzato nell'accesso a DeFi e NFT."
+      description: "Piattaforma che offre un portafoglio non-custodial specializzato nell'accesso a DeFi e NFT.",
+      href: "/airdrops/zerion"
     },
     {
       title: "Zapper",
@@ -258,7 +293,8 @@ export default function Airdrops() {
       website: "https://zapper.xyz/",
       xProfile: "https://x.com/zapper_fi",
       tokenNFT: "#",
-      description: "Piattaforma di gestione del portafoglio DeFi che consente di monitorare e interagire con asset criptovalute."
+      description: "Piattaforma di gestione del portafoglio DeFi che consente di monitorare e interagire con asset criptovalute.",
+      href: "/airdrops/zapper"
     },
     {
       title: "Marginfi",
@@ -266,7 +302,8 @@ export default function Airdrops() {
       website: "https://marginfi.com/",
       xProfile: "https://x.com/marginfi",
       tokenNFT: "#",
-      description: "Protocollo di prestito decentralizzato su Solana che offre un'esperienza di trading e gestione del margine efficiente."
+      description: "Protocollo di prestito decentralizzato su Solana che offre un'esperienza di trading e gestione del margine efficiente.",
+      href: "/airdrops/marginfi"
     },
     {
       title: "Snapshot",
@@ -274,7 +311,8 @@ export default function Airdrops() {
       website: "https://snapshot.org/",
       xProfile: "https://x.com/SnapshotLabs",
       tokenNFT: "#",
-      description: "Piattaforma di governance decentralizzata che permette alle DAO di prendere decisioni collettive in modo trasparente."
+      description: "Piattaforma di governance decentralizzata che permette alle DAO di prendere decisioni collettive in modo trasparente.",
+      href: "/airdrops/snapshot"
     },
     {
       title: "DeBank",
@@ -282,7 +320,8 @@ export default function Airdrops() {
       website: "https://debank.com/",
       xProfile: "https://x.com/debank",
       tokenNFT: "#",
-      description: "Piattaforma di tracciamento del portafoglio DeFi che offre una panoramica completa degli asset e delle attività."
+      description: "Piattaforma di tracciamento del portafoglio DeFi che offre una panoramica completa degli asset e delle attività.",
+      href: "/airdrops/debank"
     },
     {
       title: "Nifty Island",
@@ -290,7 +329,8 @@ export default function Airdrops() {
       website: "https://niftyisland.com/",
       xProfile: "https://x.com/niftyisland",
       tokenNFT: "#",
-      description: "Piattaforma di gaming e metaverso con meccaniche play-to-earn e potenziali airdrop per utenti attivi."
+      description: "Piattaforma di gaming e metaverso con meccaniche play-to-earn e potenziali airdrop per utenti attivi.",
+      href: "/airdrops/nifty-island"
     },
     {
       title: "Bong Bears",
@@ -298,7 +338,8 @@ export default function Airdrops() {
       website: "https://bongbears.com/",
       xProfile: "https://x.com/bongbears",
       tokenNFT: "#",
-      description: "Collezione NFT che celebra la cultura dei fumatori, rendendo ogni NFT distintivo e collezionabile."
+      description: "Collezione NFT che celebra la cultura dei fumatori, rendendo ogni NFT distintivo e collezionabile.",
+      href: "/airdrops/bong-bears"
     },
     {
       title: "Blast",
@@ -306,7 +347,8 @@ export default function Airdrops() {
       website: "https://blast.io/",
       xProfile: "https://x.com/Blast_L2",
       tokenNFT: "#",
-      description: "Blockchain Layer 2 di Ethereum che offre rendimenti nativi ETH e staking automatico per gli utenti."
+      description: "Blockchain Layer 2 di Ethereum che offre rendimenti nativi ETH e staking automatico per gli utenti.",
+      href: "/airdrops/blast"
     }
   ];
 
@@ -373,6 +415,8 @@ export default function Airdrops() {
                 website={project.website}
                 xProfile={project.xProfile}
                 tokenNFT={project.tokenNFT}
+                description={project.description}
+                href={project.href || "/"}
               />
             ))}
           </div>
