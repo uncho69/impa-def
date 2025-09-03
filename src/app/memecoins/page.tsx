@@ -36,6 +36,7 @@ import mem6 from "@/assets/mem6.png";
 
 export default function Memecoins() {
   const [showAllMemecoins, setShowAllMemecoins] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
   
   const allMemecoins = [
     {
@@ -262,7 +263,26 @@ export default function Memecoins() {
                   <Accordion buttonText="Attenzione ai Rischi">
                     <List>
                       <li>I memecoin sono estremamente volatili e rischiosi</li>
-                      <li>Molti progetti sono scam o pump & dump</li>
+                      <li>Molti progetti sono scam o <span className="relative inline-block">
+                        <span 
+                          className="underline cursor-help text-blue-600 hover:text-blue-800"
+                          onMouseEnter={() => setShowTooltip(true)}
+                          onMouseLeave={() => setShowTooltip(false)}
+                        >
+                          pump & dump
+                        </span>
+                        {showTooltip && (
+                          <div className="absolute top-0 left-full ml-2 px-4 py-3 bg-gray-900 text-white text-sm rounded-lg shadow-lg z-50 w-80">
+                            <div className="space-y-2">
+                              <div className="font-semibold text-blue-300">Pump & Dump:</div>
+                              <div className="leading-relaxed">
+                                Schema fraudolento in cui il prezzo di un asset (es. criptovaluta o token) viene artificialmente gonfiato ("pump") tramite promozioni ingannevoli o false informazioni, per poi essere venduto ("dump") a prezzi elevati, causando perdite agli investitori ignari quando il valore crolla.
+                              </div>
+                            </div>
+                            <div className="absolute top-4 -left-2 border-4 border-transparent border-r-gray-900"></div>
+                          </div>
+                        )}
+                      </span></li>
                       <li>Investi solo quello che puoi permetterti di perdere</li>
                       <li>Fai sempre ricerche approfondite prima di investire</li>
                       <li>Non investire basandoti solo su hype o FOMO</li>
