@@ -9,10 +9,34 @@ import { List } from "@/components/List";
 import Image from "next/image";
 import hyperliquidIcon from "@/assets/hyperliquid-icon.png";
 import { ClientTweetCard } from "@/components/magicui/client-tweet-card";
+import { useState, useEffect } from "react";
 
 
 export default function Hyperliquid() {
-  
+  const [priceData, setPriceData] = useState({
+    price: 0,
+    volume_24h: 0,
+    price_change_percentage_24h: 0,
+    market_cap: 0,
+    image: ""
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPriceData = async () => {
+      try {
+        const response = await fetch('/api/coin/hyperliquid');
+        const data = await response.json();
+        setPriceData(data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Errore nel caricamento dei dati:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchPriceData();
+  }, []);
   
             const videos = [
             {
@@ -63,26 +87,40 @@ export default function Hyperliquid() {
               <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Prezzo Live</div>
               
               <div className="flex items-baseline gap-2 mb-2">
-                <span className="text-xl font-bold text-gray-900">$0.00</span>
+                <span className="text-xl font-bold text-gray-900">
+                  {loading ? '...' : `$${priceData.price?.toFixed(2) || '0.00'}`}
+                </span>
                 <span className="text-sm text-gray-500">HYPE</span>
               </div>
               
               <div className="flex items-center gap-2 mb-3">
-                <svg className="w-3 h-3 text-green-500" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M7 14l5-5 5 5z"/>
-                </svg>
-                <span className="text-sm font-medium text-green-600">+0.00%</span>
+                {priceData.price_change_percentage_24h >= 0 ? (
+                  <svg className="w-3 h-3 text-green-500" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M7 14l5-5 5 5z"/>
+                  </svg>
+                ) : (
+                  <svg className="w-3 h-3 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M7 10l5 5 5-5z"/>
+                  </svg>
+                )}
+                <span className={`text-sm font-medium ${priceData.price_change_percentage_24h >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  {loading ? '...' : `${priceData.price_change_percentage_24h >= 0 ? '+' : ''}${priceData.price_change_percentage_24h?.toFixed(2) || '0.00'}%`}
+                </span>
                 <span className="text-xs text-gray-400">24h</span>
               </div>
               
               <div className="space-y-1 text-xs">
                 <div className="flex justify-between">
                   <span className="text-gray-500">Volume 24h</span>
-                  <span className="font-medium text-gray-700">$0.00</span>
+                  <span className="font-medium text-gray-700">
+                    {loading ? '...' : `$${priceData.volume_24h?.toLocaleString() || '0'}`}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-500">Market Cap</span>
-                  <span className="font-medium text-gray-700">$0.00</span>
+                  <span className="font-medium text-gray-700">
+                    {loading ? '...' : `$${priceData.market_cap?.toLocaleString() || '0'}`}
+                  </span>
                 </div>
               </div>
             </div>

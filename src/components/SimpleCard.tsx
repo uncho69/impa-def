@@ -66,20 +66,14 @@ export function SimpleCard({
         )}
         {subArray && subArray.length > 0 ? (
           <div className="flex flex-col gap-2">
-            {subArrayTitle && (
-              <div className="text-sm md:text-base text-neutral-600">
-                {subArrayTitle.split('\n').map((line, index) => (
-                  <div key={index} className="mb-1">{line}</div>
-                ))}
+            {subArrayTitle && subArrayTitle.split('\n').map((line, index) => (
+              <div key={index} className="flex justify-between items-center">
+                <span className="text-sm md:text-base text-neutral-600">{line}</span>
+                <span className="text-sm text-neutral-700">
+                  {typeof subArray[index] === 'string' ? subArray[index] : subArray[index]?.text || ''}
+                </span>
               </div>
-            )}
-            <div className="flex gap-2 items-center">
-              {subArray.map((item, i) => (
-                <div key={`subArray-${i}`} className="text-sm text-neutral-700">
-                  {typeof item === 'string' ? item : item.text}
-                </div>
-              ))}
-            </div>
+            ))}
           </div>
         ) : (
           ""

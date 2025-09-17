@@ -7,9 +7,11 @@ import { MobileMenu } from "./MobileMenu";
 import { AuthStatus } from "./AuthStatus";
 import { useState, useEffect, useRef } from "react";
 import { useUser } from "@clerk/nextjs";
+import { AuthModal } from "@/components/auth/AuthModal";
 
 export function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { isSignedIn } = useUser();
 
@@ -267,6 +269,13 @@ export function Navbar() {
           </div>
         </nav>
       </div>
+      
+      {/* Auth Modal */}
+      <AuthModal 
+        isOpen={isAuthModalOpen} 
+        onClose={() => setIsAuthModalOpen(false)}
+        initialMode="signin"
+      />
     </header>
   );
 }

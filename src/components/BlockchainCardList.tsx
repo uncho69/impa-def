@@ -1,3 +1,5 @@
+"use client";
+
 import { CardContainer } from "./CardContainer";
 import { SimpleCard } from "./SimpleCard";
 import Placeholder from "@/assets/placeholder.svg";
@@ -19,17 +21,43 @@ import layIcon from "@/assets/layer3-logo.png";
 import hlaIcon from "@/assets/hyperlane-logo.svg";
 import blaIcon from "@/assets/blast-logo.webp";
 import avaIcon from "@/assets/avalanche-avax-logo.svg";
+import { useState, useEffect } from "react";
 
 export function BlockchainCardList() {
+  const [bitcoinData, setBitcoinData] = useState({
+    price: 0,
+    market_cap: 0
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBitcoinData = async () => {
+      try {
+        const response = await fetch('/api/coin/bitcoin');
+        const data = await response.json();
+        setBitcoinData({
+          price: data.price || 0,
+          market_cap: data.market_cap || 0
+        });
+        setLoading(false);
+      } catch (error) {
+        console.error('Errore nel caricamento dei dati di Bitcoin:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchBitcoinData();
+  }, []);
   return (
     <CardContainer>
       <SimpleCard
         icon={btcIcon}
         title={"Bitcoin"}
         subArray={[
-          { icon: Placeholder, text: "" },
-          { icon: Placeholder, text: "" },
+          loading ? "..." : `$${bitcoinData.price?.toLocaleString() || '0'}`,
+          loading ? "..." : `$${bitcoinData.market_cap?.toLocaleString() || '0'}`
         ]}
+        subArrayTitle="Prezzo:\nMarket Cap:"
         href={"./blockchain/bitcoin"}
         externalLink="https://bitcoin.org"
         xPage="https://x.com/bitcoin"
