@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import snowflake from 'snowflake-sdk';
-export async function GET(request: Request, { params }: { params: { slug: string } }) {
+
+export async function GET(request: Request, { params }: { params: { slug: string } }): Promise<Response> {
   const { slug } = params;
   
-  return new Promise((resolve, reject) => {
+  return new Promise<Response>((resolve, reject) => {
     // Create a connection object
     const connection = snowflake.createConnection({
       // Account identifier 
@@ -20,7 +21,7 @@ export async function GET(request: Request, { params }: { params: { slug: string
     connection.connect((err, conn) => {
       if (err) {
         console.error('Unable to connect: ' + err.message);
-        reject(NextResponse.json({ error: 'Database connection failed' }, { status: 500 }));
+        resolve(NextResponse.json({ error: 'Database connection failed' }, { status: 500 }));
         return;
       }
     
@@ -33,7 +34,7 @@ export async function GET(request: Request, { params }: { params: { slug: string
         complete: (err, stmt, rows) => {
           if (err) {
             console.error('Failed to execute statement: ' + err.message);
-            reject(NextResponse.json({ error: 'Query failed' }, { status: 500 }));
+            resolve(NextResponse.json({ error: 'Query failed' }, { status: 500 }));
             return;
           } else {
             const data = rows?.[0];
