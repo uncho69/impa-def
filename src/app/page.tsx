@@ -26,7 +26,7 @@ export default function Home() {
               </div>
               
               <div className="flex flex-col sm:flex-row gap-4 animate-slide-up [animation-delay:400ms]">
-                <Link href="/registrati?next=/manuale" className="cssbuttons-io-button">
+                <Link href="/defi" className="cssbuttons-io-button">
                   Inizia Subito
                   <div className="icon">
                     <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -128,7 +128,7 @@ export default function Home() {
                     <div className="grid grid-cols-1 gap-2">
                       <div className="flex items-center gap-3 p-3 bg-red-50 rounded-lg hover:bg-red-100 transition-all duration-200">
                         <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                        <span>Migliaia di criptovalute</span>
+                        <span>Milioni di Token</span>
                       </div>
                       <div className="flex items-center gap-3 p-3 bg-red-50 rounded-lg hover:bg-red-100 transition-all duration-200">
                         <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
@@ -140,7 +140,7 @@ export default function Home() {
                       </div>
                       <div className="flex items-center gap-3 p-3 bg-red-50 rounded-lg hover:bg-red-100 transition-all duration-200">
                         <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                        <span>Difficoltà a orientarsi tra le blockchain</span>
+                        <span>Complesità tecniche</span>
                       </div>
                       <div className="flex items-center gap-3 p-3 bg-red-50 rounded-lg hover:bg-red-100 transition-all duration-200">
                         <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
@@ -198,16 +198,24 @@ export default function Home() {
                       I possessori degli NFT Shroomiez saranno inizialmente coloro che guideranno il progetto, votando quali progetti aggiungere, rimuovere o mantenere su Imparodefi.
                     </p>
                     <p>
-                      In futuro, gli smart contract potranno essere aggiornati tramite una funzione integrata per consentire l&apos;aggiunta o la rimozione di contratti token dalla piattaforma di governance di Imparodefi, permettendo a qualsiasi altra comunità di contribuire.
+                      I membri della community che governano ImparoDeFi decideranno anche come distribuire il budget di ogni progetto tra creatori e promotori.
                     </p>
                   </div>
                   <div className="space-y-4 text-neutral-700 leading-relaxed">
                     <p>
-                      Gli elettori in whitelist decidono anche come distribuire il budget di ciascuna epoch di Imparodefi tra i progetti approvati. L&apos;allocazione sarà poi suddivisa equamente tra i Creator Pool e i Promoter Pool.
+                      In futuro, gli smart contract potranno essere aggiornati per permettere ad altre collezioni NFT o community di Token di partecipare alla governance di ImparoDeFi, permettendo a qualsiasi altra comunità di contribuire.
                     </p>
-                    <p>
-                      Questa funzione potrà cambiare in futuro, consentendo agli elettori in whitelist di votare sulla percentuale di distribuzione dei premi tra i due pool per ciascun progetto.
-                    </p>
+                    <div className="mt-6">
+                      <Link 
+                        href="/defi" 
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+                      >
+                        Accedi alla piattaforma
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </div>

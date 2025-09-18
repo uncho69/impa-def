@@ -245,11 +245,17 @@ export function Navbar() {
                 
                 {isDropdownOpen && (
                   <div className="absolute top-full right-0 mt-2 w-48 bg-white border border-blue-200 rounded-lg shadow-lg py-2 z-50">
+                    <Link href="/compraevendicrypto" onClick={showAuthModal} className="block px-4 py-2 text-sm font-bold text-blue-700 hover:bg-blue-50 transition-colors">
+                      Compra e vendi crypto
+                    </Link>
                     <Link href="/nft" onClick={showAuthModal} className="block px-4 py-2 text-sm font-bold text-blue-700 hover:bg-blue-50 transition-colors">
                       NFTs
                     </Link>
                     <Link href="/giochi" onClick={showAuthModal} className="block px-4 py-2 text-sm font-bold text-blue-700 hover:bg-blue-50 transition-colors">
                       GameFi
+                    </Link>
+                    <Link href="/strumenti-utili" onClick={showAuthModal} className="block px-4 py-2 text-sm font-bold text-blue-700 hover:bg-blue-50 transition-colors">
+                      Strumenti Utili
                     </Link>
                     <Link href="/supporto" className="block px-4 py-2 text-sm font-bold text-blue-700 hover:bg-blue-50 transition-colors">
                       Assistenza
