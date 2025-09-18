@@ -257,6 +257,9 @@ export function Navbar() {
                     <Link href="/strumenti-utili" onClick={showAuthModal} className="block px-4 py-2 text-sm font-bold text-blue-700 hover:bg-blue-50 transition-colors">
                       Strumenti Utili
                     </Link>
+                    <Link href="/news" onClick={showAuthModal} className="block px-4 py-2 text-sm font-bold text-blue-700 hover:bg-blue-50 transition-colors">
+                      News
+                    </Link>
                     <Link href="/supporto" className="block px-4 py-2 text-sm font-bold text-blue-700 hover:bg-blue-50 transition-colors">
                       Assistenza
                     </Link>
