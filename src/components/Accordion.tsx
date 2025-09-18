@@ -9,7 +9,7 @@ export function Accordion({
   className,
   defaultOpen = false,
 }: {
-  buttonText: string;
+  buttonText: string | ReactNode;
   children: ReactNode;
   className?: string;
   defaultOpen?: boolean;
@@ -26,7 +26,11 @@ export function Accordion({
           alt=""
           className={`${open ? "" : "-rotate-90"} transition lg:w-6 w-5 opacity-70`}
         />
-        <span className="text-lg md:text-xl">{buttonText}</span>
+        {typeof buttonText === 'string' ? (
+          <span className="text-lg md:text-xl">{buttonText}</span>
+        ) : (
+          buttonText
+        )}
       </button>
       {open && <div className="mt-3 text-neutral-700">{children}</div>}
     </div>
