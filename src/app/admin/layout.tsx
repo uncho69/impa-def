@@ -79,49 +79,48 @@ export default function AdminLayout({
   // Admin layout
   return (
     <div className="min-h-screen bg-gray-50">
-        {/* Admin Header */}
-        <div className="bg-white border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-              <div className="flex items-center space-x-8">
-                <h1 className="text-xl font-bold text-gray-900">
-                  🛡️ Admin Dashboard
-                </h1>
-                <nav className="flex space-x-6">
-                  <Link 
-                    href="/admin/dashboard" 
-                    className="text-gray-600 hover:text-blue-600 font-medium transition-colors"
-                  >
-                    Dashboard
-                  </Link>
-                  <Link 
-                    href="/admin/news" 
-                    className="text-gray-600 hover:text-blue-600 font-medium transition-colors"
-                  >
-                    News
-                  </Link>
-                </nav>
-              </div>
-              <div className="flex items-center space-x-4">
-                <span className="text-sm text-gray-600">
-                  👋 {user.firstName || userEmail}
-                </span>
+      {/* Admin Header */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center space-x-8">
+              <h1 className="text-xl font-bold text-gray-900">
+                🛡️ Admin Dashboard
+              </h1>
+              <nav className="flex space-x-6">
                 <Link 
-                  href="/" 
-                  className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                  href="/admin/dashboard" 
+                  className="text-gray-600 hover:text-blue-600 font-medium transition-colors"
                 >
-                  Vai al Sito
+                  Dashboard
                 </Link>
-              </div>
+                <Link 
+                  href="/admin/news" 
+                  className="text-gray-600 hover:text-blue-600 font-medium transition-colors"
+                >
+                  News
+                </Link>
+              </nav>
+            </div>
+            <div className="flex items-center space-x-4">
+              <span className="text-sm text-gray-600">
+                👋 {user.firstName || userEmail}
+              </span>
+              <Link 
+                href="/" 
+                className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+              >
+                Vai al Sito
+              </Link>
             </div>
           </div>
         </div>
-
-        {/* Admin Content */}
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {children}
-        </main>
       </div>
+
+      {/* Admin Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {children}
+      </main>
     </div>
   );
 }

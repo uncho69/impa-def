@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
-import { SimpleCard } from '@/components/SimpleCard';
+// import { SimpleCard } from '@/components/SimpleCard'; // Non più necessario
 import { NEWS_CATEGORIES } from '@/lib/news';
 
 interface NewsItem {
@@ -127,7 +127,7 @@ export default function EditNewsPage({ params }: { params: { id: string } }) {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Informazioni Base */}
-        <SimpleCard className="p-6">
+        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-4">Informazioni Base</h2>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -222,10 +222,10 @@ export default function EditNewsPage({ params }: { params: { id: string } }) {
               />
             </div>
           </div>
-        </SimpleCard>
+        </div>
 
         {/* Contenuto */}
-        <SimpleCard className="p-6">
+        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-4">Contenuto</h2>
           
           <div>
@@ -245,10 +245,10 @@ export default function EditNewsPage({ params }: { params: { id: string } }) {
               💡 Puoi usare Markdown per formattare il testo (# per titoli, **grassetto**, *corsivo*, etc.)
             </p>
           </div>
-        </SimpleCard>
+        </div>
 
         {/* Opzioni */}
-        <SimpleCard className="p-6">
+        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-4">Opzioni</h2>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -282,7 +282,7 @@ export default function EditNewsPage({ params }: { params: { id: string } }) {
               </label>
             </div>
           </div>
-        </SimpleCard>
+        </div>
 
         {/* Azioni */}
         <div className="flex justify-between">

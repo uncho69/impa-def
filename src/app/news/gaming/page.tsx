@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { PageLayout } from "@/components/PageLayout";
+// import { PageLayout } from "@/components/PageLayout"; // Non più necessario
 import { BackToHome } from "@/components/BackToHome";
 import { useState, useEffect } from "react";
 import imparoLogo from "@/assets/imparodefi-logo-nobg.webp";
@@ -26,7 +26,7 @@ export default function GamingNewsPage() {
   }, []);
 
   return (
-    <PageLayout>
+    
       <div className="bg-gradient-to-br from-violet-50 via-white to-purple-50 min-h-screen">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
           {/* Back button */}
@@ -130,6 +130,6 @@ export default function GamingNewsPage() {
           )}
         </div>
       </div>
-    </PageLayout>
+    
   );
 }
