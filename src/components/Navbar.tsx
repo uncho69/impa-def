@@ -6,19 +6,40 @@ import logo from "@/assets/imparodefi-logo-nobg.webp";
 import { MobileMenu } from "./MobileMenu";
 import { AuthStatus } from "./AuthStatus";
 import { useState, useEffect, useRef } from "react";
+import { SearchBar } from "./SearchBar";
 import { useUser } from "@clerk/nextjs";
 import { AuthModal } from "@/components/auth/AuthModal";
 
+// Admin emails - AGGIORNA CON LE TUE REALI
+const ADMIN_EMAILS = [
+  "jeffben69zos@gmail.com",    // La tua email per testing
+  "admin@imparodefi.com",      // Email admin principale
+  "cofounder@imparodefi.com"   // Email cofounder
+];
+
+function isAdminEmail(email: string): boolean {
+  return ADMIN_EMAILS.includes(email.toLowerCase());
+}
+
 export function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isAdminDropdownOpen, setIsAdminDropdownOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const { isSignedIn } = useUser();
+  const adminDropdownRef = useRef<HTMLDivElement>(null);
+  const { isSignedIn, user } = useUser();
+  
+  // Check if user is admin
+  const isAdmin = user?.emailAddresses?.[0]?.emailAddress && 
+                  isAdminEmail(user.emailAddresses[0].emailAddress);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false);
+      }
+      if (adminDropdownRef.current && !adminDropdownRef.current.contains(event.target as Node)) {
+        setIsAdminDropdownOpen(false);
       }
     }
 
@@ -214,6 +235,7 @@ export function Navbar() {
           </Link>
           
           <div className="hidden lg:flex items-center space-x-8">
+            <SearchBar />
             <div className="flex space-x-6">
               <Link href="/manuale" className="gradient-text hover:opacity-80 transition-opacity font-bold text-sm">
                 Manuale
@@ -233,6 +255,43 @@ export function Navbar() {
               <Link href="/wallet" onClick={showAuthModal} className="gradient-text hover:opacity-80 transition-opacity font-bold text-sm">
                 Wallet
               </Link>
+              <Link href="/news" onClick={showAuthModal} className="gradient-text hover:opacity-80 transition-opacity font-bold text-sm">
+                News
+              </Link>
+              
+              {/* Admin Panel Dropdown (solo per admin) */}
+              {isAdmin && (
+                <div className="relative" ref={adminDropdownRef}>
+                  <button
+                    onClick={() => setIsAdminDropdownOpen(!isAdminDropdownOpen)}
+                    className="gradient-text hover:opacity-80 transition-opacity font-bold text-sm flex items-center gap-1"
+                  >
+                    🛡️ Admin Panel
+                    <span className={`transition-transform ${isAdminDropdownOpen ? 'rotate-180' : ''}`}>
+                      ▼
+                    </span>
+                  </button>
+                  
+                  {isAdminDropdownOpen && (
+                    <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-blue-200 rounded-lg shadow-lg py-2 z-50">
+                      <Link 
+                        href="/admin/news" 
+                        onClick={() => setIsAdminDropdownOpen(false)}
+                        className="block px-4 py-2 text-sm font-bold text-blue-700 hover:bg-blue-50 transition-colors"
+                      >
+                        📰 Gestione Articoli
+                      </Link>
+                      <Link 
+                        href="/admin/dashboard" 
+                        onClick={() => setIsAdminDropdownOpen(false)}
+                        className="block px-4 py-2 text-sm font-bold text-blue-700 hover:bg-blue-50 transition-colors"
+                      >
+                        📊 Dashboard
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              )}
               
               {/* Dropdown Menu */}
               <div className="relative" ref={dropdownRef}>
@@ -256,9 +315,6 @@ export function Navbar() {
                     </Link>
                     <Link href="/strumenti-utili" onClick={showAuthModal} className="block px-4 py-2 text-sm font-bold text-blue-700 hover:bg-blue-50 transition-colors">
                       Strumenti Utili
-                    </Link>
-                    <Link href="/news" onClick={showAuthModal} className="block px-4 py-2 text-sm font-bold text-blue-700 hover:bg-blue-50 transition-colors">
-                      News
                     </Link>
                     <Link href="/supporto" className="block px-4 py-2 text-sm font-bold text-blue-700 hover:bg-blue-50 transition-colors">
                       Assistenza

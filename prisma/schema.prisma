@@ -25,12 +25,12 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String?  @db.Text
-  access_token      String?  @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String?  @db.Text
+  id_token          String?
   session_state     String?
   user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -51,5 +51,57 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model News {
+  id          String      @id @default(cuid())
+  title       String
+  summary     String
+  content     String      @db.Text
+  category    NewsCategory
+  author      String
+  authorEmail String
+  imageUrl    String?
+  featured    Boolean     @default(false)
+  status      NewsStatus  @default(DRAFT)
+  views       Int         @default(0)
+  readTime    String
+  tags        String[]
+  publishedAt DateTime?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@map("news")
+}
+
+model UserRole {
+  id    String @id @default(cuid())
+  email String @unique
+  role  Role   @default(VIEWER)
+
+  @@map("user_roles")
+}
+
+enum NewsCategory {
+  GENERAL
+  DEFI
+  AIRDROPS
+  CRYPTO_AI
+  STABLECOINS
+  REGOLAMENTAZIONI
+  GAMING
+  MEMECOINS
+}
+
+enum NewsStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+  VIEWER
 }
 
