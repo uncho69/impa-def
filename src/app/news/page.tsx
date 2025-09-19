@@ -1,15 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 // import { PageLayout } from "@/components/PageLayout"; // Non necessario, usiamo layout custom
 import { useState, useEffect } from "react";
-
-// Icone per le categorie (usando assets esistenti)
-import bitcoinIcon from "@/assets/bitcoin-icon.svg";
-import ethereumIcon from "@/assets/ethereum-icon.svg";
-import degenIcon from "@/assets/degen-icon.png";
-import imparoLogo from "@/assets/imparodefi-logo-nobg.webp";
 
 export default function NewsPage() {
   const [featuredArticles, setFeaturedArticles] = useState([]);
@@ -34,56 +27,48 @@ export default function NewsPage() {
       id: "general",
       title: "General",
       description: "Notizie generali dal mondo crypto e Web3",
-      icon: imparoLogo,
       color: "from-blue-500 to-indigo-600"
     },
     {
       id: "defi",
       title: "DeFi",
       description: "Finanza decentralizzata e protocolli innovativi",
-      icon: ethereumIcon,
       color: "from-green-500 to-emerald-600"
     },
     {
       id: "airdrops",
       title: "Hot Airdrops",
       description: "I migliori airdrop e opportunità gratuite",
-      icon: imparoLogo,
       color: "from-purple-500 to-violet-600"
     },
     {
       id: "crypto-ai",
       title: "Crypto AI",
       description: "Intelligenza artificiale e blockchain unite",
-      icon: imparoLogo,
       color: "from-cyan-500 to-blue-600"
     },
     {
       id: "stablecoins",
       title: "Stablecoins",
       description: "USDC, USDT, PYUSD e il futuro dei pagamenti",
-      icon: imparoLogo,
       color: "from-emerald-500 to-green-600"
     },
     {
       id: "regolamentazioni",
       title: "Regolamentazioni",
       description: "Normative, MiCA Europa e compliance crypto",
-      icon: imparoLogo,
       color: "from-red-500 to-pink-600"
     },
     {
       id: "gaming",
       title: "Gaming",
       description: "GameFi, P2E e l'evoluzione del gaming blockchain",
-      icon: imparoLogo,
       color: "from-violet-500 to-purple-600"
     },
     {
       id: "memecoins",
       title: "Memecoins",
       description: "DOGE, SHIB, PEPE e le ultime meme sensation",
-      icon: degenIcon,
       color: "from-yellow-500 to-orange-500"
     }
   ];
@@ -114,16 +99,7 @@ export default function NewsPage() {
                 <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:scale-105 overflow-hidden border border-gray-100 h-full">
                   <div className={`h-2 bg-gradient-to-r ${category.color}`}></div>
                   <div className="p-5">
-                    <div className="flex items-center mb-3">
-                      <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center mr-3">
-                        <Image 
-                          src={category.icon} 
-                          alt={category.title}
-                          width={20}
-                          height={20}
-                          className="w-5 h-5"
-                        />
-                      </div>
+                    <div className="text-center mb-3">
                       <h3 className="font-bold text-base text-gray-900 group-hover:text-blue-600 transition-colors">
                         {category.title}
                       </h3>
@@ -147,8 +123,8 @@ export default function NewsPage() {
 
           {/* Sezione articoli in evidenza */}
           <div className="mb-10">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center flex items-center justify-center gap-2">
-              🔥 <span>Articoli in Evidenza</span>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+              News in evidenza
             </h2>
             {loading ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -179,12 +155,11 @@ export default function NewsPage() {
                   
                   return (
                     <div key={article.id} className={`bg-gradient-to-br ${colors.bg} rounded-2xl p-5 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1`}>
-                      <div className="flex items-center justify-between mb-3">
-                        <span className={`${colors.badge} text-white text-xs font-bold px-3 py-1 rounded-full`}>
-                          {article.category.replace('_', ' ')}
-                        </span>
-                        <span className={`${colors.text} text-xs font-medium`}>{article.readTime}</span>
-                      </div>
+                   <div className="flex items-center justify-between mb-3">
+                     <span className={`${colors.badge} text-white text-xs font-bold px-3 py-1 rounded-full`}>
+                       {article.category.replace('_', ' ')}
+                     </span>
+                   </div>
                       <h3 className="font-bold text-lg text-gray-900 mb-2 line-clamp-2">
                         {article.title}
                       </h3>

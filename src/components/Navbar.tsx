@@ -264,23 +264,13 @@ export function Navbar() {
                 <div className="relative" ref={adminDropdownRef}>
                   <button
                     onClick={() => setIsAdminDropdownOpen(!isAdminDropdownOpen)}
-                    className="gradient-text hover:opacity-80 transition-opacity font-bold text-sm flex items-center gap-1"
+                    className="gradient-text hover:opacity-80 transition-opacity font-bold text-sm"
                   >
-                    🛡️ Admin Panel
-                    <span className={`transition-transform ${isAdminDropdownOpen ? 'rotate-180' : ''}`}>
-                      ▼
-                    </span>
+                    Admin Panel
                   </button>
                   
                   {isAdminDropdownOpen && (
                     <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-blue-200 rounded-lg shadow-lg py-2 z-50">
-                      <Link 
-                        href="/admin/news" 
-                        onClick={() => setIsAdminDropdownOpen(false)}
-                        className="block px-4 py-2 text-sm font-bold text-blue-700 hover:bg-blue-50 transition-colors"
-                      >
-                        📰 Gestione Articoli
-                      </Link>
                       <Link 
                         href="/admin/dashboard" 
                         onClick={() => setIsAdminDropdownOpen(false)}
