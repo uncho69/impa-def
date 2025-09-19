@@ -4,7 +4,7 @@ import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import Link from 'next/link';
-import { PageLayout } from '@/components/PageLayout';
+// import { PageLayout } from '@/components/PageLayout'; // Non più necessario
 
 // AGGIORNA QUESTE EMAIL CON LE TUE REALI!
 const ADMIN_EMAILS = [
@@ -43,14 +43,12 @@ export default function AdminLayout({
   // Loading state
   if (!isLoaded) {
     return (
-      <PageLayout>
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Verificando accesso...</p>
-          </div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Verificando accesso...</p>
         </div>
-      </PageLayout>
+      </div>
     );
   }
 
@@ -63,27 +61,24 @@ export default function AdminLayout({
   const userEmail = user.emailAddresses?.[0]?.emailAddress;
   if (!userEmail || !isAdminEmail(userEmail)) {
     return (
-      <PageLayout>
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold text-red-600 mb-4">Accesso Negato</h1>
-            <p className="text-gray-600 mb-6">Non hai i permessi per accedere a questa sezione.</p>
-            <Link 
-              href="/" 
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              Torna alla Homepage
-            </Link>
-          </div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-red-600 mb-4">Accesso Negato</h1>
+          <p className="text-gray-600 mb-6">Non hai i permessi per accedere a questa sezione.</p>
+          <Link 
+            href="/" 
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Torna alla Homepage
+          </Link>
         </div>
-      </PageLayout>
+      </div>
     );
   }
 
   // Admin layout
   return (
-    <PageLayout>
-      <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50">
         {/* Admin Header */}
         <div className="bg-white border-b border-gray-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -127,6 +122,6 @@ export default function AdminLayout({
           {children}
         </main>
       </div>
-    </PageLayout>
+    </div>
   );
 }
