@@ -11,15 +11,30 @@ const ADMIN_EMAILS = [
   "cofounder@imparodefi.com"
 ];
 
-async function checkAdmin(request: Request) {
-  // Per ora semplifichiamo - l'autenticazione è gestita dal layout admin
-  // In produzione potresti aggiungere controlli più robusti qui
-  return true;
+async function checkAdmin() {
+  try {
+    const { userId } = await auth();
+    
+    if (!userId) {
+      return false;
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Errore auth:', error);
+    return false;
+  }
 }
 
 export async function GET(request: Request) {
   try {
-    await checkAdmin(request);
+    const isAdmin = await checkAdmin();
+    if (!isAdmin) {
+      return NextResponse.json(
+        { error: 'Non autorizzato' },
+        { status: 401 }
+      );
+    }
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status');
     const category = searchParams.get('category');
@@ -59,7 +74,13 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    await checkAdmin(request);
+    const isAdmin = await checkAdmin();
+    if (!isAdmin) {
+      return NextResponse.json(
+        { error: 'Non autorizzato' },
+        { status: 401 }
+      );
+    }
     const data = await request.json();
     
     const news = await prisma.news.create({

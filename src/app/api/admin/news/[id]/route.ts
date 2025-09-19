@@ -5,13 +5,18 @@ import { auth } from '@clerk/nextjs/server';
 const prisma = new PrismaClient();
 
 async function checkAdmin() {
-  const { userId } = await auth();
-  
-  if (!userId) {
-    throw new Error('Non autenticato');
+  try {
+    const { userId } = await auth();
+    
+    if (!userId) {
+      return false;
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Errore auth:', error);
+    return false;
   }
-  
-  return true;
 }
 
 export async function GET(
@@ -19,7 +24,14 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    await checkAdmin();
+    const isAdmin = await checkAdmin();
+    if (!isAdmin) {
+      return NextResponse.json(
+        { error: 'Non autorizzato' },
+        { status: 401 }
+      );
+    }
+
     const news = await prisma.news.findUnique({
       where: { id: params.id }
     });
@@ -32,10 +44,10 @@ export async function GET(
     }
 
     return NextResponse.json(news);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Errore nel recupero articolo:', error);
     return NextResponse.json(
-      { error: 'Errore interno del server' },
+      { error: error?.message || 'Errore interno del server' },
       { status: 500 }
     );
   }
@@ -46,7 +58,14 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    await checkAdmin();
+    const isAdmin = await checkAdmin();
+    if (!isAdmin) {
+      return NextResponse.json(
+        { error: 'Non autorizzato' },
+        { status: 401 }
+      );
+    }
+
     const data = await request.json();
     
     const updateData: any = {
@@ -80,10 +99,10 @@ export async function PUT(
     });
 
     return NextResponse.json(news);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Errore nell\'aggiornamento articolo:', error);
     return NextResponse.json(
-      { error: 'Errore interno del server' },
+      { error: error?.message || 'Errore interno del server' },
       { status: 500 }
     );
   }
@@ -94,16 +113,23 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    await checkAdmin();
+    const isAdmin = await checkAdmin();
+    if (!isAdmin) {
+      return NextResponse.json(
+        { error: 'Non autorizzato' },
+        { status: 401 }
+      );
+    }
+
     await prisma.news.delete({
       where: { id: params.id }
     });
 
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Errore nell\'eliminazione articolo:', error);
     return NextResponse.json(
-      { error: 'Errore interno del server' },
+      { error: error?.message || 'Errore interno del server' },
       { status: 500 }
     );
   }

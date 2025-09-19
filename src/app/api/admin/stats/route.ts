@@ -5,13 +5,29 @@ import { auth } from '@clerk/nextjs/server';
 const prisma = new PrismaClient();
 
 async function checkAdmin() {
-  // Autenticazione gestita dal layout admin
-  return true;
+  try {
+    const { userId } = await auth();
+    
+    if (!userId) {
+      return false;
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Errore auth:', error);
+    return false;
+  }
 }
 
 export async function GET() {
   try {
-    await checkAdmin();
+    const isAdmin = await checkAdmin();
+    if (!isAdmin) {
+      return NextResponse.json(
+        { error: 'Non autorizzato' },
+        { status: 401 }
+      );
+    }
     // Statistiche totali
     const total = await prisma.news.count();
     const published = await prisma.news.count({ where: { status: 'PUBLISHED' } });
