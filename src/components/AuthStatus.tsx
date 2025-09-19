@@ -1,9 +1,11 @@
 "use client";
 import Link from "next/link";
-import { UserButton, useUser, SignInButton, SignUpButton } from "@clerk/nextjs";
+import { UserButton, useUser, useClerk } from "@clerk/nextjs";
 
 function AuthStatusClerk() {
   const { isSignedIn } = useUser();
+  const { openSignIn, openSignUp } = useClerk();
+  
   if (isSignedIn) {
     return (
       <div className="flex items-center gap-2">
@@ -11,14 +13,21 @@ function AuthStatusClerk() {
       </div>
     );
   }
+  
   return (
     <div className="flex items-center gap-2">
-      <SignInButton>
-        <button className="btn-outline">Accedi</button>
-      </SignInButton>
-      <SignUpButton>
-        <button className="btn-primary">Registrati</button>
-      </SignUpButton>
+      <button 
+        onClick={() => openSignIn()}
+        className="btn-outline"
+      >
+        Accedi
+      </button>
+      <button 
+        onClick={() => openSignUp()}
+        className="btn-primary"
+      >
+        Registrati
+      </button>
     </div>
   );
 }
