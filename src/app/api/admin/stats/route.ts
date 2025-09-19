@@ -30,7 +30,7 @@ export async function GET() {
     });
 
     const byCategory: { [key: string]: number } = {};
-    categoryCounts.forEach(item => {
+    categoryCounts.forEach((item: any) => {
       byCategory[item.category] = item._count.category;
     });
 
