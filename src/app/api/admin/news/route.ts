@@ -13,11 +13,6 @@ const ADMIN_EMAILS = [
 
 async function checkAdmin() {
   try {
-    // Durante il build, Vercel non ha accesso alle env vars
-    if (process.env.NODE_ENV === 'production' && !process.env.VERCEL) {
-      return true; // Skip auth check durante build locale
-    }
-
     const { userId } = await auth();
     
     if (!userId) {
@@ -27,10 +22,6 @@ async function checkAdmin() {
     return true;
   } catch (error) {
     console.error('Errore auth:', error);
-    // Durante il build, ignora errori auth
-    if (process.env.NODE_ENV === 'production') {
-      return true;
-    }
     return false;
   }
 }
