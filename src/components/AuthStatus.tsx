@@ -24,19 +24,7 @@ function AuthStatusClerk() {
 }
 
 export function AuthStatus() {
-  const publishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
-  if (!publishableKey) {
-    return (
-      <div className="flex items-center gap-2">
-        <Link href="/registrati?next=/manuale" className="btn-outline">
-          Accedi
-        </Link>
-        <Link href="/registrati?next=/manuale" className="btn-primary">
-          Registrati
-        </Link>
-      </div>
-    );
-  }
+  // Sempre usa AuthStatusClerk - le chiavi sono configurate
   return <AuthStatusClerk />;
 }
 

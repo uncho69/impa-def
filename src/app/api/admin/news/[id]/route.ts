@@ -5,7 +5,12 @@ import { auth } from '@clerk/nextjs/server';
 const prisma = new PrismaClient();
 
 async function checkAdmin() {
-  // Autenticazione gestita dal layout admin
+  const { userId } = await auth();
+  
+  if (!userId) {
+    throw new Error('Non autenticato');
+  }
+  
   return true;
 }
 
