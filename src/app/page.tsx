@@ -26,7 +26,7 @@ export default function Home() {
               </div>
               
               <div className="flex flex-col sm:flex-row gap-4 animate-slide-up [animation-delay:400ms]">
-                <Link href="/defi" className="cssbuttons-io-button">
+                <Link href="/manuale" className="cssbuttons-io-button">
                   Inizia Subito
                   <div className="icon">
                     <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -207,7 +207,7 @@ export default function Home() {
                     </p>
                     <div className="mt-6">
                       <Link 
-                        href="/defi" 
+                        href="/sign-in" 
                         className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl"
                       >
                         Accedi alla piattaforma

@@ -30,7 +30,16 @@ export default function manuale() {
                 Ci sono diverse Blockchain, ognuna per un caso specifico. Ma non spaventatevi, perché a noi interessano al massimo una dozzina di queste, tra cui alcune Layer2 di Ethereum ed i loro ecosistemi di progetti.
               </p>
               
-              <Accordion buttonText={"Cos'è una Blockchain?"} className="mb-4">
+              <div className="mb-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-sm text-blue-600 font-medium">💡 Clicca per espandere</span>
+                  <div className="flex items-center gap-1">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{animationDelay: '0.4s'}}></div>
+                  </div>
+                </div>
+                <Accordion buttonText={"Cos'è una Blockchain?"} className="border-2 border-blue-200 hover:border-blue-300 transition-colors">
                 <p className="p-5 text-neutral-900">
                   Una blockchain è una tecnologia che funziona come un registro
                   digitale distribuito su una rete di computer. Ogni dato o
@@ -63,6 +72,7 @@ export default function manuale() {
                   <br />
                 </p>
               </Accordion>
+              </div>
               
               <div className="mt-4">
                 <Link href="/blockchain">
@@ -233,7 +243,7 @@ export default function manuale() {
             </p>
             
             <div className="mt-4">
-              <Link href="/strumenti-utili">
+              <Link href="/strumentiutili">
                 <div className="inline-flex items-center gap-2 text-blue-600 font-bold text-lg hover:text-blue-700 transition-colors cursor-pointer">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />

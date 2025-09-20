@@ -14,6 +14,9 @@ export function ExploreWeb3() {
         <Button href="/defi" local={true} className="btn btn-outline">
           DeFi
         </Button>
+        <Button href="/compraevendicrypto" local={true} className="btn btn-outline">
+          Compra e Vendi Crypto
+        </Button>
         <Button href="/memecoins" local={true} className="btn btn-outline">
           Memecoins
         </Button>
@@ -28,6 +31,9 @@ export function ExploreWeb3() {
         </Button>
         <Button href="/wallet" local={true} className="btn btn-outline">
           Wallet
+        </Button>
+        <Button href="/strumentiutili" local={true} className="btn btn-outline">
+          Strumenti Utili
         </Button>
       </div>
     </div>

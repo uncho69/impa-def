@@ -14,7 +14,7 @@ export function PageTitle({ children, description }: PageTitleProps) {
           <BackToHome />
         </div>
         <div className="text-center">
-          <h1 className="text-4xl lg:text-5xl font-bold gradient-text mb-6">
+          <h1 className="text-4xl lg:text-5xl font-bold gradient-text mb-6 py-2">
             {children}
           </h1>
           {description && (
