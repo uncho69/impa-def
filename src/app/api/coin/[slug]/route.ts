@@ -11,7 +11,7 @@ export async function GET(request: Request, { params }: { params: { slug: string
       account: 'JXLVOQE-TLB06923',
       username: 'francis',
       // TODO for Imparo
-      password: 'aRCoLtZwJDtIAiCN',
+      password: 'authentication72828TRECKING!!',
       warehouse: 'francis',
       database: 'data_collector_iceberg',
       schema: 'public'
