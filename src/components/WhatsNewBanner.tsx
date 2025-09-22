@@ -37,20 +37,29 @@ export function WhatsNewBanner({ className = "" }: WhatsNewBannerProps) {
       const response = await fetch('/api/whatsnew/banner');
       if (response.ok) {
         const cards = await response.json();
+        console.log('🔍 DEBUG BANNER - Cards ricevute:', cards);
         if (cards.length > 0) {
           setCard(cards[0]);
           
           // Controlla se l'utente ha già visitato la pagina (dismissal definitivo)
           const bannerDismissed = localStorage.getItem('whatsnew-banner-dismissed');
+          console.log('🔍 DEBUG BANNER - Banner dismissed:', bannerDismissed);
           
           // Se non è mai stato dismissato, mostra il banner
           if (!bannerDismissed) {
             setIsVisible(true);
+            console.log('🔍 DEBUG BANNER - Banner mostrato!');
+          } else {
+            console.log('🔍 DEBUG BANNER - Banner nascosto (già dismissato)');
           }
+        } else {
+          console.log('🔍 DEBUG BANNER - Nessuna card trovata');
         }
+      } else {
+        console.error('🔍 DEBUG BANNER - Errore API:', response.status);
       }
     } catch (error) {
-      console.error('Errore nel caricamento della card:', error);
+      console.error('🔍 DEBUG BANNER - Errore nel caricamento:', error);
     } finally {
       setLoading(false);
     }
@@ -68,8 +77,31 @@ export function WhatsNewBanner({ className = "" }: WhatsNewBannerProps) {
     }, 300);
   };
 
-  if (loading) return null;
-  if (!isVisible || !card) return null;
+  // Pulsante di debug temporaneo
+  const resetBanner = () => {
+    localStorage.removeItem('whatsnew-banner-dismissed');
+    window.location.reload();
+  };
+
+  if (loading) return (
+    <div className="fixed top-20 right-4 z-50 bg-white p-4 rounded-lg shadow-lg">
+      <p>Caricamento banner...</p>
+      <button onClick={resetBanner} className="mt-2 px-3 py-1 bg-blue-500 text-white rounded text-sm">
+        Reset Banner (Debug)
+      </button>
+    </div>
+  );
+  
+  if (!isVisible || !card) return (
+    <div className="fixed top-20 right-4 z-50 bg-white p-4 rounded-lg shadow-lg">
+      <p>Banner non visibile</p>
+      <p>Card: {card ? 'Presente' : 'Assente'}</p>
+      <p>Visible: {isVisible ? 'Sì' : 'No'}</p>
+      <button onClick={resetBanner} className="mt-2 px-3 py-1 bg-blue-500 text-white rounded text-sm">
+        Reset Banner (Debug)
+      </button>
+    </div>
+  );
 
   return (
     <div className={`fixed top-20 right-4 z-50 max-w-xs ${className} ${isClosing ? 'animate-slide-out-right' : 'animate-slide-in-right'}`}>
