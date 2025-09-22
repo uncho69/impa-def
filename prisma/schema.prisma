@@ -99,6 +99,22 @@ enum NewsStatus {
   ARCHIVED
 }
 
+model WhatsNewCard {
+  id            String   @id @default(cuid())
+  title         String
+  description   String   @db.Text
+  category      String
+  imageUrl      String?
+  link          String?
+  isActive      Boolean  @default(true)
+  showInLanding Boolean  @default(false)
+  order         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("whats_new_cards")
+}
+
 enum Role {
   ADMIN
   EDITOR

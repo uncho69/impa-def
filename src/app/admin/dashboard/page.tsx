@@ -152,6 +152,19 @@ export default function AdminDashboard() {
                 </div>
               </div>
             </Link>
+
+            <Link
+              href="/admin/whatsnew"
+              className="block p-3 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors"
+            >
+              <div className="flex items-center">
+                <span className="text-lg mr-3">🚀</span>
+                <div>
+                  <p className="font-medium text-gray-900">Gestisci Cosa c'è di nuovo</p>
+                  <p className="text-sm text-gray-600">Crea e modifica le card delle novità</p>
+                </div>
+              </div>
+            </Link>
           </div>
         </div>
 

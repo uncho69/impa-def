@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
+import { WhatsNewBanner } from "@/components/WhatsNewBanner";
 
 
 export default function Home() {
@@ -60,6 +61,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* WhatsNew Banner - Fluttuante */}
+      <WhatsNewBanner />
       
       {/* Perché ImparoDeFi Section - Enhanced with 3D Cards and Animations */}
       <section className="py-16 bg-white relative overflow-hidden">
