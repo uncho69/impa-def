@@ -38,12 +38,12 @@ export function WhatsNewBanner({ className = "" }: WhatsNewBannerProps) {
       if (response.ok) {
         const cards = await response.json();
         if (cards.length > 0) {
-          setCard(cards[0]); // Prendi la prima card (ordinata per order e createdAt)
+          setCard(cards[0]);
           
-          // Controlla se l'utente ha cliccato "Scopri di più" (dismissal definitivo)
+          // Controlla se l'utente ha già visitato la pagina (dismissal definitivo)
           const bannerDismissed = localStorage.getItem('whatsnew-banner-dismissed');
           
-          // Se non è mai stato dismissato definitivamente, mostra il banner
+          // Se non è mai stato dismissato, mostra il banner
           if (!bannerDismissed) {
             setIsVisible(true);
           }

@@ -56,7 +56,10 @@ export default function CosaCeDiNuovoPage() {
           <div className="container-custom">
             {/* Title */}
             <div className="text-center mb-12">
-              <h1 className="text-5xl font-bold text-primary-600 mb-8">What's New?</h1>
+              <h1 className="text-5xl font-bold text-primary-600 mb-4">Cosa c'è di nuovo su ImparoDeFi?</h1>
+              <p className="text-xl text-gray-700 max-w-2xl mx-auto">
+                Scoprilo qui!
+              </p>
             </div>
             {cards.length === 0 ? (
               <div className="text-center py-12">
