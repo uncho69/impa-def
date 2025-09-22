@@ -40,13 +40,9 @@ export function WhatsNewBanner({ className = "" }: WhatsNewBannerProps) {
         if (cards.length > 0) {
           setCard(cards[0]);
           
-          // Controlla se l'utente ha già visitato la pagina (dismissal definitivo)
-          const bannerDismissed = localStorage.getItem('whatsnew-banner-dismissed');
-          
-          // Se non è mai stato dismissato, mostra il banner
-          if (!bannerDismissed) {
-            setIsVisible(true);
-          }
+          // TEMPORANEO: Mostra sempre il banner per debug
+          // TODO: Ripristinare controllo localStorage in produzione
+          setIsVisible(true);
         }
       }
     } catch (error) {
