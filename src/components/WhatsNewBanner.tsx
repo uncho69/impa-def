@@ -40,9 +40,13 @@ export function WhatsNewBanner({ className = "" }: WhatsNewBannerProps) {
         if (cards.length > 0) {
           setCard(cards[0]);
           
-          // TEMPORANEO: Mostra sempre il banner per debug
-          // TODO: Ripristinare controllo localStorage in produzione
-          setIsVisible(true);
+          // Controlla se l'utente ha già visitato la pagina (dismissal definitivo)
+          const bannerDismissed = localStorage.getItem('whatsnew-banner-dismissed');
+          
+          // Se non è mai stato dismissato, mostra il banner
+          if (!bannerDismissed) {
+            setIsVisible(true);
+          }
         }
       }
     } catch (error) {
@@ -68,7 +72,7 @@ export function WhatsNewBanner({ className = "" }: WhatsNewBannerProps) {
   if (!isVisible || !card) return null;
 
   return (
-    <div className={`fixed top-20 right-4 z-50 max-w-xs ${className} ${isClosing ? 'animate-slide-out-right' : 'animate-slide-in-right'}`}>
+    <div className={`fixed top-20 right-4 z-[9999] max-w-xs ${className} ${isClosing ? 'animate-slide-out-right' : 'animate-slide-in-right'}`}>
       <div className="relative group">
         {/* Glassmorphism Background */}
         <div className="absolute -inset-0.5 bg-gradient-to-r from-primary-500/20 to-secondary-500/20 rounded-xl blur-sm opacity-75 group-hover:opacity-100 transition-opacity duration-300"></div>
