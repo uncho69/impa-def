@@ -34,7 +34,7 @@ export function WhatsNewBanner({ className = "" }: WhatsNewBannerProps) {
 
   const fetchCard = async () => {
     try {
-      const response = await fetch('/api/whatsnew');
+      const response = await fetch('/api/whatsnew/banner');
       if (response.ok) {
         const cards = await response.json();
         if (cards.length > 0) {
