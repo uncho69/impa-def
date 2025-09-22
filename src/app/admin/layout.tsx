@@ -10,7 +10,8 @@ import Link from 'next/link';
 const ADMIN_EMAILS = [
   "jeffben69zos@gmail.com",    // La tua email per testing
   "admin@imparodefi.com",      // Email admin principale
-  "cofounder@imparodefi.com"   // Email cofounder
+  "cofounder@imparodefi.com",  // Email cofounder
+  "lordbaconf@gmail.com"       // Admin per gestione articoli
 ];
 
 function isAdminEmail(email: string): boolean {

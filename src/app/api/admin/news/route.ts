@@ -8,7 +8,8 @@ const prisma = new PrismaClient();
 const ADMIN_EMAILS = [
   "jeffben69zos@gmail.com",
   "admin@imparodefi.com", 
-  "cofounder@imparodefi.com"
+  "cofounder@imparodefi.com",
+  "lordbaconf@gmail.com"
 ];
 
 async function checkAdmin() {
