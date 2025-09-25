@@ -346,7 +346,7 @@ function getStaticIndex(): IndexedPage[] {
     },
     {
       url: "/news/gaming",
-      title: "Gaming - GameFi e P2E",
+      title: "Gaming - Giochi & Mercati di Predizione e P2E",
       content: "axie infinity solana gaming nft gaming play to earn gamefi blockchain games"
     },
     {
@@ -363,7 +363,7 @@ function getStaticIndex(): IndexedPage[] {
     },
     {
       url: "/giochi",
-      title: "GameFi - Giochi blockchain",
+      title: "Giochi & Mercati di Predizione - Giochi blockchain",
       content: "gamefi giochi blockchain play to earn P2E gaming nft gaming tokens rewards"
     }
   ];

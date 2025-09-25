@@ -38,7 +38,7 @@ export default function GamingNewsPage() {
           {/* Header categoria */}
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Gaming News</h1>
-            <p className="text-gray-600">GameFi, P2E e l'evoluzione del gaming blockchain</p>
+            <p className="text-gray-600">Giochi & Mercati di Predizione, P2E e l'evoluzione del gaming blockchain</p>
           </div>
 
           {/* Lista articoli */}

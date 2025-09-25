@@ -302,7 +302,7 @@ export function Navbar() {
                       NFTs
                     </Link>
                     <Link href="/giochi" onClick={showAuthModal} className="block px-4 py-2 text-sm font-bold text-blue-700 hover:bg-blue-50 transition-colors">
-                      GameFi
+                      Giochi & Mercati di Predizione
                     </Link>
                     <Link href="/strumenti-utili" onClick={showAuthModal} className="block px-4 py-2 text-sm font-bold text-blue-700 hover:bg-blue-50 transition-colors">
                       Strumenti Utili

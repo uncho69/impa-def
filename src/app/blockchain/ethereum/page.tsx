@@ -1,298 +1,239 @@
+import { MobileContainer } from "@/components/MobileContainer";
+import { SectionTitle } from "@/components/SectionTitle";
+import { SectionBody } from "@/components/SectionBody";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
-import { MobileContainer } from "@/components/MobileContainer";
-import { SectionBody } from "@/components/SectionBody";
-import { SectionTitle } from "@/components/SectionTitle";
-import { SectionTutorial } from "@/components/SectionTutorial";
-import { SimpleCard } from "@/components/SimpleCard";
-import Placeholder from "@/assets/placeholder.svg";
-import { CardContainer } from "@/components/CardContainer";
+import Image from "next/image";
+import ethereumIcon from "@/assets/ethereum-icon.svg";
+// Loghi delle reti supportate
+import arbitrumIcon from "@/assets/arbitrum-arb-logo.svg";
+import optimismIcon from "@/assets/optimism-ethereum-op-logo.svg";
+import polygonIcon from "@/assets/polygon-matic-logo.svg";
+import baseIcon from "@/assets/base-logo.svg";
 
-export default function manuale() {
+export default function Ethereum() {
   return (
-    <MobileContainer>
-      <SectionTitle>Blockchain</SectionTitle>
-      <SectionBody>
-        <div>
-          <h1 className="font-bold text-4xl">Ethereum</h1>
-          <p>
-            Ethereum è una blockchain che consente la creazione e
-            l&apos;esecuzione di smart contract e applicazioni decentralizzate
-            (dApp) senza alcuna interruzione, frode, controllo o interferenza da
-            parte di terzi. Fondata da Vitalik Buterin nel 2015, Ethereum ha
-            rivoluzionato il mondo delle criptovalute e della blockchain,
-            andando oltre il semplice trasferimento di valore per abilitare
-            un&apos;intera economia di applicazioni decentralizzate.
-          </p>
-          <Accordion buttonText="Introduzione ad Ethereum">
-            <List ordered={false}>
-              <li>
-                <strong>Ether (ETH)</strong>
-                <List>
-                  <li>
-                    Ether è la criptovaluta nativa di Ethereum e viene
-                    utilizzata per pagare le commissioni di transazione (gas) e
-                    compensare i minatori e, successivamente, i validatori per
-                    il loro lavoro di mantenimento della rete. Oltre a essere
-                    utilizzato per le transazioni, ETH funge da combustibile per
-                    eseguire smart contract e dApp sulla piattaforma
-                  </li>
-                </List>
-              </li>
-              <li>
-                <strong>Smart Contracts</strong>
-                <List>
-                  <li>
-                    Gli smart contract sono programmi informatici autoeseguibili
-                    con i termini dell&apos;accordo direttamente scritti nel
-                    codice. Eseguono automaticamente le condizioni definite al
-                    loro interno quando vengono soddisfatti i requisiti
-                    specificati.
-                    <br />
-                    <strong>Esempi di Uso:</strong> Utilizzati per creare
-                    contratti finanziari, gestione della supply chain,
-                    applicazioni di voto e molto altro.
-                  </li>
-                </List>
-              </li>
-              <li>
-                <strong>dApp (Applicazioni Decentralizzate)</strong>
-                <List>
-                  <li>
-                    Le dApp sono applicazioni che funzionano su una rete di
-                    computer decentralizzati anziché su un server centralizzato.
-                    Utilizzano smart contract per gestire la logica di business
-                    sulla blockchain. Applicazioni DeFi (Finanza
-                    Decentralizzata), giochi basati su blockchain, mercati NFT
-                    (token non fungibili) e molto altro.
-                  </li>
-                </List>
-              </li>
-              <li>
-                <strong>Ethereum Virtual Machine (EVM)</strong>
-                <List>
-                  <li>
-                    La EVM è l’ambiente di programmazione che esegue gli smart
-                    contract su Ethereum. Fornisce un sistema sicuro e isolato
-                    per eseguire il codice, garantendo che le transazioni siano
-                    verificate e immutabili. <br />{" "}
-                    <strong>Funzionalità:</strong> Permette agli sviluppatori di
-                    creare e distribuire applicazioni decentralizzate in modo
-                    affidabile. Tutte le Layer2 come Optimism, Arbitrum, Polygon
-                    etc sono basate su EVM.
-                  </li>
-                </List>
-              </li>
-              <li>
-                <strong>Decentralizzazione</strong>
-                <List>
-                  <li>
-                    <strong>Rete di Nodi:</strong> Ethereum è mantenuto da una
-                    rete globale di nodi, ognuno dei quali conserva una copia
-                    della blockchain e verifica le transazioni, garantendo la
-                    sicurezza e l&apos;integrità del sistema.
-                  </li>
-                  <li>
-                    <strong>Consenso:</strong> Attualmente utilizza il
-                    meccanismo di consenso Proof of Stake (PoS), che sostituisce
-                    il precedente Proof of Work (PoW) per migliorare
-                    l&apos;efficienza energetica e la scalabilità.
-                  </li>
-                </List>
-              </li>
-              <li>
-                <strong>Ethereum 2.0 (Eth2)</strong>
-                <List ordered={true}>
-                  Ethereum 2.0, noto anche come Eth2 o Serenity, è un
-                  aggiornamento importante alla rete Ethereum che mira a
-                  migliorare la scalabilità, la sicurezza e la sostenibilità
-                  della rete. Questo aggiornamento è stato implementato in
-                  diverse fasi: <br />
-                  <li>
-                    <strong>Beacon Chain:</strong> <br />
-                    Lanciata a dicembre 2020, la Beacon Chain introduce il
-                    consenso Proof of Stake (PoS) alla rete Ethereum.
-                  </li>
-                  <li>
-                    <strong>The Merge:</strong> <br />
-                    Completato a settembre 2022, The Merge ha integrato la
-                    Beacon Chain con la mainnet di Ethereum, completando la
-                    transizione dal Proof of Work (PoW) al Proof of Stake (PoS).
-                  </li>
-                  <li>
-                    <strong>Shard Chains</strong> (Futuro): <br />
-                    Miglioreranno la scalabilità di Ethereum dividendo il carico
-                    di lavoro su 64 nuove catene parallele, permettendo un
-                    maggiore numero di transazioni al secondo.
-                  </li>
-                </List>
-              </li>
-              <li>
-                <strong>Vantaggi di Ethereum</strong>
-                <List>
-                  <li>
-                    <strong>Flessibilità:</strong> La capacità di creare smart
-                    contract consente a Ethereum di supportare una vasta gamma
-                    di applicazioni decentralizzate.
-                  </li>
-                  <li>
-                    <strong>Sicurezza:</strong> La natura decentralizzata di
-                    Ethereum e il suo robusto meccanismo di consenso rendono la
-                    rete altamente sicura.
-                  </li>
-                  <li>
-                    <strong>Innovazione Continua:</strong> Ethereum ha una
-                    comunità di sviluppatori attiva che continua a migliorare la
-                    piattaforma e a creare nuove applicazioni.
-                  </li>
-                </List>
-              </li>
-            </List>
-          </Accordion>
-          <Accordion buttonText="Portafogli (”Wallet”) Supportati">
-            <CardContainer>
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[
-                  { icon: Placeholder, text: "" },
-                  { icon: Placeholder, text: "" },
-                ]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[
-                  { icon: Placeholder, text: "" },
-                  { icon: Placeholder, text: "" },
-                ]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[
-                  { icon: Placeholder, text: "" },
-                  { icon: Placeholder, text: "" },
-                ]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-            </CardContainer>
-          </Accordion>
-          <Accordion buttonText="Applicazioni su Ethereum">
-            <CardContainer>
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[
-                  { icon: Placeholder, text: "" },
-                  { icon: Placeholder, text: "" },
-                ]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[
-                  { icon: Placeholder, text: "" },
-                  { icon: Placeholder, text: "" },
-                ]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[
-                  { icon: Placeholder, text: "" },
-                  { icon: Placeholder, text: "" },
-                ]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-            </CardContainer>
-          </Accordion>
-          <Accordion buttonText="NFT su Ethereum">
-            <CardContainer>
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[
-                  { icon: Placeholder, text: "" },
-                  { icon: Placeholder, text: "" },
-                ]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[
-                  { icon: Placeholder, text: "" },
-                  { icon: Placeholder, text: "" },
-                ]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[
-                  { icon: Placeholder, text: "" },
-                  { icon: Placeholder, text: "" },
-                ]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-            </CardContainer>
-          </Accordion>
-          <Accordion buttonText="Memecoin su Ethereum">
-            <CardContainer>
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[
-                  { icon: Placeholder, text: "" },
-                  { icon: Placeholder, text: "" },
-                ]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[
-                  { icon: Placeholder, text: "" },
-                  { icon: Placeholder, text: "" },
-                ]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[
-                  { icon: Placeholder, text: "" },
-                  { icon: Placeholder, text: "" },
-                ]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-            </CardContainer>
-          </Accordion>
+    <ProtectedRoute title="Ethereum">
+      <MobileContainer>
+        <div className="flex items-center gap-4 mb-6">
+          <Image src={ethereumIcon} alt="Ethereum" width={64} height={64} />
+          <div>
+            <SectionTitle>Ethereum</SectionTitle>
+            <div className="flex flex-wrap gap-2 mt-2">
+              <span className="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm font-medium">
+                Blockchain
+              </span>
+              <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
+                Smart Contracts
+              </span>
+              <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+                PoS
+              </span>
+              <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                DeFi
+              </span>
+            </div>
+          </div>
         </div>
-        <SectionTutorial
-          video={
-            "https://www.youtube.com/embed/K4TOrB7at0Y?si=vOBf2_Kw_RkdMPph"
-          }
-          tutorialLink="./ethereum/tutorial"
-        />
-      </SectionBody>
-    </MobileContainer>
+
+        <SectionBody>
+          <strong>Ethereum</strong> è una blockchain che consente la creazione e l'esecuzione di smart contract 
+          e applicazioni decentralizzate (dApp) senza alcuna interruzione, frode, controllo o interferenza 
+          da parte di terzi. Fondata da Vitalik Buterin nel 2015, Ethereum ha rivoluzionato il mondo delle 
+          criptovalute andando oltre il semplice trasferimento di valore per abilitare un'intera economia 
+          di applicazioni decentralizzate.
+        </SectionBody>
+
+        <SectionTitle>Caratteristiche Principali</SectionTitle>
+        <SectionBody>
+          <Accordion buttonText="Ether (ETH)">
+            <p>Contenuto da aggiungere...</p>
+          </Accordion>
+
+          <Accordion buttonText="Smart Contracts">
+            <p>Contenuto da aggiungere...</p>
+          </Accordion>
+
+          <Accordion buttonText="dApp (Applicazioni Decentralizzate)">
+            <p>Contenuto da aggiungere...</p>
+          </Accordion>
+
+          <Accordion buttonText="Ethereum Virtual Machine (EVM)">
+            <p>Contenuto da aggiungere...</p>
+          </Accordion>
+
+          <Accordion buttonText="Decentralizzazione">
+            <p>Contenuto da aggiungere...</p>
+          </Accordion>
+
+          <Accordion buttonText="Ethereum 2.0 (Eth2)">
+            <p>Contenuto da aggiungere...</p>
+          </Accordion>
+
+          <Accordion buttonText="Vantaggi di Ethereum">
+            <p>Contenuto da aggiungere...</p>
+          </Accordion>
+        </SectionBody>
+
+        <SectionTitle>Ecosistema Ethereum</SectionTitle>
+        <SectionBody>
+          <Accordion buttonText="Introduzione ad Ethereum">
+            <Accordion buttonText="Ether (ETH)">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+            <Accordion buttonText="Smart Contracts">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+            <Accordion buttonText="dApp (Applicazioni Decentralizzate)">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+            <Accordion buttonText="Ethereum Virtual Machine (EVM)">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+            <Accordion buttonText="Decentralizzazione">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+            <Accordion buttonText="Ethereum 2.0 (Eth2)">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+            <Accordion buttonText="Vantaggi di Ethereum">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+          </Accordion>
+
+          <Accordion buttonText="Applicazioni su Ethereum">
+            <Accordion buttonText="Exchange Decentralizzate">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+            <Accordion buttonText="Derivati (margin trading)">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+            <Accordion buttonText="Prestiti">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+            <Accordion buttonText="Rendimenti">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+            <Accordion buttonText="Stablecoins">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+            <Accordion buttonText="Staking liquido (LST)">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+          </Accordion>
+        </SectionBody>
+
+        <SectionTitle>Tutorial</SectionTitle>
+        <SectionBody>
+          <Accordion buttonText="Video Tutorial">
+            <div className="w-full max-w-2xl mx-auto">
+              <iframe
+                width="100%"
+                height="200"
+                src="https://www.youtube.com/embed/K4TOrB7at0Y?si=vOBf2_Kw_RkdMPph"
+                title="Ethereum Tutorial"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                className="rounded-lg"
+              ></iframe>
+            </div>
+          </Accordion>
+        </SectionBody>
+
+        <SectionTitle>Informazioni Aggiuntive</SectionTitle>
+        <SectionBody>
+          <div className="bg-white rounded-xl p-6 border border-neutral-200 shadow-sm">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Reti Supportate */}
+              <div className="bg-white rounded-lg p-4 border border-neutral-200 shadow-sm">
+                <h3 className="font-semibold text-neutral-900 mb-3">Reti Supportate</h3>
+                <p className="text-neutral-600 text-sm mb-4">
+                  Ethereum supporta le principali reti EVM, permettendoti di operare su diverse blockchain.
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  <Image 
+                    src={ethereumIcon} 
+                    alt="Ethereum" 
+                    className="w-8 h-8 hover:scale-110 transition-transform duration-300"
+                    width={32}
+                    height={32}
+                  />
+                  <Image 
+                    src={arbitrumIcon} 
+                    alt="Arbitrum" 
+                    className="w-8 h-8 hover:scale-110 transition-transform duration-300"
+                    width={32}
+                    height={32}
+                  />
+                  <Image 
+                    src={optimismIcon} 
+                    alt="Optimism" 
+                    className="w-8 h-8 hover:scale-110 transition-transform duration-300"
+                    width={32}
+                    height={32}
+                  />
+                  <Image 
+                    src={polygonIcon} 
+                    alt="Polygon" 
+                    className="w-8 h-8 hover:scale-110 transition-transform duration-300"
+                    width={32}
+                    height={32}
+                  />
+                  <Image 
+                    src={baseIcon} 
+                    alt="Base" 
+                    className="w-8 h-8 hover:scale-110 transition-transform duration-300"
+                    width={32}
+                    height={32}
+                  />
+                </div>
+              </div>
+
+              {/* Link Utili */}
+              <div className="bg-white rounded-lg p-4 border border-neutral-200 shadow-sm">
+                <h3 className="font-semibold text-neutral-900 mb-3">Link Utili</h3>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <span className="text-neutral-600">🌐</span>
+                    <a 
+                      href="https://ethereum.org/" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 underline text-sm"
+                    >
+                      Sito Web
+                    </a>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-neutral-600">🐦</span>
+                    <a 
+                      href="https://x.com/ethereum" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 underline text-sm"
+                    >
+                      Twitter/X
+                    </a>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-neutral-600">📊</span>
+                    <a 
+                      href="https://coinmarketcap.com/currencies/ethereum/" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 underline text-sm"
+                    >
+                      Token ETH
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </SectionBody>
+      </MobileContainer>
+    </ProtectedRoute>
   );
 }

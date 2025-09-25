@@ -27,7 +27,7 @@ export function ExploreWeb3() {
           NFTs
         </Button>
         <Button href="/giochi" local={true} className="btn btn-outline">
-          GameFi
+          Giochi & Mercati di Predizione
         </Button>
         <Button href="/wallet" local={true} className="btn btn-outline">
           Wallet

@@ -13,21 +13,42 @@ import { ExploreWeb3 } from "@/components/ExploreWeb3";
 
 // Import icone delle DEX
 import hyperliquidIcon from "@/assets/hyperliquid-icon.png";
+import hypervmIcon from "@/assets/hypervm-logo.png";
 import uniswapIcon from "@/assets/uniswap-icon.png";
 import orbiterIcon from "@/assets/orbiterfinance-icon.png";
-import jumperIcon from "@/assets/placeholder.svg";
-import camelotIcon from "@/assets/placeholder.svg";
-import curveIcon from "@/assets/placeholder.svg";
-import raydiumIcon from "@/assets/placeholder.svg";
-import jupiterIcon from "@/assets/placeholder.svg";
-import balancerIcon from "@/assets/placeholder.svg";
-import syncswapIcon from "@/assets/placeholder.svg";
-import stargateIcon from "@/assets/placeholder.svg";
-import debridgeIcon from "@/assets/placeholder.svg";
-import layerzeroIcon from "@/assets/placeholder.svg";
-import yearnIcon from "@/assets/placeholder.svg";
-import compoundIcon from "@/assets/placeholder.svg";
-import lidoIcon from "@/assets/placeholder.svg";
+
+// Import loghi delle reti per Uniswap
+import ethereumIcon from "@/assets/ethereum-icon.svg";
+import arbitrumIcon from "@/assets/arbitrum-arb-logo.svg";
+import optimismIcon from "@/assets/optimism-ethereum-op-logo.svg";
+import polygonIcon from "@/assets/polygon-matic-logo.svg";
+import baseIcon from "@/assets/base-logo.svg";
+
+// Import loghi delle reti per Orbiter Finance
+import zksyncIcon from "@/assets/zksynk-logo.png";
+import jumperIcon from "@/assets/jumper-logo.png";
+import camelotIcon from "@/assets/camelot-logo.png";
+import curveIcon from "@/assets/curve-logo.png";
+import raydiumIcon from "@/assets/raydium-logo.svg";
+import jupiterIcon from "@/assets/jupiter-logo.png";
+import balancerIcon from "@/assets/balancer-logo.png";
+import syncswapIcon from "@/assets/syncswap-logo.png";
+import stargateIcon from "@/assets/stargate-logo.png";
+import debridgeIcon from "@/assets/debridge-logo.png";
+import layerzeroIcon from "@/assets/layerzero-logo.png";
+import yearnIcon from "@/assets/yearnfinance-logo.png";
+import compoundIcon from "@/assets/compound-logo.png";
+import lidoIcon from "@/assets/lidofinance-logo.png";
+
+// Import loghi delle reti aggiuntive
+import solanaIcon from "@/assets/solana-sol-logo.svg";
+import avalancheIcon from "@/assets/avalanche-avax-logo.svg";
+import bscIcon from "@/assets/bsc-logo.png";
+import gnosisIcon from "@/assets/gnosis-logo.png";
+import lineaIcon from "@/assets/linea-logo.svg";
+import scrollIcon from "@/assets/Scroll-Logo.svg";
+import blastIcon from "@/assets/blast-logo.webp";
+import xaiIcon from "@/assets/xai-logo.svg";
 
 export default function Defi() {
   return (
@@ -187,10 +208,9 @@ export default function Defi() {
                 title={"Hyperliquid"}
                 icon={hyperliquidIcon}
                 subArray={[
-                  { icon: Placeholder, text: "Hyperliquid L1" },
-                  { icon: Placeholder, text: "Perpetuals" }
+                  { icon: hypervmIcon, text: "" }
                 ]}
-                subArrayTitle="Reti"
+                subArrayTitle="Reti Supportate:"
                 externalLink="https://app.hyperliquid.xyz/"
                 xPage="https://x.com/HyperliquidX"
                 href="/defi/hyperliquid"
@@ -199,13 +219,13 @@ export default function Defi() {
                 title={"Uniswap"}
                 icon={uniswapIcon}
                 subArray={[
-                  { icon: Placeholder, text: "Ethereum" },
-                  { icon: Placeholder, text: "Arbitrum" },
-                  { icon: Placeholder, text: "Optimism" },
-                  { icon: Placeholder, text: "Polygon" },
-                  { icon: Placeholder, text: "Base" }
+                  { icon: ethereumIcon, text: "" },
+                  { icon: arbitrumIcon, text: "" },
+                  { icon: optimismIcon, text: "" },
+                  { icon: polygonIcon, text: "" },
+                  { icon: baseIcon, text: "" }
                 ]}
-                subArrayTitle="Reti"
+                subArrayTitle="Reti Supportate:"
                 externalLink="https://app.uniswap.org/swap"
                 xPage="https://x.com/Uniswap"
                 href="/defi/uniswap"
@@ -214,12 +234,12 @@ export default function Defi() {
                 title={"Orbiter Finance"}
                 icon={orbiterIcon}
                 subArray={[
-                  { icon: Placeholder, text: "Ethereum" },
-                  { icon: Placeholder, text: "Arbitrum" },
-                  { icon: Placeholder, text: "Optimism" },
-                  { icon: Placeholder, text: "zkSync" }
+                  { icon: ethereumIcon, text: "" },
+                  { icon: arbitrumIcon, text: "" },
+                  { icon: optimismIcon, text: "" },
+                  { icon: zksyncIcon, text: "" }
                 ]}
-                subArrayTitle="Reti"
+                subArrayTitle="Reti Supportate:"
                 externalLink="https://www.orbiter.finance/"
                 xPage="https://x.com/Orbiter_Finance"
                 href="/defi/orbiter"
@@ -228,11 +248,14 @@ export default function Defi() {
                 title={"Jumper"}
                 icon={jumperIcon}
                 subArray={[
-                  { icon: Placeholder, text: "Multi-Chain" },
-                  { icon: Placeholder, text: "Bridge" },
-                  { icon: Placeholder, text: "Swap" }
+                  { icon: ethereumIcon, text: "" },
+                  { icon: arbitrumIcon, text: "" },
+                  { icon: optimismIcon, text: "" },
+                  { icon: baseIcon, text: "" },
+                  { icon: polygonIcon, text: "" },
+                  { icon: layerzeroIcon, text: "" }
                 ]}
-                subArrayTitle="Tipo"
+                subArrayTitle="Reti Supportate:"
                 externalLink="https://jumper.exchange/"
                 xPage="https://x.com/JumperExchange"
                 href="/defi/jumper"
@@ -241,12 +264,14 @@ export default function Defi() {
                 title={"Stargate"}
                 icon={stargateIcon}
                 subArray={[
-                  { icon: Placeholder, text: "Ethereum" },
-                  { icon: Placeholder, text: "Arbitrum" },
-                  { icon: Placeholder, text: "Optimism" },
-                  { icon: Placeholder, text: "Polygon" }
+                  { icon: ethereumIcon, text: "" },
+                  { icon: arbitrumIcon, text: "" },
+                  { icon: optimismIcon, text: "" },
+                  { icon: polygonIcon, text: "" },
+                  { icon: baseIcon, text: "" },
+                  { icon: layerzeroIcon, text: "" }
                 ]}
-                subArrayTitle="Reti"
+                subArrayTitle="Reti Supportate:"
                 externalLink="https://stargate.finance/"
                 xPage="https://x.com/StargateFinance"
                 href="/defi/stargate"
@@ -255,10 +280,18 @@ export default function Defi() {
                 title={"deBridge"}
                 icon={debridgeIcon}
                 subArray={[
-                  { icon: Placeholder, text: "Cross-Chain" },
-                  { icon: Placeholder, text: "Bridge" }
+                  { icon: ethereumIcon, text: "" },
+                  { icon: solanaIcon, text: "" },
+                  { icon: arbitrumIcon, text: "" },
+                  { icon: optimismIcon, text: "" },
+                  { icon: baseIcon, text: "" },
+                  { icon: lineaIcon, text: "" },
+                  { icon: zksyncIcon, text: "" },
+                  { icon: polygonIcon, text: "" },
+                  { icon: blastIcon, text: "" },
+                  { icon: avalancheIcon, text: "" }
                 ]}
-                subArrayTitle="Tipo"
+                subArrayTitle="Reti Supportate:"
                 externalLink="https://debridge.finance/"
                 xPage="https://x.com/deBridgeFinance"
                 href="/defi/debridge"
@@ -267,11 +300,11 @@ export default function Defi() {
                 title={"Camelot"}
                 icon={camelotIcon}
                 subArray={[
-                  { icon: Placeholder, text: "Arbitrum" },
-                  { icon: Placeholder, text: "Sanko" },
-                  { icon: Placeholder, text: "XAI" }
+                  { icon: arbitrumIcon, text: "" },
+                  { icon: Placeholder, text: "" },
+                  { icon: xaiIcon, text: "" }
                 ]}
-                subArrayTitle="Reti"
+                subArrayTitle="Reti Supportate:"
                 externalLink="https://app.camelot.exchange/"
                 xPage="https://x.com/CamelotDEX"
                 href="/defi/camelot"
@@ -280,12 +313,15 @@ export default function Defi() {
                 title={"Curve"}
                 icon={curveIcon}
                 subArray={[
-                  { icon: Placeholder, text: "Ethereum" },
-                  { icon: Placeholder, text: "Arbitrum" },
-                  { icon: Placeholder, text: "Optimism" },
-                  { icon: Placeholder, text: "Polygon" }
+                  { icon: ethereumIcon, text: "" },
+                  { icon: arbitrumIcon, text: "" },
+                  { icon: optimismIcon, text: "" },
+                  { icon: polygonIcon, text: "" },
+                  { icon: baseIcon, text: "" },
+                  { icon: avalancheIcon, text: "" },
+                  { icon: bscIcon, text: "" }
                 ]}
-                subArrayTitle="Reti"
+                subArrayTitle="Reti Supportate:"
                 externalLink="https://curve.fi/"
                 xPage="https://x.com/CurveFinance"
                 href="/defi/curve"
@@ -294,9 +330,9 @@ export default function Defi() {
                 title={"Jupiter"}
                 icon={jupiterIcon}
                 subArray={[
-                  { icon: Placeholder, text: "Solana" }
+                  { icon: solanaIcon, text: "" }
                 ]}
-                subArrayTitle="Reti"
+                subArrayTitle="Reti Supportate:"
                 externalLink="https://jup.ag/"
                 xPage="https://x.com/JupiterExchange"
                 href="/defi/jupiter"
@@ -305,9 +341,9 @@ export default function Defi() {
                 title={"Raydium"}
                 icon={raydiumIcon}
                 subArray={[
-                  { icon: Placeholder, text: "Solana" }
+                  { icon: solanaIcon, text: "" }
                 ]}
-                subArrayTitle="Reti"
+                subArrayTitle="Reti Supportate:"
                 externalLink="https://raydium.io/"
                 xPage="https://x.com/RaydiumProtocol"
                 href="/defi/raydium"
@@ -316,11 +352,16 @@ export default function Defi() {
                 title={"Balancer"}
                 icon={balancerIcon}
                 subArray={[
-                  { icon: Placeholder, text: "Ethereum" },
-                  { icon: Placeholder, text: "Arbitrum" },
-                  { icon: Placeholder, text: "Polygon" }
+                  { icon: ethereumIcon, text: "" },
+                  { icon: optimismIcon, text: "" },
+                  { icon: polygonIcon, text: "" },
+                  { icon: gnosisIcon, text: "" },
+                  { icon: baseIcon, text: "" },
+                  { icon: arbitrumIcon, text: "" },
+                  { icon: avalancheIcon, text: "" },
+                  { icon: Placeholder, text: "" }
                 ]}
-                subArrayTitle="Reti"
+                subArrayTitle="Reti Supportate:"
                 externalLink="https://balancer.fi/"
                 xPage="https://x.com/Balancer"
                 href="/defi/balancer"
@@ -329,11 +370,11 @@ export default function Defi() {
                 title={"SyncSwap"}
                 icon={syncswapIcon}
                 subArray={[
-                  { icon: Placeholder, text: "zkSync" },
-                  { icon: Placeholder, text: "Linea" },
-                  { icon: Placeholder, text: "Scroll" }
+                  { icon: zksyncIcon, text: "" },
+                  { icon: lineaIcon, text: "" },
+                  { icon: scrollIcon, text: "" }
                 ]}
-                subArrayTitle="Reti"
+                subArrayTitle="Reti Supportate:"
                 externalLink="https://syncswap.xyz/"
                 xPage="https://twitter.com/syncswap"
                 href="/defi/syncswap"
@@ -342,10 +383,11 @@ export default function Defi() {
                 title={"Yearn Finance"}
                 icon={yearnIcon}
                 subArray={[
-                  { icon: Placeholder, text: "Ethereum" },
-                  { icon: Placeholder, text: "Yield Farming" }
+                  { icon: ethereumIcon, text: "" },
+                  { icon: arbitrumIcon, text: "" },
+                  { icon: polygonIcon, text: "" }
                 ]}
-                subArrayTitle="Tipo"
+                subArrayTitle="Reti Supportate:"
                 externalLink="https://yearn.fi/"
                 xPage="https://x.com/yearnfi"
                 href="/defi/yearn"
@@ -354,10 +396,14 @@ export default function Defi() {
                 title={"Compound"}
                 icon={compoundIcon}
                 subArray={[
-                  { icon: Placeholder, text: "Ethereum" },
-                  { icon: Placeholder, text: "Lending" }
+                  { icon: ethereumIcon, text: "" },
+                  { icon: arbitrumIcon, text: "" },
+                  { icon: baseIcon, text: "" },
+                  { icon: optimismIcon, text: "" },
+                  { icon: polygonIcon, text: "" },
+                  { icon: scrollIcon, text: "" }
                 ]}
-                subArrayTitle="Tipo"
+                subArrayTitle="Reti Supportate:"
                 externalLink="https://compound.finance/"
                 xPage="https://x.com/compoundfinance"
                 href="/defi/compound"
@@ -366,10 +412,10 @@ export default function Defi() {
                 title={"Lido Finance"}
                 icon={lidoIcon}
                 subArray={[
-                  { icon: Placeholder, text: "Ethereum" },
-                  { icon: Placeholder, text: "Staking" }
+                  { icon: ethereumIcon, text: "" },
+                  { icon: solanaIcon, text: "" }
                 ]}
-                subArrayTitle="Tipo"
+                subArrayTitle="Reti Supportate:"
                 externalLink="https://lido.fi/"
                 xPage="https://x.com/LidoFinance"
                 href="/defi/lido"
@@ -378,10 +424,9 @@ export default function Defi() {
                 title={"LayerZero"}
                 icon={layerzeroIcon}
                 subArray={[
-                  { icon: Placeholder, text: "Omnichain" },
-                  { icon: Placeholder, text: "Protocol" }
+                  { icon: layerzeroIcon, text: "" }
                 ]}
-                subArrayTitle="Tipo"
+                subArrayTitle="Reti Supportate:"
                 externalLink="https://layerzero.network/"
                 xPage="https://x.com/LayerZero_Labs"
                 href="/defi/layerzero"

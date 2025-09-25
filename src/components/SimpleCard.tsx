@@ -91,13 +91,13 @@ export function SimpleCard({
             {subArray.every(item => typeof item === 'object' && (!item.text || item.text === '')) ? (
               <div className="flex flex-wrap gap-2">
                 {subArray.map((item, index) => (
-                  <div key={index} className="flex items-center justify-center w-8 h-8 bg-white rounded-lg shadow-sm border border-neutral-200 p-1">
+                  <div key={index} className="flex items-center justify-center w-8 h-8">
                     <Image 
                       src={typeof item === 'object' ? item.icon : Placeholder} 
                       alt="" 
-                      className="w-6 h-6" 
-                      width={24}
-                      height={24}
+                      className="w-8 h-8" 
+                      width={32}
+                      height={32}
                     />
                   </div>
                 ))}

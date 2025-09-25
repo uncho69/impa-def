@@ -8,6 +8,7 @@ import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 import Image from "next/image";
 import hyperliquidIcon from "@/assets/hyperliquid-icon.png";
+import hypervmIcon from "@/assets/hypervm-logo.png";
 import { ClientTweetCard } from "@/components/magicui/client-tweet-card";
 import { useState, useEffect } from "react";
 
@@ -245,6 +246,24 @@ export default function Hyperliquid() {
             Le commissioni sono competitive rispetto agli exchange centralizzati, con struttura di fee trasparente e senza costi nascosti.
           </Accordion>
         </SectionBody>
+
+        {/* Sezione Reti Supportate */}
+        <div className="bg-white rounded-2xl p-8 shadow-lg border border-neutral-100 mb-8">
+          <h2 className="text-2xl font-bold mb-6 text-neutral-900">Reti Supportate</h2>
+          <p className="text-neutral-600 mb-6">
+            Hyperliquid opera sulla propria blockchain L1, offrendo un'esperienza di trading ottimizzata e decentralizzata.
+          </p>
+          
+            <div className="flex flex-wrap gap-4">
+              <Image src={hypervmIcon} alt="HyperVM" className="w-8 h-8 hover:scale-110 transition-transform duration-300" />
+            </div>
+
+          <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-200">
+            <p className="text-sm text-blue-800">
+              <strong>🚀 Suggerimento:</strong> Hyperliquid utilizza la propria blockchain L1 per garantire velocità e sicurezza ottimali per il trading di perpetual futures.
+            </p>
+          </div>
+        </div>
 
         <SectionTitle>Tutorial</SectionTitle>
         <SectionBody>

@@ -62,7 +62,7 @@ export default function NewsPage() {
     {
       id: "gaming",
       title: "Gaming",
-      description: "GameFi, P2E e l'evoluzione del gaming blockchain",
+      description: "Giochi & Mercati di Predizione, P2E e l'evoluzione del gaming blockchain",
       color: "from-violet-500 to-purple-600"
     },
     {

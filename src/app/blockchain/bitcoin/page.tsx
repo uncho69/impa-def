@@ -1,249 +1,211 @@
+import { MobileContainer } from "@/components/MobileContainer";
+import { SectionTitle } from "@/components/SectionTitle";
+import { SectionBody } from "@/components/SectionBody";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
-import { MobileContainer } from "@/components/MobileContainer";
-import { SectionBody } from "@/components/SectionBody";
-import { SectionTitle } from "@/components/SectionTitle";
-import { SectionTutorial } from "@/components/SectionTutorial";
-import { SimpleCard } from "@/components/SimpleCard";
-import Placeholder from "@/assets/placeholder.svg";
-import { CardContainer } from "@/components/CardContainer";
-import Link from "next/link";
+import Image from "next/image";
+import bitcoinIcon from "@/assets/bitcoin-icon.svg";
 
-export default function manuale() {
+export default function Bitcoin() {
   return (
-    <MobileContainer>
-      <SectionTitle>Blockchain</SectionTitle>
-      <SectionBody>
-        <div>
-          <h1 className="font-bold text-4xl">Bitcoin</h1>
-          <p>
-            La blockchain di Bitcoin è la tecnologia rivoluzionaria che sta alla
-            base della prima e più famosa criptovaluta, Bitcoin (BTC).
-            Introdotta nel 2009 da un individuo o gruppo di individui sotto lo
-            pseudonimo di Satoshi Nakamoto, questa tecnologia ha aperto la
-            strada all&apos;era delle criptovalute e delle applicazioni
-            decentralizzate.
-          </p>
-          <Accordion buttonText="Cos'è la Blockchain di Bitcoin?">
-            <p>
-              La blockchain di Bitcoin è un registro digitale decentralizzato
-              che memorizza tutte le transazioni di Bitcoin in modo permanente e
-              immutabile. Funziona come un libro mastro distribuito, mantenuto
-              da una rete di nodi (computer) che verificano e registrano le
-              transazioni senza la necessità di un&apos;autorità centrale.
-            </p>
-          </Accordion>
-          <Accordion buttonText="Caratteristiche Principali">
-            <List ordered={true}>
-              <li>
-                <strong>Decentralizzazione:</strong>
-                <List>
-                  <li>
-                    La blockchain di Bitcoin non è controllata da nessuna
-                    singola entità. È mantenuta da una rete globale di nodi, che
-                    verificano e registrano le transazioni, garantendo che il
-                    sistema sia resistente alla censura e agli attacchi.
-                  </li>
-                </List>
-              </li>
-              <li>
-                <strong>Trasparenza e Immutabilità:</strong>
-                <List>
-                  <li>
-                    Ogni transazione effettuata sulla rete Bitcoin è registrata
-                    pubblicamente e non può essere modificata o cancellata.
-                    Questo garantisce un alto livello di trasparenza e
-                    sicurezza.
-                  </li>
-                </List>
-              </li>
-              <li>
-                <strong>Proof of Work (PoW):</strong>
-                <List>
-                  <li>
-                    Il meccanismo di consenso utilizzato dalla blockchain di
-                    Bitcoin è il Proof of Work. I minatori risolvono complessi
-                    problemi matematici per aggiungere nuovi blocchi alla
-                    catena, ricevendo in cambio nuove unità di Bitcoin come
-                    ricompensa.
-                  </li>
-                </List>
-              </li>
-              <li>
-                <strong>Blocco e Catena di Blocchi:</strong>
-                <List>
-                  <li>
-                    Le transazioni vengono raccolte in blocchi, che vengono
-                    aggiunti alla catena di blocchi (blockchain). Ogni blocco
-                    contiene un riferimento crittografico al blocco precedente,
-                    creando una catena continua che garantisce la sicurezza e
-                    l&apos;integrità dei dati.
-                  </li>
-                </List>
-              </li>
-            </List>
-          </Accordion>
-          <Accordion buttonText="Funzionamento della Blockchain di Bitcoin">
-            <List ordered={true}>
-              <li>
-                <strong>Transazioni:</strong>
-                <List>
-                  <li>
-                    Gli utenti inviano Bitcoin ad altri utenti tramite
-                    transazioni, che vengono trasmesse alla rete e raccolte nei
-                    blocchi dai minatori.
-                  </li>
-                </List>
-              </li>
-              <li>
-                <strong>Mining:</strong>
-                <List>
-                  <li>
-                    I minatori competono per risolvere un problema matematico
-                    complesso. Il primo minatore che trova la soluzione valida
-                    aggiunge il blocco alla blockchain e riceve una ricompensa
-                    in Bitcoin.
-                  </li>
-                </List>
-              </li>
-              <li>
-                <strong>Verifica:</strong>
-                <List>
-                  <li>
-                    I nodi della rete verificano che le transazioni siano valide
-                    (es. nessuna doppia spesa) e che il blocco aggiunto sia
-                    corretto.
-                  </li>
-                </List>
-              </li>
-              <li>
-                <strong>Consenso:</strong>
-                <List>
-                  <li>
-                    Il consenso viene raggiunto quando la maggior parte dei nodi
-                    nella rete accetta il blocco aggiunto. Questo processo
-                    garantisce che solo le transazioni valide siano registrate
-                    nella blockchain.
-                  </li>
-                </List>
-              </li>
-            </List>
-          </Accordion>
-          <Accordion buttonText="Gas Fees (commissioni di transazione)">
-            <p>
-              Le gas fees, note anche come commissioni di transazione, sono i
-              costi associati all&apos;elaborazione delle transazioni sulla rete
-              Bitcoin. Queste commissioni vengono pagate dai mittenti delle
-              transazioni e sono ricevute dai minatori come ricompensa per la
-              verifica e l&apos;inclusione delle transazioni nei blocchi.
-            </p>
-            <p>
-              <strong>Dettagli sulle Gas Fees:</strong>
-            </p>
-            <List ordered={false}>
-              <li>
-                <strong>Determinazione delle Commissioni:</strong>{" "}
-                L&apos;ammontare delle gas fees può variare in base alla
-                congestione della rete. Durante periodi di alta domanda, le
-                commissioni possono aumentare significativamente, poiché gli
-                utenti competono per far includere le loro transazioni nei
-                prossimi blocchi.
-              </li>
-              <li>
-                <strong>Incentivi per i Minatori:</strong> Le gas fees
-                incentivano i minatori a verificare e aggiungere le transazioni
-                alla blockchain. Oltre alla ricompensa del blocco, le
-                commissioni di transazione rappresentano una parte significativa
-                del guadagno dei minatori.
-              </li>
-              <li>
-                <strong>Impatto sulle Transazioni:</strong> Gli utenti possono
-                scegliere di pagare commissioni più alte per avere le loro
-                transazioni processate più rapidamente. Le transazioni con
-                commissioni più basse possono subire ritardi.
-              </li>
-            </List>
-          </Accordion>
-          <Accordion buttonText="Vantaggi della Blockchain di Bitcoin">
-            <List ordered={false}>
-              <li>
-                <strong>Sicurezza:</strong> L&apos;uso di crittografia avanzata
-                e il meccanismo di consenso PoW rendono la blockchain
-                estremamente sicura.
-              </li>
-              <li>
-                <strong>Trasparenza:</strong> Tutte le transazioni sono
-                pubblicamente visibili, garantendo un elevato livello di
-                trasparenza.
-              </li>
-              <li>
-                <strong>Decentralizzazione:</strong> L&apos;assenza di
-                un&apos;autorità centrale elimina il rischio di censura e
-                manipolazione.
-              </li>
-            </List>
-          </Accordion>
-          <Accordion buttonText="Applicazioni della Blockchain di Bitcoin">
-            <p>
-              Oltre all&apos;uso come criptovaluta, la blockchain di Bitcoin ha
-              ispirato lo sviluppo di molte altre blockchain e criptovalute, e
-              ha aperto la strada a nuove tecnologie come gli smart contract e
-              le applicazioni decentralizzate (dApp).
-            </p>{" "}
-            <br />
-          </Accordion>
-          <p className="font-bold p-3">
-            Per ulteriori dettagli, puoi visitare{" "}
-            <Link
-              href={"https://bitcoin.org/"}
-              target="_blank"
-              className="underline"
-            >
-              Bitcoin.org
-            </Link>
-          </p>
-          <Accordion buttonText="Portafogli (”Wallet”) Supportati">
-            <CardContainer>
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[
-                  { icon: Placeholder, text: "" },
-                  { icon: Placeholder, text: "" },
-                ]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[
-                  { icon: Placeholder, text: "" },
-                  { icon: Placeholder, text: "" },
-                ]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[
-                  { icon: Placeholder, text: "" },
-                  { icon: Placeholder, text: "" },
-                ]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-            </CardContainer>
-          </Accordion>
+    <ProtectedRoute title="Bitcoin">
+      <MobileContainer>
+        <div className="flex items-center gap-4 mb-6">
+          <Image src={bitcoinIcon} alt="Bitcoin" width={64} height={64} />
+          <div>
+            <SectionTitle>Bitcoin</SectionTitle>
+            <div className="flex flex-wrap gap-2 mt-2">
+              <span className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-medium">
+                Blockchain
+              </span>
+              <span className="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm font-medium">
+                PoW
+              </span>
+              <span className="px-3 py-1 bg-neutral-100 text-neutral-700 rounded-full text-sm font-medium">
+                Store of Value
+              </span>
+            </div>
+          </div>
         </div>
-        <SectionTutorial
-          video={
-            "https://www.youtube.com/embed/K4TOrB7at0Y?si=vOBf2_Kw_RkdMPph"
-          }
-          tutorialLink="./bitcoin/tutorial"
-        />
-      </SectionBody>
-    </MobileContainer>
+
+        <SectionBody>
+          <strong>Bitcoin</strong> è la prima e più famosa criptovaluta, introdotta nel 2009 da Satoshi Nakamoto. 
+          La blockchain di Bitcoin è la tecnologia rivoluzionaria che sta alla base di questa criptovaluta, 
+          aprendo la strada all'era delle criptovalute e delle applicazioni decentralizzate.
+        </SectionBody>
+        <SectionTitle>Caratteristiche Principali</SectionTitle>
+        <SectionBody>
+          <Accordion buttonText="Cos'è la Blockchain di Bitcoin?" defaultOpen={true}>
+            <List>
+              <li>
+                <strong>Registro Decentralizzato</strong>: La blockchain di Bitcoin è un registro digitale decentralizzato che memorizza tutte le transazioni in modo permanente e immutabile.
+              </li>
+              <li>
+                <strong>Libro Mastro Distribuito</strong>: Funziona come un libro mastro distribuito, mantenuto da una rete di nodi che verificano e registrano le transazioni senza autorità centrale.
+              </li>
+              <li>
+                <strong>Trasparenza Totale</strong>: Ogni transazione è pubblicamente visibile e verificabile da chiunque.
+              </li>
+            </List>
+          </Accordion>
+
+          <Accordion buttonText="Meccanismo di Consenso">
+            <List>
+              <li>
+                <strong>Proof of Work (PoW)</strong>: Bitcoin utilizza il meccanismo di consenso Proof of Work, dove i minatori risolvono complessi problemi matematici per aggiungere nuovi blocchi.
+              </li>
+              <li>
+                <strong>Mining</strong>: I minatori competono per risolvere il problema matematico. Il primo che trova la soluzione valida aggiunge il blocco e riceve una ricompensa in Bitcoin.
+              </li>
+              <li>
+                <strong>Sicurezza</strong>: Il PoW rende estremamente costoso e difficile attaccare la rete Bitcoin.
+              </li>
+            </List>
+          </Accordion>
+
+          <Accordion buttonText="Struttura della Blockchain">
+            <List>
+              <li>
+                <strong>Blocchi</strong>: Le transazioni vengono raccolte in blocchi che vengono aggiunti alla catena in ordine cronologico.
+              </li>
+              <li>
+                <strong>Hash Crittografico</strong>: Ogni blocco contiene un riferimento crittografico al blocco precedente, creando una catena continua e immutabile.
+              </li>
+              <li>
+                <strong>Immutabilità</strong>: Una volta aggiunto alla blockchain, un blocco non può essere modificato senza invalidare tutti i blocchi successivi.
+              </li>
+            </List>
+          </Accordion>
+
+          <Accordion buttonText="Commissioni di Transazione">
+            <List>
+              <li>
+                <strong>Commissioni di Rete</strong>: Le commissioni di transazione incentivano i minatori a includere le transazioni nei blocchi.
+              </li>
+              <li>
+                <strong>Priorità</strong>: Commissioni più alte garantiscono priorità più alta nell'elaborazione delle transazioni.
+              </li>
+              <li>
+                <strong>Variabilità</strong>: Le commissioni variano in base alla congestione della rete e alla domanda.
+              </li>
+            </List>
+          </Accordion>
+        </SectionBody>
+
+        <SectionTitle>Vantaggi di Bitcoin</SectionTitle>
+        <SectionBody>
+          <Accordion buttonText="Sicurezza e Decentralizzazione">
+            <List>
+              <li>
+                <strong>Resistenza alla Censura</strong>: Nessuna autorità centrale può bloccare o censurare le transazioni Bitcoin.
+              </li>
+              <li>
+                <strong>Sicurezza Crittografica</strong>: L'uso di crittografia avanzata rende Bitcoin estremamente sicuro.
+              </li>
+              <li>
+                <strong>Rete Distribuita</strong>: La rete è mantenuta da migliaia di nodi in tutto il mondo.
+              </li>
+            </List>
+          </Accordion>
+
+          <Accordion buttonText="Store of Value">
+            <List>
+              <li>
+                <strong>Scarsità Digitale</strong>: Bitcoin ha un limite massimo di 21 milioni di unità, garantendo scarsità.
+              </li>
+              <li>
+                <strong>Riserva di Valore</strong>: Molti considerano Bitcoin come "oro digitale" per preservare il valore nel tempo.
+              </li>
+              <li>
+                <strong>Indipendenza Monetaria</strong>: Bitcoin non dipende da banche centrali o governi.
+              </li>
+            </List>
+          </Accordion>
+        </SectionBody>
+
+        <SectionTitle>Tutorial</SectionTitle>
+        <SectionBody>
+          <Accordion buttonText="Video Tutorial">
+            <div className="w-full max-w-2xl mx-auto">
+              <iframe
+                width="100%"
+                height="200"
+                src="https://www.youtube.com/embed/K4TOrB7at0Y?si=vOBf2_Kw_RkdMPph"
+                title="Bitcoin Tutorial"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                className="rounded-lg"
+              ></iframe>
+            </div>
+          </Accordion>
+        </SectionBody>
+
+        <SectionTitle>Informazioni Aggiuntive</SectionTitle>
+        <SectionBody>
+          <div className="bg-white rounded-xl p-6 border border-neutral-200 shadow-sm">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Reti Supportate */}
+              <div className="bg-white rounded-lg p-4 border border-neutral-200 shadow-sm">
+                <h3 className="font-semibold text-neutral-900 mb-3">Reti Supportate</h3>
+                <p className="text-neutral-600 text-sm mb-4">
+                  Bitcoin opera sulla sua blockchain nativa, la prima e più sicura blockchain al mondo.
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  <Image 
+                    src={bitcoinIcon} 
+                    alt="Bitcoin" 
+                    className="w-8 h-8 hover:scale-110 transition-transform duration-300"
+                    width={32}
+                    height={32}
+                  />
+                </div>
+              </div>
+
+              {/* Link Utili */}
+              <div className="bg-white rounded-lg p-4 border border-neutral-200 shadow-sm">
+                <h3 className="font-semibold text-neutral-900 mb-3">Link Utili</h3>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <span className="text-neutral-600">🌐</span>
+                    <a 
+                      href="https://bitcoin.org/" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 underline text-sm"
+                    >
+                      Sito Web
+                    </a>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-neutral-600">🐦</span>
+                    <a 
+                      href="https://x.com/bitcoin" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 underline text-sm"
+                    >
+                      Twitter/X
+                    </a>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-neutral-600">📊</span>
+                    <a 
+                      href="https://coinmarketcap.com/currencies/bitcoin/" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 underline text-sm"
+                    >
+                      Token BTC
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </SectionBody>
+      </MobileContainer>
+    </ProtectedRoute>
   );
 }

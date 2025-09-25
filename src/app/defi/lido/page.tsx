@@ -6,13 +6,17 @@ import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 import Image from "next/image";
 import Placeholder from "@/assets/placeholder.svg";
+import lidoIcon from "@/assets/lidofinance-logo.png";
+// Loghi delle reti supportate
+import ethereumIcon from "@/assets/ethereum-icon.svg";
+import solanaIcon from "@/assets/solana-sol-logo.svg";
 
 export default function Lido() {
   return (
     <ProtectedRoute title="Lido Finance">
       <MobileContainer>
         <div className="flex items-center gap-4 mb-6">
-          <Image src={Placeholder} alt="Lido Finance" width={64} height={64} />
+          <Image src={lidoIcon} alt="Lido Finance" width={64} height={64} />
           <div>
             <SectionTitle>Lido Finance</SectionTitle>
             <div className="flex flex-wrap gap-2 mt-2">
@@ -119,12 +123,13 @@ export default function Lido() {
         <SectionBody>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-white rounded-lg border border-neutral-200 p-6">
-              <h3 className="font-bold text-lg mb-3 text-neutral-800">Asset Supportati</h3>
-              <div className="flex flex-wrap gap-2">
-                <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">ETH → stETH</span>
-                <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">MATIC → stMATIC</span>
-                <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">SOL → stSOL</span>
-                <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">DOT → stDOT</span>
+              <h3 className="font-bold text-lg mb-3 text-neutral-800">Reti Supportate</h3>
+              <p className="text-neutral-600 mb-4 text-sm">
+                Lido Finance supporta le principali blockchain per servizi di staking liquidi e decentralizzati.
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <Image src={ethereumIcon} alt="Ethereum" className="w-8 h-8 hover:scale-110 transition-transform duration-300" />
+                <Image src={solanaIcon} alt="Solana" className="w-8 h-8 hover:scale-110 transition-transform duration-300" />
               </div>
             </div>
             <div className="bg-white rounded-lg border border-neutral-200 p-6">
