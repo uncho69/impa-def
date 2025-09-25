@@ -1,6 +1,12 @@
 
 import Image from "next/image";
 import rainbowIcon from "@/assets/rainbow-icon.png";
+// Loghi delle reti supportate
+import ethereumIcon from "@/assets/ethereum-icon.svg";
+import arbitrumIcon from "@/assets/arbitrum-arb-logo.svg";
+import optimismIcon from "@/assets/optimism-ethereum-op-logo.svg";
+import polygonIcon from "@/assets/polygon-matic-logo.svg";
+import baseIcon from "@/assets/base-logo.svg";
 
 export default function RainbowPage() {
   return (
@@ -56,6 +62,63 @@ export default function RainbowPage() {
               </ul>
             </div>
 
+            {/* Sezione Reti Supportate */}
+            <div className="bg-white rounded-2xl p-8 shadow-lg border border-neutral-100">
+              <h2 className="text-2xl font-bold mb-6 text-neutral-900">Reti Supportate</h2>
+              <p className="text-neutral-600 mb-6">
+                Rainbow supporta le principali reti EVM, permettendoti di gestire i tuoi asset su diverse piattaforme Ethereum-compatibili.
+              </p>
+              
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                {/* Ethereum */}
+                <div className="flex flex-col items-center p-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border border-gray-200 hover:shadow-md transition-all duration-300 group">
+                  <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm mb-3 group-hover:scale-110 transition-transform duration-300">
+                    <Image src={ethereumIcon} alt="Ethereum" className="w-8 h-8" />
+                  </div>
+                  <span className="text-sm font-semibold text-gray-800 text-center">Ethereum</span>
+                </div>
+
+                {/* Polygon */}
+                <div className="flex flex-col items-center p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl border border-purple-200 hover:shadow-md transition-all duration-300 group">
+                  <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm mb-3 group-hover:scale-110 transition-transform duration-300">
+                    <Image src={polygonIcon} alt="Polygon" className="w-8 h-8" />
+                  </div>
+                  <span className="text-sm font-semibold text-gray-800 text-center">Polygon</span>
+                </div>
+
+                {/* Arbitrum */}
+                <div className="flex flex-col items-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl border border-blue-200 hover:shadow-md transition-all duration-300 group">
+                  <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm mb-3 group-hover:scale-110 transition-transform duration-300">
+                    <Image src={arbitrumIcon} alt="Arbitrum" className="w-8 h-8" />
+                  </div>
+                  <span className="text-sm font-semibold text-gray-800 text-center">Arbitrum</span>
+                </div>
+
+                {/* Optimism */}
+                <div className="flex flex-col items-center p-4 bg-gradient-to-br from-red-50 to-red-100 rounded-xl border border-red-200 hover:shadow-md transition-all duration-300 group">
+                  <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm mb-3 group-hover:scale-110 transition-transform duration-300">
+                    <Image src={optimismIcon} alt="Optimism" className="w-8 h-8" />
+                  </div>
+                  <span className="text-sm font-semibold text-gray-800 text-center">Optimism</span>
+                </div>
+
+                {/* Base */}
+                <div className="flex flex-col items-center p-4 bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-xl border border-indigo-200 hover:shadow-md transition-all duration-300 group">
+                  <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm mb-3 group-hover:scale-110 transition-transform duration-300">
+                    <Image src={baseIcon} alt="Base" className="w-8 h-8" />
+                  </div>
+                  <span className="text-sm font-semibold text-gray-800 text-center">Base</span>
+                </div>
+
+              </div>
+
+              <div className="mt-6 p-4 bg-gradient-to-r from-pink-50 to-purple-50 rounded-xl border border-pink-200">
+                <p className="text-sm text-pink-800">
+                  <strong>🌈 Suggerimento:</strong> Rainbow è ottimizzato per Ethereum e le sue Layer 2, offrendo un'esperienza fluida su tutte le reti supportate.
+                </p>
+              </div>
+            </div>
+
             <div className="bg-white rounded-2xl p-8 shadow-lg border border-neutral-100">
               <h2 className="text-2xl font-bold mb-4 text-neutral-900">Come iniziare</h2>
               <div className="space-y-4">
@@ -63,7 +126,26 @@ export default function RainbowPage() {
                   <div className="w-8 h-8 bg-primary-500 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">1</div>
                   <div>
                     <h3 className="font-semibold text-neutral-900 mb-2">Scarica l&apos;app</h3>
-                    <p className="text-neutral-700">Scarica Rainbow dall&apos;App Store o Google Play</p>
+                    <p className="text-neutral-700">
+                      Scarica Rainbow dall&apos;{" "}
+                      <a 
+                        href="https://apps.apple.com/app/rainbow-ethereum-wallet/id1457119021" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-primary-600 hover:text-primary-700 underline font-medium transition-colors duration-200"
+                      >
+                        App Store
+                      </a>{" "}
+                      o{" "}
+                      <a 
+                        href="https://play.google.com/store/apps/details?id=me.rainbow" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-primary-600 hover:text-primary-700 underline font-medium transition-colors duration-200"
+                      >
+                        Google Play
+                      </a>
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">

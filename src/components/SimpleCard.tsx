@@ -84,14 +84,35 @@ export function SimpleCard({
         )}
         {subArray && subArray.length > 0 ? (
           <div className="flex flex-col gap-3">
-            {subArrayTitle && subArrayTitle.split('\n').map((line, index) => (
-              <div key={index} className="flex flex-col gap-1">
-                <span className="text-sm text-neutral-600">{line}</span>
-                <span className="text-base font-semibold text-neutral-900">
-                  {typeof subArray[index] === 'string' ? subArray[index] : subArray[index]?.text || ''}
-                </span>
+            {subArrayTitle && (
+              <span className="text-sm text-neutral-600">{subArrayTitle}</span>
+            )}
+            {/* Se tutti gli elementi hanno solo icone senza testo, mostra una griglia di loghi */}
+            {subArray.every(item => typeof item === 'object' && (!item.text || item.text === '')) ? (
+              <div className="flex flex-wrap gap-2">
+                {subArray.map((item, index) => (
+                  <div key={index} className="flex items-center justify-center w-8 h-8 bg-white rounded-lg shadow-sm border border-neutral-200 p-1">
+                    <Image 
+                      src={typeof item === 'object' ? item.icon : Placeholder} 
+                      alt="" 
+                      className="w-6 h-6" 
+                      width={24}
+                      height={24}
+                    />
+                  </div>
+                ))}
               </div>
-            ))}
+            ) : (
+              /* Layout originale per elementi con testo */
+              subArrayTitle && subArrayTitle.split('\n').map((line, index) => (
+                <div key={index} className="flex flex-col gap-1">
+                  <span className="text-sm text-neutral-600">{line}</span>
+                  <span className="text-base font-semibold text-neutral-900">
+                    {typeof subArray[index] === 'string' ? subArray[index] : subArray[index]?.text || ''}
+                  </span>
+                </div>
+              ))
+            )}
           </div>
         ) : (
           ""
