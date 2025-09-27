@@ -43,9 +43,7 @@ export default function Rabby() {
         </div>
 
         <SectionBody className="mt-4 gap-2">
-          <strong>Rabby</strong> è un wallet browser avanzato progettato specificamente per 
-          utenti DeFi esperti. Offre funzionalità avanzate come simulazione di transazioni, 
-          gestione gas intelligente e supporto multi-chain per un'esperienza DeFi ottimale.
+          <p><strong>Rabby</strong> è un wallet browser avanzato progettato specificamente per utenti DeFi esperti. Offre funzionalità avanzate come simulazione di transazioni, gestione gas intelligente e supporto multi-chain per un'esperienza DeFi ottimale.</p>
         </SectionBody>
 
         <SectionTitle>Caratteristiche Principali</SectionTitle>

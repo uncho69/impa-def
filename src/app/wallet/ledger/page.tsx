@@ -40,9 +40,7 @@ export default function Ledger() {
         </div>
 
         <SectionBody className="mt-4 gap-2">
-          <strong>Ledger</strong> è uno dei wallet hardware più sicuri e affidabili del mercato. 
-          Offre protezione offline per le tue criptovalute, mantenendo le chiavi private 
-          sempre al sicuro nel dispositivo fisico, lontano da potenziali minacce online.
+          <p><strong>Ledger</strong> è uno dei wallet hardware più sicuri e affidabili del mercato. Offre protezione offline per le tue criptovalute, mantenendo le chiavi private sempre al sicuro nel dispositivo fisico, lontano da potenziali minacce online.</p>
         </SectionBody>
 
         <SectionTitle>Caratteristiche Principali</SectionTitle>

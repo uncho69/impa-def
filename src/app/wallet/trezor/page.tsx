@@ -40,9 +40,7 @@ export default function Trezor() {
         </div>
 
         <SectionBody className="mt-4 gap-2">
-          <strong>Trezor</strong> è il primo wallet hardware al mondo, sviluppato da SatoshiLabs. 
-          Offre massima sicurezza per le tue criptovalute con un design open source e 
-          un'interfaccia utente intuitiva per gestire il tuo portfolio crypto.
+          <p><strong>Trezor</strong> è il primo wallet hardware al mondo, sviluppato da SatoshiLabs. Offre massima sicurezza per le tue criptovalute con un design open source e un'interfaccia utente intuitiva per gestire il tuo portfolio crypto.</p>
         </SectionBody>
 
         <SectionTitle>Caratteristiche Principali</SectionTitle>

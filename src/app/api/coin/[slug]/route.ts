@@ -30,7 +30,7 @@ export async function GET(request: Request, { params }: { params: { slug: string
 
       // Execute a parameterized query
       conn.execute({
-        sqlText: `SELECT * FROM REALTIME_MARKET_DATA WHERE COINGECKO_ID = '${slug}';`,
+        sqlText: `SELECT * FROM REALTIME_MARKET_DATA WHERE COINGECKO_ID = '${slug}' ORDER BY LAST_UPDATED_AT DESC LIMIT 1;`,
         complete: (err, stmt, rows) => {
           if (err) {
             console.error('Failed to execute statement: ' + err.message);

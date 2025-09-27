@@ -43,9 +43,7 @@ export default function Rainbow() {
         </div>
 
         <SectionBody className="mt-4 gap-2">
-          <strong>Rainbow</strong> è un wallet mobile elegante e user-friendly progettato per 
-          rendere l'uso delle criptovalute semplice e divertente. Con un design colorato 
-          e un'interfaccia intuitiva, Rainbow è perfetto per principianti ed esperti.
+          <p><strong>Rainbow</strong> è un wallet mobile elegante e user-friendly progettato per rendere l'uso delle criptovalute semplice e divertente. Con un design colorato e un'interfaccia intuitiva, Rainbow è perfetto per principianti ed esperti.</p>
         </SectionBody>
 
         <SectionTitle>Caratteristiche Principali</SectionTitle>

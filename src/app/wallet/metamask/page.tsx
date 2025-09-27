@@ -43,9 +43,7 @@ export default function MetaMask() {
         </div>
 
         <SectionBody className="mt-4 gap-2">
-          <strong>MetaMask</strong> è il wallet software più popolare per Ethereum e le blockchain EVM. 
-          Disponibile come estensione browser e app mobile, MetaMask è la porta d'accesso 
-          principale al mondo DeFi e alle applicazioni decentralizzate.
+          <p><strong>MetaMask</strong> è il wallet software più popolare per Ethereum e le blockchain EVM. Disponibile come estensione browser e app mobile, MetaMask è la porta d'accesso principale al mondo DeFi e alle applicazioni decentralizzate.</p>
         </SectionBody>
 
         <SectionTitle>Caratteristiche Principali</SectionTitle>

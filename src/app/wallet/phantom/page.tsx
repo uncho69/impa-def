@@ -38,9 +38,7 @@ export default function Phantom() {
         </div>
 
         <SectionBody className="mt-4 gap-2">
-          <strong>Phantom</strong> è il wallet principale per l'ecosistema Solana, progettato 
-          per offrire un'esperienza utente fluida e intuitiva. Con supporto multi-chain 
-          e funzionalità DeFi avanzate, Phantom è la porta d'accesso ideale per Solana.
+          <p><strong>Phantom</strong> è il wallet principale per l'ecosistema Solana, progettato per offrire un'esperienza utente fluida e intuitiva. Con supporto multi-chain e funzionalità DeFi avanzate, Phantom è la porta d'accesso ideale per Solana.</p>
         </SectionBody>
 
         <SectionTitle>Caratteristiche Principali</SectionTitle>

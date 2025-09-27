@@ -1,150 +1,205 @@
-import { Accordion } from "@/components/Accordion";
-import { CardContainer } from "@/components/CardContainer";
-import { List } from "@/components/List";
 import { MobileContainer } from "@/components/MobileContainer";
-import { SectionBody } from "@/components/SectionBody";
 import { SectionTitle } from "@/components/SectionTitle";
-import { SectionTutorial } from "@/components/SectionTutorial";
-import { SimpleCard } from "@/components/SimpleCard";
-import Placeholder from "@/assets/placeholder.svg";
+import { SectionBody } from "@/components/SectionBody";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { Accordion } from "@/components/Accordion";
+import { List } from "@/components/List";
+import Image from "next/image";
+import arbitrumIcon from "@/assets/arbitrum-arb-logo.svg";
 
-export default function manuale() {
+export default function Arbitrum() {
   return (
-    <MobileContainer>
-      <SectionTitle>Blockchain</SectionTitle>
-      <SectionBody>
-        <div>
-          <h1 className="font-bold text-4xl">Arbitrum</h1>
-          <p>
-            <strong>Arbitrum</strong> è una suite di soluzioni di scaling per
-            Ethereum, progettata per aumentare la scalabilità e ridurre i costi
-            di transazione mantenendo la sicurezza della blockchain di Ethereum.
-            Arbitrum offre diverse tecnologie e reti Layer 2, come Arbitrum One
-            e Arbitrum Nova, per supportare vari casi d&apos;uso nel mondo delle
-            applicazioni decentralizzate (dApp).
-          </p>
-          <Accordion buttonText="Caratteristiche Principali di Arbitrum">
-            <List ordered={true}>
-              <li>
-                <strong>Tecnologia Nitro:</strong>
-                <List>
-                  <li>
-                    <strong>Nitro Stack:</strong> La tecnologia Nitro alimenta
-                    tutte le catene Arbitrum, offrendo un throughput elevato e
-                    costi di transazione bassi. Nitro utilizza una combinazione
-                    di compressione avanzata dei dati, contesti separati per
-                    l&apos;esecuzione comune e la prova dei fault, e
-                    compatibilità con il gas di Ethereum L1 per ottimizzare le
-                    prestazioni.
-                  </li>
-                </List>
-              </li>
-              <li>
-                <strong>Catene Arbitrum:</strong>
-                <List>
-                  <li>
-                    <strong>Arbitrum One:</strong> Un rollup ottimistico che
-                    implementa il protocollo Arbitrum Rollup e si collega alla
-                    blockchain di Ethereum. È ideale per applicazioni
-                    decentralizzate che richiedono sicurezza simile a quella di
-                    Ethereum, ma con costi di transazione ridotti.
-                  </li>
-                  <li>
-                    <strong>Arbitrum Nova:</strong> Utilizza il protocollo
-                    AnyTrust, che introduce un comitato di disponibilità dei
-                    dati per ridurre ulteriormente i costi di transazione,
-                    mantenendo un alto livello di sicurezza. Nova è adatta per
-                    applicazioni che richiedono throughput elevato come il
-                    gaming e le applicazioni social.
-                  </li>
-                </List>
-              </li>
-              <li>
-                <strong>Compatibilità e Flessibilità:</strong>
-                <List>
-                  <li>
-                    <strong>Compatibilità con Ethereum:</strong> Arbitrum è
-                    progettato per essere altamente compatibile con Ethereum,
-                    permettendo agli sviluppatori di utilizzare gli stessi
-                    strumenti e librerie. Questo rende facile il deployment di
-                    contratti smart e dApp su Arbitrum.
-                  </li>
-                  <li>
-                    <strong>Stylus:</strong> Permette agli sviluppatori di
-                    scrivere contratti smart ad alte prestazioni utilizzando
-                    linguaggi come Rust, C++, mantenendo la compatibilità con
-                    l&apos;Ethereum Virtual Machine (EVM).
-                  </li>
-                </List>
-              </li>
-              <li>
-                <strong>Sicurezza:</strong>
-                <List>
-                  <li>
-                    <strong>Prove di Frode:</strong> Arbitrum utilizza un
-                    sistema di prove di frode per garantire che le transazioni
-                    siano sicure e verificate. Questo meccanismo consente di
-                    rilevare e dimostrare il comportamento fraudolento,
-                    mantenendo la sicurezza del sistema.
-                  </li>
-                </List>
-              </li>
-              <li>
-                <strong>Economia delle Commissioni:</strong>
-                <List>
-                  <li>
-                    <strong>Commissioni Basse:</strong> Le transazioni su
-                    Arbitrum sono più economiche grazie al batch delle
-                    transazioni e alla compressione dei dati, riducendo
-                    significativamente il costo rispetto alle transazioni su
-                    Ethereum.
-                  </li>
-                </List>
-              </li>
-            </List>
-          </Accordion>
-          <Accordion buttonText="Progetti su Arbitrum">
-            <CardContainer>
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[
-                  { icon: Placeholder, text: "" },
-                  { icon: Placeholder, text: "" },
-                ]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[
-                  { icon: Placeholder, text: "" },
-                  { icon: Placeholder, text: "" },
-                ]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[
-                  { icon: Placeholder, text: "" },
-                  { icon: Placeholder, text: "" },
-                ]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-            </CardContainer>
-          </Accordion>
+    <ProtectedRoute title="Arbitrum">
+      <MobileContainer>
+        <div className="flex items-center gap-4 mb-6">
+          <Image src={arbitrumIcon} alt="Arbitrum" width={64} height={64} />
+          <div>
+            <SectionTitle>Arbitrum</SectionTitle>
+            <div className="flex flex-wrap gap-2 mt-2">
+              <span className="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm font-medium">
+                Layer 2
+              </span>
+              <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                Optimistic Rollup
+              </span>
+              <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+                Low Fees
+              </span>
+              <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
+                EVM Compatible
+              </span>
+            </div>
+          </div>
         </div>
-        <SectionTutorial
-          video={
-            "https://www.youtube.com/embed/K4TOrB7at0Y?si=vOBf2_Kw_RkdMPph"
-          }
-          tutorialLink="./arbitrum/tutorial"
-        />
-      </SectionBody>
-    </MobileContainer>
+
+        <SectionBody>
+          <strong>Arbitrum</strong> è una soluzione Layer 2 per Ethereum che utilizza la tecnologia Optimistic Rollup 
+          per offrire transazioni più veloci e a basso costo mantenendo la sicurezza di Ethereum. Sviluppata da 
+          Offchain Labs, Arbitrum permette agli sviluppatori di eseguire smart contract compatibili con EVM 
+          senza modificare il codice, riducendo drasticamente le commissioni di gas.
+        </SectionBody>
+
+        <SectionTitle>Caratteristiche Principali</SectionTitle>
+        <SectionBody>
+          <Accordion buttonText="Cos'è Arbitrum?">
+            <p>Contenuto da aggiungere...</p>
+          </Accordion>
+
+          <Accordion buttonText="Optimistic Rollup">
+            <p>Contenuto da aggiungere...</p>
+          </Accordion>
+
+          <Accordion buttonText="Compatibilità EVM">
+            <p>Contenuto da aggiungere...</p>
+          </Accordion>
+
+          <Accordion buttonText="Commissioni Basse">
+            <p>Contenuto da aggiungere...</p>
+          </Accordion>
+
+          <Accordion buttonText="Portafogli (Wallet) Supportati">
+            <p>Contenuto da aggiungere...</p>
+          </Accordion>
+
+          <Accordion buttonText="Sicurezza e Decentralizzazione">
+            <p>Contenuto da aggiungere...</p>
+          </Accordion>
+
+          <Accordion buttonText="Ecosistema DeFi">
+            <p>Contenuto da aggiungere...</p>
+          </Accordion>
+        </SectionBody>
+
+        <SectionTitle>Ecosistema Arbitrum</SectionTitle>
+        <SectionBody>
+          <Accordion buttonText="Introduzione ad Arbitrum">
+            <Accordion buttonText="Cos'è Arbitrum?">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+            <Accordion buttonText="Optimistic Rollup">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+            <Accordion buttonText="Compatibilità EVM">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+            <Accordion buttonText="Commissioni Basse">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+            <Accordion buttonText="Portafogli (Wallet) Supportati">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+            <Accordion buttonText="Sicurezza e Decentralizzazione">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+            <Accordion buttonText="Ecosistema DeFi">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+          </Accordion>
+
+          <Accordion buttonText="Applicazioni su Arbitrum">
+            <Accordion buttonText="DeFi e DEX">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+            <Accordion buttonText="NFT e Marketplace">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+            <Accordion buttonText="Gaming e Metaverse">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+            <Accordion buttonText="Bridge e Interoperabilità">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+            <Accordion buttonText="Smart Contracts">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+            <Accordion buttonText="Token e Governance">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+          </Accordion>
+        </SectionBody>
+
+        <SectionTitle>Tutorial</SectionTitle>
+        <SectionBody>
+          <Accordion buttonText="Video Tutorial">
+            <div className="w-full max-w-2xl mx-auto">
+              <iframe
+                width="100%"
+                height="200"
+                src="https://www.youtube.com/embed/1jzFNzUgZ6Q?si=8vQ7QwKjKjKjKjKj"
+                title="Arbitrum Tutorial"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                className="rounded-lg"
+              ></iframe>
+            </div>
+          </Accordion>
+        </SectionBody>
+
+        <SectionTitle>Informazioni Aggiuntive</SectionTitle>
+        <SectionBody>
+          <div className="bg-white rounded-xl p-6 border border-neutral-200 shadow-sm">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Reti Supportate */}
+              <div className="bg-white rounded-lg p-4 border border-neutral-200 shadow-sm">
+                <h3 className="font-semibold text-neutral-900 mb-3">Reti Supportate</h3>
+                <p className="text-neutral-600 text-sm mb-4">
+                  Arbitrum opera come Layer 2 di Ethereum, offrendo compatibilità completa con EVM.
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  <Image 
+                    src={arbitrumIcon} 
+                    alt="Arbitrum" 
+                    className="w-8 h-8 hover:scale-110 transition-transform duration-300"
+                    width={32}
+                    height={32}
+                  />
+                </div>
+              </div>
+
+              {/* Link Utili */}
+              <div className="bg-white rounded-lg p-4 border border-neutral-200 shadow-sm">
+                <h3 className="font-semibold text-neutral-900 mb-3">Link Utili</h3>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <span className="text-neutral-600">🌐</span>
+                    <a 
+                      href="https://arbitrum.io/" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 underline text-sm"
+                    >
+                      Sito Web
+                    </a>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-neutral-600">🐦</span>
+                    <a 
+                      href="https://x.com/arbitrum" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 underline text-sm"
+                    >
+                      Twitter/X
+                    </a>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-neutral-600">📊</span>
+                    <a 
+                      href="https://coinmarketcap.com/currencies/arbitrum/" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 underline text-sm"
+                    >
+                      Token ARB
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </SectionBody>
+      </MobileContainer>
+    </ProtectedRoute>
   );
 }

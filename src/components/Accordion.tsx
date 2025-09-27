@@ -26,7 +26,7 @@ export function Accordion({
         className="w-full flex items-center gap-2 text-left font-semibold text-neutral-900"
       >
         <div className="flex items-center gap-2">
-          {showTooltip && (
+          {showTooltip ? (
             <div 
               className="relative"
               onMouseEnter={() => setIsTooltipVisible(true)}
@@ -50,6 +50,8 @@ export function Accordion({
                 </div>
               )}
             </div>
+          ) : (
+            <div className="w-4 h-4"></div>
           )}
           <Image
             src={caretDown}

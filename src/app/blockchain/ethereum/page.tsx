@@ -1,3 +1,5 @@
+"use client";
+
 import { MobileContainer } from "@/components/MobileContainer";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
@@ -6,6 +8,7 @@ import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 import Image from "next/image";
 import ethereumIcon from "@/assets/ethereum-icon.svg";
+import { useState, useEffect } from "react";
 // Loghi delle reti supportate
 import arbitrumIcon from "@/assets/arbitrum-arb-logo.svg";
 import optimismIcon from "@/assets/optimism-ethereum-op-logo.svg";
@@ -13,26 +16,93 @@ import polygonIcon from "@/assets/polygon-matic-logo.svg";
 import baseIcon from "@/assets/base-logo.svg";
 
 export default function Ethereum() {
+  const [priceData, setPriceData] = useState({
+    price: 0,
+    volume_24h: 0,
+    price_change_percentage_24h: 0,
+    market_cap: 0,
+    image: ""
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPriceData = async () => {
+      try {
+        const response = await fetch('/api/coin/ethereum');
+        const data = await response.json();
+        setPriceData(data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Errore nel caricamento dei dati:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchPriceData();
+    
+    // Aggiorna i dati ogni 30 secondi
+    const interval = setInterval(fetchPriceData, 30000);
+    
+    return () => clearInterval(interval);
+  }, []);
   return (
     <ProtectedRoute title="Ethereum">
-      <MobileContainer>
-        <div className="flex items-center gap-4 mb-6">
-          <Image src={ethereumIcon} alt="Ethereum" width={64} height={64} />
-          <div>
-            <SectionTitle>Ethereum</SectionTitle>
-            <div className="flex flex-wrap gap-2 mt-2">
-              <span className="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm font-medium">
-                Blockchain
+    <MobileContainer>
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-4">
+            <Image src={ethereumIcon} alt="Ethereum" width={64} height={64} />
+            <div>
+              <SectionTitle>Ethereum</SectionTitle>
+              <div className="flex flex-wrap gap-2 mt-2">
+                <span className="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm font-medium">
+                  Blockchain
+                </span>
+                <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
+                  Smart Contracts
+                </span>
+                <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+                  PoS
+                </span>
+                <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                  DeFi
+                </span>
+              </div>
+            </div>
+          </div>
+          {/* Live Price Box */}
+          <div className="bg-gray-100 rounded-xl p-3 shadow-sm min-w-[180px]">
+            <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Prezzo Live</div>
+            
+            <div className="flex items-baseline gap-2 mb-2">
+              <span className="text-xl font-bold text-gray-900">
+                {loading ? '...' : `$${priceData.price?.toLocaleString('en-US', { maximumFractionDigits: 2 }) || '0.00'}`}
               </span>
-              <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
-                Smart Contracts
+              <span className="text-sm text-gray-500">ETH</span>
+            </div>
+            
+            <div className="flex items-center gap-2 mb-3">
+              {priceData.price_change_percentage_24h >= 0 ? (
+                <svg className="w-3 h-3 text-green-500" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M7 14l5-5 5 5z"/>
+                </svg>
+              ) : (
+                <svg className="w-3 h-3 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M7 10l5 5 5-5z"/>
+                </svg>
+              )}
+              <span className={`text-sm font-medium ${priceData.price_change_percentage_24h >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                {loading ? '...' : `${priceData.price_change_percentage_24h >= 0 ? '+' : ''}${priceData.price_change_percentage_24h?.toFixed(2) || '0.00'}%`}
               </span>
-              <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
-                PoS
-              </span>
-              <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
-                DeFi
-              </span>
+              <span className="text-xs text-gray-400">24h</span>
+            </div>
+            
+            <div className="space-y-1 text-xs">
+              <div className="text-gray-600">
+                Volume 24h ${priceData.volume_24h ? (priceData.volume_24h / 1e9).toFixed(1) + 'B' : '...'}
+              </div>
+              <div className="text-gray-600">
+                Market Cap ${priceData.market_cap ? (priceData.market_cap / 1e9).toFixed(1) + 'B' : '...'}
+              </div>
             </div>
           </div>
         </div>
@@ -77,7 +147,7 @@ export default function Ethereum() {
         </SectionBody>
 
         <SectionTitle>Ecosistema Ethereum</SectionTitle>
-        <SectionBody>
+      <SectionBody>
           <Accordion buttonText="Introduzione ad Ethereum">
             <Accordion buttonText="Ether (ETH)">
               <p>Contenuto da aggiungere...</p>
@@ -99,7 +169,7 @@ export default function Ethereum() {
             </Accordion>
             <Accordion buttonText="Vantaggi di Ethereum">
               <p>Contenuto da aggiungere...</p>
-            </Accordion>
+          </Accordion>
           </Accordion>
 
           <Accordion buttonText="Applicazioni su Ethereum">
@@ -231,9 +301,9 @@ export default function Ethereum() {
                 </div>
               </div>
             </div>
-          </div>
-        </SectionBody>
-      </MobileContainer>
+        </div>
+      </SectionBody>
+    </MobileContainer>
     </ProtectedRoute>
   );
 }
