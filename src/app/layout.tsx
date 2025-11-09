@@ -5,6 +5,7 @@ import { Navbar } from "@/components/Navbar";
 import { ClerkProvider, SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 import { Inter, Montserrat, Source_Code_Pro } from "next/font/google";
 import { Footer } from "@/components/Footer";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 
 
 const montserrat = Montserrat({
@@ -37,24 +38,57 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <ClerkProvider>
-      <html lang="en">
-        <body className={`${montserrat.variable} ${inter.variable} ${sourceCode.variable} text-neutral-900 antialiased font-montserrat bg-background flex flex-col items-center min-h-screen`}>
+  const isClerkConfigured = ((): boolean => {
+    if (process.env.SKIP_CLERK === 'true') {
+      return false;
+    }
+
+    const publishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY?.trim();
+    const secretKey = process.env.CLERK_SECRET_KEY?.trim();
+    
+    const hasPublishableKey = !!(
+      publishableKey &&
+      publishableKey.length > 20 &&
+      (publishableKey.startsWith('pk_test_') || publishableKey.startsWith('pk_live_'))
+    );
+    
+    const hasSecretKey = !!(
+      secretKey &&
+      secretKey.length > 20 &&
+      (secretKey.startsWith('sk_test_') || secretKey.startsWith('sk_live_'))
+    );
+    
+    return hasPublishableKey && hasSecretKey;
+  })();
+
+  const content = (
+    <html lang="en">
+      <body className={`${montserrat.variable} ${inter.variable} ${sourceCode.variable} text-neutral-900 antialiased font-montserrat bg-background flex flex-col items-center min-h-screen`}>
+        <LanguageProvider>
           <Navbar />
           <header className="hidden">{/* opzionale: pulsanti rapidi */}
-            <SignedOut>
-              <SignInButton />
-              <SignUpButton />
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
+            {isClerkConfigured ? (
+              <>
+                <SignedOut>
+                  <SignInButton />
+                  <SignUpButton />
+                </SignedOut>
+                <SignedIn>
+                  <UserButton />
+                </SignedIn>
+              </>
+            ) : null}
           </header>
           <main className="w-full flex-grow">{children}</main>
           <Footer />
-        </body>
-      </html>
-    </ClerkProvider>
+        </LanguageProvider>
+      </body>
+    </html>
   );
+
+  if (isClerkConfigured) {
+    return <ClerkProvider>{content}</ClerkProvider>;
+  }
+
+  return content;
 }

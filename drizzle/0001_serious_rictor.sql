@@ -1,0 +1,2 @@
+ALTER TABLE "verification_tokens" DROP CONSTRAINT "verification_tokens_identifier_type_unique";--> statement-breakpoint
+ALTER TABLE "verification_tokens" ADD CONSTRAINT "verification_tokens_identifier_type_unique" UNIQUE("identifier","type");
