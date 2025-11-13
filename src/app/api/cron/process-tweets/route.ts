@@ -3,6 +3,7 @@ import { db } from '@/lib/db';
 import { tweets, users, userEpochScores, epochs } from '@/lib/db/schema';
 import { eq, and, sql } from 'drizzle-orm';
 import { fetchTweetsFromSnowflake } from '@/lib/snowflake/queries';
+import { calculatePoints } from '@/lib/points-config';
 
 export async function POST(request: NextRequest) {
   try {
@@ -183,7 +184,7 @@ async function updateStatsForTweet(
   campaignIndex: number,
   epochIndex: number
 ) {
-  const points = (tweet.likes || 0) + (tweet.replies || 0) + (tweet.retweets || 0) + (tweet.quotes || 0);
+  const points = calculatePoints(tweet.likes, tweet.replies, tweet.retweets, tweet.quotes);
 
   const existingScore = await db
     .select()
@@ -299,7 +300,7 @@ async function recalculateStatsForTweet(tweet: TweetWithIds) {
     return;
   }
 
-  const oldPoints = (tweet.likes || 0) + (tweet.replies || 0) + (tweet.retweets || 0) + (tweet.quotes || 0);
+  const oldPoints = calculatePoints(tweet.likes, tweet.replies, tweet.retweets, tweet.quotes);
 
   const updatedTweet = await db
     .select()
@@ -312,7 +313,7 @@ async function recalculateStatsForTweet(tweet: TweetWithIds) {
   }
 
   const newTweet = updatedTweet[0];
-  const newPoints = (newTweet.likes || 0) + (newTweet.replies || 0) + (newTweet.retweets || 0) + (newTweet.quotes || 0);
+  const newPoints = calculatePoints(newTweet.likes, newTweet.replies, newTweet.retweets, newTweet.quotes);
   const pointsDiff = newPoints - oldPoints;
   const likesDiff = (newTweet.likes || 0) - (tweet.likes || 0);
   const repliesDiff = (newTweet.replies || 0) - (tweet.replies || 0);

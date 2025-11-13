@@ -51,4 +51,6 @@ drizzle-kit
 # clerk configuration (can include secrets)
 /.clerk/
 LEADERBOARD_IMPLEMENTATION.md
+.vscode/
+notes.md
 tall
