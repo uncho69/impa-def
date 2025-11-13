@@ -1,5 +1,3 @@
-// Point weights configuration
-// Admins can modify these values to change how points are calculated
 export const POINT_WEIGHTS = {
   likes: 1,
   replies: 1,
@@ -7,12 +5,11 @@ export const POINT_WEIGHTS = {
   quotes: 1,
 } as const;
 
-// Calculate points from engagement metrics
 export function calculatePoints(
-  likes: number = 0,
-  replies: number = 0,
-  retweets: number = 0,
-  quotes: number = 0
+  likes: number | null | undefined = 0,
+  replies: number | null | undefined = 0,
+  retweets: number | null | undefined = 0,
+  quotes: number | null | undefined = 0
 ): number {
   return (
     (likes || 0) * POINT_WEIGHTS.likes +
