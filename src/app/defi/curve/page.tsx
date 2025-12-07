@@ -5,12 +5,21 @@ import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 import Image from "next/image";
 import Placeholder from "@/assets/placeholder.svg";
+import curveIcon from "@/assets/curve-logo.png";
+// Loghi delle reti supportate
+import ethereumIcon from "@/assets/ethereum-icon.svg";
+import arbitrumIcon from "@/assets/arbitrum-arb-logo.svg";
+import optimismIcon from "@/assets/optimism-ethereum-op-logo.svg";
+import polygonIcon from "@/assets/polygon-matic-logo.svg";
+import baseIcon from "@/assets/base-logo.svg";
+import avalancheIcon from "@/assets/avalanche-avax-logo.svg";
+import bscIcon from "@/assets/bsc-logo.png";
 
 export default function Curve() {
   return (
     <MobileContainer>
         <div className="flex items-center gap-4 mb-6">
-          <Image src={Placeholder} alt="Curve" width={64} height={64} />
+          <Image src={curveIcon} alt="Curve" width={64} height={64} />
           <div>
             <SectionTitle>Curve</SectionTitle>
             <div className="flex flex-wrap gap-2 mt-2">
@@ -102,13 +111,17 @@ export default function Curve() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-white rounded-lg border border-neutral-200 p-6">
               <h3 className="font-bold text-lg mb-3 text-neutral-800">Reti Supportate</h3>
-              <div className="flex flex-wrap gap-2">
-                <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">Ethereum</span>
-                <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">Arbitrum</span>
-                <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">Optimism</span>
-                <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">Polygon</span>
-                <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">Base</span>
-                <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">Avalanche</span>
+              <p className="text-neutral-600 mb-4 text-sm">
+                Curve supporta le principali reti EVM per il trading di stablecoin e asset con basso slippage.
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <Image src={ethereumIcon} alt="Ethereum" className="w-8 h-8 hover:scale-110 transition-transform duration-300" />
+                <Image src={arbitrumIcon} alt="Arbitrum" className="w-8 h-8 hover:scale-110 transition-transform duration-300" />
+                <Image src={optimismIcon} alt="Optimism" className="w-8 h-8 hover:scale-110 transition-transform duration-300" />
+                <Image src={polygonIcon} alt="Polygon" className="w-8 h-8 hover:scale-110 transition-transform duration-300" />
+                <Image src={baseIcon} alt="Base" className="w-8 h-8 hover:scale-110 transition-transform duration-300" />
+                <Image src={avalancheIcon} alt="Avalanche" className="w-8 h-8 hover:scale-110 transition-transform duration-300" />
+                <Image src={bscIcon} alt="BSC" className="w-8 h-8 hover:scale-110 transition-transform duration-300" />
               </div>
             </div>
             <div className="bg-white rounded-lg border border-neutral-200 p-6">

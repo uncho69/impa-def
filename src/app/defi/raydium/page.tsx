@@ -5,12 +5,15 @@ import { Accordion } from "@/components/Accordion";
 
 import Image from "next/image";
 import Placeholder from "@/assets/placeholder.svg";
+import raydiumIcon from "@/assets/raydium-logo.svg";
+// Loghi delle reti supportate
+import solanaIcon from "@/assets/solana-sol-logo.svg";
 
 export default function Raydium() {
   return (
     <MobileContainer>
         <div className="flex items-center gap-4 mb-6">
-          <Image src={Placeholder} alt="Raydium" width={64} height={64} />
+          <Image src={raydiumIcon} alt="Raydium" width={64} height={64} />
           <div>
             <SectionTitle>Raydium</SectionTitle>
             <div className="flex flex-wrap gap-2 mt-2">
@@ -59,8 +62,11 @@ export default function Raydium() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-white rounded-lg border border-neutral-200 p-6">
               <h3 className="font-bold text-lg mb-3 text-neutral-800">Reti Supportate</h3>
-              <div className="flex flex-wrap gap-2">
-                <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">Solana</span>
+              <p className="text-neutral-600 mb-4 text-sm">
+                Raydium è il principale DEX su Solana, offrendo trading, farming e staking per l'ecosistema Solana.
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <Image src={solanaIcon} alt="Solana" className="w-8 h-8 hover:scale-110 transition-transform duration-300" />
               </div>
             </div>
             <div className="bg-white rounded-lg border border-neutral-200 p-6">

@@ -5,12 +5,17 @@ import { Accordion } from "@/components/Accordion";
 
 import Image from "next/image";
 import Placeholder from "@/assets/placeholder.svg";
+import syncswapIcon from "@/assets/syncswap-logo.png";
+// Loghi delle reti supportate
+import zksyncIcon from "@/assets/zksynk-logo.png";
+import lineaIcon from "@/assets/linea-logo.svg";
+import scrollIcon from "@/assets/Scroll-Logo.svg";
 
 export default function SyncSwap() {
   return (
     <MobileContainer>
         <div className="flex items-center gap-4 mb-6">
-          <Image src={Placeholder} alt="SyncSwap" width={64} height={64} />
+          <Image src={syncswapIcon} alt="SyncSwap" width={64} height={64} />
           <div>
             <SectionTitle>SyncSwap</SectionTitle>
             <div className="flex flex-wrap gap-2 mt-2">
@@ -63,10 +68,13 @@ export default function SyncSwap() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-white rounded-lg border border-neutral-200 p-6">
               <h3 className="font-bold text-lg mb-3 text-neutral-800">Reti Supportate</h3>
-              <div className="flex flex-wrap gap-2">
-                <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">zkSync</span>
-                <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">Linea</span>
-                <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">Scroll</span>
+              <p className="text-neutral-600 mb-4 text-sm">
+                SyncSwap supporta le principali reti zk-rollup per trading veloce e a basso costo.
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <Image src={zksyncIcon} alt="zkSync" className="w-8 h-8 hover:scale-110 transition-transform duration-300" />
+                <Image src={lineaIcon} alt="Linea" className="w-8 h-8 hover:scale-110 transition-transform duration-300" />
+                <Image src={scrollIcon} alt="Scroll" className="w-8 h-8 hover:scale-110 transition-transform duration-300" />
               </div>
             </div>
             <div className="bg-white rounded-lg border border-neutral-200 p-6">

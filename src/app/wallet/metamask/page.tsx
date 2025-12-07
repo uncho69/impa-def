@@ -1,111 +1,298 @@
+import { MobileContainer } from "@/components/MobileContainer";
+import { SectionTitle } from "@/components/SectionTitle";
+import { SectionBody } from "@/components/SectionBody";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { Accordion } from "@/components/Accordion";
+import { List } from "@/components/List";
 import Image from "next/image";
 import metamaskIcon from "@/assets/metamask-icon.svg";
+// Loghi delle reti supportate
+import ethereumIcon from "@/assets/ethereum-icon.svg";
+import arbitrumIcon from "@/assets/arbitrum-arb-logo.svg";
+import optimismIcon from "@/assets/optimism-ethereum-op-logo.svg";
+import polygonIcon from "@/assets/polygon-matic-logo.svg";
+import baseIcon from "@/assets/base-logo.svg";
+import avalancheIcon from "@/assets/avalanche-avax-logo.svg";
+import bscIcon from "@/assets/bsc-logo.png";
+import gnosisIcon from "@/assets/gnosis-logo.png";
+import lineaIcon from "@/assets/linea-logo.svg";
+import scrollIcon from "@/assets/Scroll-Logo.svg";
+import blastIcon from "@/assets/blast-logo.webp";
+import xaiIcon from "@/assets/xai-logo.svg";
 
-export default function MetaMaskPage() {
+export default function MetaMask() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-primary-50 to-background">
-      <div className="container-custom py-12">
-        <div className="max-w-4xl mx-auto">
-          {/* Header */}
-          <div className="text-center mb-12">
-            <div className="flex justify-center mb-6">
-              <Image src={metamaskIcon} alt="MetaMask" width={96} height={96} />
-            </div>
-            <h1 className="text-4xl font-bold mb-4 text-neutral-900">MetaMask</h1>
-            <p className="text-xl text-neutral-600">
-              Il wallet più popolare e utilizzato nel mondo Web3
-            </p>
-          </div>
-
-          {/* Contenuto principale */}
-          <div className="space-y-8">
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-neutral-100">
-              <h2 className="text-2xl font-bold mb-4 text-neutral-900">Cos&apos;è MetaMask?</h2>
-              <p className="text-neutral-700 leading-relaxed mb-4">
-                MetaMask è un wallet software che permette agli utenti di interagire con la blockchain Ethereum e altre reti compatibili. È disponibile come estensione per browser e come app mobile.
-              </p>
-              <p className="text-neutral-700 leading-relaxed">
-                MetaMask è stato creato da ConsenSys e si è affermato come uno dei wallet più affidabili e facili da usare per principianti ed esperti.
-              </p>
-            </div>
-
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-neutral-100">
-              <h2 className="text-2xl font-bold mb-4 text-neutral-900">Caratteristiche principali</h2>
-              <ul className="space-y-3 text-neutral-700">
-                <li className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-primary-500 rounded-full mt-2 flex-shrink-0"></div>
-                  <span>Interfaccia intuitiva e facile da usare</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-primary-500 rounded-full mt-2 flex-shrink-0"></div>
-                  <span>Supporto per multiple reti blockchain</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-primary-500 rounded-full mt-2 flex-shrink-0"></div>
-                  <span>Integrazione con dApp e marketplace</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-primary-500 rounded-full mt-2 flex-shrink-0"></div>
-                  <span>Gestione sicura delle chiavi private</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-primary-500 rounded-full mt-2 flex-shrink-0"></div>
-                  <span>Supporto per token ERC-20 e NFT</span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-neutral-100">
-              <h2 className="text-2xl font-bold mb-4 text-neutral-900">Come iniziare</h2>
-              <div className="space-y-4">
-                <div className="flex items-start gap-4">
-                  <div className="w-8 h-8 bg-primary-500 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">1</div>
-                  <div>
-                    <h3 className="font-semibold text-neutral-900 mb-2">Scarica l&apos;estensione</h3>
-                    <p className="text-neutral-700">Vai su metamask.io e scarica l&apos;estensione per il tuo browser</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="w-8 h-8 bg-primary-500 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">2</div>
-                  <div>
-                    <h3 className="font-semibold text-neutral-900 mb-2">Crea un wallet</h3>
-                    <p className="text-neutral-700">Segui la procedura guidata per creare un nuovo wallet</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="w-8 h-8 bg-primary-500 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">3</div>
-                  <div>
-                    <h3 className="font-semibold text-neutral-900 mb-2">Salva la seed phrase</h3>
-                    <p className="text-neutral-700">Scrivi e conserva in sicurezza le 12 parole di recupero</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="w-8 h-8 bg-primary-500 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">4</div>
-                  <div>
-                    <h3 className="font-semibold text-neutral-900 mb-2">Inizia a usare</h3>
-                    <p className="text-neutral-700">Ora puoi ricevere, inviare e gestire i tuoi asset digitali</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-neutral-100">
-              <h2 className="text-2xl font-bold mb-4 text-neutral-900">Sicurezza</h2>
-              <div className="space-y-4 text-neutral-700">
-                <p>
-                  <strong>Importante:</strong> MetaMask non ha mai accesso alle tue chiavi private. Queste sono crittografate e memorizzate localmente sul tuo dispositivo.
-                </p>
-                <p>
-                  <strong>Seed Phrase:</strong> Le 12 parole di recupero sono l&apos;unico modo per ripristinare il tuo wallet. Non condividerle mai con nessuno e conservale in un posto sicuro.
-                </p>
-                <p>
-                  <strong>Phishing:</strong> Fai sempre attenzione ai siti che chiedono di inserire la tua seed phrase. MetaMask non richiederà mai queste informazioni.
-                </p>
-              </div>
+    <ProtectedRoute title="MetaMask">
+      <MobileContainer>
+        <div className="flex items-center gap-4 mb-6">
+          <Image src={metamaskIcon} alt="MetaMask" width={64} height={64} />
+          <div>
+            <SectionTitle>MetaMask</SectionTitle>
+            <div className="flex flex-wrap gap-2 mt-2">
+              <span className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-medium">
+                Software Wallet
+              </span>
+              <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                Browser Extension
+              </span>
+              <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
+                DeFi Gateway
+              </span>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+
+        <SectionBody className="mt-4 gap-2">
+          <p><strong>MetaMask</strong> è il wallet software più popolare per Ethereum e le blockchain EVM. Disponibile come estensione browser e app mobile, MetaMask è la porta d'accesso principale al mondo DeFi e alle applicazioni decentralizzate.</p>
+        </SectionBody>
+
+        <SectionTitle>Caratteristiche Principali</SectionTitle>
+        <SectionBody>
+          <Accordion buttonText="Facilità d'Uso" defaultOpen={true}>
+            <List>
+              <li>
+                <strong>Setup Veloce</strong>: Creazione wallet in pochi minuti con pochi clic.
+              </li>
+              <li>
+                <strong>Interfaccia Intuitiva</strong>: Design user-friendly per principianti ed esperti.
+              </li>
+              <li>
+                <strong>Multi-Device</strong>: Sincronizzazione tra browser e mobile.
+              </li>
+            </List>
+          </Accordion>
+
+          <Accordion buttonText="Integrazione DeFi">
+            <List>
+              <li>
+                <strong>DEX Integration</strong>: Accesso diretto a Uniswap, SushiSwap e altri DEX.
+              </li>
+              <li>
+                <strong>Staking</strong>: Staking diretto di ETH e altre criptovalute.
+              </li>
+              <li>
+                <strong>NFT Support</strong>: Visualizzazione e gestione di NFT.
+              </li>
+            </List>
+          </Accordion>
+
+          <Accordion buttonText="Sicurezza">
+            <List>
+              <li>
+                <strong>Seed Phrase</strong>: Backup sicuro con frase di recupero a 12 parole.
+              </li>
+              <li>
+                <strong>Password Protection</strong>: Protezione con password e PIN.
+              </li>
+              <li>
+                <strong>Hardware Wallet Support</strong>: Integrazione con Ledger e Trezor.
+              </li>
+            </List>
+          </Accordion>
+        </SectionBody>
+
+        <SectionTitle>Come Iniziare</SectionTitle>
+        <SectionBody>
+          <Accordion buttonText="Installazione">
+            <List>
+              <li>
+                <strong>Scarica MetaMask</strong>: Installa dal sito <a href="https://metamask.io" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline">metamask.io</a> o dagli store.
+              </li>
+              <li>
+                <strong>Crea Wallet</strong>: Segui la procedura guidata per creare un nuovo wallet.
+              </li>
+              <li>
+                <strong>Imposta Password</strong>: Crea una password sicura per proteggere il wallet.
+              </li>
+              <li>
+                <strong>Salva la seed phrase</strong>: 
+                <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                  <div className="flex items-start gap-3">
+                    <span className="text-yellow-600 font-bold text-sm">Consiglio</span>
+                    <p className="text-sm text-yellow-800 flex-1">
+                      Scrivi la frase di recupero a 12 parole su carta e conservala in un posto sicuro. 
+                      Non salvarla mai online o su dispositivi connessi a internet.
+                    </p>
+                  </div>
+                </div>
+              </li>
+            </List>
+          </Accordion>
+
+          <Accordion buttonText="Prima Transazione">
+            <List>
+              <li>
+                <strong>Ricevi Fondi</strong>: Copia il tuo indirizzo e ricevi ETH o altre criptovalute.
+              </li>
+              <li>
+                <strong>Configura Reti</strong>: Aggiungi le reti che vuoi utilizzare (Arbitrum, Polygon, etc.).
+              </li>
+              <li>
+                <strong>Invia Transazione</strong>: Invia criptovalute ad altri indirizzi.
+              </li>
+            </List>
+          </Accordion>
+        </SectionBody>
+
+        <SectionTitle>Tutorial</SectionTitle>
+        <SectionBody>
+          <Accordion buttonText="Video Tutorial">
+            <div className="w-full max-w-2xl mx-auto">
+              <iframe
+                width="100%"
+                height="200"
+                src="https://www.youtube.com/embed/K4TOrB7at0Y?si=vOBf2_Kw_RkdMPph"
+                title="MetaMask Tutorial"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                className="rounded-lg"
+              ></iframe>
+            </div>
+          </Accordion>
+        </SectionBody>
+
+        <SectionTitle>Informazioni Aggiuntive</SectionTitle>
+        <SectionBody>
+          <div className="bg-white rounded-xl p-6 border border-neutral-200 shadow-sm">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Reti Supportate */}
+              <div className="bg-white rounded-lg p-4 border border-neutral-200 shadow-sm">
+                <h3 className="font-semibold text-neutral-900 mb-3">Reti Supportate</h3>
+                <p className="text-neutral-600 text-sm mb-4">
+                  MetaMask supporta tutte le reti EVM e molte altre blockchain.
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  <Image 
+                    src={ethereumIcon} 
+                    alt="Ethereum" 
+                    className="w-8 h-8 hover:scale-110 transition-transform duration-300"
+                    width={32}
+                    height={32}
+                  />
+                  <Image 
+                    src={arbitrumIcon} 
+                    alt="Arbitrum" 
+                    className="w-8 h-8 hover:scale-110 transition-transform duration-300"
+                    width={32}
+                    height={32}
+                  />
+                  <Image 
+                    src={optimismIcon} 
+                    alt="Optimism" 
+                    className="w-8 h-8 hover:scale-110 transition-transform duration-300"
+                    width={32}
+                    height={32}
+                  />
+                  <Image 
+                    src={polygonIcon} 
+                    alt="Polygon" 
+                    className="w-8 h-8 hover:scale-110 transition-transform duration-300"
+                    width={32}
+                    height={32}
+                  />
+                  <Image 
+                    src={baseIcon} 
+                    alt="Base" 
+                    className="w-8 h-8 hover:scale-110 transition-transform duration-300"
+                    width={32}
+                    height={32}
+                  />
+                  <Image 
+                    src={avalancheIcon} 
+                    alt="Avalanche" 
+                    className="w-8 h-8 hover:scale-110 transition-transform duration-300"
+                    width={32}
+                    height={32}
+                  />
+                  <Image 
+                    src={bscIcon} 
+                    alt="BSC" 
+                    className="w-8 h-8 hover:scale-110 transition-transform duration-300"
+                    width={32}
+                    height={32}
+                  />
+                  <Image 
+                    src={gnosisIcon} 
+                    alt="Gnosis" 
+                    className="w-8 h-8 hover:scale-110 transition-transform duration-300"
+                    width={32}
+                    height={32}
+                  />
+                  <Image 
+                    src={lineaIcon} 
+                    alt="Linea" 
+                    className="w-8 h-8 hover:scale-110 transition-transform duration-300"
+                    width={32}
+                    height={32}
+                  />
+                  <Image 
+                    src={scrollIcon} 
+                    alt="Scroll" 
+                    className="w-8 h-8 hover:scale-110 transition-transform duration-300"
+                    width={32}
+                    height={32}
+                  />
+                  <Image 
+                    src={blastIcon} 
+                    alt="Blast" 
+                    className="w-8 h-8 hover:scale-110 transition-transform duration-300"
+                    width={32}
+                    height={32}
+                  />
+                  <Image 
+                    src={xaiIcon} 
+                    alt="XAI" 
+                    className="w-8 h-8 hover:scale-110 transition-transform duration-300"
+                    width={32}
+                    height={32}
+                  />
+                </div>
+              </div>
+
+              {/* Link Utili */}
+              <div className="bg-white rounded-lg p-4 border border-neutral-200 shadow-sm">
+                <h3 className="font-semibold text-neutral-900 mb-3">Link Utili</h3>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <span className="text-neutral-600">🌐</span>
+                    <a 
+                      href="https://metamask.io" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 underline text-sm"
+                    >
+                      Sito Web
+                    </a>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-neutral-600">🐦</span>
+                    <a 
+                      href="https://x.com/metamask" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 underline text-sm"
+                    >
+                      Twitter/X
+                    </a>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-neutral-600">📱</span>
+                    <a 
+                      href="https://apps.apple.com/app/metamask/id1438144202" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 underline text-sm"
+                    >
+                      App Store
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </SectionBody>
+      </MobileContainer>
+    </ProtectedRoute>
   );
 }

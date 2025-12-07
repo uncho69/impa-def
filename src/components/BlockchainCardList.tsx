@@ -1,3 +1,5 @@
+"use client";
+
 import { CardContainer } from "./CardContainer";
 import { SimpleCard } from "./SimpleCard";
 import Placeholder from "@/assets/placeholder.svg";
@@ -19,17 +21,96 @@ import layIcon from "@/assets/layer3-logo.png";
 import hlaIcon from "@/assets/hyperlane-logo.svg";
 import blaIcon from "@/assets/blast-logo.webp";
 import avaIcon from "@/assets/avalanche-avax-logo.svg";
+import { useState, useEffect } from "react";
 
 export function BlockchainCardList() {
+  const [bitcoinData, setBitcoinData] = useState({
+    price: 0,
+    market_cap: 0
+  });
+  const [ethereumData, setEthereumData] = useState({
+    price: 0,
+    market_cap: 0
+  });
+  const [solanaData, setSolanaData] = useState({
+    price: 0
+  });
+  const [arbitrumData, setArbitrumData] = useState({
+    price: 0
+  });
+  const [polygonData, setPolygonData] = useState({
+    price: 0
+  });
+  const [baseData, setBaseData] = useState({
+    price: 0
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCryptoData = async () => {
+      try {
+        // Fetch Bitcoin data
+        const bitcoinResponse = await fetch('/api/coin/bitcoin');
+        const bitcoinData = await bitcoinResponse.json();
+        setBitcoinData({
+          price: bitcoinData.price || 0,
+          market_cap: bitcoinData.market_cap || 0
+        });
+
+        // Fetch Ethereum data
+        const ethereumResponse = await fetch('/api/coin/ethereum');
+        const ethereumData = await ethereumResponse.json();
+        setEthereumData({
+          price: ethereumData.price || 0,
+          market_cap: ethereumData.market_cap || 0
+        });
+
+        // Fetch Solana data
+        const solanaResponse = await fetch('/api/coin/solana');
+        const solanaData = await solanaResponse.json();
+        setSolanaData({
+          price: solanaData.price || 0
+        });
+
+        // Fetch Arbitrum data
+        const arbitrumResponse = await fetch('/api/coin/arbitrum-one');
+        const arbitrumData = await arbitrumResponse.json();
+        setArbitrumData({
+          price: arbitrumData.price || 0
+        });
+
+        // Fetch Polygon data
+        const polygonResponse = await fetch('/api/coin/matic-network');
+        const polygonData = await polygonResponse.json();
+        setPolygonData({
+          price: polygonData.price || 0
+        });
+
+        // Fetch Base data - Base non ha token nativo, rimuoviamo per ora
+        // const baseResponse = await fetch('/api/coin/base-protocol');
+        // const baseData = await baseResponse.json();
+        setBaseData({
+          price: 0 // Base non ha token nativo
+        });
+
+        setLoading(false);
+      } catch (error) {
+        console.error('Errore nel caricamento dei dati crypto:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchCryptoData();
+  }, []);
   return (
     <CardContainer>
       <SimpleCard
         icon={btcIcon}
         title={"Bitcoin"}
         subArray={[
-          { icon: Placeholder, text: "" },
-          { icon: Placeholder, text: "" },
+          loading ? "Caricamento..." : `$${bitcoinData.price?.toLocaleString() || '0'}`
         ]}
+        subArrayTitle="Prezzo:"
         href={"./blockchain/bitcoin"}
         externalLink="https://bitcoin.org"
         xPage="https://x.com/bitcoin"
@@ -38,9 +119,10 @@ export function BlockchainCardList() {
         icon={ethIcon}
         title={"Ethereum"}
         subArray={[
-          { icon: Placeholder, text: "" },
-          { icon: Placeholder, text: "" },
+          loading ? "Caricamento..." : `$${ethereumData.price?.toLocaleString() || '0'}`,
+          loading ? "Caricamento..." : `$ ${(ethereumData.market_cap / 1e9).toFixed(0)}B`
         ]}
+        subArrayTitle="Prezzo:\nMarket Cap:"
         href={"./blockchain/ethereum"}
         externalLink="https://ethereum.org/it/"
         xPage="https://x.com/ethereum"
@@ -49,9 +131,9 @@ export function BlockchainCardList() {
         icon={solIcon}
         title={"Solana"}
         subArray={[
-          { icon: Placeholder, text: "" },
-          { icon: Placeholder, text: "" },
+          loading ? "Caricamento..." : `$${solanaData.price?.toLocaleString() || '0'}`
         ]}
+        subArrayTitle="Prezzo:"
         href={"./blockchain/solana"}
         externalLink="https://solana.com/"
         xPage="https://x.com/solana"
@@ -60,9 +142,9 @@ export function BlockchainCardList() {
         icon={arbIcon}
         title={"Arbitrum"}
         subArray={[
-          { icon: Placeholder, text: "" },
-          { icon: Placeholder, text: "" },
+          loading ? "Caricamento..." : `$${arbitrumData.price?.toLocaleString() || '0'}`
         ]}
+        subArrayTitle="Prezzo:"
         href={"./blockchain/arbitrum"}
         externalLink="https://arbitrum.foundation/"
         xPage="https://x.com/arbitrum"
@@ -71,9 +153,9 @@ export function BlockchainCardList() {
         icon={polIcon}
         title={"Polygon"}
         subArray={[
-          { icon: Placeholder, text: "" },
-          { icon: Placeholder, text: "" },
+          loading ? "Caricamento..." : `$${polygonData.price?.toLocaleString() || '0'}`
         ]}
+        subArrayTitle="Prezzo:"
         href={"./blockchain/polygon"}
         externalLink="https://polygon.technology/"
         xPage="https://x.com/0xPolygon"
@@ -82,8 +164,7 @@ export function BlockchainCardList() {
         icon={basIcon}
         title={"Base"}
         subArray={[
-          { icon: Placeholder, text: "" },
-          { icon: Placeholder, text: "" },
+          { icon: Placeholder, text: "Layer 2 Ethereum" }
         ]}
         href={"./blockchain/base"}
         externalLink="https://www.base.org/"

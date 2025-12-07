@@ -39,7 +39,7 @@ export function HomeButtons() {
         <br />
         Crypto
       </Button>
-      <Button href="/strumenti" local={true} className={btnStyle}>
+      <Button href="/strumentiutili" local={true} className={btnStyle}>
         Strumenti
       </Button>
     </div>

@@ -1,249 +1,275 @@
+"use client";
+
+import { MobileContainer } from "@/components/MobileContainer";
+import { SectionTitle } from "@/components/SectionTitle";
+import { SectionBody } from "@/components/SectionBody";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
-import { MobileContainer } from "@/components/MobileContainer";
-import { SectionBody } from "@/components/SectionBody";
-import { SectionTitle } from "@/components/SectionTitle";
-import { SectionTutorial } from "@/components/SectionTutorial";
-import { SimpleCard } from "@/components/SimpleCard";
-import Placeholder from "@/assets/placeholder.svg";
-import { CardContainer } from "@/components/CardContainer";
-import Link from "next/link";
+import Image from "next/image";
+import bitcoinIcon from "@/assets/bitcoin-icon.svg";
+import { useState, useEffect } from "react";
 
-export default function manuale() {
+export default function Bitcoin() {
+  const [priceData, setPriceData] = useState({
+    price: 0,
+    volume_24h: 0,
+    price_change_percentage_24h: 0,
+    market_cap: 0,
+    image: ""
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPriceData = async () => {
+      try {
+        const response = await fetch('/api/coin/bitcoin');
+        const data = await response.json();
+        setPriceData(data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Errore nel caricamento dei dati:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchPriceData();
+    
+    // Aggiorna i dati ogni 30 secondi
+    const interval = setInterval(fetchPriceData, 30000);
+    
+    return () => clearInterval(interval);
+  }, []);
   return (
-    <MobileContainer>
-      <SectionTitle>Blockchain</SectionTitle>
-      <SectionBody>
-        <div>
-          <h1 className="font-bold text-4xl">Bitcoin</h1>
-          <p>
-            La blockchain di Bitcoin è la tecnologia rivoluzionaria che sta alla
-            base della prima e più famosa criptovaluta, Bitcoin (BTC).
-            Introdotta nel 2009 da un individuo o gruppo di individui sotto lo
-            pseudonimo di Satoshi Nakamoto, questa tecnologia ha aperto la
-            strada all&apos;era delle criptovalute e delle applicazioni
-            decentralizzate.
-          </p>
-          <Accordion buttonText="Cos'è la Blockchain di Bitcoin?">
-            <p>
-              La blockchain di Bitcoin è un registro digitale decentralizzato
-              che memorizza tutte le transazioni di Bitcoin in modo permanente e
-              immutabile. Funziona come un libro mastro distribuito, mantenuto
-              da una rete di nodi (computer) che verificano e registrano le
-              transazioni senza la necessità di un&apos;autorità centrale.
-            </p>
-          </Accordion>
-          <Accordion buttonText="Caratteristiche Principali">
-            <List ordered={true}>
-              <li>
-                <strong>Decentralizzazione:</strong>
-                <List>
-                  <li>
-                    La blockchain di Bitcoin non è controllata da nessuna
-                    singola entità. È mantenuta da una rete globale di nodi, che
-                    verificano e registrano le transazioni, garantendo che il
-                    sistema sia resistente alla censura e agli attacchi.
-                  </li>
-                </List>
-              </li>
-              <li>
-                <strong>Trasparenza e Immutabilità:</strong>
-                <List>
-                  <li>
-                    Ogni transazione effettuata sulla rete Bitcoin è registrata
-                    pubblicamente e non può essere modificata o cancellata.
-                    Questo garantisce un alto livello di trasparenza e
-                    sicurezza.
-                  </li>
-                </List>
-              </li>
-              <li>
-                <strong>Proof of Work (PoW):</strong>
-                <List>
-                  <li>
-                    Il meccanismo di consenso utilizzato dalla blockchain di
-                    Bitcoin è il Proof of Work. I minatori risolvono complessi
-                    problemi matematici per aggiungere nuovi blocchi alla
-                    catena, ricevendo in cambio nuove unità di Bitcoin come
-                    ricompensa.
-                  </li>
-                </List>
-              </li>
-              <li>
-                <strong>Blocco e Catena di Blocchi:</strong>
-                <List>
-                  <li>
-                    Le transazioni vengono raccolte in blocchi, che vengono
-                    aggiunti alla catena di blocchi (blockchain). Ogni blocco
-                    contiene un riferimento crittografico al blocco precedente,
-                    creando una catena continua che garantisce la sicurezza e
-                    l&apos;integrità dei dati.
-                  </li>
-                </List>
-              </li>
-            </List>
-          </Accordion>
-          <Accordion buttonText="Funzionamento della Blockchain di Bitcoin">
-            <List ordered={true}>
-              <li>
-                <strong>Transazioni:</strong>
-                <List>
-                  <li>
-                    Gli utenti inviano Bitcoin ad altri utenti tramite
-                    transazioni, che vengono trasmesse alla rete e raccolte nei
-                    blocchi dai minatori.
-                  </li>
-                </List>
-              </li>
-              <li>
-                <strong>Mining:</strong>
-                <List>
-                  <li>
-                    I minatori competono per risolvere un problema matematico
-                    complesso. Il primo minatore che trova la soluzione valida
-                    aggiunge il blocco alla blockchain e riceve una ricompensa
-                    in Bitcoin.
-                  </li>
-                </List>
-              </li>
-              <li>
-                <strong>Verifica:</strong>
-                <List>
-                  <li>
-                    I nodi della rete verificano che le transazioni siano valide
-                    (es. nessuna doppia spesa) e che il blocco aggiunto sia
-                    corretto.
-                  </li>
-                </List>
-              </li>
-              <li>
-                <strong>Consenso:</strong>
-                <List>
-                  <li>
-                    Il consenso viene raggiunto quando la maggior parte dei nodi
-                    nella rete accetta il blocco aggiunto. Questo processo
-                    garantisce che solo le transazioni valide siano registrate
-                    nella blockchain.
-                  </li>
-                </List>
-              </li>
-            </List>
-          </Accordion>
-          <Accordion buttonText="Gas Fees (commissioni di transazione)">
-            <p>
-              Le gas fees, note anche come commissioni di transazione, sono i
-              costi associati all&apos;elaborazione delle transazioni sulla rete
-              Bitcoin. Queste commissioni vengono pagate dai mittenti delle
-              transazioni e sono ricevute dai minatori come ricompensa per la
-              verifica e l&apos;inclusione delle transazioni nei blocchi.
-            </p>
-            <p>
-              <strong>Dettagli sulle Gas Fees:</strong>
-            </p>
-            <List ordered={false}>
-              <li>
-                <strong>Determinazione delle Commissioni:</strong>{" "}
-                L&apos;ammontare delle gas fees può variare in base alla
-                congestione della rete. Durante periodi di alta domanda, le
-                commissioni possono aumentare significativamente, poiché gli
-                utenti competono per far includere le loro transazioni nei
-                prossimi blocchi.
-              </li>
-              <li>
-                <strong>Incentivi per i Minatori:</strong> Le gas fees
-                incentivano i minatori a verificare e aggiungere le transazioni
-                alla blockchain. Oltre alla ricompensa del blocco, le
-                commissioni di transazione rappresentano una parte significativa
-                del guadagno dei minatori.
-              </li>
-              <li>
-                <strong>Impatto sulle Transazioni:</strong> Gli utenti possono
-                scegliere di pagare commissioni più alte per avere le loro
-                transazioni processate più rapidamente. Le transazioni con
-                commissioni più basse possono subire ritardi.
-              </li>
-            </List>
-          </Accordion>
-          <Accordion buttonText="Vantaggi della Blockchain di Bitcoin">
-            <List ordered={false}>
-              <li>
-                <strong>Sicurezza:</strong> L&apos;uso di crittografia avanzata
-                e il meccanismo di consenso PoW rendono la blockchain
-                estremamente sicura.
-              </li>
-              <li>
-                <strong>Trasparenza:</strong> Tutte le transazioni sono
-                pubblicamente visibili, garantendo un elevato livello di
-                trasparenza.
-              </li>
-              <li>
-                <strong>Decentralizzazione:</strong> L&apos;assenza di
-                un&apos;autorità centrale elimina il rischio di censura e
-                manipolazione.
-              </li>
-            </List>
-          </Accordion>
-          <Accordion buttonText="Applicazioni della Blockchain di Bitcoin">
-            <p>
-              Oltre all&apos;uso come criptovaluta, la blockchain di Bitcoin ha
-              ispirato lo sviluppo di molte altre blockchain e criptovalute, e
-              ha aperto la strada a nuove tecnologie come gli smart contract e
-              le applicazioni decentralizzate (dApp).
-            </p>{" "}
-            <br />
-          </Accordion>
-          <p className="font-bold p-3">
-            Per ulteriori dettagli, puoi visitare{" "}
-            <Link
-              href={"https://bitcoin.org/"}
-              target="_blank"
-              className="underline"
-            >
-              Bitcoin.org
-            </Link>
-          </p>
-          <Accordion buttonText="Portafogli (”Wallet”) Supportati">
-            <CardContainer>
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[
-                  { icon: Placeholder, text: "" },
-                  { icon: Placeholder, text: "" },
-                ]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[
-                  { icon: Placeholder, text: "" },
-                  { icon: Placeholder, text: "" },
-                ]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[
-                  { icon: Placeholder, text: "" },
-                  { icon: Placeholder, text: "" },
-                ]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-            </CardContainer>
-          </Accordion>
+    <ProtectedRoute title="Bitcoin">
+      <MobileContainer>
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-4">
+            <Image src={bitcoinIcon} alt="Bitcoin" width={64} height={64} />
+            <div>
+              <SectionTitle>Bitcoin</SectionTitle>
+              <div className="flex flex-wrap gap-2 mt-2">
+                <span className="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm font-medium">
+                  Blockchain
+                </span>
+                <span className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-medium">
+                  PoW
+                </span>
+                <span className="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm font-medium">
+                  Store of Value
+                </span>
+                <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+                  Digital Gold
+                </span>
+              </div>
+            </div>
+          </div>
+          {/* Live Price Box */}
+          <div className="bg-gray-100 rounded-xl p-3 shadow-sm min-w-[180px]">
+            <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Prezzo Live</div>
+            
+            <div className="flex items-baseline gap-2 mb-2">
+              <span className="text-xl font-bold text-gray-900">
+                {loading ? '...' : `$${priceData.price?.toLocaleString('en-US', { maximumFractionDigits: 0 }) || '0'}`}
+              </span>
+              <span className="text-sm text-gray-500">BTC</span>
+            </div>
+            
+            <div className="flex items-center gap-2 mb-3">
+              {priceData.price_change_percentage_24h >= 0 ? (
+                <svg className="w-3 h-3 text-green-500" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M7 14l5-5 5 5z"/>
+                </svg>
+              ) : (
+                <svg className="w-3 h-3 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M7 10l5 5 5-5z"/>
+                </svg>
+              )}
+              <span className={`text-sm font-medium ${priceData.price_change_percentage_24h >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                {loading ? '...' : `${priceData.price_change_percentage_24h >= 0 ? '+' : ''}${priceData.price_change_percentage_24h?.toFixed(2) || '0.00'}%`}
+              </span>
+              <span className="text-xs text-gray-400">24h</span>
+            </div>
+            
+            <div className="space-y-1 text-xs">
+              <div className="text-gray-600">
+                Volume 24h ${priceData.volume_24h ? (priceData.volume_24h / 1e9).toFixed(1) + 'B' : '...'}
+              </div>
+              <div className="text-gray-600">
+                Market Cap ${priceData.market_cap ? (priceData.market_cap / 1e9).toFixed(1) + 'B' : '...'}
+              </div>
+            </div>
+          </div>
         </div>
-        <SectionTutorial
-          video={
-            "https://www.youtube.com/embed/K4TOrB7at0Y?si=vOBf2_Kw_RkdMPph"
-          }
-          tutorialLink="./bitcoin/tutorial"
-        />
-      </SectionBody>
-    </MobileContainer>
+
+        <SectionBody>
+          <strong>Bitcoin</strong> è la prima e più famosa criptovaluta, introdotta nel 2009 da un individuo 
+          o gruppo di individui sotto lo pseudonimo di Satoshi Nakamoto. Basata su una tecnologia blockchain 
+          rivoluzionaria, Bitcoin ha aperto la strada all'era delle criptovalute e delle applicazioni 
+          decentralizzate, rappresentando oggi il "digital gold" e una forma di riserva di valore digitale.
+        </SectionBody>
+
+        <SectionTitle>Caratteristiche Principali</SectionTitle>
+        <SectionBody>
+          <Accordion buttonText="Cos'è la Blockchain di Bitcoin?">
+            <p>Contenuto da aggiungere...</p>
+          </Accordion>
+
+          <Accordion buttonText="Meccanismo di Consenso">
+            <p>Contenuto da aggiungere...</p>
+          </Accordion>
+
+          <Accordion buttonText="Struttura della Blockchain">
+            <p>Contenuto da aggiungere...</p>
+          </Accordion>
+
+          <Accordion buttonText="Commissioni di Transazione">
+            <p>Contenuto da aggiungere...</p>
+          </Accordion>
+
+          <Accordion buttonText="Portafogli (Wallet) Supportati">
+            <p>Contenuto da aggiungere...</p>
+          </Accordion>
+
+          <Accordion buttonText="Sicurezza e Decentralizzazione">
+            <p>Contenuto da aggiungere...</p>
+          </Accordion>
+
+          <Accordion buttonText="Store of Value">
+            <p>Contenuto da aggiungere...</p>
+          </Accordion>
+        </SectionBody>
+
+        <SectionTitle>Ecosistema Bitcoin</SectionTitle>
+        <SectionBody>
+          <Accordion buttonText="Introduzione a Bitcoin">
+            <Accordion buttonText="Cos'è la Blockchain di Bitcoin?">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+            <Accordion buttonText="Meccanismo di Consenso">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+            <Accordion buttonText="Struttura della Blockchain">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+            <Accordion buttonText="Commissioni di Transazione">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+            <Accordion buttonText="Portafogli (Wallet) Supportati">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+            <Accordion buttonText="Sicurezza e Decentralizzazione">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+            <Accordion buttonText="Store of Value">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+          </Accordion>
+
+          <Accordion buttonText="Applicazioni su Bitcoin">
+            <Accordion buttonText="Lightning Network">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+            <Accordion buttonText="Ordinals e Inscriptions">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+            <Accordion buttonText="Taproot e Smart Contracts">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+            <Accordion buttonText="Bitcoin ETF">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+            <Accordion buttonText="Mining e Validazione">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+            <Accordion buttonText="Halving e Scarcity">
+              <p>Contenuto da aggiungere...</p>
+            </Accordion>
+          </Accordion>
+        </SectionBody>
+
+        <SectionTitle>Tutorial</SectionTitle>
+        <SectionBody>
+          <Accordion buttonText="Video Tutorial">
+            <div className="w-full max-w-2xl mx-auto">
+              <iframe
+                width="100%"
+                height="200"
+                src="https://www.youtube.com/embed/41JCpzvnn_0?si=8vQ7QwKjKjKjKjKj"
+                title="Bitcoin Tutorial"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                className="rounded-lg"
+              ></iframe>
+            </div>
+          </Accordion>
+        </SectionBody>
+
+        <SectionTitle>Informazioni Aggiuntive</SectionTitle>
+        <SectionBody>
+          <div className="bg-white rounded-xl p-6 border border-neutral-200 shadow-sm">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Reti Supportate */}
+              <div className="bg-white rounded-lg p-4 border border-neutral-200 shadow-sm">
+                <h3 className="font-semibold text-neutral-900 mb-3">Reti Supportate</h3>
+                <p className="text-neutral-600 text-sm mb-4">
+                  Bitcoin opera sulla sua blockchain nativa, la più sicura e decentralizzata al mondo.
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  <Image 
+                    src={bitcoinIcon} 
+                    alt="Bitcoin" 
+                    className="w-8 h-8 hover:scale-110 transition-transform duration-300"
+                    width={32}
+                    height={32}
+                  />
+                </div>
+              </div>
+
+              {/* Link Utili */}
+              <div className="bg-white rounded-lg p-4 border border-neutral-200 shadow-sm">
+                <h3 className="font-semibold text-neutral-900 mb-3">Link Utili</h3>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <span className="text-neutral-600">🌐</span>
+                    <a 
+                      href="https://bitcoin.org/" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 underline text-sm"
+                    >
+                      Sito Web
+                    </a>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-neutral-600">🐦</span>
+                    <a 
+                      href="https://x.com/bitcoin" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 underline text-sm"
+                    >
+                      Twitter/X
+                    </a>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-neutral-600">📊</span>
+                    <a 
+                      href="https://coinmarketcap.com/currencies/bitcoin/" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 underline text-sm"
+                    >
+                      Token BTC
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </SectionBody>
+      </MobileContainer>
+    </ProtectedRoute>
   );
 }

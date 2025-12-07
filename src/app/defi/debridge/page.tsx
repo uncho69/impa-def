@@ -5,12 +5,24 @@ import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 import Image from "next/image";
 import Placeholder from "@/assets/placeholder.svg";
+import debridgeIcon from "@/assets/debridge-logo.png";
+// Loghi delle reti supportate
+import ethereumIcon from "@/assets/ethereum-icon.svg";
+import solanaIcon from "@/assets/solana-sol-logo.svg";
+import arbitrumIcon from "@/assets/arbitrum-arb-logo.svg";
+import optimismIcon from "@/assets/optimism-ethereum-op-logo.svg";
+import baseIcon from "@/assets/base-logo.svg";
+import lineaIcon from "@/assets/linea-logo.svg";
+import zksyncIcon from "@/assets/zksynk-logo.png";
+import polygonIcon from "@/assets/polygon-matic-logo.svg";
+import blastIcon from "@/assets/blast-logo.webp";
+import avalancheIcon from "@/assets/avalanche-avax-logo.svg";
 
 export default function DeBridge() {
   return (
     <MobileContainer>
         <div className="flex items-center gap-4 mb-6">
-          <Image src={Placeholder} alt="deBridge" width={64} height={64} />
+          <Image src={debridgeIcon} alt="deBridge" width={64} height={64} />
           <div>
             <SectionTitle>deBridge</SectionTitle>
             <div className="flex flex-wrap gap-2 mt-2">
@@ -117,12 +129,21 @@ export default function DeBridge() {
         <SectionBody>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-white rounded-lg border border-neutral-200 p-6">
-              <h3 className="font-bold text-lg mb-3 text-neutral-800">Caratteristiche Tecniche</h3>
-              <div className="flex flex-wrap gap-2">
-                <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm">Decentralized</span>
-                <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm">Cross-Chain</span>
-                <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm">Low Fees</span>
-                <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm">Smart Contracts</span>
+              <h3 className="font-bold text-lg mb-3 text-neutral-800">Reti Supportate</h3>
+              <p className="text-neutral-600 mb-4 text-sm">
+                deBridge supporta un'ampia gamma di blockchain per trasferimenti cross-chain sicuri e decentralizzati.
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <Image src={ethereumIcon} alt="Ethereum" className="w-8 h-8 hover:scale-110 transition-transform duration-300" />
+                <Image src={solanaIcon} alt="Solana" className="w-8 h-8 hover:scale-110 transition-transform duration-300" />
+                <Image src={arbitrumIcon} alt="Arbitrum" className="w-8 h-8 hover:scale-110 transition-transform duration-300" />
+                <Image src={optimismIcon} alt="Optimism" className="w-8 h-8 hover:scale-110 transition-transform duration-300" />
+                <Image src={baseIcon} alt="Base" className="w-8 h-8 hover:scale-110 transition-transform duration-300" />
+                <Image src={lineaIcon} alt="Linea" className="w-8 h-8 hover:scale-110 transition-transform duration-300" />
+                <Image src={zksyncIcon} alt="zkSync" className="w-8 h-8 hover:scale-110 transition-transform duration-300" />
+                <Image src={polygonIcon} alt="Polygon" className="w-8 h-8 hover:scale-110 transition-transform duration-300" />
+                <Image src={blastIcon} alt="Blast" className="w-8 h-8 hover:scale-110 transition-transform duration-300" />
+                <Image src={avalancheIcon} alt="Avalanche" className="w-8 h-8 hover:scale-110 transition-transform duration-300" />
               </div>
             </div>
             <div className="bg-white rounded-lg border border-neutral-200 p-6">

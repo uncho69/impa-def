@@ -1,9 +1,9 @@
 import Link from "next/link";
 
-export function BackToHome() {
+export function BackToHome({ href = "/", label = "Torna alla Homepage" }: { href?: string; label?: string }) {
   return (
     <Link 
-      href="/"
+      href={href}
       className="inline-flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gradient-to-r hover:from-primary-50 hover:to-secondary-50 transition-all duration-200 group"
     >
       <svg 
@@ -20,7 +20,7 @@ export function BackToHome() {
         />
       </svg>
       <span className="gradient-text font-semibold text-sm hover:opacity-80 transition-opacity">
-        Torna alla Homepage
+        {label}
       </span>
     </Link>
   );
