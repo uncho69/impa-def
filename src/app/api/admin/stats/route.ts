@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
 import { auth } from '@clerk/nextjs/server';
-
-const prisma = new PrismaClient();
+import { db } from '@/lib/db';
+import { news } from '@/lib/db/schema';
+import { eq, sql, count } from 'drizzle-orm';
 
 async function checkAdmin() {
   try {
@@ -28,26 +28,41 @@ export async function GET() {
         { status: 401 }
       );
     }
+    
     // Statistiche totali
-    const total = await prisma.news.count();
-    const published = await prisma.news.count({ where: { status: 'PUBLISHED' } });
-    const drafts = await prisma.news.count({ where: { status: 'DRAFT' } });
+    const totalResult = await db.select({ count: count() }).from(news);
+    const total = totalResult[0]?.count || 0;
+    
+    const publishedResult = await db
+      .select({ count: count() })
+      .from(news)
+      .where(eq(news.status, 'PUBLISHED'));
+    const published = publishedResult[0]?.count || 0;
+    
+    const draftsResult = await db
+      .select({ count: count() })
+      .from(news)
+      .where(eq(news.status, 'DRAFT'));
+    const drafts = draftsResult[0]?.count || 0;
     
     // Somma delle visualizzazioni
-    const viewsResult = await prisma.news.aggregate({
-      _sum: { views: true }
-    });
-    const views = viewsResult._sum.views || 0;
+    const viewsResult = await db
+      .select({ totalViews: sql<number>`COALESCE(SUM(${news.views}), 0)` })
+      .from(news);
+    const views = Number(viewsResult[0]?.totalViews || 0);
 
     // Articoli per categoria
-    const categoryCounts = await prisma.news.groupBy({
-      by: ['category'],
-      _count: { category: true }
-    });
+    const categoryCounts = await db
+      .select({
+        category: news.category,
+        count: count(),
+      })
+      .from(news)
+      .groupBy(news.category);
 
     const byCategory: { [key: string]: number } = {};
-    categoryCounts.forEach((item: any) => {
-      byCategory[item.category] = item._count.category;
+    categoryCounts.forEach((item) => {
+      byCategory[item.category] = item.count;
     });
 
     return NextResponse.json({

@@ -1,21 +1,21 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { db } from '@/lib/db';
+import { whatsNewCard } from '@/lib/db/schema';
+import { eq, and, asc, desc } from 'drizzle-orm';
 
 // GET - Recupera solo le card per il banner (showInLanding: true)
 export async function GET() {
   try {
-    const cards = await prisma.whatsNewCard.findMany({
-      where: {
-        isActive: true,
-        showInLanding: true
-      },
-      orderBy: [
-        { order: 'asc' },
-        { createdAt: 'desc' }
-      ]
-    });
+    const cards = await db
+      .select()
+      .from(whatsNewCard)
+      .where(
+        and(
+          eq(whatsNewCard.isActive, 1),
+          eq(whatsNewCard.showInLanding, 1)
+        )
+      )
+      .orderBy(asc(whatsNewCard.order), desc(whatsNewCard.createdAt));
 
     return NextResponse.json(cards);
   } catch (error) {

@@ -23,6 +23,7 @@
     "db:check-impact": "npx tsx scripts/check-db-impact.ts"
   },
   "dependencies": {
+    "@clerk/clerk-sdk-node": "^4.13.23",
     "@clerk/nextjs": "^6.30.1",
     "@heroicons/react": "^2.2.0",
     "bootstrap": "^5.3.3",

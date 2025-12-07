@@ -229,7 +229,7 @@ export const verificationTokens = pgTable('verification_tokens', {
     index('verification_tokens_user_id_idx').on(table.userId),
     index('verification_tokens_expires_at_idx').on(table.expiresAt),
     unique('verification_tokens_token_unique').on(table.token),
-    unique('verification_tokens_identifier_type_unique').on(table.identifier, table.type),
+    unique('verification_tokens_identifier_type_unique').on(table.identifier, table.token, table.type),
     check('verification_tokens_used_check', sql`${table.used} IN (0, 1)`),
 ]);
 
@@ -402,6 +402,57 @@ export const userRoles = pgTable('user_roles', {
     index('user_roles_user_id_idx').on(table.userId),
     index('user_roles_role_idx').on(table.role),
     check('user_roles_role_check', sql`${table.role} IN ('admin', 'moderator', 'participant', 'base_user')`),
+]);
+
+// News table
+export const news = pgTable('news', {
+    id: varchar('id', { length: 255 }).primaryKey(),
+    title: varchar('title', { length: 500 }).notNull(),
+    summary: text('summary').notNull(),
+    content: text('content').notNull(),
+    category: varchar('category', { length: 50 }).notNull(), // GENERAL, DEFI, AIRDROPS, etc.
+    author: varchar('author', { length: 255 }).notNull(),
+    authorEmail: varchar('author_email', { length: 255 }).notNull(),
+    imageUrl: varchar('image_url', { length: 500 }),
+    featured: smallint('featured').notNull().default(0),
+    status: varchar('status', { length: 50 }).notNull().default('DRAFT'), // DRAFT, PUBLISHED, ARCHIVED
+    readTime: varchar('read_time', { length: 50 }).notNull(),
+    tags: text('tags'), // JSON array stored as text
+    publishedAt: timestamp('published_at'),
+    views: integer('views').notNull().default(0),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => [
+    index('news_category_idx').on(table.category),
+    index('news_status_idx').on(table.status),
+    index('news_featured_idx').on(table.featured),
+    index('news_published_at_idx').on(table.publishedAt),
+    index('news_created_at_idx').on(table.createdAt),
+    check('news_featured_check', sql`${table.featured} IN (0, 1)`),
+    check('news_status_check', sql`${table.status} IN ('DRAFT', 'PUBLISHED', 'ARCHIVED')`),
+    check('news_views_check', sql`${table.views} >= 0`),
+]);
+
+// WhatsNewCard table
+export const whatsNewCard = pgTable('whats_new_card', {
+    id: varchar('id', { length: 255 }).primaryKey(),
+    title: varchar('title', { length: 255 }).notNull(),
+    description: text('description').notNull(),
+    category: varchar('category', { length: 50 }).notNull().default('feature'),
+    imageUrl: varchar('image_url', { length: 500 }),
+    link: varchar('link', { length: 500 }),
+    isActive: smallint('is_active').notNull().default(1),
+    showInLanding: smallint('show_in_landing').notNull().default(0),
+    order: integer('order').notNull().default(0),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => [
+    index('whats_new_card_is_active_idx').on(table.isActive),
+    index('whats_new_card_show_in_landing_idx').on(table.showInLanding),
+    index('whats_new_card_order_idx').on(table.order),
+    index('whats_new_card_created_at_idx').on(table.createdAt),
+    check('whats_new_card_is_active_check', sql`${table.isActive} IN (0, 1)`),
+    check('whats_new_card_show_in_landing_check', sql`${table.showInLanding} IN (0, 1)`),
 ]);
 
 // Relations

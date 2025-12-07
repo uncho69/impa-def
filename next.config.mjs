@@ -12,18 +12,18 @@ const nextConfig = {
               key: "Content-Security-Policy",
               value: `
                 default-src 'self';
-                script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.privy.io https://privy.imparodefi.xyz https://*.clerk.accounts.dev https://*.clerk.com;
-                style-src 'self' 'unsafe-inline' https://*.privy.io https://privy.imparodefi.xyz https://*.clerk.accounts.dev https://*.clerk.com;
-                img-src 'self' data: blob: https://*.privy.io https://privy.imparodefi.xyz https://*.clerk.accounts.dev https://*.clerk.com;
-                font-src 'self' https://*.privy.io https://privy.imparodefi.xyz https://*.clerk.accounts.dev https://*.clerk.com;
+                script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.privy.io https://privy.imparodefi.xyz https://*.clerk.accounts.dev https://*.clerk.com https://id-bot-eight.vercel.app;
+                style-src 'self' 'unsafe-inline' https://*.privy.io https://privy.imparodefi.xyz https://*.clerk.accounts.dev https://*.clerk.com https://id-bot-eight.vercel.app;
+                img-src 'self' data: blob: https://*.privy.io https://privy.imparodefi.xyz https://*.clerk.accounts.dev https://*.clerk.com https://id-bot-eight.vercel.app;
+                font-src 'self' https://*.privy.io https://privy.imparodefi.xyz https://*.clerk.accounts.dev https://*.clerk.com https://id-bot-eight.vercel.app;
                 object-src 'none';
                 base-uri 'self';
                 form-action 'self';
                 frame-ancestors 'none';
-                child-src https://*.privy.io https://privy.imparodefi.xyz https://challenges.cloudflare.com https://*.clerk.accounts.dev https://*.clerk.com;
-                frame-src https://*.privy.io https://privy.imparodefi.xyz https://challenges.cloudflare.com https://*.clerk.accounts.dev https://*.clerk.com;
-                connect-src 'self' https://*.privy.io https://privy.imparodefi.xyz https://challenges.cloudflare.com wss://relay.walletconnect.com wss://relay.walletconnect.org wss://www.walletlink.org https://*.rpc.privy.systems https://explorer-api.walletconnect.com https://*.clerk.accounts.dev https://*.clerk.com;
-                worker-src 'self' https://*.privy.io https://privy.imparodefi.xyz https://*.clerk.accounts.dev https://*.clerk.com;
+                child-src https://*.privy.io https://privy.imparodefi.xyz https://challenges.cloudflare.com https://*.clerk.accounts.dev https://*.clerk.com https://id-bot-eight.vercel.app;
+                frame-src https://*.privy.io https://privy.imparodefi.xyz https://challenges.cloudflare.com https://*.clerk.accounts.dev https://*.clerk.com https://id-bot-eight.vercel.app;
+                connect-src 'self' https://*.privy.io https://privy.imparodefi.xyz https://challenges.cloudflare.com wss://relay.walletconnect.com wss://relay.walletconnect.org wss://www.walletlink.org https://*.rpc.privy.systems https://explorer-api.walletconnect.com https://*.clerk.accounts.dev https://*.clerk.com https://id-bot-eight.vercel.app;
+                worker-src 'self' https://*.privy.io https://privy.imparodefi.xyz https://*.clerk.accounts.dev https://*.clerk.com https://id-bot-eight.vercel.app;
                 manifest-src 'self';
               `.replace(/\s+/g, ' ').trim(),
             },
@@ -40,18 +40,18 @@ const nextConfig = {
             key: "Content-Security-Policy",
               value: `
                 default-src 'self';
-                script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.privy.io https://privy.imparodefi.xyz https://*.clerk.accounts.dev https://*.clerk.com;
-                style-src 'self' 'unsafe-inline' https://*.privy.io https://privy.imparodefi.xyz https://*.clerk.accounts.dev https://*.clerk.com;
-                img-src 'self' data: blob: https://*.privy.io https://privy.imparodefi.xyz https://*.clerk.accounts.dev https://*.clerk.com;
-                font-src 'self' https://*.privy.io https://privy.imparodefi.xyz https://*.clerk.accounts.dev https://*.clerk.com;
+                script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.privy.io https://privy.imparodefi.xyz https://*.clerk.accounts.dev https://*.clerk.com https://id-bot-eight.vercel.app;
+                style-src 'self' 'unsafe-inline' https://*.privy.io https://privy.imparodefi.xyz https://*.clerk.accounts.dev https://*.clerk.com https://id-bot-eight.vercel.app;
+                img-src 'self' data: blob: https://*.privy.io https://privy.imparodefi.xyz https://*.clerk.accounts.dev https://*.clerk.com https://id-bot-eight.vercel.app;
+                font-src 'self' https://*.privy.io https://privy.imparodefi.xyz https://*.clerk.accounts.dev https://*.clerk.com https://id-bot-eight.vercel.app;
                 object-src 'none';
                 base-uri 'self';
                 form-action 'self';
                 frame-ancestors 'none';
-                child-src https://*.privy.io https://privy.imparodefi.xyz https://challenges.cloudflare.com https://*.clerk.accounts.dev https://*.clerk.com;
-                frame-src https://*.privy.io https://privy.imparodefi.xyz https://challenges.cloudflare.com https://*.clerk.accounts.dev https://*.clerk.com;
-                connect-src 'self' https://*.privy.io https://privy.imparodefi.xyz https://challenges.cloudflare.com wss://relay.walletconnect.com wss://relay.walletconnect.org wss://www.walletlink.org https://*.rpc.privy.systems https://explorer-api.walletconnect.com https://*.clerk.accounts.dev https://*.clerk.com;
-                worker-src 'self' https://*.privy.io https://privy.imparodefi.xyz https://*.clerk.accounts.dev https://*.clerk.com;
+                child-src https://*.privy.io https://privy.imparodefi.xyz https://challenges.cloudflare.com https://*.clerk.accounts.dev https://*.clerk.com https://id-bot-eight.vercel.app;
+                frame-src https://*.privy.io https://privy.imparodefi.xyz https://challenges.cloudflare.com https://*.clerk.accounts.dev https://*.clerk.com https://id-bot-eight.vercel.app;
+                connect-src 'self' https://*.privy.io https://privy.imparodefi.xyz https://challenges.cloudflare.com wss://relay.walletconnect.com wss://relay.walletconnect.org wss://www.walletlink.org https://*.rpc.privy.systems https://explorer-api.walletconnect.com https://*.clerk.accounts.dev https://*.clerk.com https://id-bot-eight.vercel.app;
+                worker-src 'self' https://*.privy.io https://privy.imparodefi.xyz https://*.clerk.accounts.dev https://*.clerk.com https://id-bot-eight.vercel.app;
                 manifest-src 'self';
               `.replace(/\s+/g, ' ').trim(),
           },

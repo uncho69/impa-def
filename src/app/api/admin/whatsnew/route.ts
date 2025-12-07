@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
 import { auth } from '@clerk/nextjs/server';
-
-const prisma = new PrismaClient();
+import { db } from '@/lib/db';
+import { whatsNewCard } from '@/lib/db/schema';
+import { asc, desc } from 'drizzle-orm';
 
 // Lista degli admin autorizzati
 const ADMIN_EMAILS = [
@@ -36,12 +36,10 @@ export async function GET() {
       return NextResponse.json({ error: 'Non autorizzato' }, { status: 401 });
     }
 
-    const cards = await prisma.whatsNewCard.findMany({
-      orderBy: [
-        { order: 'asc' },
-        { createdAt: 'desc' }
-      ]
-    });
+    const cards = await db
+      .select()
+      .from(whatsNewCard)
+      .orderBy(asc(whatsNewCard.order), desc(whatsNewCard.createdAt));
 
     return NextResponse.json(cards);
   } catch (error) {
@@ -66,20 +64,23 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Titolo e descrizione sono obbligatori' }, { status: 400 });
     }
 
-    const card = await prisma.whatsNewCard.create({
-      data: {
+    const id = crypto.randomUUID();
+    const card = await db
+      .insert(whatsNewCard)
+      .values({
+        id,
         title,
         description,
         category: category || 'feature',
-        imageUrl: null,
+        imageUrl: imageUrl || null,
         link: link || null,
-        isActive: isActive !== undefined ? isActive : true,
-        showInLanding: showInLanding !== undefined ? showInLanding : false,
-        order: order || 0
-      }
-    });
+        isActive: isActive !== undefined ? (isActive ? 1 : 0) : 1,
+        showInLanding: showInLanding !== undefined ? (showInLanding ? 1 : 0) : 0,
+        order: order || 0,
+      })
+      .returning();
 
-    return NextResponse.json(card, { status: 201 });
+    return NextResponse.json(card[0], { status: 201 });
   } catch (error) {
     console.error('Errore nella creazione card novità:', error);
     return NextResponse.json({ error: 'Errore interno del server' }, { status: 500 });

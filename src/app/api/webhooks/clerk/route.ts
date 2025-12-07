@@ -36,13 +36,22 @@ function getWebhookSecret(): string {
 }
 
 export async function POST(request: NextRequest) {
+  console.log('🔔 Webhook received at:', new Date().toISOString());
+  
   try {
     const headerPayload = await headers();
     const svix_id = headerPayload.get('svix-id');
     const svix_timestamp = headerPayload.get('svix-timestamp');
     const svix_signature = headerPayload.get('svix-signature');
 
+    console.log('📋 Webhook headers:', {
+      hasSvixId: !!svix_id,
+      hasSvixTimestamp: !!svix_timestamp,
+      hasSvixSignature: !!svix_signature,
+    });
+
     if (!svix_id || !svix_timestamp || !svix_signature) {
+      console.error('❌ Missing svix headers');
       return NextResponse.json(
         { error: 'Error occurred -- no svix headers' },
         { status: 400 }
@@ -50,6 +59,7 @@ export async function POST(request: NextRequest) {
     }
 
     const payload = await request.text();
+    console.log('📦 Payload length:', payload.length, 'bytes');
 
     let webhookSecret: string;
     let wh: Webhook;
@@ -104,8 +114,10 @@ export async function POST(request: NextRequest) {
     }
 
     const eventType = evt.type;
+    console.log(`📨 Event type: ${eventType}`);
 
     if (eventType === 'user.created') {
+      console.log('👤 Processing user.created event...');
       const { id: clerkId, email_addresses, username } = evt.data;
 
       const existingAuthAccount = await db
@@ -131,37 +143,61 @@ export async function POST(request: NextRequest) {
 
       const userId = clerkId;
 
-      await db.insert(users).values({
-        id: userId,
-        email: email || null,
-        username: username || null,
-        isActive: 1,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
+      try {
+        await db.insert(users).values({
+          id: userId,
+          email: email || null,
+          username: username || null,
+          isActive: 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        });
 
-      await db.insert(authAccounts).values({
-        userId: userId,
-        provider: 'clerk',
-        providerAccountId: clerkId,
-        providerUserId: clerkId,
-        email: email || null,
-        isActive: 1,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
+        await db.insert(authAccounts).values({
+          userId: userId,
+          provider: 'clerk',
+          providerAccountId: clerkId,
+          providerUserId: clerkId,
+          email: email || null,
+          isActive: 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        });
 
-      await db.insert(userRoles).values({
-        userId: userId,
-        role: 'base_user',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
+        await db.insert(userRoles).values({
+          userId: userId,
+          role: 'base_user',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        });
 
-      return NextResponse.json(
-        { message: 'User created successfully', userId },
-        { status: 201 }
-      );
+        console.log(`✅ User created successfully via webhook: ${userId} (${email || 'no email'})`);
+        return NextResponse.json(
+          { message: 'User created successfully', userId },
+          { status: 201 }
+        );
+      } catch (dbError: any) {
+        console.error('❌ Database error creating user:', dbError);
+        // Check if it's a unique constraint violation
+        if (dbError?.code === '23505' || dbError?.message?.includes('unique')) {
+          console.log(`⚠️  User ${userId} might already exist, checking...`);
+          // Try to find existing user
+          const existingUser = await db
+            .select()
+            .from(users)
+            .where(eq(users.id, userId))
+            .limit(1);
+          
+          if (existingUser.length > 0) {
+            console.log(`✅ User ${userId} already exists in database`);
+            return NextResponse.json(
+              { message: 'User already exists', userId },
+              { status: 200 }
+            );
+          }
+        }
+        throw dbError; // Re-throw to be caught by outer try-catch
+      }
     }
 
     if (eventType === 'user.updated') {
@@ -256,14 +292,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    console.log(`ℹ️  Unhandled event type: ${eventType}`);
     return NextResponse.json(
       { message: 'Webhook received', eventType },
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error processing webhook:', error);
+    console.error('❌ Error processing webhook:', error);
+    if (error instanceof Error) {
+      console.error('   Error message:', error.message);
+      console.error('   Error stack:', error.stack);
+    }
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }

@@ -8,10 +8,10 @@ import Image from "next/image";
 
 export default function Manuale() {
   return (
-    <PageLayout 
-      title="Manuale A-Z" 
-      description="Guida completa al mondo Web3, crypto e DeFi dalla A alla Z"
-    >
+      <PageLayout 
+        title="Manuale A-Z" 
+        description="Guida completa al mondo Web3, crypto e DeFi dalla A alla Z"
+      >
         <div className="bg-white rounded-2xl shadow-lg p-8 border border-neutral-200 mb-8">
               <p className="text-neutral-900 mb-6">
                 Cosa sono le criptovalute? Cos&apos;è il metaverso, il mondo Web3, la DeFi e l&apos;economia digitale?
@@ -239,41 +239,41 @@ export default function Manuale() {
               <p className="text-neutral-900 mb-6">
                 Ci sono diverse Blockchain, ognuna per un caso specifico. Ma non spaventatevi, perché a noi interessano al massimo una dozzina di queste, tra cui alcune Layer2 di Ethereum ed i loro ecosistemi di progetti.
               </p>
-              
+          
               <div className="mb-4">
                 <Accordion buttonText={"Cos'è una Blockchain?"}>
                 <p className="p-5 text-neutral-900">
-                  Una blockchain è una tecnologia che funziona come un registro
-                  digitale distribuito su una rete di computer. Ogni dato o
-                  transazione inserito viene organizzato in blocchi collegati tra loro
-                  in ordine cronologico tramite crittografia, garantendo
-                  l&apos;immutabilità dei dati.
-                  <br />
-                  <br />
-                  Le blockchain sono decentralizzate, il che significa che non
-                  c&apos;è un&apos;autorità centrale che gestisce le informazioni,
-                  rendendo i dati sicuri, trasparenti e resistenti alla manipolazione.
-                  Questo è uno dei motivi per cui la blockchain è alla base di molte
-                  criptovalute, come Bitcoin, che garantiscono sovranità monetaria:
-                  permettono a chiunque di possedere, trasferire e gestire il proprio
-                  denaro senza bisogno di banche o intermediari, offrendo una forma di
-                  libertà economica indipendente da governi o istituzioni.
-                  <br />
-                  <br />
-                  Oltre alla funzione monetaria, la blockchain è anche una piattaforma
-                  per creare applicazioni decentralizzate (dApp) grazie a reti come
-                  Ethereum. Le dApp operano su contratti intelligenti, ovvero
-                  programmi autoeseguibili che funzionano su blockchain senza il
-                  bisogno di intermediari. Ethereum, ad esempio, consente agli
-                  sviluppatori di creare soluzioni decentralizzate che spaziano dalla
-                  finanza alla gestione di identità digitali, garantendo trasparenza e
-                  sicurezza senza l&apos;intervento di un&apos;autorità centrale.
-                  Questa tecnologia sta trasformando settori come quello finanziario,
-                  legale e artistico, aprendo la strada a nuovi modelli di governance,
-                  economia e innovazione.
-                  <br />
-                </p>
-              </Accordion>
+              Una blockchain è una tecnologia che funziona come un registro
+              digitale distribuito su una rete di computer. Ogni dato o
+              transazione inserito viene organizzato in blocchi collegati tra loro
+              in ordine cronologico tramite crittografia, garantendo
+              l&apos;immutabilità dei dati.
+              <br />
+              <br />
+              Le blockchain sono decentralizzate, il che significa che non
+              c&apos;è un&apos;autorità centrale che gestisce le informazioni,
+              rendendo i dati sicuri, trasparenti e resistenti alla manipolazione.
+              Questo è uno dei motivi per cui la blockchain è alla base di molte
+              criptovalute, come Bitcoin, che garantiscono sovranità monetaria:
+              permettono a chiunque di possedere, trasferire e gestire il proprio
+              denaro senza bisogno di banche o intermediari, offrendo una forma di
+              libertà economica indipendente da governi o istituzioni.
+              <br />
+              <br />
+              Oltre alla funzione monetaria, la blockchain è anche una piattaforma
+              per creare applicazioni decentralizzate (dApp) grazie a reti come
+              Ethereum. Le dApp operano su contratti intelligenti, ovvero
+              programmi autoeseguibili che funzionano su blockchain senza il
+              bisogno di intermediari. Ethereum, ad esempio, consente agli
+              sviluppatori di creare soluzioni decentralizzate che spaziano dalla
+              finanza alla gestione di identità digitali, garantendo trasparenza e
+              sicurezza senza l&apos;intervento di un&apos;autorità centrale.
+              Questa tecnologia sta trasformando settori come quello finanziario,
+              legale e artistico, aprendo la strada a nuovi modelli di governance,
+              economia e innovazione.
+              <br />
+            </p>
+          </Accordion>
               </div>
               
               <div className="mt-4">
@@ -292,30 +292,30 @@ export default function Manuale() {
             <p className="text-neutral-900 mb-6">
               Ogni Blockchain ha il proprio ecosistema di applicazioni, ed è importante saper riconoscere quali sono le migliori per poter gestire al meglio le proprio risorse (tempo e denaro).
             </p>
-            
-            <Accordion
-              buttonText={"Cosa sono le applicazioni decentralizzate (DeFi)"}
+
+          <Accordion
+            buttonText={"Cosa sono le applicazioni decentralizzate (DeFi)"}
               className="mb-4"
-            >
+          >
               <p className="p-5 text-neutral-900">
-                Le applicazioni decentralizzate (o dApp) sono programmi che
-                funzionano su una rete blockchain, invece che su server
-                centralizzati. A differenza delle applicazioni tradizionali, che
-                dipendono da un&apos;entità centrale (come una società o un server),
-                le dApp operano su reti distribuite, rendendole più sicure,
-                trasparenti e resistenti alla censura. Le dApp utilizzano smart
-                contract, che sono contratti programmabili auto-eseguibili su
-                blockchain. Una volta impostati, questi contratti funzionano
-                autonomamente secondo le regole stabilite nel codice, senza bisogno
-                di intermediari per far rispettare gli accordi. Un esempio noto di
-                dApp è Uniswap, un exchange decentralizzato che permette agli utenti
-                di scambiare criptovalute direttamente tra di loro, senza bisogno di
-                piattaforme centralizzate. Altri esempi includono applicazioni per
-                la finanza decentralizzata (DeFi), giochi blockchain, marketplace
-                NFT e molto altro.
-              </p>
-            </Accordion>
-            
+              Le applicazioni decentralizzate (o dApp) sono programmi che
+              funzionano su una rete blockchain, invece che su server
+              centralizzati. A differenza delle applicazioni tradizionali, che
+              dipendono da un&apos;entità centrale (come una società o un server),
+              le dApp operano su reti distribuite, rendendole più sicure,
+              trasparenti e resistenti alla censura. Le dApp utilizzano smart
+              contract, che sono contratti programmabili auto-eseguibili su
+              blockchain. Una volta impostati, questi contratti funzionano
+              autonomamente secondo le regole stabilite nel codice, senza bisogno
+              di intermediari per far rispettare gli accordi. Un esempio noto di
+              dApp è Uniswap, un exchange decentralizzato che permette agli utenti
+              di scambiare criptovalute direttamente tra di loro, senza bisogno di
+              piattaforme centralizzate. Altri esempi includono applicazioni per
+              la finanza decentralizzata (DeFi), giochi blockchain, marketplace
+              NFT e molto altro.
+            </p>
+          </Accordion>
+          
             <div className="mt-4">
               <Link href="/defi">
                 <div className="inline-flex items-center gap-2 text-blue-600 font-bold text-lg hover:text-blue-700 transition-colors cursor-pointer">
@@ -905,11 +905,11 @@ export default function Manuale() {
                   <p className="text-blue-800 font-medium">
                     Seguendo questi consigli, puoi ridurre significativamente il rischio di cadere vittima di truffe nel mondo delle criptovalute e navigare questo spazio con maggiore sicurezza.
                   </p>
-                </div>
-              </div>
+            </div>
+        </div>
             </Accordion>
           </div>
 
-    </PageLayout>
+      </PageLayout>
   );
 }

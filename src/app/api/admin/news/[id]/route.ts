@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
 import { auth } from '@clerk/nextjs/server';
-
-const prisma = new PrismaClient();
+import { db } from '@/lib/db';
+import { news } from '@/lib/db/schema';
+import { eq } from 'drizzle-orm';
+import { updateNews, getNewsById, deleteNews } from '@/lib/news';
 
 async function checkAdmin() {
   try {
@@ -32,18 +33,16 @@ export async function GET(
       );
     }
 
-    const news = await prisma.news.findUnique({
-      where: { id: params.id }
-    });
+    const newsItem = await getNewsById(params.id);
 
-    if (!news) {
+    if (!newsItem) {
       return NextResponse.json(
         { error: 'Articolo non trovato' },
         { status: 404 }
       );
     }
 
-    return NextResponse.json(news);
+    return NextResponse.json(newsItem);
   } catch (error: any) {
     console.error('Errore nel recupero articolo:', error);
     return NextResponse.json(
@@ -68,37 +67,38 @@ export async function PUT(
 
     const data = await request.json();
     
-    const updateData: any = {
-      title: data.title,
-      summary: data.summary,
-      content: data.content,
-      category: data.category,
-      author: data.author,
-      authorEmail: data.authorEmail,
-      imageUrl: data.imageUrl,
-      featured: data.featured,
-      status: data.status,
-      readTime: data.readTime,
-      tags: data.tags || []
-    };
+    const updateData: any = {};
+    if (data.title !== undefined) updateData.title = data.title;
+    if (data.summary !== undefined) updateData.summary = data.summary;
+    if (data.content !== undefined) updateData.content = data.content;
+    if (data.category !== undefined) updateData.category = data.category;
+    if (data.author !== undefined) updateData.author = data.author;
+    if (data.authorEmail !== undefined) updateData.authorEmail = data.authorEmail;
+    if (data.imageUrl !== undefined) updateData.imageUrl = data.imageUrl;
+    if (data.featured !== undefined) updateData.featured = Boolean(data.featured); // Convert to boolean, updateNews will convert to 0/1
+    if (data.status !== undefined) updateData.status = data.status;
+    if (data.readTime !== undefined) updateData.readTime = data.readTime;
+    if (data.tags !== undefined) updateData.tags = data.tags;
 
     // Se l'articolo viene pubblicato per la prima volta
     if (data.status === 'PUBLISHED') {
-      const existing = await prisma.news.findUnique({
-        where: { id: params.id }
-      });
+      const existing = await getNewsById(params.id);
       
-      if (existing?.status !== 'PUBLISHED') {
+      if (existing && existing.status !== 'PUBLISHED') {
         updateData.publishedAt = new Date();
       }
     }
 
-    const news = await prisma.news.update({
-      where: { id: params.id },
-      data: updateData
-    });
+    const newsItem = await updateNews(params.id, updateData);
 
-    return NextResponse.json(news);
+    if (!newsItem) {
+      return NextResponse.json(
+        { error: 'Articolo non trovato' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(newsItem);
   } catch (error: any) {
     console.error('Errore nell\'aggiornamento articolo:', error);
     return NextResponse.json(
@@ -121,9 +121,7 @@ export async function DELETE(
       );
     }
 
-    await prisma.news.delete({
-      where: { id: params.id }
-    });
+    await deleteNews(params.id);
 
     return NextResponse.json({ success: true });
   } catch (error: any) {

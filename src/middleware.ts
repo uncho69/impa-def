@@ -14,7 +14,6 @@ const publicRoutes = [
   '/api/leaderboards(.*)',
   '/api/campaigns(.*)',
   '/api/admin(.*)',
-  '/api/siwe(.*)',
   '/sign-in(.*)',
   '/sign-up(.*)',
   '/registrati(.*)',

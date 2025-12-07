@@ -1,20 +1,16 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { db } from '@/lib/db';
+import { whatsNewCard } from '@/lib/db/schema';
+import { eq, asc, desc } from 'drizzle-orm';
 
 // GET - Recupera tutte le card attive delle novità
 export async function GET() {
   try {
-    const cards = await prisma.whatsNewCard.findMany({
-      where: {
-        isActive: true
-      },
-      orderBy: [
-        { order: 'asc' },
-        { createdAt: 'desc' }
-      ]
-    });
+    const cards = await db
+      .select()
+      .from(whatsNewCard)
+      .where(eq(whatsNewCard.isActive, 1))
+      .orderBy(asc(whatsNewCard.order), desc(whatsNewCard.createdAt));
 
     return NextResponse.json(cards);
   } catch (error) {

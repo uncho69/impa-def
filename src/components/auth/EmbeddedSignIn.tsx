@@ -29,7 +29,6 @@ export function EmbeddedSignIn() {
             formHeaderSubtitle: "hidden",
             footer: "hidden",
             socialButtonsBlockButton__github: "hidden",
-            socialButtonsBlockButton__google: "hidden",
             socialButtonsBlockButton__apple: "hidden",
             socialButtonsBlockButton__microsoft: "hidden",
             socialButtonsBlockButton__facebook: "hidden",

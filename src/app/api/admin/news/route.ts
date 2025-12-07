@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
 import { auth } from '@clerk/nextjs/server';
-
-const prisma = new PrismaClient();
+import { db } from '@/lib/db';
+import { news } from '@/lib/db/schema';
+import { eq, and, desc, sql, count } from 'drizzle-orm';
+import { createNews } from '@/lib/news';
 
 // Lista degli admin autorizzati
 const ADMIN_EMAILS = [
@@ -42,21 +43,35 @@ export async function GET(request: Request) {
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '10');
 
-    const where: any = {};
-    if (status) where.status = status;
-    if (category) where.category = category;
+    let query = db.select().from(news);
+    const conditions = [];
+    
+    if (status) {
+      conditions.push(eq(news.status, status));
+    }
+    if (category) {
+      conditions.push(eq(news.category, category));
+    }
 
-    const news = await prisma.news.findMany({
-      where,
-      orderBy: { createdAt: 'desc' },
-      skip: (page - 1) * limit,
-      take: limit
-    });
+    if (conditions.length > 0) {
+      query = query.where(and(...conditions));
+    }
 
-    const total = await prisma.news.count({ where });
+    const allNews = await query
+      .orderBy(desc(news.createdAt))
+      .limit(limit)
+      .offset((page - 1) * limit);
+
+    // Count total
+    let countQuery = db.select({ count: count() }).from(news);
+    if (conditions.length > 0) {
+      countQuery = countQuery.where(and(...conditions));
+    }
+    const totalResult = await countQuery;
+    const total = totalResult[0]?.count || 0;
 
     return NextResponse.json({
-      news,
+      news: allNews,
       pagination: {
         page,
         limit,
@@ -84,24 +99,32 @@ export async function POST(request: Request) {
     }
     const data = await request.json();
     
-    const news = await prisma.news.create({
-      data: {
-        title: data.title,
-        summary: data.summary,
-        content: data.content,
-        category: data.category,
-        author: data.author,
-        authorEmail: data.authorEmail,
-        imageUrl: data.imageUrl,
-        featured: data.featured || false,
-        status: data.status || 'DRAFT',
-        readTime: data.readTime,
-        tags: data.tags || [],
-        publishedAt: data.status === 'PUBLISHED' ? new Date() : null
-      }
+    // Validate required fields
+    const requiredFields = ['title', 'summary', 'content', 'category', 'author', 'authorEmail', 'readTime'];
+    const missingFields = requiredFields.filter(field => !data[field] || (typeof data[field] === 'string' && data[field].trim() === ''));
+    
+    if (missingFields.length > 0) {
+      return NextResponse.json(
+        { error: `Campi obbligatori mancanti: ${missingFields.join(', ')}` },
+        { status: 400 }
+      );
+    }
+    
+    const newsItem = await createNews({
+      title: data.title,
+      summary: data.summary,
+      content: data.content,
+      category: data.category,
+      author: data.author,
+      authorEmail: data.authorEmail,
+      imageUrl: data.imageUrl,
+      featured: data.featured || false,
+      status: data.status || 'DRAFT',
+      readTime: data.readTime,
+      tags: data.tags || [],
     });
 
-    return NextResponse.json(news);
+    return NextResponse.json(newsItem);
   } catch (error) {
     console.error('Errore nella creazione news:', error);
     return NextResponse.json(

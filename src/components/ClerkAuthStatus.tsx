@@ -1,18 +1,53 @@
 "use client";
 
-import { UserButton, useUser, SignInButton } from "@clerk/nextjs";
-import { Button } from './Button';
+import { UserButton, useUser, SignInButton, SignUpButton } from "@clerk/nextjs";
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 export function ClerkAuthStatus() {
   const { isSignedIn, user, isLoaded } = useUser();
   const { t } = useLanguage();
+  const [showFallback, setShowFallback] = useState(false);
 
-  // Show loading state briefly
-  if (!isLoaded) {
+  // Show fallback after 3 seconds if Clerk hasn't loaded
+  useEffect(() => {
+    if (!isLoaded) {
+      const timer = setTimeout(() => {
+        setShowFallback(true);
+      }, 3000);
+      return () => clearTimeout(timer);
+    } else {
+      setShowFallback(false);
+    }
+  }, [isLoaded]);
+
+  // Show loading state briefly, but show fallback if it takes too long
+  if (!isLoaded && !showFallback) {
     return (
       <div className="flex items-center space-x-4">
         <div className="animate-pulse bg-neutral-200 rounded-lg w-20 h-8"></div>
+        <div className="animate-pulse bg-neutral-200 rounded-lg w-24 h-8"></div>
+      </div>
+    );
+  }
+
+  // If Clerk is taking too long, show the buttons anyway
+  if (!isLoaded && showFallback) {
+    return (
+      <div className="flex items-center space-x-3">
+        <Link 
+          href="/sign-in" 
+          className="px-4 py-2 border-2 border-primary-600 text-primary-600 bg-white rounded-lg font-semibold text-sm hover:bg-primary-50 transition-colors"
+        >
+          Accedi
+        </Link>
+        <Link 
+          href="/sign-up" 
+          className="px-4 py-2 bg-primary-600 text-white rounded-lg font-semibold text-sm hover:bg-primary-700 transition-colors"
+        >
+          Registrati
+        </Link>
       </div>
     );
   }
@@ -31,14 +66,21 @@ export function ClerkAuthStatus() {
     );
   }
 
-  // Show sign in button - use redirect mode for better reliability
+  // Show both Accedi and Registrati buttons when not signed in
   return (
-    <div className="flex items-center space-x-4">
-      <SignInButton mode="redirect" redirectUrl="/">
-        <Button className="btn btn-primary">
-          {t('auth.accedi')}
-        </Button>
-      </SignInButton>
+    <div className="flex items-center space-x-3">
+      <Link 
+        href="/sign-in" 
+        className="px-4 py-2 border-2 border-primary-600 text-primary-600 bg-white rounded-lg font-semibold text-sm hover:bg-primary-50 transition-colors"
+      >
+        Accedi
+      </Link>
+      <Link 
+        href="/sign-up" 
+        className="px-4 py-2 bg-primary-600 text-white rounded-lg font-semibold text-sm hover:bg-primary-700 transition-colors"
+      >
+        Registrati
+      </Link>
     </div>
   );
 }

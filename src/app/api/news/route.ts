@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { db } from '@/lib/db';
+import { news } from '@/lib/db/schema';
+import { eq, and, desc } from 'drizzle-orm';
 
 export async function GET(request: Request) {
   try {
@@ -10,23 +10,24 @@ export async function GET(request: Request) {
     const featured = searchParams.get('featured');
     const limit = parseInt(searchParams.get('limit') || '10');
 
-    let where: any = { status: 'PUBLISHED' };
+    const conditions = [eq(news.status, 'PUBLISHED')];
     
     if (category) {
-      where.category = category.toUpperCase();
+      conditions.push(eq(news.category, category.toUpperCase()));
     }
     
     if (featured === 'true') {
-      where.featured = true;
+      conditions.push(eq(news.featured, 1));
     }
 
-    const news = await prisma.news.findMany({
-      where,
-      orderBy: { publishedAt: 'desc' },
-      take: limit
-    });
+    const newsItems = await db
+      .select()
+      .from(news)
+      .where(and(...conditions))
+      .orderBy(desc(news.publishedAt))
+      .limit(limit);
 
-    return NextResponse.json(news);
+    return NextResponse.json(newsItems);
   } catch (error) {
     console.error('Errore nel recupero news pubbliche:', error);
     return NextResponse.json(

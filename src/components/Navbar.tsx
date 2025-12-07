@@ -4,7 +4,6 @@ import Link from "next/link";
 import Image from "next/image";
 import logo from "@/assets/imparodefi-logo-nobg.webp";
 import { MobileMenu } from "./MobileMenu";
-import LanguageToggle from "./LanguageToggle";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ClerkAuthStatus } from "./ClerkAuthStatus";
 import { useState, useEffect, useRef } from "react";
@@ -324,10 +323,7 @@ export function Navbar() {
               </div>
             </div>
             
-            <div className="flex items-center space-x-3">
-              <LanguageToggle />
-              <ClerkAuthStatus />
-            </div>
+            <ClerkAuthStatus />
           </div>
           
           <div className="lg:hidden">

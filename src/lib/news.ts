@@ -1,6 +1,6 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { db } from '@/lib/db';
+import { news } from '@/lib/db/schema';
+import { eq, and, desc, sql } from 'drizzle-orm';
 
 export interface NewsData {
   id?: string;
@@ -19,83 +19,136 @@ export interface NewsData {
 }
 
 export async function getAllNews() {
-  return await prisma.news.findMany({
-    orderBy: { createdAt: 'desc' }
-  });
+  return await db
+    .select()
+    .from(news)
+    .orderBy(desc(news.createdAt));
 }
 
 export async function getPublishedNews() {
-  return await prisma.news.findMany({
-    where: { status: 'PUBLISHED' },
-    orderBy: { publishedAt: 'desc' }
-  });
+  return await db
+    .select()
+    .from(news)
+    .where(eq(news.status, 'PUBLISHED'))
+    .orderBy(desc(news.publishedAt));
 }
 
 export async function getNewsByCategory(category: string) {
-  return await prisma.news.findMany({
-    where: { 
-      category: category.toUpperCase() as any,
-      status: 'PUBLISHED'
-    },
-    orderBy: { publishedAt: 'desc' }
-  });
+  return await db
+    .select()
+    .from(news)
+    .where(
+      and(
+        eq(news.category, category.toUpperCase()),
+        eq(news.status, 'PUBLISHED')
+      )
+    )
+    .orderBy(desc(news.publishedAt));
 }
 
 export async function getFeaturedNews() {
-  return await prisma.news.findMany({
-    where: { 
-      featured: true,
-      status: 'PUBLISHED'
-    },
-    orderBy: { publishedAt: 'desc' },
-    take: 6
-  });
+  return await db
+    .select()
+    .from(news)
+    .where(
+      and(
+        eq(news.featured, 1),
+        eq(news.status, 'PUBLISHED')
+      )
+    )
+    .orderBy(desc(news.publishedAt))
+    .limit(6);
 }
 
 export async function getNewsById(id: string) {
-  return await prisma.news.findUnique({
-    where: { id }
-  });
+  const result = await db
+    .select()
+    .from(news)
+    .where(eq(news.id, id))
+    .limit(1);
+  
+  return result[0] || null;
 }
 
 export async function createNews(data: NewsData) {
-  return await prisma.news.create({
-    data: {
-      ...data,
-      category: data.category.toUpperCase() as any,
-      publishedAt: data.status === 'PUBLISHED' ? new Date() : null
-    }
-  });
+  const id = data.id || crypto.randomUUID();
+  
+  const insertData = {
+    id,
+    title: data.title,
+    summary: data.summary,
+    content: data.content,
+    category: data.category.toUpperCase(),
+    author: data.author,
+    authorEmail: data.authorEmail,
+    imageUrl: data.imageUrl || null,
+    featured: data.featured ? 1 : 0,
+    status: data.status || 'DRAFT',
+    readTime: data.readTime,
+    tags: JSON.stringify(data.tags || []),
+    publishedAt: data.status === 'PUBLISHED' ? new Date() : null,
+  };
+
+  const result = await db
+    .insert(news)
+    .values(insertData)
+    .returning();
+  
+  return result[0];
 }
 
 export async function updateNews(id: string, data: Partial<NewsData>) {
-  const updateData: any = { ...data };
+  const updateData: any = {};
   
-  if (data.category) {
-    updateData.category = data.category.toUpperCase();
+  if (data.title !== undefined) updateData.title = data.title;
+  if (data.summary !== undefined) updateData.summary = data.summary;
+  if (data.content !== undefined) updateData.content = data.content;
+  if (data.category !== undefined) updateData.category = data.category.toUpperCase();
+  if (data.author !== undefined) updateData.author = data.author;
+  if (data.authorEmail !== undefined) updateData.authorEmail = data.authorEmail;
+  if (data.imageUrl !== undefined) updateData.imageUrl = data.imageUrl || null;
+  if (data.featured !== undefined) updateData.featured = data.featured ? 1 : 0;
+  if (data.status !== undefined) {
+    updateData.status = data.status;
+    if (data.status === 'PUBLISHED' && !data.publishedAt) {
+      updateData.publishedAt = new Date();
+    }
   }
+  if (data.readTime !== undefined) updateData.readTime = data.readTime;
+  if (data.tags !== undefined) updateData.tags = JSON.stringify(data.tags);
+  if (data.publishedAt !== undefined) updateData.publishedAt = data.publishedAt;
   
-  if (data.status === 'PUBLISHED' && !updateData.publishedAt) {
-    updateData.publishedAt = new Date();
-  }
+  updateData.updatedAt = new Date();
 
-  return await prisma.news.update({
-    where: { id },
-    data: updateData
-  });
+  const result = await db
+    .update(news)
+    .set(updateData)
+    .where(eq(news.id, id))
+    .returning();
+  
+  return result[0] || null;
 }
 
 export async function deleteNews(id: string) {
-  return await prisma.news.delete({
-    where: { id }
-  });
+  const result = await db
+    .delete(news)
+    .where(eq(news.id, id))
+    .returning();
+  
+  return result[0] || null;
 }
 
 export async function incrementViews(id: string) {
-  return await prisma.news.update({
-    where: { id },
-    data: { views: { increment: 1 } }
-  });
+  const result = await db
+    .update(news)
+    .set({
+      views: sql`${news.views} + 1`,
+      updatedAt: new Date(),
+    })
+    .where(eq(news.id, id))
+    .returning();
+  
+  return result[0] || null;
 }
 
 export const NEWS_CATEGORIES = [
