@@ -18,6 +18,8 @@ export async function getUserIdFromRequest(request: NextRequest): Promise<string
 
     if (hasValidClerkKeys) {
       try {
+        // Only call auth() if we're in a context where clerkMiddleware has run
+        // This will work in API routes that go through the middleware
         const { userId: clerkUserId } = await auth();
         if (clerkUserId) {
           const authAccount = await db
@@ -36,7 +38,9 @@ export async function getUserIdFromRequest(request: NextRequest): Promise<string
           }
         }
       } catch (error) {
-        console.debug('Clerk auth not available (dev mode?):', error instanceof Error ? error.message : 'Unknown error');
+        // Silently fail if auth() can't be called (e.g., middleware not set up)
+        // This allows the code to work even if Clerk isn't fully configured
+        console.debug('Clerk auth not available:', error instanceof Error ? error.message : 'Unknown error');
       }
     }
 

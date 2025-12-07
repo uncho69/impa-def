@@ -4,19 +4,10 @@ import Link from "next/link";
 import Image from "next/image";
 import logo from "@/assets/imparodefi-logo-nobg.webp";
 import { MobileMenu } from "./MobileMenu";
-import dynamic from "next/dynamic";
 import LanguageToggle from "./LanguageToggle";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-const PrivyAuthStatus = dynamic(() => import("./PrivyAuthStatus").then(m => m.PrivyAuthStatus), {
-  ssr: false,
-  loading: () => (
-    <div className="flex items-center space-x-4">
-      <div className="animate-pulse bg-neutral-200 rounded-full w-8 h-8" />
-      <div className="animate-pulse bg-neutral-200 rounded-full w-20 h-4" />
-    </div>
-  ),
-});
+import { ClerkAuthStatus } from "./ClerkAuthStatus";
 
 export function Navbar() {
   const { t } = useLanguage();
@@ -66,6 +57,9 @@ export function Navbar() {
               <Link href="/wallet" className="gradient-text hover:opacity-80 transition-opacity font-bold text-sm">
                 {t('nav.wallet')}
               </Link>
+              <Link href="/leaderboards/global" className="gradient-text hover:opacity-80 transition-opacity font-bold text-sm">
+                {t('nav.leaderboards')}
+              </Link>
               <Link href="/supporto" className="gradient-text hover:opacity-80 transition-opacity font-bold text-sm">
                 {t('nav.supporto')}
               </Link>
@@ -73,7 +67,7 @@ export function Navbar() {
             
             <div className="flex items-center space-x-3">
               <LanguageToggle />
-              <PrivyAuthStatus />
+              <ClerkAuthStatus />
             </div>
           </div>
           

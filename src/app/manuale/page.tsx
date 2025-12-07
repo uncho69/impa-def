@@ -1,13 +1,13 @@
 import { Accordion } from "@/components/Accordion";
 import { Button } from "@/components/Button";
 import { List } from "@/components/List";
-import { PrivyProtectedRoute } from "@/components/PrivyProtectedRoute";
+import { ClerkProtectedRoute } from "@/components/ClerkProtectedRoute";
 import { PageLayout } from "@/components/PageLayout";
 // Removed unused imports
 
 export default function manuale() {
   return (
-    <PrivyProtectedRoute title="Manuale A-Z">
+    <ClerkProtectedRoute title="Manuale A-Z">
       <PageLayout 
         title="Manuale A-Z" 
         description="Guida completa al mondo Web3, crypto e DeFi dalla A alla Z"
@@ -98,6 +98,6 @@ export default function manuale() {
             </div>
         </div>
       </PageLayout>
-    </PrivyProtectedRoute>
+    </ClerkProtectedRoute>
   );
 }

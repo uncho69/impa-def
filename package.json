@@ -19,12 +19,12 @@
     "test:webhooks": "npx tsx scripts/test-webhooks.ts",
     "test:siwe": "npx tsx scripts/test-siwe.ts",
     "test:snowflake": "npx tsx scripts/test-snowflake.ts",
-    "snowflake:list-tables": "npx tsx scripts/list-snowflake-tables.ts"
+    "snowflake:list-tables": "npx tsx scripts/list-snowflake-tables.ts",
+    "db:check-impact": "npx tsx scripts/check-db-impact.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.30.1",
     "@heroicons/react": "^2.2.0",
-    "@privy-io/react-auth": "^2.21.4",
     "bootstrap": "^5.3.3",
     "drizzle-orm": "^0.44.7",
     "ethers": "^6.15.0",

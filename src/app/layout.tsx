@@ -86,9 +86,13 @@ export default function RootLayout({
     </html>
   );
 
-  if (isClerkConfigured) {
-    return <ClerkProvider>{content}</ClerkProvider>;
-  }
-
-  return content;
+  // Always render ClerkProvider - components need it to use Clerk hooks
+  // If keys aren't configured, Clerk will handle it gracefully
+  const publishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY?.trim() || '';
+  
+  return (
+    <ClerkProvider publishableKey={publishableKey}>
+      {content}
+    </ClerkProvider>
+  );
 }

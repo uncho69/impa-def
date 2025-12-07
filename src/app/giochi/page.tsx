@@ -1,7 +1,7 @@
 import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { PrivyProtectedRoute } from "@/components/PrivyProtectedRoute";
+import { ClerkProtectedRoute } from "@/components/ClerkProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 import { CardContainer } from "@/components/CardContainer";
@@ -21,7 +21,7 @@ import blurIcon from "@/assets/blur-icon.png";
 
 export default function Giochi() {
   return (
-    <PrivyProtectedRoute title="GameFi">
+    <ClerkProtectedRoute title="GameFi">
       <PageTitle description="L'intersezione tra gaming e finanza decentralizzata">
         GameFi
       </PageTitle>
@@ -166,6 +166,6 @@ export default function Giochi() {
         </SectionBody>
         <ExploreWeb3 />
       </MobileContainer>
-    </PrivyProtectedRoute>
+    </ClerkProtectedRoute>
   );
 }

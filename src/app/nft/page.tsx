@@ -1,7 +1,7 @@
 import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { PrivyProtectedRoute } from "@/components/PrivyProtectedRoute";
+import { ClerkProtectedRoute } from "@/components/ClerkProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 // import { Button } from "@/components/Button";
@@ -23,7 +23,7 @@ import tubbycatsIcon from "@/assets/tubbycats-icon.png";
 
 export default function NFT() {
   return (
-    <PrivyProtectedRoute title="NFTs">
+    <ClerkProtectedRoute title="NFTs">
       <PageTitle description="Scopri il mondo dei token non fungibili e le loro applicazioni">
         NFTs
       </PageTitle>
@@ -176,7 +176,7 @@ export default function NFT() {
         </SectionBody>
         <ExploreWeb3 />
       </MobileContainer>
-    </PrivyProtectedRoute>
+    </ClerkProtectedRoute>
   );
 }
 

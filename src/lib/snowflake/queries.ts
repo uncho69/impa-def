@@ -103,7 +103,8 @@ function transformRowToTweetData(row: Record<string, unknown>): TweetData {
 }
 
 function getTableName(): string {
-  const tableName = process.env.SNOWFLAKE_TABLE_NAME || 'tweets_table';
+  // Default to the Twitter tweets view if not specified
+  const tableName = process.env.SNOWFLAKE_TABLE_NAME || 'PUBLIC.TWITTER_TWEETS';
   
   const parts = tableName.split('.');
   for (const part of parts) {
@@ -140,20 +141,20 @@ export async function fetchTweetsFromSnowflake(
 
   const query = `
     SELECT 
-      TWEET_ID,
-      USER_ID,
-      CONTENT,
-      POSTED_AT,
+      ID AS TWEET_ID,
+      POSTER_ID AS USER_ID,
+      TEXT AS CONTENT,
+      TO_TIMESTAMP_NTZ(TIMESTAMP / 1000) AS POSTED_AT,
       COALESCE(LIKES, 0) AS LIKES,
       COALESCE(REPLIES, 0) AS REPLIES,
-      COALESCE(RETWEETS, 0) AS RETWEETS,
+      COALESCE(REPOSTS, 0) AS RETWEETS,
       COALESCE(QUOTES, 0) AS QUOTES,
       HASHTAGS,
       TAGGED_USERS,
-      COALESCE(HAS_IMAGE, FALSE) AS HAS_IMAGE,
-      COALESCE(HAS_VIDEO, FALSE) AS HAS_VIDEO
+      CASE WHEN IMAGES IS NOT NULL AND ARRAY_SIZE(IMAGES) > 0 THEN TRUE ELSE FALSE END AS HAS_IMAGE,
+      CASE WHEN VIDEOS IS NOT NULL AND ARRAY_SIZE(VIDEOS) > 0 THEN TRUE ELSE FALSE END AS HAS_VIDEO
     FROM ${tableName}
-    WHERE POSTED_AT >= ? AND POSTED_AT <= ?
+    WHERE TO_TIMESTAMP_NTZ(TIMESTAMP / 1000) >= ? AND TO_TIMESTAMP_NTZ(TIMESTAMP / 1000) <= ?
     ORDER BY POSTED_AT ASC
     ${validatedLimit ? `LIMIT ${validatedLimit}` : ''}
   `;
@@ -183,10 +184,10 @@ export async function fetchTweetIdsFromSnowflake(
   const validatedLimit = validateLimit(limit);
 
   const query = `
-    SELECT TWEET_ID
+    SELECT ID AS TWEET_ID
     FROM ${tableName}
-    WHERE POSTED_AT >= ? AND POSTED_AT <= ?
-    ORDER BY POSTED_AT ASC
+    WHERE TO_TIMESTAMP_NTZ(TIMESTAMP / 1000) >= ? AND TO_TIMESTAMP_NTZ(TIMESTAMP / 1000) <= ?
+    ORDER BY TO_TIMESTAMP_NTZ(TIMESTAMP / 1000) ASC
     ${validatedLimit ? `LIMIT ${validatedLimit}` : ''}
   `;
 
@@ -239,20 +240,20 @@ async function fetchTweetsByIdsBatch(
   const placeholders = tweetIds.map(() => '?').join(',');
   const query = `
     SELECT 
-      TWEET_ID,
-      USER_ID,
-      CONTENT,
-      POSTED_AT,
+      ID AS TWEET_ID,
+      POSTER_ID AS USER_ID,
+      TEXT AS CONTENT,
+      TO_TIMESTAMP_NTZ(TIMESTAMP / 1000) AS POSTED_AT,
       COALESCE(LIKES, 0) AS LIKES,
       COALESCE(REPLIES, 0) AS REPLIES,
-      COALESCE(RETWEETS, 0) AS RETWEETS,
+      COALESCE(REPOSTS, 0) AS RETWEETS,
       COALESCE(QUOTES, 0) AS QUOTES,
       HASHTAGS,
       TAGGED_USERS,
-      COALESCE(HAS_IMAGE, FALSE) AS HAS_IMAGE,
-      COALESCE(HAS_VIDEO, FALSE) AS HAS_VIDEO
+      CASE WHEN IMAGES IS NOT NULL AND ARRAY_SIZE(IMAGES) > 0 THEN TRUE ELSE FALSE END AS HAS_IMAGE,
+      CASE WHEN VIDEOS IS NOT NULL AND ARRAY_SIZE(VIDEOS) > 0 THEN TRUE ELSE FALSE END AS HAS_VIDEO
     FROM ${tableName}
-    WHERE TWEET_ID IN (${placeholders})
+    WHERE ID IN (${placeholders})
   `;
 
   try {
@@ -281,30 +282,30 @@ export async function fetchTweetsByUserIds(
   const placeholders = userIds.map(() => '?').join(',');
   let query = `
     SELECT 
-      TWEET_ID,
-      USER_ID,
-      CONTENT,
-      POSTED_AT,
+      ID AS TWEET_ID,
+      POSTER_ID AS USER_ID,
+      TEXT AS CONTENT,
+      TO_TIMESTAMP_NTZ(TIMESTAMP / 1000) AS POSTED_AT,
       COALESCE(LIKES, 0) AS LIKES,
       COALESCE(REPLIES, 0) AS REPLIES,
-      COALESCE(RETWEETS, 0) AS RETWEETS,
+      COALESCE(REPOSTS, 0) AS RETWEETS,
       COALESCE(QUOTES, 0) AS QUOTES,
       HASHTAGS,
       TAGGED_USERS,
-      COALESCE(HAS_IMAGE, FALSE) AS HAS_IMAGE,
-      COALESCE(HAS_VIDEO, FALSE) AS HAS_VIDEO
+      CASE WHEN IMAGES IS NOT NULL AND ARRAY_SIZE(IMAGES) > 0 THEN TRUE ELSE FALSE END AS HAS_IMAGE,
+      CASE WHEN VIDEOS IS NOT NULL AND ARRAY_SIZE(VIDEOS) > 0 THEN TRUE ELSE FALSE END AS HAS_VIDEO
     FROM ${tableName}
-    WHERE USER_ID IN (${placeholders})
+    WHERE POSTER_ID IN (${placeholders})
   `;
 
   const params: SnowflakeBinds = [...userIds];
 
   if (startDate && endDate) {
-    query += ` AND POSTED_AT >= ? AND POSTED_AT <= ?`;
+    query += ` AND TO_TIMESTAMP_NTZ(TIMESTAMP / 1000) >= ? AND TO_TIMESTAMP_NTZ(TIMESTAMP / 1000) <= ?`;
     params.push(startDate.toISOString(), endDate.toISOString());
   }
 
-  query += ` ORDER BY POSTED_AT DESC`;
+  query += ` ORDER BY TO_TIMESTAMP_NTZ(TIMESTAMP / 1000) DESC`;
 
   try {
     const results = await client.executeQuery(query, params);

@@ -3,7 +3,7 @@
 import { Button } from "./Button";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { usePrivy } from '@privy-io/react-auth';
+import { useUser, SignInButton, SignOutButton } from '@clerk/nextjs';
 import LanguageToggle from "./LanguageToggle";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -13,7 +13,7 @@ const btnModalStyle =
 export function MobileMenu() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
-  const { authenticated, login, logout, ready } = usePrivy();
+  const { isSignedIn, isLoaded } = useUser();
   const { t } = useLanguage();
 
   useEffect(() => {
@@ -64,6 +64,9 @@ export function MobileMenu() {
               <Button href="/wallet" local={true} className={btnModalStyle}>
                 {t('nav.wallet')}
               </Button>
+              <Button href="/leaderboards/global" local={true} className={btnModalStyle}>
+                {t('nav.leaderboards')}
+              </Button>
               <Button href="/supporto" local={true} className={btnModalStyle}>
                 {t('nav.supporto')}
               </Button>
@@ -73,16 +76,20 @@ export function MobileMenu() {
                 <LanguageToggle />
               </div>
               
-              {/* Pulsanti di autenticazione (Privy) */}
-              {ready && (
-                authenticated ? (
-                  <button onClick={logout} className={btnModalStyle}>
-                    {t('auth.logout')}
-                  </button>
+              {/* Pulsanti di autenticazione (Clerk) */}
+              {isLoaded && (
+                isSignedIn ? (
+                  <SignOutButton>
+                    <button className={btnModalStyle}>
+                      {t('auth.logout')}
+                    </button>
+                  </SignOutButton>
                 ) : (
-                  <button onClick={login} className={btnModalStyle}>
-                    {t('auth.accedi')}
-                  </button>
+                  <SignInButton mode="modal">
+                    <button className={btnModalStyle}>
+                      {t('auth.accedi')}
+                    </button>
+                  </SignInButton>
                 )
               )}
             </div>

@@ -2,7 +2,7 @@ import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { PrivyProtectedRoute } from "@/components/PrivyProtectedRoute";
+import { ClerkProtectedRoute } from "@/components/ClerkProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 import { CardContainer } from "@/components/CardContainer";
@@ -31,7 +31,7 @@ import lidoIcon from "@/assets/placeholder.svg";
 
 export default function Defi() {
   return (
-    <PrivyProtectedRoute title="DeFi">
+    <ClerkProtectedRoute title="DeFi">
       <PageTitle description="La finanza decentralizzata aperta a tutti, senza intermediari">
         DeFi
       </PageTitle>
@@ -745,6 +745,6 @@ export default function Defi() {
         
         <ExploreWeb3 />
       </MobileContainer>
-    </PrivyProtectedRoute>
+    </ClerkProtectedRoute>
   );
 }
