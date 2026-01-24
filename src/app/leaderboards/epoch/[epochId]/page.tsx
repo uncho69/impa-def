@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { BackToHome } from "@/components/BackToHome";
+import Link from "next/link";
+import { Plus } from "lucide-react";
 
 interface LeaderboardEntry {
   rank: number;
@@ -26,6 +28,12 @@ interface EpochInfo {
   startDate: string;
   endDate: string;
 }
+
+const isEpochOpen = (endDate: string): boolean => {
+  const now = new Date();
+  const epochEnd = new Date(endDate);
+  return epochEnd > now;
+};
 
 interface LeaderboardResponse {
   epoch: EpochInfo;
@@ -140,7 +148,7 @@ export default function EpochLeaderboardPage() {
           <BackToHome />
         </div>
         
-        <div className="text-center mb-12">
+        <div className="text-center mb-8">
           <h1 className="text-4xl lg:text-5xl font-bold gradient-text mb-6 py-2">
             {t('leaderboards.epochTitle')}
           </h1>
@@ -173,6 +181,28 @@ export default function EpochLeaderboardPage() {
             </div>
           )}
         </div>
+
+        {/* Add Tweet Interface */}
+        {data?.epoch && (
+          <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 p-6 mb-8 max-w-4xl mx-auto">
+            <h2 className="text-xl font-bold text-neutral-900 mb-4">Aggiungi Tweet</h2>
+            {isEpochOpen(data.epoch.endDate) ? (
+              <Link
+                href={`/campaigns/${data.epoch.projectId}-${data.epoch.campaignIndex}/add-tweet?epochIndex=${data.epoch.epochIndex}`}
+                className="inline-flex items-center gap-2 bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors"
+              >
+                <Plus className="w-5 h-5" />
+                Aggiungi Tweet a questo Epoch
+              </Link>
+            ) : (
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                <p className="text-yellow-800 font-medium">
+                  ⚠️ Questo epoch è chiuso. Non è possibile aggiungere nuovi tweet.
+                </p>
+              </div>
+            )}
+          </div>
+        )}
 
         {data && (
           <>

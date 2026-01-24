@@ -3,11 +3,19 @@ import { Webhook } from 'svix';
 import { headers } from 'next/headers';
 import { db } from '@/lib/db';
 import { users, authAccounts, userRoles } from '@/lib/db/schema';
-import { eq, and } from 'drizzle-orm';
+import { eq, and, or, sql } from 'drizzle-orm';
 
 interface ClerkEmailAddress {
   id: string;
   email_address: string;
+}
+
+interface ClerkExternalAccount {
+  id: string;
+  provider: string;
+  provider_user_id?: string;
+  username?: string | null;
+  verified?: boolean;
 }
 
 interface ClerkWebhookData {
@@ -17,6 +25,7 @@ interface ClerkWebhookData {
   username?: string | null;
   first_name?: string | null;
   last_name?: string | null;
+  external_accounts?: ClerkExternalAccount[];
 }
 
 interface ClerkWebhookEvent {
@@ -118,7 +127,7 @@ export async function POST(request: NextRequest) {
 
     if (eventType === 'user.created') {
       console.log('👤 Processing user.created event...');
-      const { id: clerkId, email_addresses, username } = evt.data;
+      const { id: clerkId, email_addresses, username, external_accounts } = evt.data;
 
       const existingAuthAccount = await db
         .select({ userId: authAccounts.userId })
@@ -141,12 +150,102 @@ export async function POST(request: NextRequest) {
       const primaryEmail = email_addresses?.find((email) => email.id === evt.data.primary_email_address_id);
       const email = primaryEmail?.email_address || email_addresses?.[0]?.email_address;
 
+      // Extract Twitter ID from external_accounts if user signed in with Twitter
+      const twitterAccount = external_accounts?.find(
+        (account) => account.provider === 'oauth_twitter' || account.provider === 'twitter'
+      );
+      const twitterId = twitterAccount?.provider_user_id || null;
+
       const userId = clerkId;
 
+      // Check if user exists (including soft-deleted)
+      const existingUser = await db
+        .select()
+        .from(users)
+        .where(eq(users.id, userId))
+        .limit(1);
+
+      if (existingUser.length > 0) {
+        // User exists - check if soft-deleted
+        const user = existingUser[0];
+        if (user.deletedAt || user.isActive === 0) {
+          // User is soft-deleted - restore/reactivate them
+          console.log(`♻️  Restoring soft-deleted user: ${userId}`);
+          await db
+            .update(users)
+            .set({
+              email: email || user.email,
+              twitterId: twitterId || user.twitterId,
+              username: username || user.username,
+              isActive: 1,
+              deletedAt: null,
+              updatedAt: new Date(),
+            })
+            .where(eq(users.id, userId));
+
+          // Check if authAccount exists, if not create it
+          const existingAuth = await db
+            .select()
+            .from(authAccounts)
+            .where(
+              and(
+                eq(authAccounts.userId, userId),
+                eq(authAccounts.provider, 'clerk'),
+                eq(authAccounts.providerAccountId, clerkId)
+              )
+            )
+            .limit(1);
+
+          if (existingAuth.length === 0) {
+            await db.insert(authAccounts).values({
+              userId: userId,
+              provider: 'clerk',
+              providerAccountId: clerkId,
+              providerUserId: clerkId,
+              email: email || null,
+              isActive: 1,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            });
+          }
+
+          // Check if userRoles exist, if not create base_user role
+          const existingRoles = await db
+            .select()
+            .from(userRoles)
+            .where(eq(userRoles.userId, userId))
+            .limit(1);
+
+          if (existingRoles.length === 0) {
+            await db.insert(userRoles).values({
+              userId: userId,
+              role: 'base_user',
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            });
+          }
+
+          console.log(`✅ Soft-deleted user restored: ${userId} (${email || 'no email'})`);
+          return NextResponse.json(
+            { message: 'User restored successfully', userId },
+            { status: 200 }
+          );
+        } else {
+          // User exists and is active
+          console.log(`✅ User ${userId} already exists in database`);
+          return NextResponse.json(
+            { message: 'User already exists', userId },
+            { status: 200 }
+          );
+        }
+      }
+
+      // User doesn't exist - create new user
       try {
         await db.insert(users).values({
           id: userId,
           email: email || null,
+          twitterId: twitterId,
           username: username || null,
           isActive: 1,
           createdAt: new Date(),
@@ -178,20 +277,91 @@ export async function POST(request: NextRequest) {
         );
       } catch (dbError: any) {
         console.error('❌ Database error creating user:', dbError);
-        // Check if it's a unique constraint violation
+        // Check if it's a unique constraint violation (email, twitterId, or username)
         if (dbError?.code === '23505' || dbError?.message?.includes('unique')) {
-          console.log(`⚠️  User ${userId} might already exist, checking...`);
-          // Try to find existing user
-          const existingUser = await db
+          console.log(`⚠️  Unique constraint violation, checking for soft-deleted user...`);
+          
+          // Try to find soft-deleted user by email, twitterId, or username
+          const softDeletedUser = await db
             .select()
             .from(users)
-            .where(eq(users.id, userId))
+            .where(
+              and(
+                or(
+                  email ? eq(users.email, email) : undefined,
+                  twitterId ? eq(users.twitterId, twitterId) : undefined,
+                  username ? eq(users.username, username) : undefined
+                ),
+                or(
+                  sql`${users.deletedAt} IS NOT NULL`,
+                  eq(users.isActive, 0)
+                )
+              )
+            )
             .limit(1);
-          
-          if (existingUser.length > 0) {
-            console.log(`✅ User ${userId} already exists in database`);
+
+          if (softDeletedUser.length > 0) {
+            const user = softDeletedUser[0];
+            console.log(`♻️  Found soft-deleted user with same email/twitterId/username, restoring: ${user.id}`);
+            
+            // Restore the soft-deleted user (keep existing ID, can't change primary key)
+            await db
+              .update(users)
+              .set({
+                email: email || user.email,
+                twitterId: twitterId || user.twitterId,
+                username: username || user.username,
+                isActive: 1,
+                deletedAt: null,
+                updatedAt: new Date(),
+              })
+              .where(eq(users.id, user.id));
+
+            // Create authAccount linking new Clerk ID to the restored user
+            // Check if authAccount already exists for this Clerk ID
+            const existingAuthForClerk = await db
+              .select()
+              .from(authAccounts)
+              .where(
+                and(
+                  eq(authAccounts.provider, 'clerk'),
+                  eq(authAccounts.providerAccountId, clerkId)
+                )
+              )
+              .limit(1);
+
+            if (existingAuthForClerk.length === 0) {
+              await db.insert(authAccounts).values({
+                userId: user.id, // Use the restored user's ID
+                provider: 'clerk',
+                providerAccountId: clerkId,
+                providerUserId: clerkId,
+                email: email || null,
+                isActive: 1,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+              });
+            }
+
+            // Ensure base_user role exists
+            const existingRoles = await db
+              .select()
+              .from(userRoles)
+              .where(eq(userRoles.userId, user.id))
+              .limit(1);
+
+            if (existingRoles.length === 0) {
+              await db.insert(userRoles).values({
+                userId: user.id,
+                role: 'base_user',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+              });
+            }
+
+            console.log(`✅ Soft-deleted user restored: ${user.id} (linked to Clerk ID: ${clerkId})`);
             return NextResponse.json(
-              { message: 'User already exists', userId },
+              { message: 'User restored successfully', userId: user.id },
               { status: 200 }
             );
           }
@@ -201,7 +371,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (eventType === 'user.updated') {
-      const { id: clerkId, email_addresses, username } = evt.data;
+      const { id: clerkId, email_addresses, username, external_accounts } = evt.data;
 
       const existingAuthAccount = await db
         .select({ userId: authAccounts.userId })
@@ -238,10 +408,17 @@ export async function POST(request: NextRequest) {
       const primaryEmail = email_addresses?.find((email) => email.id === evt.data.primary_email_address_id);
       const email = primaryEmail?.email_address || email_addresses?.[0]?.email_address;
 
+      // Extract Twitter ID from external_accounts if user signed in with Twitter
+      const twitterAccount = external_accounts?.find(
+        (account) => account.provider === 'oauth_twitter' || account.provider === 'twitter'
+      );
+      const twitterId = twitterAccount?.provider_user_id || existingUser[0].twitterId || null;
+
       await db
         .update(users)
         .set({
           email: email || existingUser[0].email,
+          twitterId: twitterId,
           username: username || existingUser[0].username,
           updatedAt: new Date(),
         })

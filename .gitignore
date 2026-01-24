@@ -43,4 +43,9 @@ next-env.d.ts
 /.clerk/
 
 #misc
-scripts/
+/scripts
+/local_docs
+
+# archived code
+_clerk_archived/
+snowflake.log

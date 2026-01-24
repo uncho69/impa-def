@@ -12,15 +12,14 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "test": "npx tsx scripts/test-all.ts",
-    "test:db": "npx tsx scripts/test-database-schema.ts",
-    "test:auth": "npx tsx scripts/test-auth-permissions.ts",
-    "test:api": "npx tsx scripts/test-api-endpoints.ts",
-    "test:points": "npx tsx scripts/test-points-calculation.ts",
+    "test:middleware": "npx tsx scripts/test-middleware.ts",
+    "test:unit": "npx tsx scripts/test-unit.ts",
+    "test:db": "npx tsx scripts/test-db.ts",
+    "test:auth": "npx tsx scripts/test-auth.ts",
+    "test:api": "npx tsx scripts/test-api.ts",
+    "test:points": "npx tsx scripts/test-points.ts",
     "test:webhooks": "npx tsx scripts/test-webhooks.ts",
-    "test:siwe": "npx tsx scripts/test-siwe.ts",
-    "test:snowflake": "npx tsx scripts/test-snowflake.ts",
-    "snowflake:list-tables": "npx tsx scripts/list-snowflake-tables.ts",
-    "db:check-impact": "npx tsx scripts/check-db-impact.ts"
+    "test:snowflake": "npx tsx scripts/test-snowflake.ts"
   },
   "dependencies": {
     "@clerk/clerk-sdk-node": "^4.13.23",

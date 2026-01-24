@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1762701214144,
-      "tag": "0000_blue_liz_osborn",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1762724903408,
-      "tag": "0001_serious_rictor",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1765129559019,
-      "tag": "0002_late_squirrel_girl",
+      "when": 1765647717560,
+      "tag": "0000_initial_schema",
       "breakpoints": true
     }
   ]

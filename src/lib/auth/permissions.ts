@@ -1,6 +1,6 @@
 import { db } from '@/lib/db';
-import { userRoles } from '@/lib/db/schema';
-import { eq, and, inArray } from 'drizzle-orm';
+import { userRoles, users } from '@/lib/db/schema';
+import { eq, and, inArray, sql } from 'drizzle-orm';
 
 export type UserRole = 'admin' | 'moderator' | 'participant' | 'base_user';
 
@@ -40,7 +40,24 @@ export async function getUserRoles(userId: string): Promise<UserRole[]> {
 }
 
 export async function canAddTweetsToCampaign(userId: string): Promise<boolean> {
-  return hasAnyRole(userId, ['admin', 'moderator', 'participant']);
+  // All registered users can add tweets
+  // Just check if userId exists (user is registered)
+  if (!userId) return false;
+  
+  // Check if user exists in the database
+  const user = await db
+    .select({ id: users.id })
+    .from(users)
+    .where(
+      and(
+        eq(users.id, userId),
+        eq(users.isActive, 1),
+        sql`${users.deletedAt} IS NULL`
+      )
+    )
+    .limit(1);
+  
+  return user.length > 0;
 }
 
 export async function isAdmin(userId: string): Promise<boolean> {

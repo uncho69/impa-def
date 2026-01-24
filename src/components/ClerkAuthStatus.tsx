@@ -52,15 +52,10 @@ export function ClerkAuthStatus() {
     );
   }
 
-  // If user is signed in, show user info and logout
+  // If user is signed in, show user button (no email, no dashboard)
   if (isSignedIn && user) {
     return (
-      <div className="flex items-center space-x-4">
-        <div className="flex items-center space-x-2">
-          <span className="text-sm text-neutral-600">
-            {user.emailAddresses[0]?.emailAddress || user.username || user.id.slice(0, 8) + '...'}
-          </span>
-        </div>
+      <div className="flex items-center space-x-3">
         <UserButton afterSignOutUrl="/" />
       </div>
     );

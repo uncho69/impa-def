@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import { hasRole, hasAnyRole, UserRole } from './permissions';
 import { db } from '@/lib/db';
-import { authAccounts } from '@/lib/db/schema';
-import { eq, and } from 'drizzle-orm';
+import { authAccounts, users } from '@/lib/db/schema';
+import { eq, and, sql } from 'drizzle-orm';
 
 export async function getUserIdFromRequest(request: NextRequest): Promise<string | null> {
   try {
@@ -16,12 +16,18 @@ export async function getUserIdFromRequest(request: NextRequest): Promise<string
       process.env.CLERK_SECRET_KEY.startsWith('sk_')
     );
 
+    console.log('🔍 getUserIdFromRequest - hasValidClerkKeys:', hasValidClerkKeys);
+
     if (hasValidClerkKeys) {
       try {
         // Only call auth() if we're in a context where clerkMiddleware has run
         // This will work in API routes that go through the middleware
-        const { userId: clerkUserId } = await auth();
+        const authResult = await auth();
+        const clerkUserId = authResult?.userId;
+        console.log('🔍 getUserIdFromRequest - Clerk userId:', clerkUserId);
+        
         if (clerkUserId) {
+          // First try to find via authAccounts (preferred method)
           const authAccount = await db
             .select({ userId: authAccounts.userId })
             .from(authAccounts)
@@ -36,12 +42,40 @@ export async function getUserIdFromRequest(request: NextRequest): Promise<string
           if (authAccount.length > 0) {
             return authAccount[0].userId;
           }
+
+          // If no authAccount found, check if user exists directly with Clerk ID as primary key
+          // (since we use Clerk ID as the user ID in the users table)
+          const user = await db
+            .select({ id: users.id })
+            .from(users)
+            .where(
+              and(
+                eq(users.id, clerkUserId),
+                eq(users.isActive, 1),
+                sql`${users.deletedAt} IS NULL`
+              )
+            )
+            .limit(1);
+
+          if (user.length > 0) {
+            // User exists but authAccount is missing - return the user ID anyway
+            console.warn(`Clerk user ${clerkUserId} found in users table but no authAccount found`);
+            return user[0].id;
+          } else {
+            // Clerk user authenticated but no user record found
+            // This can happen if the webhook hasn't created the user yet
+            console.warn(`⚠️  Clerk user ${clerkUserId} authenticated but no user record found in database. User needs to be created via webhook.`);
+          }
+        } else {
+          console.warn('⚠️  Clerk auth() returned no userId - user may not be signed in');
         }
       } catch (error) {
-        // Silently fail if auth() can't be called (e.g., middleware not set up)
-        // This allows the code to work even if Clerk isn't fully configured
-        console.debug('Clerk auth not available:', error instanceof Error ? error.message : 'Unknown error');
+        // Log error for debugging but don't fail completely
+        console.error('❌ Error getting Clerk user ID:', error instanceof Error ? error.message : 'Unknown error');
+        console.error('❌ Error stack:', error instanceof Error ? error.stack : 'No stack trace');
       }
+    } else {
+      console.warn('⚠️  Clerk keys not configured or invalid');
     }
 
     const privyToken = request.headers.get('authorization')?.replace('Bearer ', '');

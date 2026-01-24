@@ -1,5 +1,0 @@
-- scremare tweet in base alla epoch (senza dati pubblicazione o attivi nella epoch start date etc.)
-- aggiornare db locale
-- collate di tutte le stat dei tweet per utente per epoch (somma tweet utenti in span di tempo)
-- collate di stat di tutti i tweet per epoch
-- calolo punti globali e share utenti (o punti tot)

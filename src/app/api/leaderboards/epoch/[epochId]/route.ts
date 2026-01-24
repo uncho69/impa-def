@@ -8,17 +8,23 @@ export async function GET(
   { params }: { params: { epochId: string } }
 ) {
   try {
-    const epochIdParts = params.epochId.split('-');
-    if (epochIdParts.length !== 3) {
+    // Parse epochId: projectId can contain hyphens, so we parse from the end
+    // Format: projectId-campaignIndex-epochIndex
+    // We know campaignIndex and epochIndex are always numbers, so parse from the end
+    const epochIdStr = params.epochId;
+    const lastDashIndex = epochIdStr.lastIndexOf('-');
+    const secondLastDashIndex = epochIdStr.lastIndexOf('-', lastDashIndex - 1);
+    
+    if (lastDashIndex === -1 || secondLastDashIndex === -1) {
       return NextResponse.json(
         { error: 'Invalid epochId format. Expected: projectId-campaignIndex-epochIndex' },
         { status: 400 }
       );
     }
 
-    const projectId = epochIdParts[0];
-    const campaignIndex = parseInt(epochIdParts[1], 10);
-    const epochIndex = parseInt(epochIdParts[2], 10);
+    const epochIndex = parseInt(epochIdStr.substring(lastDashIndex + 1), 10);
+    const campaignIndex = parseInt(epochIdStr.substring(secondLastDashIndex + 1, lastDashIndex), 10);
+    const projectId = epochIdStr.substring(0, secondLastDashIndex);
 
     if (isNaN(campaignIndex) || isNaN(epochIndex)) {
       return NextResponse.json(

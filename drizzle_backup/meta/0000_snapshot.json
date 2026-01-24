@@ -1,5 +1,5 @@
 {
-  "id": "e628107a-c46a-4001-9dfd-edaa8fb08d1f",
+  "id": "bee957d9-3459-449c-9673-8713a1318486",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -584,8 +584,8 @@
         }
       },
       "compositePrimaryKeys": {
-        "campaigns_pkey": {
-          "name": "campaigns_pkey",
+        "id": {
+          "name": "id",
           "columns": [
             "project_id",
             "index"
@@ -862,8 +862,8 @@
         }
       },
       "compositePrimaryKeys": {
-        "epochs_pkey": {
-          "name": "epochs_pkey",
+        "id": {
+          "name": "id",
           "columns": [
             "project_id",
             "campaign_index",
@@ -909,209 +909,6 @@
         "epochs_is_active_check": {
           "name": "epochs_is_active_check",
           "value": "\"epochs\".\"is_active\" IN (0, 1)"
-        }
-      },
-      "isRLSEnabled": false
-    },
-    "public.news": {
-      "name": "news",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(255)",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "title": {
-          "name": "title",
-          "type": "varchar(500)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "summary": {
-          "name": "summary",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "content": {
-          "name": "content",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "category": {
-          "name": "category",
-          "type": "varchar(50)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "author": {
-          "name": "author",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "author_email": {
-          "name": "author_email",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "image_url": {
-          "name": "image_url",
-          "type": "varchar(500)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "featured": {
-          "name": "featured",
-          "type": "smallint",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
-        },
-        "status": {
-          "name": "status",
-          "type": "varchar(50)",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'DRAFT'"
-        },
-        "read_time": {
-          "name": "read_time",
-          "type": "varchar(50)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "tags": {
-          "name": "tags",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "published_at": {
-          "name": "published_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "views": {
-          "name": "views",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {
-        "news_category_idx": {
-          "name": "news_category_idx",
-          "columns": [
-            {
-              "expression": "category",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "news_status_idx": {
-          "name": "news_status_idx",
-          "columns": [
-            {
-              "expression": "status",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "news_featured_idx": {
-          "name": "news_featured_idx",
-          "columns": [
-            {
-              "expression": "featured",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "news_published_at_idx": {
-          "name": "news_published_at_idx",
-          "columns": [
-            {
-              "expression": "published_at",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "news_created_at_idx": {
-          "name": "news_created_at_idx",
-          "columns": [
-            {
-              "expression": "created_at",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {
-        "news_featured_check": {
-          "name": "news_featured_check",
-          "value": "\"news\".\"featured\" IN (0, 1)"
-        },
-        "news_status_check": {
-          "name": "news_status_check",
-          "value": "\"news\".\"status\" IN ('DRAFT', 'PUBLISHED', 'ARCHIVED')"
-        },
-        "news_views_check": {
-          "name": "news_views_check",
-          "value": "\"news\".\"views\" >= 0"
         }
       },
       "isRLSEnabled": false
@@ -1755,8 +1552,8 @@
         }
       },
       "compositePrimaryKeys": {
-        "rewards_pkey": {
-          "name": "rewards_pkey",
+        "id": {
+          "name": "id",
           "columns": [
             "project_id",
             "campaign_index",
@@ -2639,8 +2436,8 @@
         }
       },
       "compositePrimaryKeys": {
-        "user_epoch_scores_pkey": {
-          "name": "user_epoch_scores_pkey",
+        "id": {
+          "name": "id",
           "columns": [
             "project_id",
             "campaign_index",
@@ -2687,6 +2484,12 @@
       "name": "user_roles",
       "schema": "",
       "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
         "user_id": {
           "name": "user_id",
           "type": "varchar(50)",
@@ -2744,6 +2547,27 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "user_roles_user_role_idx": {
+          "name": "user_roles_user_role_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "role",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -2761,16 +2585,17 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {
-        "user_roles_pkey": {
-          "name": "user_roles_pkey",
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "user_roles_user_role_unique": {
+          "name": "user_roles_user_role_unique",
+          "nullsNotDistinct": false,
           "columns": [
             "user_id",
             "role"
           ]
         }
       },
-      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {
         "user_roles_role_check": {
@@ -2823,6 +2648,12 @@
         },
         "privy_id": {
           "name": "privy_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "clerk_id": {
+          "name": "clerk_id",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false
@@ -2985,6 +2816,21 @@
           "method": "btree",
           "with": {}
         },
+        "users_clerk_id_idx": {
+          "name": "users_clerk_id_idx",
+          "columns": [
+            {
+              "expression": "clerk_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "users_total_points_idx": {
           "name": "users_total_points_idx",
           "columns": [
@@ -3066,6 +2912,13 @@
           "nullsNotDistinct": false,
           "columns": [
             "privy_id"
+          ]
+        },
+        "users_clerk_id_unique": {
+          "name": "users_clerk_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "clerk_id"
           ]
         }
       },
@@ -3273,161 +3126,6 @@
         "verification_tokens_used_check": {
           "name": "verification_tokens_used_check",
           "value": "\"verification_tokens\".\"used\" IN (0, 1)"
-        }
-      },
-      "isRLSEnabled": false
-    },
-    "public.whats_new_card": {
-      "name": "whats_new_card",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(255)",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "title": {
-          "name": "title",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "category": {
-          "name": "category",
-          "type": "varchar(50)",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'feature'"
-        },
-        "image_url": {
-          "name": "image_url",
-          "type": "varchar(500)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "link": {
-          "name": "link",
-          "type": "varchar(500)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "is_active": {
-          "name": "is_active",
-          "type": "smallint",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 1
-        },
-        "show_in_landing": {
-          "name": "show_in_landing",
-          "type": "smallint",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
-        },
-        "order": {
-          "name": "order",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {
-        "whats_new_card_is_active_idx": {
-          "name": "whats_new_card_is_active_idx",
-          "columns": [
-            {
-              "expression": "is_active",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "whats_new_card_show_in_landing_idx": {
-          "name": "whats_new_card_show_in_landing_idx",
-          "columns": [
-            {
-              "expression": "show_in_landing",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "whats_new_card_order_idx": {
-          "name": "whats_new_card_order_idx",
-          "columns": [
-            {
-              "expression": "order",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "whats_new_card_created_at_idx": {
-          "name": "whats_new_card_created_at_idx",
-          "columns": [
-            {
-              "expression": "created_at",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {
-        "whats_new_card_is_active_check": {
-          "name": "whats_new_card_is_active_check",
-          "value": "\"whats_new_card\".\"is_active\" IN (0, 1)"
-        },
-        "whats_new_card_show_in_landing_check": {
-          "name": "whats_new_card_show_in_landing_check",
-          "value": "\"whats_new_card\".\"show_in_landing\" IN (0, 1)"
         }
       },
       "isRLSEnabled": false

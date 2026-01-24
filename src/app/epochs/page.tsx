@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { BackToHome } from "@/components/BackToHome";
 import { ClerkProtectedRoute } from "@/components/ClerkProtectedRoute";
+import Link from "next/link";
+import { Plus } from "lucide-react";
 
 interface Epoch {
   projectId: string;
@@ -22,10 +24,11 @@ interface Epoch {
   createdAt: string;
 }
 
-export default function EpochLeaderboardSelectionPage() {
+export default function EpochsPage() {
   const router = useRouter();
   const { isSignedIn, isLoaded } = useUser();
   const [epochs, setEpochs] = useState<Epoch[]>([]);
+  const [selectedEpoch, setSelectedEpoch] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
@@ -103,6 +106,31 @@ export default function EpochLeaderboardSelectionPage() {
               </h1>
             </div>
 
+            {/* Add Tweet Interface */}
+            {selectedEpoch && (
+              <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 p-6 mb-8">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xl font-bold text-neutral-900">Aggiungi Tweet</h2>
+                  <button
+                    onClick={() => setSelectedEpoch(null)}
+                    className="text-neutral-500 hover:text-neutral-700"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <p className="text-sm text-neutral-600 mb-4">
+                  Epoch selezionato: {selectedEpoch}
+                </p>
+                <Link
+                  href={`/campaigns/${selectedEpoch.split('-').slice(0, 2).join('-')}/add-tweet?epochIndex=${selectedEpoch.split('-')[2]}`}
+                  className="inline-flex items-center gap-2 bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors"
+                >
+                  <Plus className="w-5 h-5" />
+                  Aggiungi Tweet a questo Epoch
+                </Link>
+              </div>
+            )}
+
             {/* Error Message */}
             {error && (
               <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-6">
@@ -128,11 +156,16 @@ export default function EpochLeaderboardSelectionPage() {
                   <div className="space-y-3 mb-6">
                     {epochs.map((epoch) => {
                       const epochId = getEpochId(epoch);
+                      const isSelected = selectedEpoch === epochId;
                       return (
                         <div
                           key={epochId}
-                          onClick={() => router.push(`/leaderboards/epoch/${epochId}`)}
-                          className="border border-neutral-200 rounded-lg p-4 cursor-pointer transition-colors hover:border-primary-300 hover:bg-neutral-50"
+                          onClick={() => setSelectedEpoch(isSelected ? null : epochId)}
+                          className={`border rounded-lg p-4 cursor-pointer transition-colors ${
+                            isSelected
+                              ? 'border-primary-500 bg-primary-50'
+                              : 'border-neutral-200 hover:border-primary-300 hover:bg-neutral-50'
+                          }`}
                         >
                           <div className="flex items-center justify-between">
                             <div className="flex-1">
@@ -140,6 +173,11 @@ export default function EpochLeaderboardSelectionPage() {
                                 <h3 className="font-bold text-lg text-neutral-900">
                                   {epoch.projectId} - Campaign {epoch.campaignIndex} - Epoch {epoch.index}
                                 </h3>
+                                {isSelected && (
+                                  <span className="px-2 py-1 bg-primary-600 text-white text-xs rounded">
+                                    Selezionato
+                                  </span>
+                                )}
                               </div>
                               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                                 <div>

@@ -12,16 +12,18 @@ export async function POST(
   try {
     const userId = await getUserIdFromRequest(request);
     if (!userId) {
+      console.error('Unauthorized: getUserIdFromRequest returned null');
       return NextResponse.json(
-        { error: 'Unauthorized' },
+        { error: 'Unauthorized: Please sign in to add tweets' },
         { status: 401 }
       );
     }
 
     const canAdd = await canAddTweetsToCampaign(userId);
     if (!canAdd) {
+      console.error(`Forbidden: User ${userId} does not have permission to add tweets`);
       return NextResponse.json(
-        { error: 'Forbidden: Insufficient permissions to add tweets' },
+        { error: 'Forbidden: Insufficient permissions to add tweets. Please ensure you are registered and active.' },
         { status: 403 }
       );
     }
@@ -53,16 +55,20 @@ export async function POST(
       );
     }
 
-    const campaignIdParts = params.campaignId.split('-');
-    if (campaignIdParts.length !== 2) {
+    // Parse campaignId: projectId can contain hyphens, so parse from the end
+    // Format: projectId-campaignIndex (campaignIndex is always a number)
+    const campaignIdStr = params.campaignId;
+    const lastDashIndex = campaignIdStr.lastIndexOf('-');
+    
+    if (lastDashIndex === -1) {
       return NextResponse.json(
         { error: 'Invalid campaignId format. Expected: projectId-campaignIndex' },
         { status: 400 }
       );
     }
 
-    const parsedProjectId = projectId || campaignIdParts[0];
-    const parsedCampaignIndex = campaignIndex || parseInt(campaignIdParts[1], 10);
+    const parsedCampaignIndex = campaignIndex || parseInt(campaignIdStr.substring(lastDashIndex + 1), 10);
+    const parsedProjectId = projectId || campaignIdStr.substring(0, lastDashIndex);
 
     if (isNaN(parsedCampaignIndex)) {
       return NextResponse.json(
@@ -110,6 +116,17 @@ export async function POST(
           { status: 404 }
         );
       }
+
+      // Check if epoch is still open (endDate > now)
+      const now = new Date();
+      const epochEndDate = new Date(epoch[0].endDate);
+      
+      if (epochEndDate <= now) {
+        return NextResponse.json(
+          { error: 'Epoch is closed. You can only add tweets to open epochs.' },
+          { status: 403 }
+        );
+      }
     }
 
     const existingTweet = await db
@@ -125,28 +142,33 @@ export async function POST(
       );
     }
 
-    const finalUserId = tweetUserId || null;
-    if (finalUserId) {
-      const user = await db
-        .select()
-        .from(users)
-        .where(eq(users.id, finalUserId))
-        .limit(1);
+    // Get authenticated user's info from database
+    const authenticatedUser = await db
+      .select({
+        id: users.id,
+        twitterId: users.twitterId,
+      })
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
 
-      if (user.length === 0) {
-        return NextResponse.json(
-          { error: 'User not found' },
-          { status: 404 }
-        );
-      }
+    if (authenticatedUser.length === 0) {
+      return NextResponse.json(
+        { error: 'Authenticated user not found in database' },
+        { status: 404 }
+      );
     }
+
+    // Use authenticated user's ID and Twitter ID
+    const finalUserId = authenticatedUser[0].id;
+    const finalTwitterUserId = authenticatedUser[0].twitterId || null;
 
     const tweetData = {
       projectId: parsedProjectId,
       campaignIndex: parsedCampaignIndex,
       epochIndex: epochIndex !== undefined ? epochIndex : null,
       userId: finalUserId,
-      twitterUserId: twitterUserId || null,
+      twitterUserId: finalTwitterUserId,
       postId: postId,
       content: content || null,
       postedAt: postedAt ? new Date(postedAt) : null,
@@ -191,16 +213,20 @@ export async function GET(
   { params }: { params: { campaignId: string } }
 ) {
   try {
-    const campaignIdParts = params.campaignId.split('-');
-    if (campaignIdParts.length !== 2) {
+    // Parse campaignId: projectId can contain hyphens, so parse from the end
+    // Format: projectId-campaignIndex (campaignIndex is always a number)
+    const campaignIdStr = params.campaignId;
+    const lastDashIndex = campaignIdStr.lastIndexOf('-');
+    
+    if (lastDashIndex === -1) {
       return NextResponse.json(
         { error: 'Invalid campaignId format. Expected: projectId-campaignIndex' },
         { status: 400 }
       );
     }
 
-    const projectId = campaignIdParts[0];
-    const campaignIndex = parseInt(campaignIdParts[1], 10);
+    const campaignIndex = parseInt(campaignIdStr.substring(lastDashIndex + 1), 10);
+    const projectId = campaignIdStr.substring(0, lastDashIndex);
 
     if (isNaN(campaignIndex)) {
       return NextResponse.json(
