@@ -2,13 +2,12 @@ import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 
 export default function PropellerSwapPage() {
   return (
-    <ProtectedRoute title="PropellerSwap - Airdrop">
+    <>
       <PageTitle description="DEX con protezione MEV e routing intelligente">
         PropellerSwap
       </PageTitle>
@@ -219,6 +218,6 @@ export default function PropellerSwapPage() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

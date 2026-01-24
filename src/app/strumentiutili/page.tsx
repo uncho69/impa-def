@@ -1,4 +1,4 @@
-import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { ClerkProtectedRoute } from "@/components/ClerkProtectedRoute";
 import { PageTitle } from "@/components/PageTitle";
 import { MobileContainer } from "@/components/MobileContainer";
 import { SectionBody } from "@/components/SectionBody";
@@ -6,7 +6,7 @@ import { Accordion } from "@/components/Accordion";
 
 export default function StrumentiUtiliPage() {
   return (
-    <ProtectedRoute>
+    <ClerkProtectedRoute title="Strumenti Utili">
       <MobileContainer>
         <PageTitle>Strumenti Utili</PageTitle>
         <SectionBody>
@@ -123,6 +123,6 @@ export default function StrumentiUtiliPage() {
           </Accordion>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </ClerkProtectedRoute>
   );
 }

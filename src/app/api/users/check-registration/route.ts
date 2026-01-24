@@ -4,6 +4,8 @@ import { db } from '@/lib/db';
 import { users, authAccounts } from '@/lib/db/schema';
 import { eq, and, sql } from 'drizzle-orm';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     let clerkUserId: string | null = null;

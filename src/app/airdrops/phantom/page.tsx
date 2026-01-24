@@ -2,13 +2,12 @@ import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 
 export default function PhantomPage() {
   return (
-    <ProtectedRoute title="Phantom - Wallet">
+    <>
       <PageTitle description="Portafoglio non-custodial per Solana ed Ethereum">
         Phantom
       </PageTitle>
@@ -259,6 +258,6 @@ export default function PhantomPage() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

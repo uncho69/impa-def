@@ -1,7 +1,6 @@
 import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 import { CardContainer } from "@/components/CardContainer";
@@ -18,7 +17,7 @@ import polymarketIcon from "@/assets/polymarket-logo.png";
 
 export default function Giochi() {
   return (
-    <ProtectedRoute title="Giochi & Mercati di Predizione">
+    <>
       <PageTitle description="L'intersezione tra gaming e finanza decentralizzata">
         Giochi & Mercati di Predizione
       </PageTitle>
@@ -220,6 +219,6 @@ export default function Giochi() {
         </SectionBody>
         <ExploreWeb3 />
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

@@ -2,13 +2,12 @@ import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 
 export default function OpenSeaPage() {
   return (
-    <ProtectedRoute title="OpenSea - Airdrop">
+    <>
       <PageTitle description="Marketplace leader per NFT e oggetti digitali">
         OpenSea
       </PageTitle>
@@ -268,6 +267,6 @@ export default function OpenSeaPage() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

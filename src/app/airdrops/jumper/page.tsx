@@ -2,13 +2,12 @@ import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 
 export default function JumperPage() {
   return (
-    <ProtectedRoute title="Jumper - Airdrop">
+    <>
       <PageTitle description="Piattaforma di bridging e swapping multi-chain">
         Jumper
       </PageTitle>
@@ -206,6 +205,6 @@ export default function JumperPage() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

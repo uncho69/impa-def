@@ -3,7 +3,6 @@
 import { MobileContainer } from "@/components/MobileContainer";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 import Image from "next/image";
@@ -46,7 +45,6 @@ export default function Ethereum() {
     return () => clearInterval(interval);
   }, []);
   return (
-    <ProtectedRoute title="Ethereum">
     <MobileContainer>
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
@@ -304,6 +302,5 @@ export default function Ethereum() {
         </div>
       </SectionBody>
     </MobileContainer>
-    </ProtectedRoute>
   );
 }

@@ -1,7 +1,6 @@
 import { MobileContainer } from "@/components/MobileContainer";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 import Image from "next/image";
@@ -22,8 +21,7 @@ import xaiIcon from "@/assets/xai-logo.svg";
 
 export default function MetaMask() {
   return (
-    <ProtectedRoute title="MetaMask">
-      <MobileContainer>
+    <MobileContainer>
         <div className="flex items-center gap-4 mb-6">
           <Image src={metamaskIcon} alt="MetaMask" width={64} height={64} />
           <div>
@@ -292,7 +290,6 @@ export default function MetaMask() {
             </div>
           </div>
         </SectionBody>
-      </MobileContainer>
-    </ProtectedRoute>
+    </MobileContainer>
   );
 }

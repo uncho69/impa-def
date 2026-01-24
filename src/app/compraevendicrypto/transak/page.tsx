@@ -1,14 +1,13 @@
 import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 import { ExploreWeb3 } from "@/components/ExploreWeb3";
 
 export default function Transak() {
   return (
-    <ProtectedRoute title="Transak">
+    <>
       <PageTitle description="On-ramp fiat-crypto che permette acquisti diretti con carta. Supporta oltre 155 paesi con integrazione facile.">
         Transak
       </PageTitle>
@@ -81,6 +80,6 @@ export default function Transak() {
         </SectionBody>
         <ExploreWeb3 />
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

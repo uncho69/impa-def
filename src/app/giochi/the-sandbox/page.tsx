@@ -1,11 +1,10 @@
 import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 export default function TheSandbox() {
   return (
-    <ProtectedRoute title="The Sandbox">
+    <>
       <PageTitle description="Metaverso virtuale e piattaforma di creazione">
         The Sandbox
       </PageTitle>
@@ -18,6 +17,6 @@ export default function TheSandbox() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

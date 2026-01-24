@@ -1,14 +1,13 @@
 import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 import { ExploreWeb3 } from "@/components/ExploreWeb3";
 
 export default function Wirex() {
   return (
-    <ProtectedRoute title="Wirex">
+    <>
       <PageTitle description="Piattaforma di pagamenti digitali con carta di debito. Supporta oltre 37 criptovalute con ricompense Cryptoback™.">
         Wirex
       </PageTitle>
@@ -87,6 +86,6 @@ export default function Wirex() {
         </SectionBody>
         <ExploreWeb3 />
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

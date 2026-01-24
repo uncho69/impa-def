@@ -3,6 +3,8 @@ import { db } from '@/lib/db';
 import { whatsNewCard } from '@/lib/db/schema';
 import { eq, asc, desc } from 'drizzle-orm';
 
+export const dynamic = 'force-dynamic';
+
 // GET - Recupera tutte le card attive delle novità
 export async function GET() {
   try {

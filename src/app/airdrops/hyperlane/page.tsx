@@ -2,13 +2,12 @@ import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 
 export default function HyperlanePage() {
   return (
-    <ProtectedRoute title="Hyperlane - Airdrop">
+    <>
       <PageTitle description="Protocollo di interoperabilità universale per blockchain">
         Hyperlane
       </PageTitle>
@@ -238,6 +237,6 @@ export default function HyperlanePage() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

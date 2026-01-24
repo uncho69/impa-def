@@ -1,7 +1,6 @@
 import { MobileContainer } from "@/components/MobileContainer";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 import Image from "next/image";
@@ -19,8 +18,7 @@ import dogechainIcon from "@/assets/dogechain-logo.png";
 
 export default function Trezor() {
   return (
-    <ProtectedRoute title="Trezor">
-      <MobileContainer>
+    <MobileContainer>
         <div className="flex items-center gap-4 mb-6">
           <Image src={trezorIcon} alt="Trezor" width={64} height={64} />
           <div>
@@ -268,7 +266,6 @@ export default function Trezor() {
             </div>
           </div>
         </SectionBody>
-      </MobileContainer>
-    </ProtectedRoute>
+    </MobileContainer>
   );
 }

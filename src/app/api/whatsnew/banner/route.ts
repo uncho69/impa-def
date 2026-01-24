@@ -3,6 +3,8 @@ import { db } from '@/lib/db';
 import { whatsNewCard } from '@/lib/db/schema';
 import { eq, and, asc, desc } from 'drizzle-orm';
 
+export const dynamic = 'force-dynamic';
+
 // GET - Recupera solo le card per il banner (showInLanding: true)
 export async function GET() {
   try {

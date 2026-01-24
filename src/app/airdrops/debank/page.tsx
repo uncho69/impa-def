@@ -2,13 +2,12 @@ import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 
 export default function DebankPage() {
   return (
-    <ProtectedRoute title="DeBank - Airdrop">
+    <>
       <PageTitle description="Dashboard DeFi e aggregatore di portfolio multi-chain">
         DeBank
       </PageTitle>
@@ -268,6 +267,6 @@ export default function DebankPage() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

@@ -2,13 +2,12 @@ import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 
 export default function SyncSwapPage() {
   return (
-    <ProtectedRoute title="SyncSwap - Airdrop">
+    <>
       <PageTitle description="DEX nativo di zkSync Era con governance">
         SyncSwap
       </PageTitle>
@@ -256,6 +255,6 @@ export default function SyncSwapPage() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

@@ -1,7 +1,6 @@
 import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 import { ExploreWeb3 } from "@/components/ExploreWeb3";
@@ -9,7 +8,7 @@ import Image from "next/image";
 
 export default function Binance() {
   return (
-    <ProtectedRoute title="Binance">
+    <>
       <PageTitle description="La più grande exchange al mondo per volume di trading. Offre trading spot, futures e servizi DeFi.">
         Binance
       </PageTitle>
@@ -125,6 +124,6 @@ export default function Binance() {
         </SectionBody>
         <ExploreWeb3 />
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

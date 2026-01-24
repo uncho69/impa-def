@@ -2,13 +2,12 @@ import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 
 export default function PolymarketPage() {
   return (
-    <ProtectedRoute title="Polymarket - Airdrop">
+    <>
       <PageTitle description="Piattaforma di mercato di previsione decentralizzato">
         Polymarket
       </PageTitle>
@@ -229,6 +228,6 @@ export default function PolymarketPage() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

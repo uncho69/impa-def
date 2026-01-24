@@ -1,11 +1,10 @@
 import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 export default function OpenSea() {
   return (
-    <ProtectedRoute title="OpenSea">
+    <>
       <PageTitle description="Il più grande marketplace di NFT">
         OpenSea
       </PageTitle>
@@ -18,6 +17,6 @@ export default function OpenSea() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

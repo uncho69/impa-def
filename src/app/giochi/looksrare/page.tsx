@@ -1,11 +1,10 @@
 import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 export default function LooksRare() {
   return (
-    <ProtectedRoute title="LooksRare">
+    <>
       <PageTitle description="Marketplace NFT community-driven">
         LooksRare
       </PageTitle>
@@ -18,6 +17,6 @@ export default function LooksRare() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

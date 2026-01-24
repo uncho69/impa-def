@@ -2,13 +2,12 @@ import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 
 export default function DegenPage() {
   return (
-    <ProtectedRoute title="Degen - Airdrop">
+    <>
       <PageTitle description="Ecosistema su Base per applicazioni decentralizzate">
         Degen
       </PageTitle>
@@ -238,6 +237,6 @@ export default function DegenPage() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

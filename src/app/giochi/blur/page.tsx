@@ -1,11 +1,10 @@
 import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 export default function Blur() {
   return (
-    <ProtectedRoute title="Blur">
+    <>
       <PageTitle description="Marketplace NFT per trader professionali">
         Blur
       </PageTitle>
@@ -18,6 +17,6 @@ export default function Blur() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

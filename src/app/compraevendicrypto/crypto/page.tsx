@@ -1,7 +1,6 @@
 import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 import { ExploreWeb3 } from "@/components/ExploreWeb3";
@@ -9,7 +8,7 @@ import Image from "next/image";
 
 export default function Crypto() {
   return (
-    <ProtectedRoute title="Crypto.com">
+    <>
       <PageTitle description="Piattaforma completa con exchange, carte di debito e servizi DeFi. Supporta oltre 250 criptovalute.">
         Crypto.com
       </PageTitle>
@@ -115,6 +114,6 @@ export default function Crypto() {
         </SectionBody>
         <ExploreWeb3 />
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

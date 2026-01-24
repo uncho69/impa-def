@@ -2,13 +2,12 @@ import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 
 export default function BerachainPage() {
   return (
-    <ProtectedRoute title="Berachain - Airdrop">
+    <>
       <PageTitle description="Blockchain Layer 1 basata su Cosmos con proof of liquidity">
         Berachain
       </PageTitle>
@@ -238,6 +237,6 @@ export default function BerachainPage() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

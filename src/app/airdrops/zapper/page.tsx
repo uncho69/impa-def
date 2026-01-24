@@ -2,13 +2,12 @@ import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 
 export default function ZapperPage() {
   return (
-    <ProtectedRoute title="Zapper - Airdrop">
+    <>
       <PageTitle description="Dashboard DeFi e aggregatore di protocolli">
         Zapper
       </PageTitle>
@@ -268,6 +267,6 @@ export default function ZapperPage() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

@@ -2,13 +2,12 @@ import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 
 export default function MetamaskPage() {
   return (
-    <ProtectedRoute title="MetaMask - Wallet">
+    <>
       <PageTitle description="Portafoglio non-custodial leader per Ethereum e Layer 2">
         MetaMask
       </PageTitle>
@@ -259,6 +258,6 @@ export default function MetamaskPage() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

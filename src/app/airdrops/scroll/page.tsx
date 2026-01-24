@@ -2,7 +2,6 @@ import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 import Image from "next/image";
@@ -10,7 +9,7 @@ import scrollLogo from "@/assets/Scroll-Logo.svg";
 
 export default function ScrollPage() {
   return (
-    <ProtectedRoute title="Scroll - Airdrop">
+    <>
       <PageTitle description="Layer 2 di Ethereum con tecnologia zkEVM">
         Scroll
       </PageTitle>
@@ -221,6 +220,6 @@ export default function ScrollPage() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

@@ -10,6 +10,7 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
+    "db:wipe-and-push": "npx tsx scripts/db-wipe-and-push.ts",
     "db:studio": "drizzle-kit studio",
     "test": "npx tsx scripts/test-all.ts",
     "test:middleware": "npx tsx scripts/test-middleware.ts",

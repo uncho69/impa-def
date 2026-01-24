@@ -4,6 +4,8 @@ import { db } from '@/lib/db';
 import { news } from '@/lib/db/schema';
 import { eq, sql, count } from 'drizzle-orm';
 
+export const dynamic = 'force-dynamic';
+
 async function checkAdmin() {
   try {
     const { userId } = await auth();

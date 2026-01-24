@@ -4,7 +4,6 @@ import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 import { SimpleCard } from "@/components/SimpleCard";
@@ -356,7 +355,7 @@ export default function Airdrops() {
   const displayedProjects = showAllProjects ? allProjects : allProjects.slice(0, 3);
 
   return (
-    <ProtectedRoute title="Airdrops">
+    <>
       <PageTitle description="Token gratuiti distribuiti ai primi utenti dei progetti Web3">
         Airdrops
       </PageTitle>
@@ -498,6 +497,6 @@ export default function Airdrops() {
       </MobileContainer>
       
       <ExploreWeb3 />
-    </ProtectedRoute>
+    </>
   );
 }

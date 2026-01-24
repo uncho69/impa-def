@@ -1,11 +1,10 @@
 import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 export default function Kalshi() {
   return (
-    <ProtectedRoute title="Kalshi">
+    <>
       <PageTitle description="Piattaforma di mercati di previsione regolamentata">
         Kalshi
       </PageTitle>
@@ -18,6 +17,6 @@ export default function Kalshi() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

@@ -2,13 +2,12 @@ import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 
 export default function LineaPage() {
   return (
-    <ProtectedRoute title="Linea - Airdrop">
+    <>
       <PageTitle description="Layer 2 di ConsenSys per Ethereum con zk-Rollup">
         Linea
       </PageTitle>
@@ -238,6 +237,6 @@ export default function LineaPage() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
-import { NEWS_CATEGORIES } from '@/lib/news';
+import { NEWS_CATEGORIES } from '@/lib/news-constants';
 
 export default function NewNewsPage() {
   const router = useRouter();

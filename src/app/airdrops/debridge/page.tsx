@@ -2,13 +2,12 @@ import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 
 export default function DeBridgePage() {
   return (
-    <ProtectedRoute title="deBridge - Airdrop">
+    <>
       <PageTitle description="Protocollo di interoperabilità cross-chain">
         deBridge
       </PageTitle>
@@ -217,6 +216,6 @@ export default function DeBridgePage() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

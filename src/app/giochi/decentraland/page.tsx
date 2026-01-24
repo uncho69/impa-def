@@ -1,11 +1,10 @@
 import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 export default function Decentraland() {
   return (
-    <ProtectedRoute title="Decentraland">
+    <>
       <PageTitle description="Metaverso decentralizzato basato su blockchain">
         Decentraland
       </PageTitle>
@@ -18,6 +17,6 @@ export default function Decentraland() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

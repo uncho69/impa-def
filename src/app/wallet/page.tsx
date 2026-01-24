@@ -1,6 +1,5 @@
 import { CardContainer } from "@/components/CardContainer";
 import { SimpleCard } from "@/components/SimpleCard";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { BackToHome } from "@/components/BackToHome";
 import { ExploreWeb3 } from "@/components/ExploreWeb3";
 import Placeholder from "@/assets/placeholder.svg";
@@ -35,8 +34,7 @@ import dogechainIcon from "@/assets/dogechain-logo.png";
 
 export default function WalletPage() {
   return (
-    <ProtectedRoute title="Wallet">
-      <div className="min-h-screen bg-gradient-to-b from-primary-50 to-background">
+    <div className="min-h-screen bg-gradient-to-b from-primary-50 to-background">
       <div className="container-custom py-12">
         <div className="flex justify-end mb-6">
           <BackToHome />
@@ -200,6 +198,5 @@ export default function WalletPage() {
 
       </div>
     </div>
-    </ProtectedRoute>
   );
 }

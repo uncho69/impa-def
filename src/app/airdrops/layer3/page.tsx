@@ -2,13 +2,12 @@ import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 
 export default function Layer3Page() {
   return (
-    <ProtectedRoute title="Layer3 - Airdrop">
+    <>
       <PageTitle description="Piattaforma di gamification per Web3 e DeFi">
         Layer3
       </PageTitle>
@@ -238,6 +237,6 @@ export default function Layer3Page() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

@@ -2,13 +2,12 @@ import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 
 export default function BeramarketPage() {
   return (
-    <ProtectedRoute title="Beramarket - Airdrop">
+    <>
       <PageTitle description="Marketplace NFT su Berachain con funzionalità avanzate">
         Beramarket
       </PageTitle>
@@ -277,6 +276,6 @@ export default function BeramarketPage() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

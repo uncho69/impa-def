@@ -2,13 +2,12 @@ import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 
 export default function PolygonZkEVMPage() {
   return (
-    <ProtectedRoute title="Polygon zkEVM - Airdrop">
+    <>
       <PageTitle description="Soluzione Layer 2 per Ethereum con tecnologia zero-knowledge">
         Polygon zkEVM
       </PageTitle>
@@ -238,6 +237,6 @@ export default function PolygonZkEVMPage() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

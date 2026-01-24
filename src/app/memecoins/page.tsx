@@ -6,7 +6,7 @@ import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { ClerkProtectedRoute } from "@/components/ClerkProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 import { SimpleCard } from "@/components/SimpleCard";
@@ -136,7 +136,7 @@ export default function Memecoins() {
   const displayedMemecoins = showAllMemecoins ? allMemecoins : allMemecoins.slice(0, 3);
   
   return (
-    <ProtectedRoute title="Memecoins">
+    <ClerkProtectedRoute title="Memecoins">
       <PageTitle description="Criptovalute basate su meme e cultura internet">
         Memecoins
       </PageTitle>
@@ -355,6 +355,6 @@ export default function Memecoins() {
               </MobileContainer>
               
               <ExploreWeb3 />
-            </ProtectedRoute>
+            </ClerkProtectedRoute>
           );
         }

@@ -4,13 +4,12 @@ import { MobileContainer } from "@/components/MobileContainer";
 import { SectionBody } from "@/components/SectionBody";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionTutorial } from "@/components/SectionTutorial";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { PageTitle } from "@/components/PageTitle";
 import { ExploreWeb3 } from "@/components/ExploreWeb3";
 
 export default function Kraken() {
   return (
-    <ProtectedRoute title="Kraken">
+    <>
       <PageTitle description="Una delle exchange più rispettate e sicure al mondo">
         Kraken
       </PageTitle>
@@ -226,6 +225,6 @@ export default function Kraken() {
         </SectionBody>
         <ExploreWeb3 />
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

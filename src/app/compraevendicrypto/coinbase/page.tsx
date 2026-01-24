@@ -4,14 +4,13 @@ import { MobileContainer } from "@/components/MobileContainer";
 import { SectionBody } from "@/components/SectionBody";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionTutorial } from "@/components/SectionTutorial";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { PageTitle } from "@/components/PageTitle";
 import { ExploreWeb3 } from "@/components/ExploreWeb3";
 import Image from "next/image";
 
 export default function Coinbase() {
   return (
-    <ProtectedRoute title="Coinbase">
+    <>
       <PageTitle description="La più grande exchange di criptovalute quotata in borsa">
         Coinbase
       </PageTitle>
@@ -219,6 +218,6 @@ export default function Coinbase() {
         </SectionBody>
         <ExploreWeb3 />
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

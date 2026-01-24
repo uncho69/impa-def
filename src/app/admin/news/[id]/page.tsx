@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
 // import { SimpleCard } from '@/components/SimpleCard'; // Non più necessario
-import { NEWS_CATEGORIES } from '@/lib/news';
+import { NEWS_CATEGORIES } from '@/lib/news-constants';
 
 interface NewsItem {
   id: string;

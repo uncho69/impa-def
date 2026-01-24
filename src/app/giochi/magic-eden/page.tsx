@@ -1,11 +1,10 @@
 import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 export default function MagicEden() {
   return (
-    <ProtectedRoute title="Magic Eden">
+    <>
       <PageTitle description="Marketplace NFT leader su Solana">
         Magic Eden
       </PageTitle>
@@ -18,6 +17,6 @@ export default function MagicEden() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

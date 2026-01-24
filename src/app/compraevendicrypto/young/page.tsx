@@ -1,14 +1,13 @@
 import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 import { ExploreWeb3 } from "@/components/ExploreWeb3";
 
 export default function Young() {
   return (
-    <ProtectedRoute title="Young Platform">
+    <>
       <PageTitle description="Exchange italiana user-friendly con servizi educativi. Ideale per principianti con Academy e Step per guadagnare crypto.">
         Young Platform
       </PageTitle>
@@ -87,6 +86,6 @@ export default function Young() {
         </SectionBody>
         <ExploreWeb3 />
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

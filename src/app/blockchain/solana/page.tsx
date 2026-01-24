@@ -3,7 +3,6 @@
 import { MobileContainer } from "@/components/MobileContainer";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 import Image from "next/image";
@@ -41,8 +40,7 @@ export default function Solana() {
     return () => clearInterval(interval);
   }, []);
   return (
-    <ProtectedRoute title="Solana">
-      <MobileContainer>
+    <MobileContainer>
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
             <Image src={solanaIcon} alt="Solana" width={64} height={64} />
@@ -269,7 +267,6 @@ export default function Solana() {
             </div>
           </div>
         </SectionBody>
-      </MobileContainer>
-    </ProtectedRoute>
+    </MobileContainer>
   );
 }

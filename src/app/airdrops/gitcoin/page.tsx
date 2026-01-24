@@ -2,13 +2,12 @@ import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 
 export default function GitcoinPage() {
   return (
-    <ProtectedRoute title="Gitcoin - Airdrop">
+    <>
       <PageTitle description="Piattaforma per il finanziamento di beni pubblici open source">
         Gitcoin
       </PageTitle>
@@ -268,6 +267,6 @@ export default function GitcoinPage() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

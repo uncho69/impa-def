@@ -1,11 +1,10 @@
 import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 export default function AxieInfinity() {
   return (
-    <ProtectedRoute title="Axie Infinity">
+    <>
       <PageTitle description="Gioco Play-to-Earn basato su NFT">
         Axie Infinity
       </PageTitle>
@@ -18,6 +17,6 @@ export default function AxieInfinity() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

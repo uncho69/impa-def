@@ -2,13 +2,12 @@ import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 
 export default function MarginfiPage() {
   return (
-    <ProtectedRoute title="Marginfi - Airdrop">
+    <>
       <PageTitle description="Protocollo di lending e borrowing su Solana">
         Marginfi
       </PageTitle>
@@ -238,6 +237,6 @@ export default function MarginfiPage() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

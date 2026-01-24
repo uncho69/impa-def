@@ -2,13 +2,12 @@ import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 
 export default function ZerionPage() {
   return (
-    <ProtectedRoute title="Zerion - Airdrop">
+    <>
       <PageTitle description="Portafoglio e dashboard DeFi multi-chain">
         Zerion
       </PageTitle>
@@ -268,6 +267,6 @@ export default function ZerionPage() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

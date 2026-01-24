@@ -1,7 +1,6 @@
 import { MobileContainer } from "@/components/MobileContainer";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 import Image from "next/image";
@@ -9,8 +8,7 @@ import arbitrumIcon from "@/assets/arbitrum-arb-logo.svg";
 
 export default function Arbitrum() {
   return (
-    <ProtectedRoute title="Arbitrum">
-      <MobileContainer>
+    <MobileContainer>
         <div className="flex items-center gap-4 mb-6">
           <Image src={arbitrumIcon} alt="Arbitrum" width={64} height={64} />
           <div>
@@ -200,6 +198,5 @@ export default function Arbitrum() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
   );
 }

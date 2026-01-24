@@ -1,14 +1,14 @@
 import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { ClerkProtectedRoute } from "@/components/ClerkProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { ExploreWeb3 } from "@/components/ExploreWeb3";
 import Link from "next/link";
 
 export default function EventiStorici() {
   return (
-    <ProtectedRoute title="Eventi Storici">
+    <ClerkProtectedRoute title="Eventi Storici">
       <PageTitle description="I momenti che hanno definito l'evoluzione del Web3">
         Eventi Storici
       </PageTitle>
@@ -234,6 +234,6 @@ export default function EventiStorici() {
         
         <ExploreWeb3 />
       </MobileContainer>
-    </ProtectedRoute>
+    </ClerkProtectedRoute>
   );
 }

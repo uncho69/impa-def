@@ -1,7 +1,6 @@
 import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 import { ExploreWeb3 } from "@/components/ExploreWeb3";
@@ -9,7 +8,7 @@ import Image from "next/image";
 
 export default function Holyheld() {
   return (
-    <ProtectedRoute title="Holyheld">
+    <>
       <PageTitle description="Banca digitale Web3 con carta di debito per spendere crypto nel mondo reale. Sicurezza avanzata e cashback.">
         Holyheld
       </PageTitle>
@@ -114,6 +113,6 @@ export default function Holyheld() {
         </SectionBody>
         <ExploreWeb3 />
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

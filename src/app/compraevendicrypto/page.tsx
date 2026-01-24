@@ -2,7 +2,6 @@ import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 import { ExchangeCardList } from "@/components/ExchangeCardList";
@@ -10,7 +9,7 @@ import { ExploreWeb3 } from "@/components/ExploreWeb3";
 
 export default function Exchange() {
   return (
-    <ProtectedRoute title="Compra e Vendi Crypto">
+    <>
       <PageTitle description="Scopri come acquistare e vendere criptovalute in modo sicuro e conveniente">
         Compra e Vendi Crypto
       </PageTitle>
@@ -74,6 +73,6 @@ export default function Exchange() {
         </SectionBody>
         <ExploreWeb3 />
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

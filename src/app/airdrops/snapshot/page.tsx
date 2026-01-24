@@ -2,13 +2,12 @@ import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 
 export default function SnapshotPage() {
   return (
-    <ProtectedRoute title="Snapshot - Airdrop">
+    <>
       <PageTitle description="Piattaforma di governance decentralizzata per DAO">
         Snapshot
       </PageTitle>
@@ -268,6 +267,6 @@ export default function SnapshotPage() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

@@ -2,13 +2,12 @@ import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 
 export default function RelayBridgePage() {
   return (
-    <ProtectedRoute title="Relay Bridge - Airdrop">
+    <>
       <PageTitle description="Piattaforma di bridging cross-chain istantaneo">
         Relay Bridge
       </PageTitle>
@@ -210,6 +209,6 @@ export default function RelayBridgePage() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

@@ -2,13 +2,12 @@ import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 
 export default function BongBearsPage() {
   return (
-    <ProtectedRoute title="Bong Bears - Airdrop">
+    <>
       <PageTitle description="Collezione NFT e community su Solana">
         Bong Bears
       </PageTitle>
@@ -268,6 +267,6 @@ export default function BongBearsPage() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

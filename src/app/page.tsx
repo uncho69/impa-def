@@ -47,11 +47,9 @@ export default function Home() {
                     src="/imparodefi-promo.mp4"
                     controls
                     playsInline
-                    webkit-playsinline="true"
                     className="w-full h-auto object-cover rounded-2xl transition-transform duration-700"
                     preload="metadata"
                     style={{ minHeight: '400px', aspectRatio: '16/9' }}
-                    poster=""
                   >
                     Il tuo browser non supporta il video.
                   </video>

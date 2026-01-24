@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { NEWS_CATEGORIES, NEWS_STATUSES, getCategoryLabel, getStatusLabel } from '@/lib/news';
+import { NEWS_CATEGORIES, NEWS_STATUSES, getCategoryLabel, getStatusLabel } from '@/lib/news-constants';
 
 interface NewsItem {
   id: string;

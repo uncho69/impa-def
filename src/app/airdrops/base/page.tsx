@@ -2,7 +2,6 @@ import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 import Image from "next/image";
@@ -10,7 +9,7 @@ import baseLogo from "@/assets/base-logo.svg";
 
 export default function BasePage() {
   return (
-    <ProtectedRoute title="Base - Airdrop">
+    <>
       <PageTitle description="Layer 2 di Ethereum sviluppata da Coinbase">
         Base
       </PageTitle>
@@ -205,6 +204,6 @@ export default function BasePage() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

@@ -2,6 +2,12 @@
 
 One test script per app functionality. Run all via `npm run test`, or run a single suite with `npm run test:<name>`.
 
+## DB scripts
+
+| Script | Command | Description |
+|--------|---------|-------------|
+| **db:wipe-and-push** | `npm run db:wipe-and-push` | Drops all tables in `public`, then `drizzle-kit push` (fresh schema). Use for first push or full reset. Requires `WIPE_PROD=1` when `DATABASE_URL` looks like production. |
+
 ## Test scripts
 
 | Script | Functionality | Deps |

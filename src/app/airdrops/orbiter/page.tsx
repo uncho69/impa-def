@@ -2,7 +2,6 @@ import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 import Image from "next/image";
@@ -10,7 +9,7 @@ import orbiterIcon from "@/assets/orbiterfinance-icon.png";
 
 export default function OrbiterPage() {
   return (
-    <ProtectedRoute title="Orbiter - Airdrop">
+    <>
       <PageTitle description="Protocollo di bridging decentralizzato cross-chain">
         Orbiter Finance
       </PageTitle>
@@ -236,6 +235,6 @@ export default function OrbiterPage() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }

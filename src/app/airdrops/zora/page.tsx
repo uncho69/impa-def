@@ -2,13 +2,12 @@ import { MobileContainer } from "@/components/MobileContainer";
 import { PageTitle } from "@/components/PageTitle";
 import { SectionTitle } from "@/components/SectionTitle";
 import { SectionBody } from "@/components/SectionBody";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
 
 export default function ZoraPage() {
   return (
-    <ProtectedRoute title="Zora - Airdrop">
+    <>
       <PageTitle description="Piattaforma per la creazione su internet libera e preziosa">
         Zora
       </PageTitle>
@@ -268,6 +267,6 @@ export default function ZoraPage() {
           </div>
         </SectionBody>
       </MobileContainer>
-    </ProtectedRoute>
+    </>
   );
 }
