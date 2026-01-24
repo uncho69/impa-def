@@ -977,7 +977,7 @@
           "type": "varchar(50)",
           "primaryKey": false,
           "notNull": true,
-          "default": "'DRAFT'"
+          "default": "DRAFT"
         },
         "read_time": {
           "name": "read_time",
@@ -3304,7 +3304,7 @@
           "type": "varchar(50)",
           "primaryKey": false,
           "notNull": true,
-          "default": "'feature'"
+          "default": "feature"
         },
         "image_url": {
           "name": "image_url",
