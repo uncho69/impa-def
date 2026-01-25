@@ -3,7 +3,7 @@
 import { Button } from "./Button";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useUser, SignInButton, SignOutButton } from '@clerk/nextjs';
+import { useUser, SignOutButton } from '@clerk/nextjs';
 import LanguageToggle from "./LanguageToggle";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -245,11 +245,12 @@ export function MobileMenu() {
                     </button>
                   </SignOutButton>
                 ) : (
-                  <SignInButton mode="modal" signInUrl="https://accounts.imparodefi.xyz/sign-in">
-                    <button className={btnModalStyle}>
-                      {t('auth.accedi')}
-                    </button>
-                  </SignInButton>
+                  <a 
+                    href="https://accounts.imparodefi.xyz/sign-in"
+                    className={btnModalStyle}
+                  >
+                    {t('auth.accedi')}
+                  </a>
                 )
               )}
             </div>

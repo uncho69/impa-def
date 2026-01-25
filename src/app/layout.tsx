@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 // import "bootstrap/dist/css/bootstrap.min.css";
 import { Navbar } from "@/components/Navbar";
-import { ClerkProvider, SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
+import { ClerkProvider, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Footer } from "@/components/Footer";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { fontClassNames } from "./fonts";
@@ -50,8 +50,8 @@ export default function RootLayout({
             {isClerkConfigured ? (
               <>
                 <SignedOut>
-                  <SignInButton signInUrl="https://accounts.imparodefi.xyz/sign-in" />
-                  <SignUpButton signUpUrl="https://accounts.imparodefi.xyz/sign-up" />
+                  <a href="https://accounts.imparodefi.xyz/sign-in">Accedi</a>
+                  <a href="https://accounts.imparodefi.xyz/sign-up">Registrati</a>
                 </SignedOut>
                 <SignedIn>
                   <UserButton afterSignOutUrl="https://accounts.imparodefi.xyz/sign-in" />

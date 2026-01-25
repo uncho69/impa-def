@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { UserButton, useUser, SignInButton, SignUpButton } from "@clerk/nextjs";
+import { UserButton, useUser } from "@clerk/nextjs";
 
 function AuthStatusClerk() {
   const { isSignedIn } = useUser();
@@ -13,12 +13,18 @@ function AuthStatusClerk() {
   }
   return (
     <div className="flex items-center gap-2">
-      <SignInButton signInUrl="https://accounts.imparodefi.xyz/sign-in">
-        <button className="btn-outline">Accedi</button>
-      </SignInButton>
-      <SignUpButton signUpUrl="https://accounts.imparodefi.xyz/sign-up">
-        <button className="btn-primary">Registrati</button>
-      </SignUpButton>
+      <a 
+        href="https://accounts.imparodefi.xyz/sign-in"
+        className="btn-outline"
+      >
+        Accedi
+      </a>
+      <a 
+        href="https://accounts.imparodefi.xyz/sign-up"
+        className="btn-primary"
+      >
+        Registrati
+      </a>
     </div>
   );
 }
@@ -39,4 +45,3 @@ export function AuthStatus() {
   }
   return <AuthStatusClerk />;
 }
-
