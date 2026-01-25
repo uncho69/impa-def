@@ -740,6 +740,11 @@ export default function RootLayout({
   const signInFallbackUrl = process.env.NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL || '/';
   const signUpFallbackUrl = process.env.NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL || '/';
   
+  // Note: Custom domain (accounts.imparodefi.xyz) is configured in Clerk Dashboard
+  // Clerk automatically uses the custom domain based on the publishable key
+  // The domain prop is not available in ClerkProvider for Next.js
+  // Cookie cross-domain handling is managed by Clerk's server configuration
+  
   return (
     <ClerkProvider 
       publishableKey={publishableKey}

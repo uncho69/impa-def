@@ -12,18 +12,18 @@ const nextConfig = {
               key: "Content-Security-Policy",
               value: `
                 default-src 'self';
-                script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com https://id-bot-eight.vercel.app;
-                style-src 'self' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com https://id-bot-eight.vercel.app;
-                img-src 'self' data: blob: https://*.clerk.accounts.dev https://*.clerk.com https://id-bot-eight.vercel.app;
-                font-src 'self' https://*.clerk.accounts.dev https://*.clerk.com https://id-bot-eight.vercel.app;
+                script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
+                style-src 'self' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
+                img-src 'self' data: blob: https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
+                font-src 'self' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
                 object-src 'none';
                 base-uri 'self';
                 form-action 'self';
                 frame-ancestors 'none';
-                child-src https://challenges.cloudflare.com https://*.clerk.accounts.dev https://*.clerk.com https://id-bot-eight.vercel.app;
-                frame-src https://challenges.cloudflare.com https://*.clerk.accounts.dev https://*.clerk.com https://id-bot-eight.vercel.app;
-                connect-src 'self' https://challenges.cloudflare.com wss://relay.walletconnect.com wss://relay.walletconnect.org wss://www.walletlink.org https://explorer-api.walletconnect.com https://*.clerk.accounts.dev https://*.clerk.com https://id-bot-eight.vercel.app;
-                worker-src 'self' https://*.clerk.accounts.dev https://*.clerk.com https://id-bot-eight.vercel.app;
+                child-src https://challenges.cloudflare.com https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
+                frame-src https://challenges.cloudflare.com https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
+                connect-src 'self' https://challenges.cloudflare.com wss://relay.walletconnect.com wss://relay.walletconnect.org wss://www.walletlink.org https://explorer-api.walletconnect.com https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
+                worker-src 'self' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
                 manifest-src 'self';
               `.replace(/\s+/g, ' ').trim(),
             },
@@ -40,18 +40,18 @@ const nextConfig = {
             key: "Content-Security-Policy",
               value: `
                 default-src 'self';
-                script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com https://id-bot-eight.vercel.app;
-                style-src 'self' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com https://id-bot-eight.vercel.app;
-                img-src 'self' data: blob: https://*.clerk.accounts.dev https://*.clerk.com https://id-bot-eight.vercel.app;
-                font-src 'self' https://*.clerk.accounts.dev https://*.clerk.com https://id-bot-eight.vercel.app;
+                script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
+                style-src 'self' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
+                img-src 'self' data: blob: https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
+                font-src 'self' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
                 object-src 'none';
                 base-uri 'self';
                 form-action 'self';
                 frame-ancestors 'none';
-                child-src https://challenges.cloudflare.com https://*.clerk.accounts.dev https://*.clerk.com https://id-bot-eight.vercel.app;
-                frame-src https://challenges.cloudflare.com https://*.clerk.accounts.dev https://*.clerk.com https://id-bot-eight.vercel.app;
-                connect-src 'self' https://challenges.cloudflare.com wss://relay.walletconnect.com wss://relay.walletconnect.org wss://www.walletlink.org https://explorer-api.walletconnect.com https://*.clerk.accounts.dev https://*.clerk.com https://id-bot-eight.vercel.app;
-                worker-src 'self' https://*.clerk.accounts.dev https://*.clerk.com https://id-bot-eight.vercel.app;
+                child-src https://challenges.cloudflare.com https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
+                frame-src https://challenges.cloudflare.com https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
+                connect-src 'self' https://challenges.cloudflare.com wss://relay.walletconnect.com wss://relay.walletconnect.org wss://www.walletlink.org https://explorer-api.walletconnect.com https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
+                worker-src 'self' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
                 manifest-src 'self';
               `.replace(/\s+/g, ' ').trim(),
           },
