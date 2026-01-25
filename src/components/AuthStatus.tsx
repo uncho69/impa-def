@@ -7,16 +7,16 @@ function AuthStatusClerk() {
   if (isSignedIn) {
     return (
       <div className="flex items-center gap-2">
-        <UserButton afterSignOutUrl="/" />
+        <UserButton afterSignOutUrl="https://accounts.imparodefi.xyz/sign-in" />
       </div>
     );
   }
   return (
     <div className="flex items-center gap-2">
-      <SignInButton signInUrl="/sign-in">
+      <SignInButton signInUrl="https://accounts.imparodefi.xyz/sign-in">
         <button className="btn-outline">Accedi</button>
       </SignInButton>
-      <SignUpButton signUpUrl="/sign-up">
+      <SignUpButton signUpUrl="https://accounts.imparodefi.xyz/sign-up">
         <button className="btn-primary">Registrati</button>
       </SignUpButton>
     </div>

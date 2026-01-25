@@ -197,7 +197,7 @@ export function Navbar() {
       if (signupBtn) {
         signupBtn.onclick = () => {
           modal.remove();
-          window.location.href = '/sign-up';
+          window.location.href = 'https://accounts.imparodefi.xyz/sign-up';
         };
       }
       
@@ -205,7 +205,7 @@ export function Navbar() {
       if (signinBtn) {
         signinBtn.onclick = () => {
           modal.remove();
-          window.location.href = '/sign-in';
+          window.location.href = 'https://accounts.imparodefi.xyz/sign-in';
         };
       }
     }

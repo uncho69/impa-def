@@ -34,17 +34,19 @@ export function ClerkProtectedRoute({ children, title }: ClerkProtectedRouteProp
           </p>
           <div className="bg-white rounded-2xl shadow-xl p-8 border border-neutral-200">
             <div className="space-y-3">
-              <SignInButton mode="modal" signInUrl="/sign-in">
-                <button className="w-full bg-primary-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-primary-700 transition-colors">
-                  {t('auth.accedi')}
-                </button>
-              </SignInButton>
+              <a 
+                href="https://accounts.imparodefi.xyz/sign-in"
+                className="w-full bg-primary-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-primary-700 transition-colors block text-center"
+              >
+                {t('auth.accedi')}
+              </a>
 
-              <SignUpButton mode="modal" signUpUrl="/sign-up">
-                <button className="w-full bg-white text-primary-600 py-3 px-4 rounded-xl font-semibold border-2 border-primary-600 hover:bg-primary-50 transition-colors">
-                  {t('auth.createNewAccount')}
-                </button>
-              </SignUpButton>
+              <a 
+                href="https://accounts.imparodefi.xyz/sign-up"
+                className="w-full bg-white text-primary-600 py-3 px-4 rounded-xl font-semibold border-2 border-primary-600 hover:bg-primary-50 transition-colors block text-center"
+              >
+                {t('auth.createNewAccount')}
+              </a>
             </div>
           </div>
         </div>

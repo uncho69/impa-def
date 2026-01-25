@@ -50,11 +50,11 @@ export default function RootLayout({
             {isClerkConfigured ? (
               <>
                 <SignedOut>
-                  <SignInButton />
-                  <SignUpButton />
+                  <SignInButton signInUrl="https://accounts.imparodefi.xyz/sign-in" />
+                  <SignUpButton signUpUrl="https://accounts.imparodefi.xyz/sign-up" />
                 </SignedOut>
                 <SignedIn>
-                  <UserButton />
+                  <UserButton afterSignOutUrl="https://accounts.imparodefi.xyz/sign-in" />
                 </SignedIn>
               </>
             ) : null}
@@ -654,7 +654,7 @@ export default function RootLayout({
                   signupBtn.onclick = (e) => {
                     e.stopPropagation();
                     modal.remove();
-                    window.location.href = '/sign-up';
+                    window.location.href = 'https://accounts.imparodefi.xyz/sign-up';
                   };
                   
                   // Sign in button
@@ -683,7 +683,7 @@ export default function RootLayout({
                   signinBtn.onclick = (e) => {
                     e.stopPropagation();
                     modal.remove();
-                    window.location.href = '/sign-in';
+                    window.location.href = 'https://accounts.imparodefi.xyz/sign-in';
                   };
                   
                   // Assemble modal

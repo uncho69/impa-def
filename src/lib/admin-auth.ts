@@ -13,7 +13,7 @@ export async function requireAdmin() {
   const { userId } = await auth();
   
   if (!userId) {
-    redirect('/sign-in');
+    redirect('https://accounts.imparodefi.xyz/sign-in');
   }
 
   // In un ambiente reale dovresti prendere l'email dall'utente Clerk

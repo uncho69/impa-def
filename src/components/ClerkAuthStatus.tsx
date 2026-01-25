@@ -36,18 +36,18 @@ export function ClerkAuthStatus() {
   if (!isLoaded && showFallback) {
     return (
       <div className="flex items-center space-x-3">
-        <Link 
-          href="/sign-in" 
+        <a 
+          href="https://accounts.imparodefi.xyz/sign-in" 
           className="px-4 py-2 border-2 border-primary-600 text-primary-600 bg-white rounded-lg font-semibold text-sm hover:bg-primary-50 transition-colors"
         >
           Accedi
-        </Link>
-        <Link 
-          href="/sign-up" 
+        </a>
+        <a 
+          href="https://accounts.imparodefi.xyz/sign-up" 
           className="px-4 py-2 bg-primary-600 text-white rounded-lg font-semibold text-sm hover:bg-primary-700 transition-colors"
         >
           Registrati
-        </Link>
+        </a>
       </div>
     );
   }
@@ -56,7 +56,7 @@ export function ClerkAuthStatus() {
   if (isSignedIn && user) {
     return (
       <div className="flex items-center space-x-3">
-        <UserButton afterSignOutUrl="/" />
+        <UserButton afterSignOutUrl="https://accounts.imparodefi.xyz/sign-in" />
       </div>
     );
   }
@@ -64,18 +64,18 @@ export function ClerkAuthStatus() {
   // Show both Accedi and Registrati buttons when not signed in
   return (
     <div className="flex items-center space-x-3">
-      <Link 
-        href="/sign-in" 
+      <a 
+        href="https://accounts.imparodefi.xyz/sign-in" 
         className="px-4 py-2 border-2 border-primary-600 text-primary-600 bg-white rounded-lg font-semibold text-sm hover:bg-primary-50 transition-colors"
       >
         Accedi
-      </Link>
-      <Link 
-        href="/sign-up" 
+      </a>
+      <a 
+        href="https://accounts.imparodefi.xyz/sign-up" 
         className="px-4 py-2 bg-primary-600 text-white rounded-lg font-semibold text-sm hover:bg-primary-700 transition-colors"
       >
         Registrati
-      </Link>
+      </a>
     </div>
   );
 }

@@ -29,7 +29,7 @@ export default function AdminLayout({
   useEffect(() => {
     if (isLoaded) {
       if (!user) {
-        router.push('/sign-in');
+        window.location.href = 'https://accounts.imparodefi.xyz/sign-in';
         return;
       }
 
