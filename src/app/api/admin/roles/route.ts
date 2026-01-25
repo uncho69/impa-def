@@ -33,7 +33,6 @@ export async function GET(request: NextRequest) {
         userId: users.id,
         email: users.email,
         username: users.username,
-        privyId: users.privyId,
         walletAddress: users.walletAddress,
         isActive: users.isActive,
         createdAt: users.createdAt,

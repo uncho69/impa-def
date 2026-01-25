@@ -245,7 +245,7 @@ export function MobileMenu() {
                     </button>
                   </SignOutButton>
                 ) : (
-                  <SignInButton mode="modal">
+                  <SignInButton mode="modal" signInUrl="/sign-in">
                     <button className={btnModalStyle}>
                       {t('auth.accedi')}
                     </button>

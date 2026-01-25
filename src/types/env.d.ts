@@ -9,6 +9,12 @@ declare namespace NodeJS {
     CLERK_SECRET_KEY?: string;
     CLERK_WEBHOOK_SECRET?: string;
     SKIP_CLERK?: string;
+    // Optional: Custom sign-in/sign-up URLs (defaults to /sign-in and /sign-up)
+    CLERK_SIGN_IN_URL?: string;
+    CLERK_SIGN_UP_URL?: string;
+    // Optional: Redirect URLs after authentication
+    NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL?: string;
+    NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL?: string;
     
     // Cron
     CRON_SECRET?: string;

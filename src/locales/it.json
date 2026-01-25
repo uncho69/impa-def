@@ -102,6 +102,7 @@
     "invalidEpochFormat": "Formato ID epoca non valido. Usa: projectId-campaignIndex-epochIndex",
     "viewLeaderboard": "Visualizza Leaderboard",
     "backToSelection": "Torna alla selezione",
+    "comingSoon": "In arrivo…",
     "project": "Progetto",
     "campaign": "Campagna",
     "epoch": "Epoca",

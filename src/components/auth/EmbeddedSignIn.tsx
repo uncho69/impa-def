@@ -2,7 +2,11 @@
 
 import { SignIn } from "@clerk/nextjs";
 
-export function EmbeddedSignIn() {
+interface EmbeddedSignInProps {
+  redirectUrl?: string;
+}
+
+export function EmbeddedSignIn({ redirectUrl = '/' }: EmbeddedSignInProps) {
   return (
     <div className="w-full max-w-md mx-auto">
       <SignIn
@@ -59,9 +63,10 @@ export function EmbeddedSignIn() {
             fontFamily: "Montserrat, sans-serif",
           },
         }}
-        routing="hash"
-        signUpUrl="#signup"
-        redirectUrl="/"
+        routing="path"
+        signUpUrl="/sign-up"
+        redirectUrl={redirectUrl}
+        fallbackRedirectUrl={redirectUrl}
       />
     </div>
   );

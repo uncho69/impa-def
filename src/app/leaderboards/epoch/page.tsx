@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { BackToHome } from "@/components/BackToHome";
-import { ClerkProtectedRoute } from "@/components/ClerkProtectedRoute";
 
 interface Epoch {
   projectId: string;
@@ -24,6 +24,7 @@ interface Epoch {
 
 export default function EpochLeaderboardSelectionPage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const { isSignedIn, isLoaded } = useUser();
   const [epochs, setEpochs] = useState<Epoch[]>([]);
   const [loading, setLoading] = useState(true);
@@ -89,114 +90,117 @@ export default function EpochLeaderboardSelectionPage() {
   }
 
   return (
-    <ClerkProtectedRoute title="Epochs">
-      <div className="min-h-screen bg-gradient-to-b from-primary-50 to-background">
-        <div className="container-custom py-12">
-          <div className="flex justify-end mb-6">
-            <BackToHome />
+    <div className="min-h-screen bg-gradient-to-b from-primary-50 to-background">
+      <div className="container-custom py-12">
+        <div className="flex justify-end mb-6">
+          <BackToHome />
+        </div>
+
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-8">
+            <h1 className="text-4xl lg:text-5xl font-bold gradient-text mb-4">
+              Epochs
+            </h1>
           </div>
 
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-8">
-              <h1 className="text-4xl lg:text-5xl font-bold gradient-text mb-4">
-                Epochs
-              </h1>
+          {/* Error Message */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-6">
+              <p className="text-red-700">{error}</p>
             </div>
+          )}
 
-            {/* Error Message */}
-            {error && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-6">
-                <p className="text-red-700">{error}</p>
+          {/* Epochs List */}
+          <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 p-8">
+            <h2 className="text-2xl font-bold gradient-text mb-6">Lista Epochs</h2>
+            
+            {loading ? (
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto mb-4"></div>
+                <p className="text-neutral-600">Caricamento epochs...</p>
               </div>
-            )}
-
-            {/* Epochs List */}
-            <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 p-8">
-              <h2 className="text-2xl font-bold gradient-text mb-6">Lista Epochs</h2>
-              
-              {loading ? (
-                <div className="text-center py-12">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto mb-4"></div>
-                  <p className="text-neutral-600">Caricamento epochs...</p>
-                </div>
-              ) : epochs.length === 0 ? (
-                <div className="text-center py-12">
-                  <p className="text-neutral-600">Nessun epoch trovato.</p>
-                </div>
-              ) : (
-                <>
-                  <div className="space-y-3 mb-6">
-                    {epochs.map((epoch) => {
-                      const epochId = getEpochId(epoch);
-                      return (
-                        <div
-                          key={epochId}
-                          onClick={() => router.push(`/leaderboards/epoch/${epochId}`)}
-                          className="border border-neutral-200 rounded-lg p-4 cursor-pointer transition-colors hover:border-primary-300 hover:bg-neutral-50"
-                        >
-                          <div className="flex items-center justify-between">
-                            <div className="flex-1">
-                              <div className="flex items-center gap-3 mb-2">
-                                <h3 className="font-bold text-lg text-neutral-900">
-                                  {epoch.projectId} - Campaign {epoch.campaignIndex} - Epoch {epoch.index}
-                                </h3>
+            ) : epochs.length === 0 ? (
+              <div className="text-center py-16">
+                <p className="text-2xl font-semibold gradient-text mb-2">
+                  {t('leaderboards.comingSoon')}
+                </p>
+                <p className="text-neutral-500 max-w-md mx-auto">
+                  {t('leaderboards.epochDescription')}
+                </p>
+              </div>
+            ) : (
+              <>
+                <div className="space-y-3 mb-6">
+                  {epochs.map((epoch) => {
+                    const epochId = getEpochId(epoch);
+                    return (
+                      <div
+                        key={epochId}
+                        onClick={() => router.push(`/leaderboards/epoch/${epochId}`)}
+                        className="border border-neutral-200 rounded-lg p-4 cursor-pointer transition-colors hover:border-primary-300 hover:bg-neutral-50"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-3 mb-2">
+                              <h3 className="font-bold text-lg text-neutral-900">
+                                {epoch.projectId} - Campaign {epoch.campaignIndex} - Epoch {epoch.index}
+                              </h3>
+                            </div>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                              <div>
+                                <span className="text-neutral-500">Inizio:</span>
+                                <p className="font-semibold">{formatDate(epoch.startDate)}</p>
                               </div>
-                              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                                <div>
-                                  <span className="text-neutral-500">Inizio:</span>
-                                  <p className="font-semibold">{formatDate(epoch.startDate)}</p>
-                                </div>
-                                <div>
-                                  <span className="text-neutral-500">Fine:</span>
-                                  <p className="font-semibold">{formatDate(epoch.endDate)}</p>
-                                </div>
-                                <div>
-                                  <span className="text-neutral-500">Tweet:</span>
-                                  <p className="font-semibold">{formatNumber(epoch.tweetCount)}</p>
-                                </div>
-                                <div>
-                                  <span className="text-neutral-500">Punti:</span>
-                                  <p className="font-semibold">{formatNumber(epoch.totalPoints)}</p>
-                                </div>
+                              <div>
+                                <span className="text-neutral-500">Fine:</span>
+                                <p className="font-semibold">{formatDate(epoch.endDate)}</p>
+                              </div>
+                              <div>
+                                <span className="text-neutral-500">Tweet:</span>
+                                <p className="font-semibold">{formatNumber(epoch.tweetCount)}</p>
+                              </div>
+                              <div>
+                                <span className="text-neutral-500">Punti:</span>
+                                <p className="font-semibold">{formatNumber(epoch.totalPoints)}</p>
                               </div>
                             </div>
                           </div>
                         </div>
-                      );
-                    })}
-                  </div>
+                      </div>
+                    );
+                  })}
+                </div>
 
-                  {/* Pagination */}
-                  {total > 0 && (
-                    <div className="flex items-center justify-between pt-6 border-t border-neutral-200">
-                      <div className="text-sm text-neutral-600">
-                        Mostrando {currentPage * limit + 1} - {Math.min((currentPage + 1) * limit, total)} di {formatNumber(total)}
-                      </div>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => setCurrentPage(prev => Math.max(0, prev - 1))}
-                          disabled={currentPage === 0}
-                          className="px-4 py-2 rounded-lg border border-neutral-200 bg-white text-neutral-700 hover:bg-primary-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                        >
-                          Precedente
-                        </button>
-                        <button
-                          onClick={() => setCurrentPage(prev => prev + 1)}
-                          disabled={!hasMore}
-                          className="px-4 py-2 rounded-lg border border-neutral-200 bg-white text-neutral-700 hover:bg-primary-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                        >
-                          Successivo
-                        </button>
-                      </div>
+                {/* Pagination */}
+                {total > 0 && (
+                  <div className="flex items-center justify-between pt-6 border-t border-neutral-200">
+                    <div className="text-sm text-neutral-600">
+                      Mostrando {currentPage * limit + 1} - {Math.min((currentPage + 1) * limit, total)} di {formatNumber(total)}
                     </div>
-                  )}
-                </>
-              )}
-            </div>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => setCurrentPage(prev => Math.max(0, prev - 1))}
+                        disabled={currentPage === 0}
+                        className="px-4 py-2 rounded-lg border border-neutral-200 bg-white text-neutral-700 hover:bg-primary-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      >
+                        Precedente
+                      </button>
+                      <button
+                        onClick={() => setCurrentPage(prev => prev + 1)}
+                        disabled={!hasMore}
+                        className="px-4 py-2 rounded-lg border border-neutral-200 bg-white text-neutral-700 hover:bg-primary-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      >
+                        Successivo
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
           </div>
         </div>
       </div>
-    </ClerkProtectedRoute>
+    </div>
   );
 }
 

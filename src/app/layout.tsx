@@ -736,8 +736,16 @@ export default function RootLayout({
   // If keys aren't configured, Clerk will handle it gracefully
   const publishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY?.trim() || '';
   
+  // Configure redirect URLs - these are fallbacks if not specified in components
+  const signInFallbackUrl = process.env.NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL || '/';
+  const signUpFallbackUrl = process.env.NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL || '/';
+  
   return (
-    <ClerkProvider publishableKey={publishableKey}>
+    <ClerkProvider 
+      publishableKey={publishableKey}
+      signInFallbackRedirectUrl={signInFallbackUrl}
+      signUpFallbackRedirectUrl={signUpFallbackUrl}
+    >
       {content}
     </ClerkProvider>
   );

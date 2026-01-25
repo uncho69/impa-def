@@ -33,11 +33,34 @@ export default function GlobalLeaderboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
+  const [hasCampaigns, setHasCampaigns] = useState<boolean | null>(null);
   const limit = 50;
 
   useEffect(() => {
-    fetchLeaderboard();
-  }, [currentPage]);
+    async function checkCampaigns() {
+      try {
+        const res = await fetch('/api/campaigns?limit=1&offset=0');
+        if (!res.ok) {
+          setHasCampaigns(false);
+          setLoading(false);
+          return;
+        }
+        const json = await res.json();
+        const hasCampaignsValue = (json.pagination?.total ?? 0) > 0;
+        setHasCampaigns(hasCampaignsValue);
+        
+        // If no campaigns, stop loading immediately
+        if (!hasCampaignsValue) {
+          setLoading(false);
+        }
+      } catch (err) {
+        console.error('Error checking campaigns:', err);
+        setHasCampaigns(false);
+        setLoading(false);
+      }
+    }
+    checkCampaigns();
+  }, []);
 
   const fetchLeaderboard = async () => {
     try {
@@ -59,6 +82,13 @@ export default function GlobalLeaderboardPage() {
     }
   };
 
+  useEffect(() => {
+    if (hasCampaigns === true) {
+      fetchLeaderboard();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasCampaigns, currentPage]);
+
   const formatNumber = (num: number) => {
     return new Intl.NumberFormat('it-IT').format(num);
   };
@@ -67,26 +97,49 @@ export default function GlobalLeaderboardPage() {
     return entry.username || entry.email?.split('@')[0] || entry.walletAddress?.slice(0, 8) + '...' || t('leaderboards.anonymous');
   };
 
-  if (loading && !data) {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-primary-50 to-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto mb-4"></div>
-          <p className="text-neutral-600">{t('common.loading')}</p>
-        </div>
-      </div>
-    );
-  }
+  // Determine what to show
+  const isLoading = hasCampaigns === null || (hasCampaigns === true && loading && !data);
+  const showError = !isLoading && error && !data && hasCampaigns === true;
+  const showTable = !isLoading && !showError && hasCampaigns === true && !!data;
+  // Show coming soon if no campaigns (database is empty)
+  const showComingSoon = hasCampaigns === false;
 
-  if (error && !data) {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-primary-50 to-background flex items-center justify-center">
-        <div className="text-center max-w-md mx-auto p-8">
-          <div className="text-red-500 mb-4">
-            <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+  return (
+    <div className="w-full">
+      <div className="flex justify-end mb-6">
+        <BackToHome />
+      </div>
+
+      <div className="text-center mb-12">
+        <h1 className="text-4xl lg:text-5xl font-bold gradient-text mb-6 py-2">
+          {t('leaderboards.globalTitle')}
+        </h1>
+        <p className="text-xl text-neutral-600 max-w-3xl mx-auto">
+          {t('leaderboards.globalDescription')}
+        </p>
+      </div>
+
+      {isLoading && (
+        <div className="flex justify-center py-16">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto mb-4" />
+            <p className="text-neutral-600">{t('common.loading')}</p>
           </div>
+        </div>
+      )}
+
+      {showComingSoon && (
+        <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 p-8">
+          <div className="text-center py-16">
+            <p className="text-2xl font-semibold gradient-text">
+              {t('leaderboards.comingSoon')}
+            </p>
+          </div>
+        </div>
+      )}
+
+      {showError && (
+        <div className="bg-red-50 border border-red-200 rounded-2xl p-8 text-center">
           <h2 className="text-2xl font-bold gradient-text mb-4">{t('leaderboards.error')}</h2>
           <p className="text-neutral-600 mb-6">{error}</p>
           <button
@@ -96,27 +149,9 @@ export default function GlobalLeaderboardPage() {
             {t('common.retry')}
           </button>
         </div>
-      </div>
-    );
-  }
+      )}
 
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-primary-50 to-background">
-      <div className="container-custom py-12">
-        <div className="flex justify-end mb-6">
-          <BackToHome />
-        </div>
-        
-        <div className="text-center mb-12">
-          <h1 className="text-4xl lg:text-5xl font-bold gradient-text mb-6 py-2">
-            {t('leaderboards.globalTitle')}
-          </h1>
-          <p className="text-xl text-neutral-600 max-w-3xl mx-auto">
-            {t('leaderboards.globalDescription')}
-          </p>
-        </div>
-
-        {data && (
+      {showTable && data && (
           <>
             {/* Leaderboard Table */}
             <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden mb-8">
@@ -221,7 +256,6 @@ export default function GlobalLeaderboardPage() {
             )}
           </>
         )}
-      </div>
     </div>
   );
 }

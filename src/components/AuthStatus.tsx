@@ -13,10 +13,10 @@ function AuthStatusClerk() {
   }
   return (
     <div className="flex items-center gap-2">
-      <SignInButton>
+      <SignInButton signInUrl="/sign-in">
         <button className="btn-outline">Accedi</button>
       </SignInButton>
-      <SignUpButton>
+      <SignUpButton signUpUrl="/sign-up">
         <button className="btn-primary">Registrati</button>
       </SignUpButton>
     </div>

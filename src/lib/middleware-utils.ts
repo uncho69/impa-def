@@ -24,6 +24,21 @@ const PUBLIC_PATTERNS: Array<{ exact?: string; prefix?: string }> = [
   { prefix: '/sign-up' },
   { prefix: '/registrati' },
   { prefix: '/videos' },
+  // Routes that use ClerkProtectedRoute component for authentication
+  { prefix: '/leaderboards' },
+  { prefix: '/blockchain' },
+  { prefix: '/defi' },
+  { prefix: '/wallet' },
+  { prefix: '/nft' },
+  { prefix: '/exchange' },
+  { prefix: '/giochi' },
+  { prefix: '/compraevendicrypto' },
+  { prefix: '/airdrops' },
+  { prefix: '/campaigns' },
+  { prefix: '/epochs' },
+  { prefix: '/memecoins' },
+  { prefix: '/eventi-storici' },
+  { prefix: '/strumentiutili' },
 ];
 
 export function matchesPublicRoute(pathname: string): boolean {

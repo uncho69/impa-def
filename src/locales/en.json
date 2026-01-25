@@ -102,6 +102,7 @@
     "invalidEpochFormat": "Invalid epoch ID format. Use: projectId-campaignIndex-epochIndex",
     "viewLeaderboard": "View Leaderboard",
     "backToSelection": "Back to Selection",
+    "comingSoon": "Coming soon…",
     "project": "Project",
     "campaign": "Campaign",
     "epoch": "Epoch",

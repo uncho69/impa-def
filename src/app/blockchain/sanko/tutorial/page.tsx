@@ -21,7 +21,7 @@ export default function manuale() {
                 l&apos;account Google o l&apos;ID Apple. Nota che devi collegare
                 il tuo account X/Twitter per completare il processo di
                 registrazione. Il prossimo passo per iniziare sarà trasferire
-                ETH su Arbitrum al tuo portafoglio Privy di SankoTV e acquistare
+                ETH su Arbitrum al tuo portafoglio SankoTV e acquistare
                 uno (o quanti ne vuoi) dei tuoi pass personali (vedi{" "}
                 <strong>DEPOSITARE E PRELEVARE ETH</strong>). Per accedere su
                 mobile se hai già collegato il tuo Twitter su desktop (e lo hai

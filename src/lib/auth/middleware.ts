@@ -5,7 +5,8 @@ import { db } from '@/lib/db';
 import { authAccounts, users } from '@/lib/db/schema';
 import { eq, and, sql } from 'drizzle-orm';
 
-export async function getUserIdFromRequest(request: NextRequest): Promise<string | null> {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function getUserIdFromRequest(_request: NextRequest): Promise<string | null> {
   try {
     const hasValidClerkKeys = !!(
       process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY &&
@@ -76,19 +77,6 @@ export async function getUserIdFromRequest(request: NextRequest): Promise<string
       }
     } else {
       console.warn('⚠️  Clerk keys not configured or invalid');
-    }
-
-    const privyToken = request.headers.get('authorization')?.replace('Bearer ', '');
-    if (privyToken) {
-      const authAccount = await db
-        .select({ userId: authAccounts.userId })
-        .from(authAccounts)
-        .where(eq(authAccounts.provider, 'privy'))
-        .limit(1);
-
-      if (authAccount.length > 0) {
-        return authAccount[0].userId;
-      }
     }
 
     return null;

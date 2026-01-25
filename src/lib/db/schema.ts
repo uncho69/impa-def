@@ -126,7 +126,7 @@ export const users = pgTable('users', {
     twitterId: varchar('twitter_id', { length: 50 }),
     username: varchar('username', { length: 50 }),
     walletAddress: varchar('wallet_address', { length: 255 }), // Primary wallet address
-    privyId: varchar('privy_id', { length: 255 }), // Privy user ID
+    privyId: varchar('privy_id', { length: 255 }), // DEPRECATED: Privy user ID - no longer used, kept for database compatibility
     totalPoints: bigint('total_points', { mode: 'number' }).notNull().default(0),
     totalLikes: bigint('total_likes', { mode: 'number' }).notNull().default(0),
     totalReplies: bigint('total_replies', { mode: 'number' }).notNull().default(0),
