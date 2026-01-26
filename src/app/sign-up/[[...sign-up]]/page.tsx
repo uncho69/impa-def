@@ -1,24 +1,37 @@
 "use client";
-import { useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { SignUp } from "@clerk/nextjs";
+import { useEffect, useState } from "react";
 
-export default function SignUpPage() {
-  const searchParams = useSearchParams();
-  const redirectUrl = searchParams.get('redirect_url') || '/';
+export default function SignUpPage({
+  searchParams,
+}: {
+  searchParams?: { redirect_url?: string };
+}) {
+  const [redirectUrl, setRedirectUrl] = useState('/');
 
   useEffect(() => {
-    // Redirect to Clerk Account Portal
-    const clerkUrl = `https://accounts.imparodefi.xyz/sign-up${redirectUrl !== '/' ? `?redirect_url=${encodeURIComponent(redirectUrl)}` : ''}`;
-    window.location.href = clerkUrl;
-  }, [redirectUrl]);
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const url = params.get('redirect_url') || searchParams?.redirect_url || '/';
+      setRedirectUrl(url);
+    }
+  }, [searchParams]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4" />
-        <p className="text-neutral-600">Reindirizzamento a Clerk...</p>
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-primary-50 to-background py-16">
+      <div className="w-full max-w-md">
+        <SignUp 
+          routing="path"
+          path="/sign-up"
+          redirectUrl={redirectUrl}
+          appearance={{
+            elements: {
+              rootBox: "mx-auto",
+            }
+          }}
+          signInUrl="/sign-in"
+        />
       </div>
     </div>
   );
 }
-

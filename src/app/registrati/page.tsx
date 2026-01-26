@@ -6,6 +6,6 @@ export default function Registrati({
   searchParams: { next?: string };
 }) {
   const next = searchParams?.next || "/manuale";
-  redirect(`https://accounts.imparodefi.xyz/sign-up?redirect_url=${encodeURIComponent(next)}`);
+  redirect(`/sign-up?redirect_url=${encodeURIComponent(next)}`);
 }
 

@@ -209,7 +209,7 @@ export default function Home() {
                     </p>
                     <div className="mt-6">
                       <a 
-                        href="https://accounts.imparodefi.xyz/sign-in" 
+                        href="/sign-in" 
                         className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl"
                       >
                         Accedi alla piattaforma
