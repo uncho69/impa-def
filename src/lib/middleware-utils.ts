@@ -24,6 +24,9 @@ const PUBLIC_PATTERNS: Array<{ exact?: string; prefix?: string }> = [
   { prefix: '/sign-up' },
   { prefix: '/registrati' },
   { prefix: '/videos' },
+  // Public routes - always accessible without authentication
+  { prefix: '/manuale' },
+  { prefix: '/supporto' },
   // Routes that use ClerkProtectedRoute component for authentication
   { prefix: '/leaderboards' },
   { prefix: '/blockchain' },
