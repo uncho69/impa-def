@@ -53,7 +53,7 @@ export function ClerkAuthStatus() {
   if (isSignedIn && user) {
     return (
       <div className="flex items-center space-x-3">
-        <UserButton afterSignOutUrl="/" />
+        <UserButton afterSignOutUrl="/sign-in" />
       </div>
     );
   }

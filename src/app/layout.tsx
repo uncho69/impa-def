@@ -6,6 +6,7 @@ import { ClerkProvider, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Footer } from "@/components/Footer";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { fontClassNames } from "./fonts";
+import { AIBotAuthModal } from "@/components/AIBotAuthModal";
 
 export const dynamic = "force-dynamic";
 
@@ -45,6 +46,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${fontClassNames} text-neutral-900 antialiased font-montserrat bg-background flex flex-col items-center min-h-screen`}>
         <LanguageProvider>
+          <AIBotAuthModal />
           <Navbar />
           <header className="hidden">{/* opzionale: pulsanti rapidi */}
             {isClerkConfigured ? (
@@ -516,212 +518,10 @@ export default function RootLayout({
                   }
                 }, true); // Use capture phase
                 
-                // Create and show registration modal
+                // Trigger React modal component via custom event
                 function showAuthModal() {
-                  // Remove existing modal if present
-                  const existingModal = document.getElementById('auth-modal');
-                  if (existingModal) {
-                    existingModal.remove();
-                  }
-                  
-                  // Create modal backdrop
-                  const modal = document.createElement('div');
-                  modal.id = 'auth-modal';
-                  modal.style.cssText = \`
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: rgba(0, 0, 0, 0.5);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    z-index: 99999;
-                    backdrop-filter: blur(4px);
-                  \`;
-                  
-                  // Create modal content
-                  const modalContent = document.createElement('div');
-                  modalContent.style.cssText = \`
-                    background: white;
-                    border-radius: 16px;
-                    padding: 32px;
-                    max-width: 400px;
-                    width: 90%;
-                    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-                    text-align: center;
-                    position: relative;
-                  \`;
-                  
-                  // Prevent click propagation on content
-                  modalContent.onclick = (e) => {
-                    e.stopPropagation();
-                  };
-                  
-                  // Close button
-                  const closeBtn = document.createElement('button');
-                  closeBtn.innerHTML = '×';
-                  closeBtn.style.cssText = \`
-                    position: absolute;
-                    top: 16px;
-                    right: 16px;
-                    background: none;
-                    border: none;
-                    font-size: 24px;
-                    cursor: pointer;
-                    color: #6b7280;
-                    width: 32px;
-                    height: 32px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    border-radius: 50%;
-                    transition: background-color 0.2s;
-                  \`;
-                  closeBtn.onmouseover = () => { closeBtn.style.backgroundColor = '#f3f4f6'; };
-                  closeBtn.onmouseout = () => { closeBtn.style.backgroundColor = 'transparent'; };
-                  closeBtn.onclick = (e) => {
-                    e.stopPropagation();
-                    modal.remove();
-                  };
-                  
-                  // Icon
-                  const icon = document.createElement('div');
-                  icon.innerHTML = '🤖';
-                  icon.style.cssText = \`
-                    width: 64px;
-                    height: 64px;
-                    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-                    border-radius: 50%;
-                    margin: 0 auto 24px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-size: 24px;
-                    color: white;
-                  \`;
-                  
-                  // Title
-                  const title = document.createElement('h2');
-                  title.textContent = 'Accedi per utilizzare l\\'AI Bot';
-                  title.style.cssText = \`
-                    font-size: 24px;
-                    font-weight: 700;
-                    color: #111827;
-                    margin: 0 0 16px 0;
-                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                  \`;
-                  
-                  // Description
-                  const description = document.createElement('p');
-                  description.textContent = 'Per utilizzare l\\'assistente AI, devi prima registrarti o effettuare il login.';
-                  description.style.cssText = \`
-                    color: #6b7280;
-                    font-size: 16px;
-                    line-height: 1.5;
-                    margin: 0 0 32px 0;
-                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                  \`;
-                  
-                  // Button container
-                  const buttonContainer = document.createElement('div');
-                  buttonContainer.style.cssText = 'display: flex; gap: 12px; justify-content: center;';
-                  
-                  // Sign up button
-                  const signupBtn = document.createElement('button');
-                  signupBtn.textContent = 'Registrati';
-                  signupBtn.style.cssText = \`
-                    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-                    color: white;
-                    border: none;
-                    padding: 12px 24px;
-                    border-radius: 8px;
-                    font-size: 16px;
-                    font-weight: 600;
-                    cursor: pointer;
-                    transition: transform 0.2s, box-shadow 0.2s;
-                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                  \`;
-                  signupBtn.onmouseover = () => {
-                    signupBtn.style.transform = 'translateY(-1px)';
-                    signupBtn.style.boxShadow = '0 10px 15px -3px rgba(59, 130, 246, 0.3)';
-                  };
-                  signupBtn.onmouseout = () => {
-                    signupBtn.style.transform = 'translateY(0)';
-                    signupBtn.style.boxShadow = 'none';
-                  };
-                  signupBtn.onclick = (e) => {
-                    e.stopPropagation();
-                    modal.remove();
-                    window.location.href = 'https://accounts.imparodefi.xyz/sign-up';
-                  };
-                  
-                  // Sign in button
-                  const signinBtn = document.createElement('button');
-                  signinBtn.textContent = 'Accedi';
-                  signinBtn.style.cssText = \`
-                    background: white;
-                    color: #3b82f6;
-                    border: 2px solid #3b82f6;
-                    padding: 10px 24px;
-                    border-radius: 8px;
-                    font-size: 16px;
-                    font-weight: 600;
-                    cursor: pointer;
-                    transition: all 0.2s;
-                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                  \`;
-                  signinBtn.onmouseover = () => {
-                    signinBtn.style.backgroundColor = '#3b82f6';
-                    signinBtn.style.color = 'white';
-                  };
-                  signinBtn.onmouseout = () => {
-                    signinBtn.style.backgroundColor = 'white';
-                    signinBtn.style.color = '#3b82f6';
-                  };
-                  signinBtn.onclick = (e) => {
-                    e.stopPropagation();
-                    modal.remove();
-                    window.location.href = 'https://accounts.imparodefi.xyz/sign-in';
-                  };
-                  
-                  // Assemble modal
-                  buttonContainer.appendChild(signupBtn);
-                  buttonContainer.appendChild(signinBtn);
-                  modalContent.appendChild(closeBtn);
-                  modalContent.appendChild(icon);
-                  modalContent.appendChild(title);
-                  modalContent.appendChild(description);
-                  modalContent.appendChild(buttonContainer);
-                  modal.appendChild(modalContent);
-                  
-                  // Close when clicking on backdrop
-                  modal.onclick = (e) => {
-                    if (e.target === modal) {
-                      modal.remove();
-                    }
-                  };
-                  
-                  // Add to DOM
-                  document.body.appendChild(modal);
-                  
-                  // Prevent body scroll when modal is open
-                  document.body.style.overflow = 'hidden';
-                  
-                  // Restore scroll when modal is closed
-                  const restoreScroll = () => {
-                    document.body.style.overflow = '';
-                  };
-                  
-                  // Add listener to restore scroll when modal is removed
-                  const observer = new MutationObserver((mutations) => {
-                    if (!document.getElementById('auth-modal')) {
-                      restoreScroll();
-                      observer.disconnect();
-                    }
-                  });
-                  observer.observe(document.body, { childList: true });
+                  // Dispatch custom event to open the AIBotAuthModal React component
+                  window.dispatchEvent(new CustomEvent('open-ai-bot-auth-modal'));
                 }
                 
               `,
