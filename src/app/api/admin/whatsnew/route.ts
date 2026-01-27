@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
+import { auth, currentUser } from '@clerk/nextjs/server';
 import { db } from '@/lib/db';
 import { whatsNewCard } from '@/lib/db/schema';
 import { asc, desc } from 'drizzle-orm';
@@ -20,7 +20,19 @@ async function checkAdmin() {
       return false;
     }
     
-    return true;
+    // Get user details including email
+    const user = await currentUser();
+    if (!user) {
+      return false;
+    }
+    
+    // Check if user's email is in the admin list
+    const userEmail = user.emailAddresses?.[0]?.emailAddress;
+    if (!userEmail) {
+      return false;
+    }
+    
+    return ADMIN_EMAILS.includes(userEmail.toLowerCase());
   } catch (error) {
     console.error('Errore auth:', error);
     return false;
@@ -41,7 +53,14 @@ export async function GET() {
       .from(whatsNewCard)
       .orderBy(asc(whatsNewCard.order), desc(whatsNewCard.createdAt));
 
-    return NextResponse.json(cards);
+    // Convert smallint to boolean for isActive and showInLanding
+    const parsedCards = cards.map(card => ({
+      ...card,
+      isActive: Boolean(card.isActive),
+      showInLanding: Boolean(card.showInLanding),
+    }));
+
+    return NextResponse.json(parsedCards);
   } catch (error) {
     console.error('Errore nel recupero card novità:', error);
     return NextResponse.json({ error: 'Errore interno del server' }, { status: 500 });

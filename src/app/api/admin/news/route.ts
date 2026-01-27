@@ -1,9 +1,21 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
+import { auth, currentUser } from '@clerk/nextjs/server';
 import { db } from '@/lib/db';
 import { news } from '@/lib/db/schema';
 import { eq, and, desc, sql, count } from 'drizzle-orm';
 import { createNews } from '@/lib/news';
+
+// Helper function to safely parse tags from JSON string
+function parseTags(tags: string | null | undefined): string[] {
+  if (!tags) return [];
+  if (Array.isArray(tags)) return tags;
+  try {
+    const parsed = JSON.parse(tags);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
 
 // Lista degli admin autorizzati
 const ADMIN_EMAILS = [
@@ -21,7 +33,19 @@ async function checkAdmin() {
       return false;
     }
     
-    return true;
+    // Get user details including email
+    const user = await currentUser();
+    if (!user) {
+      return false;
+    }
+    
+    // Check if user's email is in the admin list
+    const userEmail = user.emailAddresses?.[0]?.emailAddress;
+    if (!userEmail) {
+      return false;
+    }
+    
+    return ADMIN_EMAILS.includes(userEmail.toLowerCase());
   } catch (error) {
     console.error('Errore auth:', error);
     return false;
@@ -62,6 +86,13 @@ export async function GET(request: Request) {
       .limit(limit)
       .offset((page - 1) * limit);
 
+    // Parse tags from JSON string to array and convert featured to boolean
+    const parsedNews = allNews.map(item => ({
+      ...item,
+      tags: parseTags(item.tags),
+      featured: Boolean(item.featured),
+    }));
+
     // Count total
     let countQuery = db.select({ count: count() }).from(news);
     if (conditions.length > 0) {
@@ -71,7 +102,7 @@ export async function GET(request: Request) {
     const total = totalResult[0]?.count || 0;
 
     return NextResponse.json({
-      news: allNews,
+      news: parsedNews,
       pagination: {
         page,
         limit,

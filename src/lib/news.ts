@@ -2,6 +2,18 @@ import { db } from '@/lib/db';
 import { news } from '@/lib/db/schema';
 import { eq, and, desc, sql } from 'drizzle-orm';
 
+// Helper function to safely parse tags from JSON string
+function parseTags(tags: string | null | undefined): string[] {
+  if (!tags) return [];
+  if (Array.isArray(tags)) return tags;
+  try {
+    const parsed = JSON.parse(tags);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
 export interface NewsData {
   id?: string;
   title: string;
@@ -19,22 +31,36 @@ export interface NewsData {
 }
 
 export async function getAllNews() {
-  return await db
+  const result = await db
     .select()
     .from(news)
     .orderBy(desc(news.createdAt));
+  
+  // Parse tags from JSON string to array and convert featured to boolean
+  return result.map(item => ({
+    ...item,
+    tags: parseTags(item.tags),
+    featured: Boolean(item.featured),
+  }));
 }
 
 export async function getPublishedNews() {
-  return await db
+  const result = await db
     .select()
     .from(news)
     .where(eq(news.status, 'PUBLISHED'))
     .orderBy(desc(news.publishedAt));
+  
+  // Parse tags from JSON string to array and convert featured to boolean
+  return result.map(item => ({
+    ...item,
+    tags: parseTags(item.tags),
+    featured: Boolean(item.featured),
+  }));
 }
 
 export async function getNewsByCategory(category: string) {
-  return await db
+  const result = await db
     .select()
     .from(news)
     .where(
@@ -44,10 +70,17 @@ export async function getNewsByCategory(category: string) {
       )
     )
     .orderBy(desc(news.publishedAt));
+  
+  // Parse tags from JSON string to array and convert featured to boolean
+  return result.map(item => ({
+    ...item,
+    tags: parseTags(item.tags),
+    featured: Boolean(item.featured),
+  }));
 }
 
 export async function getFeaturedNews() {
-  return await db
+  const result = await db
     .select()
     .from(news)
     .where(
@@ -58,6 +91,13 @@ export async function getFeaturedNews() {
     )
     .orderBy(desc(news.publishedAt))
     .limit(6);
+  
+  // Parse tags from JSON string to array and convert featured to boolean
+  return result.map(item => ({
+    ...item,
+    tags: parseTags(item.tags),
+    featured: Boolean(item.featured),
+  }));
 }
 
 export async function getNewsById(id: string) {
@@ -67,7 +107,16 @@ export async function getNewsById(id: string) {
     .where(eq(news.id, id))
     .limit(1);
   
-  return result[0] || null;
+  if (!result[0]) {
+    return null;
+  }
+
+  // Parse tags from JSON string to array and convert featured to boolean
+  return {
+    ...result[0],
+    tags: parseTags(result[0].tags),
+    featured: Boolean(result[0].featured),
+  };
 }
 
 export async function createNews(data: NewsData) {
@@ -94,7 +143,12 @@ export async function createNews(data: NewsData) {
     .values(insertData)
     .returning();
   
-  return result[0];
+  // Parse tags from JSON string to array and convert featured to boolean
+  return {
+    ...result[0],
+    tags: parseTags(result[0].tags),
+    featured: Boolean(result[0].featured),
+  };
 }
 
 export async function updateNews(id: string, data: Partial<NewsData>) {
@@ -126,7 +180,16 @@ export async function updateNews(id: string, data: Partial<NewsData>) {
     .where(eq(news.id, id))
     .returning();
   
-  return result[0] || null;
+  if (!result[0]) {
+    return null;
+  }
+
+  // Parse tags from JSON string to array and convert featured to boolean
+  return {
+    ...result[0],
+    tags: parseTags(result[0].tags),
+    featured: Boolean(result[0].featured),
+  };
 }
 
 export async function deleteNews(id: string) {

@@ -1,9 +1,17 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
+import { auth, currentUser } from '@clerk/nextjs/server';
 import { db } from '@/lib/db';
 import { news } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { updateNews, getNewsById, deleteNews } from '@/lib/news';
+
+// Lista degli admin autorizzati
+const ADMIN_EMAILS = [
+  "jeffben69zos@gmail.com",
+  "admin@imparodefi.com", 
+  "cofounder@imparodefi.com",
+  "lordbaconf@gmail.com"
+];
 
 async function checkAdmin() {
   try {
@@ -13,7 +21,19 @@ async function checkAdmin() {
       return false;
     }
     
-    return true;
+    // Get user details including email
+    const user = await currentUser();
+    if (!user) {
+      return false;
+    }
+    
+    // Check if user's email is in the admin list
+    const userEmail = user.emailAddresses?.[0]?.emailAddress;
+    if (!userEmail) {
+      return false;
+    }
+    
+    return ADMIN_EMAILS.includes(userEmail.toLowerCase());
   } catch (error) {
     console.error('Errore auth:', error);
     return false;

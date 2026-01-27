@@ -90,7 +90,7 @@ export default function ExpandableNewsCard({
         
         {/* Tags */}
         <div className="flex flex-wrap gap-2 mb-4">
-          {article.tags && article.tags.map((tag: string, index: number) => (
+          {article.tags && Array.isArray(article.tags) && article.tags.map((tag: string, index: number) => (
             <span key={index} className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full">
               {tag}
             </span>

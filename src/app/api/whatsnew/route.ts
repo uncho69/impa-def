@@ -14,7 +14,14 @@ export async function GET() {
       .where(eq(whatsNewCard.isActive, 1))
       .orderBy(asc(whatsNewCard.order), desc(whatsNewCard.createdAt));
 
-    return NextResponse.json(cards);
+    // Convert smallint to boolean for isActive and showInLanding
+    const parsedCards = cards.map(card => ({
+      ...card,
+      isActive: Boolean(card.isActive),
+      showInLanding: Boolean(card.showInLanding),
+    }));
+
+    return NextResponse.json(parsedCards);
   } catch (error) {
     console.error('Errore nel recupero card novità pubbliche:', error);
     return NextResponse.json({ error: 'Errore interno del server' }, { status: 500 });

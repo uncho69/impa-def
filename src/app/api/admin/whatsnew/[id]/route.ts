@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
+import { auth, currentUser } from '@clerk/nextjs/server';
 import { db } from '@/lib/db';
 import { whatsNewCard } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
@@ -20,7 +20,19 @@ async function checkAdmin() {
       return false;
     }
     
-    return true;
+    // Get user details including email
+    const user = await currentUser();
+    if (!user) {
+      return false;
+    }
+    
+    // Check if user's email is in the admin list
+    const userEmail = user.emailAddresses?.[0]?.emailAddress;
+    if (!userEmail) {
+      return false;
+    }
+    
+    return ADMIN_EMAILS.includes(userEmail.toLowerCase());
   } catch (error) {
     console.error('Errore auth:', error);
     return false;
@@ -49,7 +61,14 @@ export async function GET(
       return NextResponse.json({ error: 'Card non trovata' }, { status: 404 });
     }
 
-    return NextResponse.json(result[0]);
+    // Convert smallint to boolean for isActive and showInLanding
+    const parsedCard = {
+      ...result[0],
+      isActive: Boolean(result[0].isActive),
+      showInLanding: Boolean(result[0].showInLanding),
+    };
+
+    return NextResponse.json(parsedCard);
   } catch (error) {
     console.error('Errore nel recupero card novità:', error);
     return NextResponse.json({ error: 'Errore interno del server' }, { status: 500 });
@@ -97,7 +116,14 @@ export async function PUT(
       return NextResponse.json({ error: 'Card non trovata' }, { status: 404 });
     }
 
-    return NextResponse.json(result[0]);
+    // Convert smallint to boolean for isActive and showInLanding
+    const parsedCard = {
+      ...result[0],
+      isActive: Boolean(result[0].isActive),
+      showInLanding: Boolean(result[0].showInLanding),
+    };
+
+    return NextResponse.json(parsedCard);
   } catch (error) {
     console.error('Errore nell\'aggiornamento card novità:', error);
     return NextResponse.json({ error: 'Errore interno del server' }, { status: 500 });
