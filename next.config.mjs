@@ -23,7 +23,7 @@ const nextConfig = {
                 child-src https://challenges.cloudflare.com https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
                 frame-src https://challenges.cloudflare.com https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
                 connect-src 'self' https://challenges.cloudflare.com wss://relay.walletconnect.com wss://relay.walletconnect.org wss://www.walletlink.org https://explorer-api.walletconnect.com https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
-                worker-src 'self' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
+                worker-src 'self' blob: https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
                 manifest-src 'self';
               `.replace(/\s+/g, ' ').trim(),
             },
@@ -51,7 +51,7 @@ const nextConfig = {
                 child-src https://challenges.cloudflare.com https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
                 frame-src https://challenges.cloudflare.com https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
                 connect-src 'self' https://challenges.cloudflare.com wss://relay.walletconnect.com wss://relay.walletconnect.org wss://www.walletlink.org https://explorer-api.walletconnect.com https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
-                worker-src 'self' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
+                worker-src 'self' blob: https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
                 manifest-src 'self';
               `.replace(/\s+/g, ' ').trim(),
           },
