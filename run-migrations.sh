@@ -14,12 +14,32 @@ cd "$(dirname "$0")"
 if [ -s "$HOME/.nvm/nvm.sh" ]; then
     export NVM_DIR="$HOME/.nvm"
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-    nvm use 20 2>/dev/null || nvm use --lts 2>/dev/null || true
+    echo "📦 Loading nvm..."
+    
+    # Try to use Node.js 20, or install it if not available
+    if ! nvm use 20 2>/dev/null; then
+        echo "📥 Node.js 20 not found, installing..."
+        nvm install 20
+        nvm use 20
+    fi
+fi
+
+# Also try loading from .zshrc or .bash_profile
+if [ -f "$HOME/.zshrc" ]; then
+    source "$HOME/.zshrc" 2>/dev/null || true
 fi
 
 # Check if Node.js is available
 if ! command -v node &> /dev/null; then
-    echo "❌ Node.js is not found. Please ensure Node.js is installed and in your PATH."
+    echo ""
+    echo "❌ Node.js is not found in PATH."
+    echo ""
+    echo "Please run one of these commands first:"
+    echo "  source ~/.nvm/nvm.sh && nvm use 20"
+    echo "  OR"
+    echo "  source ~/.zshrc"
+    echo ""
+    echo "Then run this script again."
     exit 1
 fi
 
