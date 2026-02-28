@@ -48,3 +48,10 @@ After migrations complete, you should see:
 - Migration files generated in `drizzle/` directory
 - Success message confirming columns were added
 
+## New schema (campaign participation + multi-campaign tweets)
+
+- **campaign_participation_requests**: table for users requesting access to campaigns; admins/moderators approve or deny.
+- **tweets** unique constraint changed from `(post_id)` to `(post_id, project_id, campaign_index, epoch_index)` so the same tweet can count in multiple campaigns (e.g. Extended and Hyperliquid).
+
+Run `npm run db:generate` then `npm run db:push` (or your migration flow) after pulling these changes.
+

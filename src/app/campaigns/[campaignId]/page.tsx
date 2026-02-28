@@ -6,7 +6,6 @@ import { useUser } from "@clerk/nextjs";
 import { BackToHome } from "@/components/BackToHome";
 import { ClerkProtectedRoute } from "@/components/ClerkProtectedRoute";
 import Link from "next/link";
-import { Plus } from "lucide-react";
 
 interface Campaign {
   projectId: string;
@@ -134,13 +133,9 @@ export default function CampaignPage() {
                   )}
                 </div>
                 {isSignedIn && (
-                  <Link
-                    href={`/campaigns/${campaignId}/add-tweet`}
-                    className="flex items-center gap-2 bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors"
-                  >
-                    <Plus className="w-5 h-5" />
-                    Aggiungi Tweet
-                  </Link>
+                  <p className="text-sm text-neutral-600">
+                    Per partecipare, vai alla classifica di un epoch e richiedi l&apos;accesso alla campagna.
+                  </p>
                 )}
               </div>
 
@@ -187,16 +182,7 @@ export default function CampaignPage() {
                 </div>
               ) : tweets.length === 0 ? (
                 <div className="text-center py-12">
-                  <p className="text-neutral-600 mb-4">Nessun tweet ancora aggiunto a questa campagna.</p>
-                  {isSignedIn && (
-                    <Link
-                      href={`/campaigns/${campaignId}/add-tweet`}
-                      className="inline-flex items-center gap-2 bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors"
-                    >
-                      <Plus className="w-5 h-5" />
-                      Aggiungi il Primo Tweet
-                    </Link>
-                  )}
+                  <p className="text-neutral-600 mb-4">Nessun tweet ancora in questa campagna. Richiedi l&apos;accesso dalla pagina classifica dell&apos;epoch.</p>
                 </div>
               ) : (
                 <div className="space-y-4">

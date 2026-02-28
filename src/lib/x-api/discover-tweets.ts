@@ -4,8 +4,8 @@
  */
 
 import { db } from '@/lib/db';
-import { users, authAccounts, tweets, projects } from '@/lib/db/schema';
-import { eq, and, isNotNull, sql } from 'drizzle-orm';
+import { users, authAccounts, tweets, projects, campaigns, epochs } from '@/lib/db/schema';
+import { eq, and, isNotNull, sql, lte, gte } from 'drizzle-orm';
 import { getXAPIClient } from './client';
 
 export interface DiscoveryResult {
@@ -19,50 +19,75 @@ export interface DiscoveryResult {
 
 export interface DiscoveryOptions {
   daysBack?: number; // How many days back to fetch tweets (default: 30)
+  hoursBack?: number; // If set, overrides daysBack for a precise hour window (e.g. 24 for past 24 hours)
   maxTweetsPerUser?: number; // Max tweets to process per user (default: 1000)
 }
 
+export interface CampaignKeyword {
+  projectId: string;
+  campaignIndex: number;
+  name: string;
+  nameLower: string;
+  epochIndex: number;
+}
+
 /**
- * Get all active project names for keyword matching
+ * Get all active campaigns with open epochs for keyword matching (campaign name = keyword)
  */
-async function getProjectKeywords(): Promise<string[]> {
-  const activeProjects = await db
-    .select({ name: projects.name })
-    .from(projects)
+async function getCampaignKeywords(): Promise<CampaignKeyword[]> {
+  const now = new Date();
+  const openEpochs = await db
+    .select({
+      projectId: epochs.projectId,
+      campaignIndex: epochs.campaignIndex,
+      epochIndex: epochs.index,
+      campaignName: campaigns.name,
+    })
+    .from(epochs)
+    .innerJoin(campaigns, and(
+      eq(epochs.projectId, campaigns.projectId),
+      eq(epochs.campaignIndex, campaigns.index)
+    ))
     .where(
       and(
-        eq(projects.isActive, 1),
-        sql`${projects.deletedAt} IS NULL`
+        eq(epochs.isActive, 1),
+        sql`${epochs.deletedAt} IS NULL`,
+        eq(campaigns.isActive, 1),
+        sql`${campaigns.deletedAt} IS NULL`,
+        lte(epochs.startDate, now),
+        gte(epochs.endDate, now)
       )
     );
 
-  return activeProjects.map((p) => p.name.toLowerCase().trim());
+  return openEpochs.map((e) => ({
+    projectId: e.projectId,
+    campaignIndex: e.campaignIndex,
+    name: e.campaignName,
+    nameLower: e.campaignName.toLowerCase().trim(),
+    epochIndex: e.epochIndex,
+  }));
 }
 
 /**
- * Check if tweet content contains any project keywords
+ * Get all matching campaigns for tweet text (campaign name in text)
  */
-function containsProjectKeywords(
+function getMatchingCampaigns(
   tweetText: string,
-  keywords: string[]
-): boolean {
+  campaignKeywords: CampaignKeyword[]
+): CampaignKeyword[] {
   const normalizedText = tweetText.toLowerCase();
-  
-  return keywords.some((keyword) => {
-    // Case-insensitive matching
-    // Could enhance with word boundary matching if needed
-    return normalizedText.includes(keyword.toLowerCase());
-  });
+  return campaignKeywords.filter((c) => normalizedText.includes(c.nameLower));
 }
 
 /**
- * Discover and verify tweets for a single user
+ * Discover and verify tweets for a single user.
+ * A tweet can match multiple campaigns (e.g. contains "Extended" and "Hyperliquid"); we insert one row per match.
  */
 async function discoverUserTweets(
   userId: string,
   twitterUserId: string,
   accessToken: string,
-  keywords: string[],
+  campaignKeywords: CampaignKeyword[],
   options: DiscoveryOptions
 ): Promise<{
   verified: number;
@@ -72,7 +97,11 @@ async function discoverUserTweets(
   const client = getXAPIClient();
   const endTime = new Date();
   const startTime = new Date();
-  startTime.setDate(startTime.getDate() - (options.daysBack || 30));
+  if (options.hoursBack) {
+    startTime.setHours(startTime.getHours() - options.hoursBack);
+  } else {
+    startTime.setDate(startTime.getDate() - (options.daysBack || 30));
+  }
 
   let verifiedCount = 0;
   let rejectedCount = 0;
@@ -91,70 +120,71 @@ async function discoverUserTweets(
 
       for (const tweet of result.tweets) {
         totalProcessed++;
+        const matchingCampaigns = getMatchingCampaigns(tweet.text, campaignKeywords);
 
-        // Check if tweet already exists
-        const existingTweet = await db
-          .select()
-          .from(tweets)
-          .where(eq(tweets.postId, tweet.id))
-          .limit(1);
+        for (const campaign of matchingCampaigns) {
+          const existingTweet = await db
+            .select()
+            .from(tweets)
+            .where(
+              and(
+                eq(tweets.postId, tweet.id),
+                eq(tweets.projectId, campaign.projectId),
+                eq(tweets.campaignIndex, campaign.campaignIndex),
+                eq(tweets.epochIndex, campaign.epochIndex)
+              )
+            )
+            .limit(1);
 
-        const isVerified = containsProjectKeywords(tweet.text, keywords);
-
-        if (existingTweet.length > 0) {
-          // Update existing tweet
-          const existing = existingTweet[0];
-          
-          // Only update verification status if it hasn't been verified yet
-          if (existing.isVerified === null) {
-            await db
-              .update(tweets)
-              .set({
-                isVerified: isVerified ? 1 : -1,
-                verifiedAt: new Date(),
-                verifiedBy: 'system',
-                content: tweet.text, // Update content in case it changed
-                updatedAt: new Date(),
-              })
-              .where(eq(tweets.id, existing.id));
-
-            if (isVerified) verifiedCount++;
-            else rejectedCount++;
-          } else if (existing.isVerified === 1 && isVerified) {
-            // Already verified, just update content
-            await db
-              .update(tweets)
-              .set({
-                content: tweet.text,
-                updatedAt: new Date(),
-              })
-              .where(eq(tweets.id, existing.id));
+          if (existingTweet.length > 0) {
+            const existing = existingTweet[0];
+            if (existing.isVerified === null) {
+              await db
+                .update(tweets)
+                .set({
+                  isVerified: 1,
+                  verifiedAt: new Date(),
+                  verifiedBy: 'system',
+                  content: tweet.text,
+                  updatedAt: new Date(),
+                })
+                .where(eq(tweets.id, existing.id));
+              verifiedCount++;
+            } else if (existing.isVerified === 1) {
+              await db
+                .update(tweets)
+                .set({ content: tweet.text, updatedAt: new Date() })
+                .where(eq(tweets.id, existing.id));
+            }
+          } else {
+            await db.insert(tweets).values({
+              postId: tweet.id,
+              projectId: campaign.projectId,
+              campaignIndex: campaign.campaignIndex,
+              epochIndex: campaign.epochIndex,
+              userId,
+              twitterUserId,
+              content: tweet.text,
+              postedAt: new Date(tweet.created_at),
+              likes: tweet.public_metrics?.like_count || 0,
+              replies: tweet.public_metrics?.reply_count || 0,
+              retweets: tweet.public_metrics?.retweet_count || 0,
+              quotes: tweet.public_metrics?.quote_count || 0,
+              isVerified: 1,
+              verifiedAt: new Date(),
+              verifiedBy: 'system',
+              isActive: 1,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            });
+            verifiedCount++;
           }
-        } else {
-          // Insert new tweet
-          await db.insert(tweets).values({
-            postId: tweet.id,
-            userId: userId,
-            twitterUserId: twitterUserId,
-            content: tweet.text,
-            postedAt: new Date(tweet.created_at),
-            likes: tweet.public_metrics?.like_count || 0,
-            replies: tweet.public_metrics?.reply_count || 0,
-            retweets: tweet.public_metrics?.retweet_count || 0,
-            quotes: tweet.public_metrics?.quote_count || 0,
-            isVerified: isVerified ? 1 : -1,
-            verifiedAt: new Date(),
-            verifiedBy: 'system',
-            isActive: 1,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          });
-
-          if (isVerified) verifiedCount++;
-          else rejectedCount++;
         }
 
-        // Stop if we've processed enough tweets
+        if (matchingCampaigns.length === 0) {
+          rejectedCount++;
+        }
+
         if (options.maxTweetsPerUser && totalProcessed >= options.maxTweetsPerUser) {
           break;
         }
@@ -165,8 +195,6 @@ async function discoverUserTweets(
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     errors.push(`Error processing tweets for user ${userId}: ${errorMessage}`);
-    
-    // If it's a token expiration error, mark it
     if (errorMessage === 'UNAUTHORIZED_TOKEN_EXPIRED') {
       errors.push(`Token expired for user ${userId} - re-authentication required`);
     }
@@ -208,16 +236,16 @@ export async function discoverTweetsForAllUsers(
     return [];
   }
 
-  // Get project keywords once
-  const keywords = await getProjectKeywords();
-  
-  if (keywords.length === 0) {
-    console.warn('No active projects found for keyword matching');
+  // Get campaign keywords (campaign names) for matching; each has an open epoch
+  const campaignKeywords = await getCampaignKeywords();
+
+  if (campaignKeywords.length === 0) {
+    console.warn('No active campaigns with open epochs found for keyword matching');
     return [];
   }
 
   console.log(`Found ${authenticatedUsers.length} authenticated users`);
-  console.log(`Using ${keywords.length} project keywords for matching`);
+  console.log(`Using ${campaignKeywords.length} campaign keywords for matching`);
 
   const results: DiscoveryResult[] = [];
 
@@ -249,7 +277,7 @@ export async function discoverTweetsForAllUsers(
         user.userId,
         user.twitterUserId,
         user.accessToken,
-        keywords,
+        campaignKeywords,
         options
       );
 

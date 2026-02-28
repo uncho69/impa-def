@@ -2,12 +2,11 @@
   "crons": [
     {
       "path": "/api/cron/discover-tweets",
-      "schedule": "0 2 * * *"
+      "schedule": "*/3 * * * *"
     },
     {
       "path": "/api/cron/update-tweet-metrics",
-      "schedule": "0 */4 * * *"
+      "schedule": "*/3 * * * *"
     }
   ]
 }
-

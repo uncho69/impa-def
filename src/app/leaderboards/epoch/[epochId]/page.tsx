@@ -4,8 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { BackToHome } from "@/components/BackToHome";
-import Link from "next/link";
-import { Plus } from "lucide-react";
+import { UserPlus } from "lucide-react";
 
 interface LeaderboardEntry {
   rank: number;
@@ -55,6 +54,8 @@ export default function EpochLeaderboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
+  const [requestStatus, setRequestStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [participationStatus, setParticipationStatus] = useState<'pending' | 'approved' | 'rejected' | null>(null);
   const limit = 50;
 
   useEffect(() => {
@@ -62,6 +63,15 @@ export default function EpochLeaderboardPage() {
       fetchLeaderboard();
     }
   }, [epochId, currentPage]);
+
+  useEffect(() => {
+    if (!data?.epoch || requestStatus !== 'idle') return;
+    const campaignId = `${data.epoch.projectId}-${data.epoch.campaignIndex}`;
+    fetch(`/api/campaigns/${campaignId}/request-access`)
+      .then((res) => res.json())
+      .then((body) => setParticipationStatus(body.status ?? null))
+      .catch(() => setParticipationStatus(null));
+  }, [data?.epoch?.projectId, data?.epoch?.campaignIndex, requestStatus]);
 
   const fetchLeaderboard = async () => {
     try {
@@ -182,22 +192,50 @@ export default function EpochLeaderboardPage() {
           )}
         </div>
 
-        {/* Add Tweet Interface */}
+        {/* Request access to campaign */}
         {data?.epoch && (
           <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 p-6 mb-8 max-w-4xl mx-auto">
-            <h2 className="text-xl font-bold text-neutral-900 mb-4">Aggiungi Tweet</h2>
-            {isEpochOpen(data.epoch.endDate) ? (
-              <Link
-                href={`/campaigns/${data.epoch.projectId}-${data.epoch.campaignIndex}/add-tweet?epochIndex=${data.epoch.epochIndex}`}
-                className="inline-flex items-center gap-2 bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors"
+            <h2 className="text-xl font-bold text-neutral-900 mb-4">Partecipa alla campagna</h2>
+            {participationStatus === 'approved' ? (
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <p className="text-green-800 font-medium">Hai accesso a questa campagna. I tuoi tweet con le parole chiave verranno scoperti automaticamente.</p>
+              </div>
+            ) : participationStatus === 'pending' ? (
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                <p className="text-amber-800 font-medium">Richiesta in attesa di approvazione da un amministratore.</p>
+              </div>
+            ) : participationStatus === 'rejected' ? (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <p className="text-red-800 font-medium">La tua richiesta è stata rifiutata. Contatta un amministratore per maggiori informazioni.</p>
+              </div>
+            ) : isEpochOpen(data.epoch.endDate) ? (
+              <button
+                onClick={async () => {
+                  setRequestStatus('loading');
+                  try {
+                    const campaignId = `${data.epoch!.projectId}-${data.epoch!.campaignIndex}`;
+                    const res = await fetch(`/api/campaigns/${campaignId}/request-access`, { method: 'POST' });
+                    const body = await res.json();
+                    if (res.ok) {
+                      setParticipationStatus(body.status ?? 'pending');
+                      setRequestStatus('success');
+                    } else {
+                      setRequestStatus('error');
+                    }
+                  } catch {
+                    setRequestStatus('error');
+                  }
+                }}
+                disabled={requestStatus === 'loading'}
+                className="inline-flex items-center gap-2 bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors disabled:opacity-50"
               >
-                <Plus className="w-5 h-5" />
-                Aggiungi Tweet a questo Epoch
-              </Link>
+                <UserPlus className="w-5 h-5" />
+                {requestStatus === 'loading' ? 'Invio...' : 'Richiedi accesso alla campagna'}
+              </button>
             ) : (
               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                 <p className="text-yellow-800 font-medium">
-                  ⚠️ Questo epoch è chiuso. Non è possibile aggiungere nuovi tweet.
+                  Questo epoch è chiuso. Non è possibile richiedere accesso.
                 </p>
               </div>
             )}

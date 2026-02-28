@@ -345,7 +345,7 @@ export const tweets = pgTable('tweets', {
     index('tweets_is_verified_idx').on(table.isVerified),
     index('tweets_verified_at_idx').on(table.verifiedAt),
     index('tweets_active_filter_idx').on(table.isActive, table.deletedAt),
-    unique('tweets_post_id_unique').on(table.postId),
+    unique('tweets_post_id_epoch_unique').on(table.postId, table.projectId, table.campaignIndex, table.epochIndex),
     foreignKey({
         columns: [table.projectId, table.campaignIndex, table.epochIndex],
         foreignColumns: [epochs.projectId, epochs.campaignIndex, epochs.index],
@@ -410,6 +410,26 @@ export const userRoles = pgTable('user_roles', {
     index('user_roles_user_id_idx').on(table.userId),
     index('user_roles_role_idx').on(table.role),
     check('user_roles_role_check', sql`${table.role} IN ('admin', 'moderator', 'participant', 'base_user')`),
+]);
+
+// Campaign participation requests - users request to join a campaign, admins/mods approve or deny
+export const campaignParticipationRequests = pgTable('campaign_participation_requests', {
+    id: serial('id').primaryKey(),
+    userId: varchar('user_id', { length: 50 }).notNull().references(() => users.id, { onDelete: 'cascade' }),
+    projectId: varchar('project_id', { length: 50 }).notNull(),
+    campaignIndex: integer('campaign_index').notNull(),
+    status: varchar('status', { length: 50 }).notNull().default('pending'), // 'pending', 'approved', 'rejected'
+    requestedAt: timestamp('requested_at').notNull().defaultNow(),
+    reviewedAt: timestamp('reviewed_at'),
+    reviewedBy: varchar('reviewed_by', { length: 50 }),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => [
+    index('campaign_participation_requests_user_idx').on(table.userId),
+    index('campaign_participation_requests_campaign_idx').on(table.projectId, table.campaignIndex),
+    index('campaign_participation_requests_status_idx').on(table.status),
+    unique('campaign_participation_requests_user_campaign_unique').on(table.userId, table.projectId, table.campaignIndex),
+    check('campaign_participation_requests_status_check', sql`${table.status} IN ('pending', 'approved', 'rejected')`),
 ]);
 
 // News table
@@ -503,6 +523,14 @@ export const usersRelations = relations(users, ({ many }) => ({
     otpCodes: many(otpCodes),
     apiKeys: many(apiKeys),
     userRoles: many(userRoles),
+    campaignParticipationRequests: many(campaignParticipationRequests),
+}));
+
+export const campaignParticipationRequestsRelations = relations(campaignParticipationRequests, ({ one }) => ({
+    user: one(users, {
+        fields: [campaignParticipationRequests.userId],
+        references: [users.id],
+    }),
 }));
 
 export const authAccountsRelations = relations(authAccounts, ({ one }) => ({

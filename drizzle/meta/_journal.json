@@ -15,6 +15,13 @@
       "when": 1772299239132,
       "tag": "0001_good_nocturne",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1772303401257,
+      "tag": "0002_daffy_arclight",
+      "breakpoints": true
     }
   ]
 }

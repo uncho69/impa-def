@@ -165,6 +165,19 @@ export default function AdminDashboard() {
                 </div>
               </div>
             </Link>
+
+            <Link
+              href="/admin/participation-requests"
+              className="block p-3 bg-amber-50 hover:bg-amber-100 rounded-lg transition-colors"
+            >
+              <div className="flex items-center">
+                <span className="text-lg mr-3">👥</span>
+                <div>
+                  <p className="font-medium text-gray-900">Richieste di partecipazione</p>
+                  <p className="text-sm text-gray-600">Approva o rifiuta l'accesso alle campagne</p>
+                </div>
+              </div>
+            </Link>
           </div>
         </div>
 

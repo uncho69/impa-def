@@ -6,7 +6,6 @@ import { useUser } from "@clerk/nextjs";
 import { BackToHome } from "@/components/BackToHome";
 import { ClerkProtectedRoute } from "@/components/ClerkProtectedRoute";
 import Link from "next/link";
-import { Plus } from "lucide-react";
 
 interface Epoch {
   projectId: string;
@@ -106,11 +105,11 @@ export default function EpochsPage() {
               </h1>
             </div>
 
-            {/* Add Tweet Interface */}
+            {/* Epoch selection info */}
             {selectedEpoch && (
               <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 p-6 mb-8">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-bold text-neutral-900">Aggiungi Tweet</h2>
+                  <h2 className="text-xl font-bold text-neutral-900">Epoch selezionato</h2>
                   <button
                     onClick={() => setSelectedEpoch(null)}
                     className="text-neutral-500 hover:text-neutral-700"
@@ -119,14 +118,13 @@ export default function EpochsPage() {
                   </button>
                 </div>
                 <p className="text-sm text-neutral-600 mb-4">
-                  Epoch selezionato: {selectedEpoch}
+                  Vai alla classifica di questo epoch per richiedere l&apos;accesso alla campagna e partecipare con i tuoi tweet.
                 </p>
                 <Link
-                  href={`/campaigns/${selectedEpoch.split('-').slice(0, 2).join('-')}/add-tweet?epochIndex=${selectedEpoch.split('-')[2]}`}
+                  href={`/leaderboards/epoch/${selectedEpoch}`}
                   className="inline-flex items-center gap-2 bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors"
                 >
-                  <Plus className="w-5 h-5" />
-                  Aggiungi Tweet a questo Epoch
+                  Vai alla classifica epoch
                 </Link>
               </div>
             )}

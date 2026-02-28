@@ -26,19 +26,21 @@ export async function POST(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url);
-    const daysBack = searchParams.get('daysBack')
-      ? parseInt(searchParams.get('daysBack')!, 10)
-      : 30;
+    const hoursBackParam = searchParams.get('hoursBack');
+    const daysBackParam = searchParams.get('daysBack');
+    const hoursBack = hoursBackParam ? parseInt(hoursBackParam, 10) : 24;
+    const daysBack = daysBackParam ? parseInt(daysBackParam, 10) : undefined;
     const maxTweetsPerUser = searchParams.get('maxTweetsPerUser')
       ? parseInt(searchParams.get('maxTweetsPerUser')!, 10)
       : 1000;
 
     console.log(
-      `Starting tweet discovery: daysBack=${daysBack}, maxTweetsPerUser=${maxTweetsPerUser}`
+      `Starting tweet discovery: hoursBack=${hoursBack ?? 'n/a'}, daysBack=${daysBack ?? 'n/a'}, maxTweetsPerUser=${maxTweetsPerUser}`
     );
 
     const results = await discoverTweetsForAllUsers({
-      daysBack,
+      hoursBack,
+      ...(daysBack !== undefined && { daysBack }),
       maxTweetsPerUser,
     });
 
