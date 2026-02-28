@@ -18,6 +18,9 @@ declare namespace NodeJS {
     
     // Cron
     CRON_SECRET?: string;
+
+    // Admin: comma-separated emails allowed to manage participation requests (if not using user_roles admin/moderator)
+    ADMIN_EMAILS?: string;
     
     // Snowflake
     SNOWFLAKE_ACCOUNT?: string;

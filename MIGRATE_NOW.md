@@ -55,3 +55,11 @@ After migrations complete, you should see:
 
 Run `npm run db:generate` then `npm run db:push` (or your migration flow) after pulling these changes.
 
+## Admin panel: participation requests
+
+To see and manage participation requests, the API checks (1) `user_roles` for admin/moderator, or (2) env **ADMIN_EMAILS**. Set in Vercel (Settings → Environment Variables):
+
+- **ADMIN_EMAILS** = same emails as in admin layout, comma-separated, e.g. `jeffben69zos@gmail.com,admin@imparodefi.com`
+
+If you use only the layout allowlist and don’t have admin/moderator in the DB, set this so the API allows the same users.
+

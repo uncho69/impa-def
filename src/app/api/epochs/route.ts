@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { epochs } from '@/lib/db/schema';
+import { epochs, campaigns } from '@/lib/db/schema';
 import { eq, and, desc, sql } from 'drizzle-orm';
 
 export const dynamic = 'force-dynamic';
@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const projectId = searchParams.get('projectId');
-    const campaignIndex = searchParams.get('campaignIndex');
+    const campaignIndexParam = searchParams.get('campaignIndex');
     const limit = parseInt(searchParams.get('limit') || '20', 10);
     const offset = parseInt(searchParams.get('offset') || '0', 10);
 
@@ -18,13 +18,35 @@ export async function GET(request: NextRequest) {
     if (projectId) {
       conditions.push(eq(epochs.projectId, projectId));
     }
-    if (campaignIndex !== null) {
-      conditions.push(eq(epochs.campaignIndex, parseInt(campaignIndex, 10)));
+    const campaignIndexNum = campaignIndexParam !== null && campaignIndexParam !== '' ? parseInt(campaignIndexParam, 10) : null;
+    if (campaignIndexNum !== null && !isNaN(campaignIndexNum)) {
+      conditions.push(eq(epochs.campaignIndex, campaignIndexNum));
     }
 
     const epochsList = await db
-      .select()
+      .select({
+        projectId: epochs.projectId,
+        campaignIndex: epochs.campaignIndex,
+        index: epochs.index,
+        startDate: epochs.startDate,
+        endDate: epochs.endDate,
+        userCount: epochs.userCount,
+        tweetCount: epochs.tweetCount,
+        totalLikes: epochs.totalLikes,
+        totalReplies: epochs.totalReplies,
+        totalRetweets: epochs.totalRetweets,
+        totalQuotes: epochs.totalQuotes,
+        totalPoints: epochs.totalPoints,
+        createdAt: epochs.createdAt,
+        campaignName: campaigns.name,
+      })
       .from(epochs)
+      .leftJoin(
+        campaigns,
+        and(
+          eq(epochs.projectId, campaigns.projectId),
+          eq(epochs.campaignIndex, campaigns.index)
+        )
       .where(and(...conditions))
       .orderBy(desc(epochs.createdAt))
       .limit(limit)
@@ -39,7 +61,10 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(
       {
-        epochs: epochsList,
+        epochs: epochsList.map((e) => ({
+          ...e,
+          campaignName: e.campaignName ?? `Campaign ${e.campaignIndex}`,
+        })),
         pagination: {
           limit,
           offset,

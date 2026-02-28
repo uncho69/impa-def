@@ -22,9 +22,11 @@ export default function AdminParticipationRequestsPage() {
   const [filter, setFilter] = useState<"all" | "pending" | "approved" | "rejected">("pending");
   const [loading, setLoading] = useState(true);
   const [actioningId, setActioningId] = useState<number | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchRequests = async () => {
     setLoading(true);
+    setError(null);
     try {
       const url =
         filter === "all"
@@ -32,10 +34,15 @@ export default function AdminParticipationRequestsPage() {
           : `/api/admin/participation-requests?status=${filter}`;
       const res = await fetch(url);
       const data = await res.json();
-      if (res.ok) setRequests(data.requests ?? []);
-      else setRequests([]);
-    } catch {
+      if (res.ok) {
+        setRequests(data.requests ?? []);
+      } else {
+        setRequests([]);
+        setError(data?.error ?? `Errore ${res.status}: ${res.statusText}`);
+      }
+    } catch (e) {
       setRequests([]);
+      setError(e instanceof Error ? e.message : "Errore di connessione");
     } finally {
       setLoading(false);
     }
@@ -94,6 +101,20 @@ export default function AdminParticipationRequestsPage() {
           </button>
         ))}
       </div>
+
+      {error && (
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-amber-800">
+          <p className="font-medium">Impossibile caricare le richieste</p>
+          <p className="text-sm mt-1">{error}</p>
+          <p className="text-sm mt-2">Assicurati di avere il ruolo admin/moderator in database oppure imposta la variabile ADMIN_EMAILS (email separate da virgola) in Vercel.</p>
+          <button
+            onClick={() => { setError(null); fetchRequests(); }}
+            className="mt-3 text-sm font-medium text-amber-700 underline"
+          >
+            Riprova
+          </button>
+        </div>
+      )}
 
       {loading ? (
         <div className="text-center py-12">

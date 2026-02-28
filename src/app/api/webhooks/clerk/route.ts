@@ -150,9 +150,10 @@ export async function POST(request: NextRequest) {
       const primaryEmail = email_addresses?.find((email) => email.id === evt.data.primary_email_address_id);
       const email = primaryEmail?.email_address || email_addresses?.[0]?.email_address;
 
-      // Extract Twitter ID from external_accounts if user signed in with Twitter
+      // Extract Twitter ID from external_accounts if user signed in with Twitter/X (Clerk can send 'oauth_twitter', 'twitter', or 'x')
       const twitterAccount = external_accounts?.find(
-        (account) => account.provider === 'oauth_twitter' || account.provider === 'twitter'
+        (account) =>
+          account.provider === 'oauth_twitter' || account.provider === 'twitter' || account.provider === 'x'
       );
       const twitterId = twitterAccount?.provider_user_id || null;
 
@@ -408,9 +409,10 @@ export async function POST(request: NextRequest) {
       const primaryEmail = email_addresses?.find((email) => email.id === evt.data.primary_email_address_id);
       const email = primaryEmail?.email_address || email_addresses?.[0]?.email_address;
 
-      // Extract Twitter ID from external_accounts if user signed in with Twitter
+      // Extract Twitter ID from external_accounts if user signed in with Twitter/X (Clerk can send 'oauth_twitter', 'twitter', or 'x')
       const twitterAccount = external_accounts?.find(
-        (account) => account.provider === 'oauth_twitter' || account.provider === 'twitter'
+        (account) =>
+          account.provider === 'oauth_twitter' || account.provider === 'twitter' || account.provider === 'x'
       );
       const twitterId = twitterAccount?.provider_user_id || existingUser[0].twitterId || null;
 

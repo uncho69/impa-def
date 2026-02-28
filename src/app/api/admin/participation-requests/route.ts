@@ -5,6 +5,25 @@ import { eq, and, desc, sql } from 'drizzle-orm';
 import { getUserIdFromRequest } from '@/lib/auth/middleware';
 import { isModeratorOrAdmin } from '@/lib/auth/permissions';
 
+/** Comma-separated list of emails allowed to manage participation (e.g. ADMIN_EMAILS=a@x.com,b@x.com). Falls back to role check if not set. */
+const ADMIN_EMAILS_RAW = process.env.ADMIN_EMAILS ?? '';
+const ADMIN_EMAILS_SET = new Set(
+  ADMIN_EMAILS_RAW.split(',').map((e) => e.trim().toLowerCase()).filter(Boolean)
+);
+
+async function canManageParticipationRequests(userId: string): Promise<boolean> {
+  if (!userId) return false;
+  if (await isModeratorOrAdmin(userId)) return true;
+  if (ADMIN_EMAILS_SET.size === 0) return false;
+  const row = await db
+    .select({ email: users.email })
+    .from(users)
+    .where(eq(users.id, userId))
+    .limit(1);
+  const email = row[0]?.email?.trim().toLowerCase();
+  return !!email && ADMIN_EMAILS_SET.has(email);
+}
+
 export interface ParticipationRequestRow {
   id: number;
   userId: string;
@@ -29,9 +48,12 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const allowed = await isModeratorOrAdmin(userId);
+    const allowed = await canManageParticipationRequests(userId);
     if (!allowed) {
-      return NextResponse.json({ error: 'Forbidden: admin or moderator only' }, { status: 403 });
+      return NextResponse.json(
+        { error: 'Forbidden: admin or moderator role required, or add your email to ADMIN_EMAILS env' },
+        { status: 403 }
+      );
     }
 
     const { searchParams } = new URL(request.url);

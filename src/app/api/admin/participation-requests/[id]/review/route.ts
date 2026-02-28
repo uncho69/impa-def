@@ -1,9 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { campaignParticipationRequests } from '@/lib/db/schema';
+import { campaignParticipationRequests, users } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { getUserIdFromRequest } from '@/lib/auth/middleware';
 import { isModeratorOrAdmin } from '@/lib/auth/permissions';
+
+const ADMIN_EMAILS_RAW = process.env.ADMIN_EMAILS ?? '';
+const ADMIN_EMAILS_SET = new Set(
+  ADMIN_EMAILS_RAW.split(',').map((e) => e.trim().toLowerCase()).filter(Boolean)
+);
+
+async function canManageParticipationRequests(userId: string): Promise<boolean> {
+  if (!userId) return false;
+  if (await isModeratorOrAdmin(userId)) return true;
+  if (ADMIN_EMAILS_SET.size === 0) return false;
+  const row = await db
+    .select({ email: users.email })
+    .from(users)
+    .where(eq(users.id, userId))
+    .limit(1);
+  const email = row[0]?.email?.trim().toLowerCase();
+  return !!email && ADMIN_EMAILS_SET.has(email);
+}
 
 /**
  * POST: Approve or reject a participation request. Admin or moderator only.
@@ -19,7 +37,7 @@ export async function POST(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const allowed = await isModeratorOrAdmin(userId);
+    const allowed = await canManageParticipationRequests(userId);
     if (!allowed) {
       return NextResponse.json({ error: 'Forbidden: admin or moderator only' }, { status: 403 });
     }

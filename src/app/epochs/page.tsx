@@ -11,6 +11,7 @@ interface Epoch {
   projectId: string;
   campaignIndex: number;
   index: number;
+  campaignName?: string;
   startDate: string;
   endDate: string;
   userCount: number;
@@ -169,7 +170,7 @@ export default function EpochsPage() {
                             <div className="flex-1">
                               <div className="flex items-center gap-3 mb-2">
                                 <h3 className="font-bold text-lg text-neutral-900">
-                                  {epoch.projectId} - Campaign {epoch.campaignIndex} - Epoch {epoch.index}
+                                  {epoch.campaignName ?? `Campaign ${epoch.campaignIndex}`} — Epoch {epoch.index}
                                 </h3>
                                 {isSelected && (
                                   <span className="px-2 py-1 bg-primary-600 text-white text-xs rounded">
