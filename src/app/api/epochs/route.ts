@@ -47,6 +47,7 @@ export async function GET(request: NextRequest) {
           eq(epochs.projectId, campaigns.projectId),
           eq(epochs.campaignIndex, campaigns.index)
         )
+      )
       .where(and(...conditions))
       .orderBy(desc(epochs.createdAt))
       .limit(limit)
