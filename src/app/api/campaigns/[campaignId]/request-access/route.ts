@@ -18,9 +18,6 @@ function parseCampaignId(campaignId: string): { projectId: string; campaignIndex
   return { projectId, campaignIndex };
 }
 
-/** Codice errore PostgreSQL: relation (tabella) non esiste */
-const PG_UNDEFINED_TABLE = '42P01';
-
 /**
  * POST: Request participation in a campaign (creates a pending request).
  * Se la tabella non esiste, la crea e riprova (così funziona anche senza migrazione).
@@ -65,6 +62,16 @@ export async function POST(
       return NextResponse.json(
         { error: 'Campaign not found' },
         { status: 404 }
+      );
+    }
+
+    try {
+      await ensureCampaignParticipationRequestsTable();
+    } catch (ensureErr) {
+      console.error('ensureCampaignParticipationRequestsTable failed:', ensureErr);
+      return NextResponse.json(
+        { error: 'Internal server error' },
+        { status: 500 }
       );
     }
 
@@ -116,20 +123,14 @@ export async function POST(
     try {
       const result = await runInsert();
       return NextResponse.json(result.body, { status: result.status });
-    } catch (firstError: unknown) {
-      const code = (firstError as { code?: string })?.code;
-      if (code === PG_UNDEFINED_TABLE) {
-        await ensureCampaignParticipationRequestsTable();
-        const result = await runInsert();
-        return NextResponse.json(result.body, { status: result.status });
-      }
-      if ((firstError as { status?: number }).status === 403) {
+    } catch (rejectedErr: unknown) {
+      if ((rejectedErr as { status?: number }).status === 403) {
         return NextResponse.json(
           { error: 'Your previous request was denied. Contact an admin to try again.' },
           { status: 403 }
         );
       }
-      throw firstError;
+      throw rejectedErr;
     }
   } catch (error) {
     console.error('Error creating participation request:', error);
@@ -168,30 +169,27 @@ export async function GET(
 
     const { projectId, campaignIndex } = parsed;
 
-    const fetchStatus = async () =>
-      db
-        .select({ status: campaignParticipationRequests.status })
-        .from(campaignParticipationRequests)
-        .where(
-          and(
-            eq(campaignParticipationRequests.userId, userId),
-            eq(campaignParticipationRequests.projectId, projectId),
-            eq(campaignParticipationRequests.campaignIndex, campaignIndex)
-          )
-        )
-        .limit(1);
-
-    let existing: { status: string }[];
     try {
-      existing = await fetchStatus();
-    } catch (e: unknown) {
-      if ((e as { code?: string }).code === PG_UNDEFINED_TABLE) {
-        await ensureCampaignParticipationRequestsTable();
-        existing = await fetchStatus();
-      } else {
-        throw e;
-      }
+      await ensureCampaignParticipationRequestsTable();
+    } catch (ensureErr) {
+      console.error('ensureCampaignParticipationRequestsTable (GET) failed:', ensureErr);
+      return NextResponse.json(
+        { error: 'Internal server error' },
+        { status: 500 }
+      );
     }
+
+    const existing = await db
+      .select({ status: campaignParticipationRequests.status })
+      .from(campaignParticipationRequests)
+      .where(
+        and(
+          eq(campaignParticipationRequests.userId, userId),
+          eq(campaignParticipationRequests.projectId, projectId),
+          eq(campaignParticipationRequests.campaignIndex, campaignIndex)
+        )
+      )
+      .limit(1);
 
     if (existing.length === 0) {
       return NextResponse.json(
