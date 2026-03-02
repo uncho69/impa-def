@@ -15,6 +15,9 @@ interface NewsStats {
 export default function AdminDashboard() {
   const [stats, setStats] = useState<NewsStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [refreshingMetrics, setRefreshingMetrics] = useState(false);
+  const [refreshMessage, setRefreshMessage] = useState<string | null>(null);
+  const [refreshError, setRefreshError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchStats();
@@ -29,6 +32,33 @@ export default function AdminDashboard() {
       console.error('Errore nel caricamento statistiche:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleManualMetricsRefresh = async () => {
+    setRefreshingMetrics(true);
+    setRefreshMessage(null);
+    setRefreshError(null);
+    try {
+      const res = await fetch('/api/admin/refresh-metrics', {
+        method: 'POST',
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setRefreshError(data?.error || 'Errore durante il refresh delle metriche');
+      } else {
+        const updated = data?.metrics?.tweetsUpdated ?? 0;
+        const recalculated = data?.stats?.tweetsRecalculated ?? 0;
+        setRefreshMessage(
+          `Refresh completato: ${updated} tweet aggiornati, stats ricalcolate per ${recalculated} tweet.`
+        );
+        // opzionale: ricarichiamo le stats dashboard
+        fetchStats();
+      }
+    } catch (e) {
+      setRefreshError('Errore di rete durante il refresh delle metriche');
+    } finally {
+      setRefreshingMetrics(false);
     }
   };
 
@@ -165,6 +195,36 @@ export default function AdminDashboard() {
                 </div>
               </div>
             </Link>
+
+            <button
+              type="button"
+              onClick={handleManualMetricsRefresh}
+              disabled={refreshingMetrics}
+              className="w-full p-3 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors text-left disabled:opacity-60"
+            >
+              <div className="flex items-center">
+                <span className="text-lg mr-3">🔄</span>
+                <div>
+                  <p className="font-medium text-gray-900">
+                    Aggiorna metriche leaderboard
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    Esegue ora il cron metrics (update tweet + ricalcolo punti)
+                  </p>
+                </div>
+              </div>
+            </button>
+
+            {refreshMessage && (
+              <div className="mt-2 text-sm text-green-700 bg-green-50 border border-green-200 rounded-md px-3 py-2">
+                {refreshMessage}
+              </div>
+            )}
+            {refreshError && (
+              <div className="mt-2 text-sm text-red-700 bg-red-50 border border-red-200 rounded-md px-3 py-2">
+                {refreshError}
+              </div>
+            )}
           </div>
         </div>
 
