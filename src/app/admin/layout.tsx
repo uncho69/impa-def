@@ -101,6 +101,12 @@ export default function AdminLayout({
                 >
                   News
                 </Link>
+                <Link 
+                  href="/admin/participation-requests" 
+                  className="text-gray-600 hover:text-blue-600 font-medium transition-colors"
+                >
+                  Richieste partecipazione
+                </Link>
               </nav>
             </div>
             <div className="flex items-center space-x-4">
