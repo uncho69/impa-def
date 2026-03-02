@@ -412,6 +412,26 @@ export const userRoles = pgTable('user_roles', {
     check('user_roles_role_check', sql`${table.role} IN ('admin', 'moderator', 'participant', 'base_user')`),
 ]);
 
+// Campaign participation requests - users request to join a campaign, admins/mods approve or deny
+export const campaignParticipationRequests = pgTable('campaign_participation_requests', {
+    id: serial('id').primaryKey(),
+    userId: varchar('user_id', { length: 50 }).notNull().references(() => users.id, { onDelete: 'cascade' }),
+    projectId: varchar('project_id', { length: 50 }).notNull(),
+    campaignIndex: integer('campaign_index').notNull(),
+    status: varchar('status', { length: 50 }).notNull().default('pending'), // 'pending', 'approved', 'rejected'
+    requestedAt: timestamp('requested_at').notNull().defaultNow(),
+    reviewedAt: timestamp('reviewed_at'),
+    reviewedBy: varchar('reviewed_by', { length: 50 }),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => [
+    index('campaign_participation_requests_user_idx').on(table.userId),
+    index('campaign_participation_requests_campaign_idx').on(table.projectId, table.campaignIndex),
+    index('campaign_participation_requests_status_idx').on(table.status),
+    unique('campaign_participation_requests_user_campaign_unique').on(table.userId, table.projectId, table.campaignIndex),
+    check('campaign_participation_requests_status_check', sql`${table.status} IN ('pending', 'approved', 'rejected')`),
+]);
+
 // News table
 export const news = pgTable('news', {
     id: varchar('id', { length: 255 }).primaryKey(),
@@ -475,6 +495,7 @@ export const campaignsRelations = relations(campaigns, ({ one, many }) => ({
     }),
     epochs: many(epochs),
     rewards: many(rewards),
+    campaignParticipationRequests: many(campaignParticipationRequests),
 }));
 
 export const rewardsRelations = relations(rewards, ({ one }) => ({
@@ -503,6 +524,18 @@ export const usersRelations = relations(users, ({ many }) => ({
     otpCodes: many(otpCodes),
     apiKeys: many(apiKeys),
     userRoles: many(userRoles),
+    campaignParticipationRequests: many(campaignParticipationRequests),
+}));
+
+export const campaignParticipationRequestsRelations = relations(campaignParticipationRequests, ({ one }) => ({
+    user: one(users, {
+        fields: [campaignParticipationRequests.userId],
+        references: [users.id],
+    }),
+    campaign: one(campaigns, {
+        fields: [campaignParticipationRequests.projectId, campaignParticipationRequests.campaignIndex],
+        references: [campaigns.projectId, campaigns.index],
+    }),
 }));
 
 export const authAccountsRelations = relations(authAccounts, ({ one }) => ({
