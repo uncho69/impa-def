@@ -72,10 +72,18 @@ export default function EpochLeaderboardPage() {
     fetch(`/api/campaigns/${campaignId}/request-access`, { credentials: 'include' })
       .then((res) => res.json())
       .then((body) => {
-        setParticipationStatus(body.status ?? null);
+        // Non sovrascrivere 'pending' con null (es. se GET non riconosce la sessione dopo il POST)
+        setParticipationStatus((prev) => {
+          const s = body.status ?? null;
+          if (s !== null) return s;
+          return prev ?? null;
+        });
         if (body.status) setRequestError(null);
       })
-      .catch(() => setParticipationStatus(null));
+      .catch(() => {
+        // Non resettare a null se avevamo già "pending" (richiesta appena inviata)
+        setParticipationStatus((prev) => prev === 'pending' ? 'pending' : null);
+      });
   }, [data?.epoch?.projectId, data?.epoch?.campaignIndex, requestStatus]);
 
   const fetchLeaderboard = async () => {
@@ -231,12 +239,13 @@ export default function EpochLeaderboardPage() {
                         credentials: 'include',
                         headers: { 'Content-Type': 'application/json' },
                       });
-                      const body = await res.json();
-                      if (res.ok) {
+                      const body = await res.json().catch(() => ({}));
+                      if (res.ok && (res.status === 200 || res.status === 201)) {
                         setParticipationStatus(body.status ?? 'pending');
+                        setRequestError(null);
                         setRequestStatus('idle');
                       } else {
-                        setRequestStatus('error');
+                        setRequestStatus('idle');
                         if (res.status === 401) {
                           setRequestError('Accedi con il tuo account per richiedere partecipazione.');
                         } else {
@@ -244,7 +253,7 @@ export default function EpochLeaderboardPage() {
                         }
                       }
                     } catch {
-                      setRequestStatus('error');
+                      setRequestStatus('idle');
                       setRequestError('Errore di connessione. Riprova.');
                     }
                   }}
