@@ -102,10 +102,10 @@ export default function AdminLayout({
                   News
                 </Link>
                 <Link 
-                  href="/admin/participation-requests" 
+                  href="/admin/campaigns" 
                   className="text-gray-600 hover:text-blue-600 font-medium transition-colors"
                 >
-                  Richieste partecipazione
+                  Gestione campagne
                 </Link>
               </nav>
             </div>
