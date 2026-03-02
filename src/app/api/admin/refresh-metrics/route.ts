@@ -2,12 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getUserIdFromRequest } from '@/lib/auth/middleware';
 import { canManageAdmin } from '@/lib/auth/admin';
 import { updateTweetMetrics } from '@/lib/x-api/update-metrics';
+import { discoverTweetsForAllUsers } from '@/lib/x-api/discover-tweets';
 import { recalculateStatsForVerifiedTweets } from '@/app/api/cron/update-tweet-metrics/recalculate-stats';
 
 export const dynamic = 'force-dynamic';
 
 /**
- * POST: Trigger manual refresh of tweet metrics and leaderboard stats.
+ * POST: Trigger manual discovery + refresh of tweet metrics and leaderboard stats.
  * Access: admin / moderator (same check as other /api/admin endpoints).
  *
  * Optionally accepts query params:
@@ -31,7 +32,20 @@ export async function POST(request: NextRequest) {
     const maxTweets = searchParams.get('maxTweets')
       ? parseInt(searchParams.get('maxTweets')!, 10)
       : undefined;
+    const daysBack = searchParams.get('daysBack')
+      ? parseInt(searchParams.get('daysBack')!, 10)
+      : 7;
+    const maxTweetsPerUser = searchParams.get('maxTweetsPerUser')
+      ? parseInt(searchParams.get('maxTweetsPerUser')!, 10)
+      : 500;
 
+    // 1) Discover tweets (import nuovi tweet e verifica per progetto)
+    const discoveryResults = await discoverTweetsForAllUsers({
+      daysBack,
+      maxTweetsPerUser,
+    });
+
+    // 2) Aggiorna metriche per tutti i tweet verificati
     const metricsResult = await updateTweetMetrics({
       batchSize,
       maxTweets,
@@ -46,7 +60,13 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(
       {
-        message: 'Manual metrics refresh completed',
+        message: 'Manual discovery + metrics refresh completed',
+        discovery: {
+          totalUsers: discoveryResults.length,
+          totalTweetsProcessed: discoveryResults.reduce((sum, r) => sum + r.tweetsProcessed, 0),
+          totalTweetsVerified: discoveryResults.reduce((sum, r) => sum + r.tweetsVerified, 0),
+          totalTweetsRejected: discoveryResults.reduce((sum, r) => sum + r.tweetsRejected, 0),
+        },
         metrics: {
           tweetsUpdated: metricsResult.tweetsUpdated,
           tweetsWithImpressions: metricsResult.tweetsWithImpressions,

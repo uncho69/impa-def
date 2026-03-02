@@ -65,6 +65,8 @@ export default function AdminCampaignsPage() {
     rewards: [] as { token: string; amount: number }[],
   });
   const [actioningId, setActioningId] = useState<string | null>(null);
+  const [refreshingCampaignId, setRefreshingCampaignId] = useState<string | null>(null);
+  const [refreshMessage, setRefreshMessage] = useState<string | null>(null);
 
   // Richieste partecipazione state
   const [requests, setRequests] = useState<RequestRow[]>([]);
@@ -174,6 +176,32 @@ export default function AdminCampaignsPage() {
       if (res.ok) fetchCampaigns();
     } finally {
       setActioningId(null);
+    }
+  };
+
+  const handleRefreshMetrics = async (campaignId: string) => {
+    setRefreshingCampaignId(campaignId);
+    setRefreshMessage(null);
+    try {
+      const res = await fetch("/api/admin/refresh-metrics", {
+        method: "POST",
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data?.error || "Errore durante il refresh delle metriche");
+      } else {
+        const processed = data?.discovery?.totalTweetsVerified ?? 0;
+        const updated = data?.metrics?.tweetsUpdated ?? 0;
+        setRefreshMessage(
+          `Refresh completato: ${processed} tweet verificati, ${updated} tweet aggiornati.`
+        );
+        // Ricarichiamo le campagne per avere numeri aggiornati
+        fetchCampaigns();
+      }
+    } catch (e) {
+      alert("Errore di rete durante il refresh delle metriche");
+    } finally {
+      setRefreshingCampaignId(null);
     }
   };
 
@@ -321,6 +349,13 @@ export default function AdminCampaignsPage() {
                         <td className="px-4 py-3 text-right">
                           {!c.deletedAt && (
                             <div className="flex justify-end gap-2">
+                              <button
+                                onClick={() => handleRefreshMetrics(c.campaignId)}
+                                disabled={!!refreshingCampaignId}
+                                className="text-indigo-700 hover:bg-indigo-50 px-2 py-1 rounded text-sm font-medium disabled:opacity-50"
+                              >
+                                {refreshingCampaignId === c.campaignId ? "Refresh..." : "Refresh"}
+                              </button>
                               {c.isActive === 1 ? (
                                 <button
                                   onClick={() => handleCloseOrReopen(c.campaignId, "close")}
@@ -453,6 +488,12 @@ export default function AdminCampaignsPage() {
                       </div>
                     </div>
                   </div>
+
+                  {refreshMessage && (
+                    <div className="mt-4 text-sm text-green-700 bg-green-50 border border-green-200 rounded-md px-3 py-2">
+                      {refreshMessage}
+                    </div>
+                  )}
 
                   <div className="flex gap-2 mt-6">
                     <button
