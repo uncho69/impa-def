@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { epochs } from '@/lib/db/schema';
+import { epochs, campaigns } from '@/lib/db/schema';
 import { eq, and, desc, sql } from 'drizzle-orm';
 
 export const dynamic = 'force-dynamic';
@@ -23,8 +23,24 @@ export async function GET(request: NextRequest) {
     }
 
     const epochsList = await db
-      .select()
+      .select({
+        projectId: epochs.projectId,
+        campaignIndex: epochs.campaignIndex,
+        index: epochs.index,
+        startDate: epochs.startDate,
+        endDate: epochs.endDate,
+        userCount: epochs.userCount,
+        tweetCount: epochs.tweetCount,
+        totalLikes: epochs.totalLikes,
+        totalReplies: epochs.totalReplies,
+        totalRetweets: epochs.totalRetweets,
+        totalQuotes: epochs.totalQuotes,
+        totalPoints: epochs.totalPoints,
+        createdAt: epochs.createdAt,
+        campaignName: campaigns.name,
+      })
       .from(epochs)
+      .innerJoin(campaigns, and(eq(epochs.projectId, campaigns.projectId), eq(epochs.campaignIndex, campaigns.index)))
       .where(and(...conditions))
       .orderBy(desc(epochs.createdAt))
       .limit(limit)

@@ -4,12 +4,14 @@ import { projects } from '@/lib/db/schema';
 import { sql } from 'drizzle-orm';
 import { getUserIdFromRequest } from '@/lib/auth/middleware';
 import { canManageAdmin } from '@/lib/auth/admin';
+import { PLATFORM_PROJECTS } from '@/lib/platform-projects';
 
 export const dynamic = 'force-dynamic';
 
 /**
  * GET: Lista progetti della piattaforma (per selezione in creazione campagna). Solo admin.
- * Mostra tutti i progetti non cancellati, indipendentemente da isActive.
+ * Restituisce tutti i progetti presenti sulla piattaforma (bitcoin, ethereum, base, hyperliquid, ...)
+ * più eventuali progetti presenti solo nel DB (non cancellati).
  */
 export async function GET(request: NextRequest) {
   try {
@@ -19,13 +21,25 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const list = await db
+    const dbList = await db
       .select({ id: projects.id, name: projects.name })
       .from(projects)
-      .where(sql`${projects.deletedAt} IS NULL`)
-      .orderBy(projects.name);
+      .where(sql`${projects.deletedAt} IS NULL`);
 
-    return NextResponse.json({ projects: list }, { status: 200 });
+    const byId = new Map(dbList.map((p) => [p.id, p]));
+    const merged: { id: string; name: string }[] = [];
+    const seen = new Set<string>();
+
+    for (const p of PLATFORM_PROJECTS) {
+      seen.add(p.id);
+      merged.push(byId.has(p.id) ? { id: p.id, name: byId.get(p.id)!.name } : p);
+    }
+    for (const p of dbList) {
+      if (!seen.has(p.id)) merged.push(p);
+    }
+    merged.sort((a, b) => a.name.localeCompare(b.name, 'it'));
+
+    return NextResponse.json({ projects: merged }, { status: 200 });
   } catch (error) {
     console.error('Error listing projects:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

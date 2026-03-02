@@ -4,6 +4,7 @@ import { projects, campaigns, rewards, epochs } from '@/lib/db/schema';
 import { eq, and, sql, desc } from 'drizzle-orm';
 import { getUserIdFromRequest } from '@/lib/auth/middleware';
 import { canManageAdmin } from '@/lib/auth/admin';
+import { PLATFORM_PROJECTS } from '@/lib/platform-projects';
 
 export const dynamic = 'force-dynamic';
 
@@ -95,13 +96,30 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const project = await db
+    let project = await db
       .select()
       .from(projects)
-      .where(and(eq(projects.id, projectId), eq(projects.isActive, 1)))
+      .where(eq(projects.id, projectId))
       .limit(1);
+
     if (project.length === 0) {
-      return NextResponse.json({ error: 'Progetto non trovato o non attivo' }, { status: 404 });
+      const platformEntry = PLATFORM_PROJECTS.find((p) => p.id === projectId);
+      if (!platformEntry) {
+        return NextResponse.json({ error: 'Progetto non trovato sulla piattaforma' }, { status: 404 });
+      }
+      await db.insert(projects).values({
+        id: platformEntry.id,
+        name: platformEntry.name,
+        isActive: 1,
+        campaignCount: 0,
+        createdBy: userId,
+        updatedBy: userId,
+      });
+      project = await db.select().from(projects).where(eq(projects.id, projectId)).limit(1);
+    }
+
+    if (project.length === 0 || project[0].isActive !== 1) {
+      return NextResponse.json({ error: 'Progetto non attivo' }, { status: 400 });
     }
 
     const nextIndexResult = await db
