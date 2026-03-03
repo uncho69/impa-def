@@ -99,7 +99,37 @@ async function updateStatsForTweet(
     tweet.quotes
   );
 
-  // Update user epoch scores
+  const allTweets = await db
+    .select({
+      likes: tweets.likes,
+      replies: tweets.replies,
+      retweets: tweets.retweets,
+      quotes: tweets.quotes,
+    })
+    .from(tweets)
+    .where(
+      and(
+        eq(tweets.userId, userId),
+        eq(tweets.projectId, projectId),
+        eq(tweets.campaignIndex, campaignIndex),
+        eq(tweets.epochIndex, epochIndex),
+        eq(tweets.isVerified, 1),
+        eq(tweets.isActive, 1),
+        sql`${tweets.deletedAt} IS NULL`
+      )
+    );
+
+  const totals = allTweets.reduce(
+    (acc, t) => ({
+      points: acc.points + calculatePoints(t.likes || 0, t.replies || 0, t.retweets || 0, t.quotes || 0),
+      likes: acc.likes + (t.likes || 0),
+      replies: acc.replies + (t.replies || 0),
+      retweets: acc.retweets + (t.retweets || 0),
+      quotes: acc.quotes + (t.quotes || 0),
+    }),
+    { points: 0, likes: 0, replies: 0, retweets: 0, quotes: 0 }
+  );
+
   const existingScore = await db
     .select()
     .from(userEpochScores)
@@ -114,38 +144,6 @@ async function updateStatsForTweet(
     .limit(1);
 
   if (existingScore.length > 0) {
-    // Recalculate totals by summing all tweets for this user/epoch
-    const allTweets = await db
-      .select({
-        likes: tweets.likes,
-        replies: tweets.replies,
-        retweets: tweets.retweets,
-        quotes: tweets.quotes,
-      })
-      .from(tweets)
-      .where(
-        and(
-          eq(tweets.userId, userId),
-          eq(tweets.projectId, projectId),
-          eq(tweets.campaignIndex, campaignIndex),
-          eq(tweets.epochIndex, epochIndex),
-          eq(tweets.isVerified, 1),
-          eq(tweets.isActive, 1),
-          sql`${tweets.deletedAt} IS NULL`
-        )
-      );
-
-    const totals = allTweets.reduce(
-      (acc, t) => ({
-        points: acc.points + calculatePoints(t.likes || 0, t.replies || 0, t.retweets || 0, t.quotes || 0),
-        likes: acc.likes + (t.likes || 0),
-        replies: acc.replies + (t.replies || 0),
-        retweets: acc.retweets + (t.retweets || 0),
-        quotes: acc.quotes + (t.quotes || 0),
-      }),
-      { points: 0, likes: 0, replies: 0, retweets: 0, quotes: 0 }
-    );
-
     await db
       .update(userEpochScores)
       .set({
@@ -165,6 +163,22 @@ async function updateStatsForTweet(
           eq(userEpochScores.userId, userId)
         )
       );
+  } else {
+    await db.insert(userEpochScores).values({
+      projectId,
+      campaignIndex,
+      epochIndex,
+      userId,
+      points: totals.points,
+      tweetCount: allTweets.length,
+      totalLikes: totals.likes,
+      totalReplies: totals.replies,
+      totalRetweets: totals.retweets,
+      totalQuotes: totals.quotes,
+      isActive: 1,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
   }
 
   // Update epoch totals

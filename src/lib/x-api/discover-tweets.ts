@@ -4,9 +4,11 @@
  */
 
 import { db } from '@/lib/db';
-import { users, authAccounts, tweets, projects } from '@/lib/db/schema';
-import { eq, and, isNotNull, sql } from 'drizzle-orm';
+import { users, authAccounts, tweets, projects, epochs } from '@/lib/db/schema';
+import { eq, and, isNotNull, sql, lte, gte, asc } from 'drizzle-orm';
 import { getXAPIClient } from './client';
+
+type ProjectWithId = { id: string; name: string };
 
 export interface DiscoveryResult {
   userId: string;
@@ -23,11 +25,11 @@ export interface DiscoveryOptions {
 }
 
 /**
- * Get all active project names for keyword matching
+ * Get all active projects (id + name) for keyword matching and epoch assignment
  */
-async function getProjectKeywords(): Promise<string[]> {
-  const activeProjects = await db
-    .select({ name: projects.name })
+async function getActiveProjects(): Promise<ProjectWithId[]> {
+  const list = await db
+    .select({ id: projects.id, name: projects.name })
     .from(projects)
     .where(
       and(
@@ -35,24 +37,54 @@ async function getProjectKeywords(): Promise<string[]> {
         sql`${projects.deletedAt} IS NULL`
       )
     );
-
-  return activeProjects.map((p) => p.name.toLowerCase().trim());
+  return list;
 }
 
 /**
- * Check if tweet content contains any project keywords
+ * Find first matching project by keyword in tweet text (case-insensitive). Returns project id or null.
  */
-function containsProjectKeywords(
-  tweetText: string,
-  keywords: string[]
-): boolean {
-  const normalizedText = tweetText.toLowerCase();
-  
-  return keywords.some((keyword) => {
-    // Case-insensitive matching
-    // Could enhance with word boundary matching if needed
-    return normalizedText.includes(keyword.toLowerCase());
-  });
+function getMatchingProjectId(tweetText: string, projectList: ProjectWithId[]): string | null {
+  const normalized = tweetText.toLowerCase();
+  for (const p of projectList) {
+    if (normalized.includes(p.name.toLowerCase().trim())) return p.id;
+  }
+  return null;
+}
+
+/**
+ * Find an active epoch for the given project that contains the given date (startDate <= date <= endDate).
+ * Returns { projectId, campaignIndex, epochIndex } or null.
+ */
+async function findEpochForProjectAndDate(
+  projectId: string,
+  date: Date
+): Promise<{ projectId: string; campaignIndex: number; epochIndex: number } | null> {
+  const list = await db
+    .select({
+      projectId: epochs.projectId,
+      campaignIndex: epochs.campaignIndex,
+      index: epochs.index,
+      startDate: epochs.startDate,
+      endDate: epochs.endDate,
+    })
+    .from(epochs)
+    .where(
+      and(
+        eq(epochs.projectId, projectId),
+        eq(epochs.isActive, 1),
+        sql`${epochs.deletedAt} IS NULL`,
+        lte(epochs.startDate, date),
+        gte(epochs.endDate, date)
+      )
+    )
+    .orderBy(asc(epochs.startDate))
+    .limit(1);
+  if (list.length === 0) return null;
+  return {
+    projectId: list[0].projectId,
+    campaignIndex: list[0].campaignIndex,
+    epochIndex: list[0].index,
+  };
 }
 
 /**
@@ -62,7 +94,7 @@ async function discoverUserTweets(
   userId: string,
   twitterUserId: string,
   accessToken: string,
-  keywords: string[],
+  projectList: ProjectWithId[],
   options: DiscoveryOptions
 ): Promise<{
   verified: number;
@@ -92,20 +124,29 @@ async function discoverUserTweets(
       for (const tweet of result.tweets) {
         totalProcessed++;
 
-        // Check if tweet already exists
+        const matchingProjectId = getMatchingProjectId(tweet.text, projectList);
+        const isVerified = !!matchingProjectId;
+        const postedAt = new Date(tweet.created_at);
+        const epochAssignment = isVerified
+          ? await findEpochForProjectAndDate(matchingProjectId, postedAt)
+          : null;
+
+        const epochFields = epochAssignment
+          ? {
+              projectId: epochAssignment.projectId,
+              campaignIndex: epochAssignment.campaignIndex,
+              epochIndex: epochAssignment.epochIndex,
+            }
+          : {};
+
         const existingTweet = await db
           .select()
           .from(tweets)
           .where(eq(tweets.postId, tweet.id))
           .limit(1);
 
-        const isVerified = containsProjectKeywords(tweet.text, keywords);
-
         if (existingTweet.length > 0) {
-          // Update existing tweet
           const existing = existingTweet[0];
-          
-          // Only update verification status if it hasn't been verified yet
           if (existing.isVerified === null) {
             await db
               .update(tweets)
@@ -113,31 +154,30 @@ async function discoverUserTweets(
                 isVerified: isVerified ? 1 : -1,
                 verifiedAt: new Date(),
                 verifiedBy: 'system',
-                content: tweet.text, // Update content in case it changed
+                content: tweet.text,
                 updatedAt: new Date(),
+                ...epochFields,
               })
               .where(eq(tweets.id, existing.id));
-
             if (isVerified) verifiedCount++;
             else rejectedCount++;
           } else if (existing.isVerified === 1 && isVerified) {
-            // Already verified, just update content
             await db
               .update(tweets)
               .set({
                 content: tweet.text,
                 updatedAt: new Date(),
+                ...(Object.keys(epochFields).length ? epochFields : {}),
               })
               .where(eq(tweets.id, existing.id));
           }
         } else {
-          // Insert new tweet
           await db.insert(tweets).values({
             postId: tweet.id,
             userId: userId,
             twitterUserId: twitterUserId,
             content: tweet.text,
-            postedAt: new Date(tweet.created_at),
+            postedAt,
             likes: tweet.public_metrics?.like_count || 0,
             replies: tweet.public_metrics?.reply_count || 0,
             retweets: tweet.public_metrics?.retweet_count || 0,
@@ -148,13 +188,12 @@ async function discoverUserTweets(
             isActive: 1,
             createdAt: new Date(),
             updatedAt: new Date(),
+            ...epochFields,
           });
-
           if (isVerified) verifiedCount++;
           else rejectedCount++;
         }
 
-        // Stop if we've processed enough tweets
         if (options.maxTweetsPerUser && totalProcessed >= options.maxTweetsPerUser) {
           break;
         }
@@ -208,16 +247,14 @@ export async function discoverTweetsForAllUsers(
     return [];
   }
 
-  // Get project keywords once
-  const keywords = await getProjectKeywords();
-  
-  if (keywords.length === 0) {
+  const projectList = await getActiveProjects();
+  if (projectList.length === 0) {
     console.warn('No active projects found for keyword matching');
     return [];
   }
 
   console.log(`Found ${authenticatedUsers.length} authenticated users`);
-  console.log(`Using ${keywords.length} project keywords for matching`);
+  console.log(`Using ${projectList.length} projects for matching`);
 
   const results: DiscoveryResult[] = [];
 
@@ -249,7 +286,7 @@ export async function discoverTweetsForAllUsers(
         user.userId,
         user.twitterUserId,
         user.accessToken,
-        keywords,
+        projectList,
         options
       );
 
