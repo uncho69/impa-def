@@ -34,9 +34,10 @@ export async function recalculateStatsForVerifiedTweets(): Promise<number> {
     .where(
       and(
         eq(tweets.isVerified, 1),
-        eq(tweets.isActive, 1),
-        sql`${tweets.updatedAt} >= ${oneHourAgo}`,
-        sql`${tweets.deletedAt} IS NULL`
+        // Consideriamo tutti i tweet verificati aggiornati di recente,
+        // inclusi quelli che sono stati appena disattivati/eliminati,
+        // così i punteggi vengono ricalcolati correttamente.
+        sql`${tweets.updatedAt} >= ${oneHourAgo}`
       )
     );
 
