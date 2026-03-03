@@ -448,13 +448,10 @@ export const news = pgTable('news', {
     tags: text('tags'), // JSON array stored as text
     publishedAt: timestamp('published_at'),
     views: integer('views').notNull().default(0),
-    deletedAt: timestamp('deleted_at'),
-    deletedBy: varchar('deleted_by', { length: 50 }),
     createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at').notNull().defaultNow(),
 }, (table) => [
     index('news_category_idx').on(table.category),
-    index('news_deleted_at_idx').on(table.deletedAt),
     index('news_status_idx').on(table.status),
     index('news_featured_idx').on(table.featured),
     index('news_published_at_idx').on(table.publishedAt),

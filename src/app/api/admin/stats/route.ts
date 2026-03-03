@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { auth, currentUser } from '@clerk/nextjs/server';
 import { db } from '@/lib/db';
 import { news } from '@/lib/db/schema';
-import { eq, sql, count, and, isNull } from 'drizzle-orm';
+import { eq, sql, count, and } from 'drizzle-orm';
 
 export const dynamic = 'force-dynamic';
 
@@ -51,39 +51,35 @@ export async function GET() {
       );
     }
     
-    const notDeleted = isNull(news.deletedAt);
-
-    // Statistiche totali (escludi articoli eliminati)
-    const totalResult = await db.select({ count: count() }).from(news).where(notDeleted);
+    // Statistiche totali
+    const totalResult = await db.select({ count: count() }).from(news);
     const total = totalResult[0]?.count || 0;
 
     const publishedResult = await db
       .select({ count: count() })
       .from(news)
-      .where(and(eq(news.status, 'PUBLISHED'), notDeleted));
+      .where(eq(news.status, 'PUBLISHED'));
     const published = publishedResult[0]?.count || 0;
 
     const draftsResult = await db
       .select({ count: count() })
       .from(news)
-      .where(and(eq(news.status, 'DRAFT'), notDeleted));
+      .where(eq(news.status, 'DRAFT'));
     const drafts = draftsResult[0]?.count || 0;
 
-    // Somma delle visualizzazioni (solo articoli non eliminati)
+    // Somma delle visualizzazioni
     const viewsResult = await db
       .select({ totalViews: sql<number>`COALESCE(SUM(${news.views}), 0)` })
-      .from(news)
-      .where(notDeleted);
+      .from(news);
     const views = Number(viewsResult[0]?.totalViews || 0);
 
-    // Articoli per categoria (solo non eliminati)
+    // Articoli per categoria
     const categoryCounts = await db
       .select({
         category: news.category,
         count: count(),
       })
       .from(news)
-      .where(notDeleted)
       .groupBy(news.category);
 
     const byCategory: { [key: string]: number } = {};

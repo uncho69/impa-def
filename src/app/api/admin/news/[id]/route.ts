@@ -133,16 +133,15 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { userId } = await auth();
     const isAdmin = await checkAdmin();
-    if (!userId || !isAdmin) {
+    if (!isAdmin) {
       return NextResponse.json(
         { error: 'Non autorizzato' },
         { status: 401 }
       );
     }
 
-    await deleteNews(params.id, userId);
+    await deleteNews(params.id);
 
     return NextResponse.json({ success: true });
   } catch (error: any) {

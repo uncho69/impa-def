@@ -1,6 +1,6 @@
 import { db } from '@/lib/db';
 import { news } from '@/lib/db/schema';
-import { eq, and, desc, sql, isNull } from 'drizzle-orm';
+import { eq, and, desc, sql } from 'drizzle-orm';
 
 // Helper function to safely parse tags from JSON string
 function parseTags(tags: string | null | undefined): string[] {
@@ -34,7 +34,6 @@ export async function getAllNews() {
   const result = await db
     .select()
     .from(news)
-    .where(isNull(news.deletedAt))
     .orderBy(desc(news.createdAt));
   
   // Parse tags from JSON string to array and convert featured to boolean
@@ -49,7 +48,7 @@ export async function getPublishedNews() {
   const result = await db
     .select()
     .from(news)
-    .where(and(eq(news.status, 'PUBLISHED'), isNull(news.deletedAt)))
+    .where(eq(news.status, 'PUBLISHED'))
     .orderBy(desc(news.publishedAt));
   
   // Parse tags from JSON string to array and convert featured to boolean
@@ -67,8 +66,7 @@ export async function getNewsByCategory(category: string) {
     .where(
       and(
         eq(news.category, category.toUpperCase()),
-        eq(news.status, 'PUBLISHED'),
-        isNull(news.deletedAt)
+        eq(news.status, 'PUBLISHED')
       )
     )
     .orderBy(desc(news.publishedAt));
@@ -88,8 +86,7 @@ export async function getFeaturedNews() {
     .where(
       and(
         eq(news.featured, 1),
-        eq(news.status, 'PUBLISHED'),
-        isNull(news.deletedAt)
+        eq(news.status, 'PUBLISHED')
       )
     )
     .orderBy(desc(news.publishedAt))
@@ -107,7 +104,7 @@ export async function getNewsById(id: string) {
   const result = await db
     .select()
     .from(news)
-    .where(and(eq(news.id, id), isNull(news.deletedAt)))
+    .where(eq(news.id, id))
     .limit(1);
   
   if (!result[0]) {
@@ -195,15 +192,9 @@ export async function updateNews(id: string, data: Partial<NewsData>) {
   };
 }
 
-/** Soft delete: imposta deletedAt e deletedBy. deletedBy è l'userId (Clerk) di chi elimina. */
-export async function deleteNews(id: string, deletedBy?: string | null) {
+export async function deleteNews(id: string) {
   const result = await db
-    .update(news)
-    .set({
-      deletedAt: new Date(),
-      deletedBy: deletedBy ?? null,
-      updatedAt: new Date(),
-    })
+    .delete(news)
     .where(eq(news.id, id))
     .returning();
 
