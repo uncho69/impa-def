@@ -1,8 +1,59 @@
 "use client";
 
-import Link from 'next/link';
+import { useEffect, useState } from "react";
+import Link from "next/link";
+
+interface ActivityItem {
+  type: "campaign" | "news";
+  title: string;
+  description: string;
+  actorUserId: string | null;
+  actorUsername: string | null;
+  actorEmail: string | null;
+  timestamp: string;
+}
+
+function formatActor(username: string | null, email: string | null): string {
+  if (username && username.trim()) return username;
+  if (email) {
+    const localPart = email.split("@")[0];
+    return localPart || email;
+  }
+  return "Admin";
+}
+
+function formatDateTime(iso: string): string {
+  const d = new Date(iso);
+  return d.toLocaleString("it-IT", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
 
 export default function AdminDashboard() {
+  const [activity, setActivity] = useState<ActivityItem[]>([]);
+  const [activityError, setActivityError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchActivity = async () => {
+      try {
+        const res = await fetch("/api/admin/activity");
+        if (!res.ok) {
+          setActivityError("Impossibile caricare i log admin.");
+          return;
+        }
+        const data = await res.json();
+        setActivity(data.activities ?? []);
+      } catch (e) {
+        setActivityError("Errore di rete durante il caricamento dei log admin.");
+      }
+    };
+    fetchActivity();
+  }, []);
+
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -51,6 +102,41 @@ export default function AdminDashboard() {
             </Link>
           </div>
         </div>
+      </div>
+
+      {/* Admin Logs */}
+      <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold text-gray-900">Admin Logs</h2>
+          <span className="text-xs uppercase tracking-wide text-gray-400">
+            Ultime attività
+          </span>
+        </div>
+        {activityError && (
+          <p className="text-sm text-red-600 mb-2">{activityError}</p>
+        )}
+        {activity.length === 0 && !activityError ? (
+          <p className="text-sm text-gray-500">Nessuna attività recente.</p>
+        ) : (
+          <ul className="divide-y divide-gray-100">
+            {activity.map((item, idx) => (
+              <li key={idx} className="py-3 flex items-start justify-between">
+                <div>
+                  <p className="text-sm text-gray-900">
+                    <span className="font-semibold">
+                      {formatActor(item.actorUsername, item.actorEmail)}
+                    </span>{" "}
+                    {item.description}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {item.type === "campaign" ? "Campagna" : "Articolo"} ·{" "}
+                    {formatDateTime(item.timestamp)}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );
