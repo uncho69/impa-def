@@ -99,13 +99,13 @@ export default function AdminLayout({
                   href="/admin/news" 
                   className="text-gray-600 hover:text-blue-600 font-medium transition-colors"
                 >
-                  News
+                  Articoli
                 </Link>
                 <Link 
                   href="/admin/campaigns" 
                   className="text-gray-600 hover:text-blue-600 font-medium transition-colors"
                 >
-                  Gestione campagne
+                  Campagne
                 </Link>
               </nav>
             </div>

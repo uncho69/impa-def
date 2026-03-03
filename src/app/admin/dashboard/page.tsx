@@ -1,250 +1,59 @@
-"use client";
+\"use client\";
 
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
-// import { SimpleCard } from '@/components/SimpleCard'; // Non più necessario
-
-interface NewsStats {
-  total: number;
-  published: number;
-  drafts: number;
-  views: number;
-  byCategory: { [key: string]: number };
-}
 
 export default function AdminDashboard() {
-  const [stats, setStats] = useState<NewsStats | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [refreshingMetrics, setRefreshingMetrics] = useState(false);
-  const [refreshMessage, setRefreshMessage] = useState<string | null>(null);
-  const [refreshError, setRefreshError] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetchStats();
-  }, []);
-
-  const fetchStats = async () => {
-    try {
-      const response = await fetch('/api/admin/stats');
-      const data = await response.json();
-      setStats(data);
-    } catch (error) {
-      console.error('Errore nel caricamento statistiche:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleManualMetricsRefresh = async () => {
-    setRefreshingMetrics(true);
-    setRefreshMessage(null);
-    setRefreshError(null);
-    try {
-      const res = await fetch('/api/admin/refresh-metrics', {
-        method: 'POST',
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setRefreshError(data?.error || 'Errore durante il refresh delle metriche');
-      } else {
-        const updated = data?.metrics?.tweetsUpdated ?? 0;
-        const recalculated = data?.stats?.tweetsRecalculated ?? 0;
-        const hint = data?.discovery?.hint;
-        setRefreshMessage(
-          hint
-            ? `${hint} (${data?.discovery?.totalUsers ?? 0} utenti con X collegato.)`
-            : `Refresh completato: ${updated} tweet aggiornati, stats ricalcolate per ${recalculated} tweet.`
-        );
-        fetchStats();
-      }
-    } catch (e) {
-      setRefreshError('Errore di rete durante il refresh delle metriche');
-    } finally {
-      setRefreshingMetrics(false);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="text-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-        <p className="text-gray-600">Caricamento statistiche...</p>
-      </div>
-    );
-  }
-
   return (
-    <div className="space-y-8">
+    <div className=\"space-y-8\">
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className=\"flex justify-between items-center\">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-600 mt-2">Panoramica del sistema di gestione news</p>
-        </div>
-        <Link
-          href="/admin/news/new"
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
-        >
-          ➕ Nuovo Articolo
-        </Link>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
-          <div className="flex items-center">
-            <div className="p-3 bg-blue-100 rounded-lg">
-              <span className="text-2xl">📰</span>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm text-gray-600">Totale Articoli</p>
-              <p className="text-2xl font-bold text-gray-900">{stats?.total || 0}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
-          <div className="flex items-center">
-            <div className="p-3 bg-green-100 rounded-lg">
-              <span className="text-2xl">✅</span>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm text-gray-600">Pubblicati</p>
-              <p className="text-2xl font-bold text-gray-900">{stats?.published || 0}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
-          <div className="flex items-center">
-            <div className="p-3 bg-yellow-100 rounded-lg">
-              <span className="text-2xl">📝</span>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm text-gray-600">Bozze</p>
-              <p className="text-2xl font-bold text-gray-900">{stats?.drafts || 0}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
-          <div className="flex items-center">
-            <div className="p-3 bg-purple-100 rounded-lg">
-              <span className="text-2xl">👀</span>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm text-gray-600">Visualizzazioni</p>
-              <p className="text-2xl font-bold text-gray-900">{stats?.views || 0}</p>
-            </div>
-          </div>
+          <h1 className=\"text-3xl font-bold text-gray-900\">Dashboard</h1>
+          <p className=\"text-gray-600 mt-2\">
+            Benvenuto nel pannello admin di ImparoDeFi. Scegli cosa gestire qui sotto.
+          </p>
         </div>
       </div>
 
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Recent Actions */}
-        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Azioni Rapide</h2>
-          <div className="space-y-3">
+      {/* Azioni principali */}
+      <div className=\"grid grid-cols-1 md:grid-cols-2 gap-6\">
+        <div className=\"bg-white rounded-xl shadow-md border border-gray-200 p-6 flex flex-col justify-between\">
+          <div>
+            <h2 className=\"text-xl font-bold text-gray-900 mb-2\">Articoli</h2>
+            <p className=\"text-gray-600 text-sm mb-4\">
+              Gestisci news, bozze e la sezione &quot;Cosa c&apos;è di nuovo&quot; del sito.
+            </p>
+          </div>
+          <div className=\"flex flex-wrap gap-2\">
             <Link
-              href="/admin/news/new"
-              className="block p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
+              href=\"/admin/news\"
+              className=\"inline-flex items-center px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition-colors\"
             >
-              <div className="flex items-center">
-                <span className="text-lg mr-3">➕</span>
-                <div>
-                  <p className="font-medium text-gray-900">Crea Nuovo Articolo</p>
-                  <p className="text-sm text-gray-600">Scrivi e pubblica una nuova news</p>
-                </div>
-              </div>
+              Vai ad Articoli
             </Link>
-            
             <Link
-              href="/admin/news?status=draft"
-              className="block p-3 bg-yellow-50 hover:bg-yellow-100 rounded-lg transition-colors"
+              href=\"/admin/news/new\"
+              className=\"inline-flex items-center px-3 py-2 rounded-lg bg-blue-50 text-blue-700 text-sm font-medium hover:bg-blue-100 transition-colors\"
             >
-              <div className="flex items-center">
-                <span className="text-lg mr-3">📝</span>
-                <div>
-                  <p className="font-medium text-gray-900">Gestisci Bozze</p>
-                  <p className="text-sm text-gray-600">Completa e pubblica le bozze</p>
-                </div>
-              </div>
+              ➕ Nuovo articolo
             </Link>
-
-            <Link
-              href="/admin/news"
-              className="block p-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors"
-            >
-              <div className="flex items-center">
-                <span className="text-lg mr-3">📋</span>
-                <div>
-                  <p className="font-medium text-gray-900">Tutti gli Articoli</p>
-                  <p className="text-sm text-gray-600">Visualizza e modifica tutti gli articoli</p>
-                </div>
-              </div>
-            </Link>
-
-            <Link
-              href="/admin/whatsnew"
-              className="block p-3 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors"
-            >
-              <div className="flex items-center">
-                <span className="text-lg mr-3">🚀</span>
-                <div>
-                  <p className="font-medium text-gray-900">Gestisci Cosa c'è di nuovo</p>
-                  <p className="text-sm text-gray-600">Crea e modifica le card delle novità</p>
-                </div>
-              </div>
-            </Link>
-
-            <button
-              type="button"
-              onClick={handleManualMetricsRefresh}
-              disabled={refreshingMetrics}
-              className="w-full p-3 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors text-left disabled:opacity-60"
-            >
-              <div className="flex items-center">
-                <span className="text-lg mr-3">🔄</span>
-                <div>
-                  <p className="font-medium text-gray-900">
-                    Aggiorna metriche leaderboard
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    Esegue ora il cron metrics (update tweet + ricalcolo punti)
-                  </p>
-                </div>
-              </div>
-            </button>
-
-            {refreshMessage && (
-              <div className="mt-2 text-sm text-green-700 bg-green-50 border border-green-200 rounded-md px-3 py-2">
-                {refreshMessage}
-              </div>
-            )}
-            {refreshError && (
-              <div className="mt-2 text-sm text-red-700 bg-red-50 border border-red-200 rounded-md px-3 py-2">
-                {refreshError}
-              </div>
-            )}
           </div>
         </div>
 
-        {/* Stats by Category */}
-        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Articoli per Categoria</h2>
-          <div className="space-y-3">
-            {stats?.byCategory && Object.entries(stats.byCategory).map(([category, count]) => (
-              <div key={category} className="flex justify-between items-center">
-                <span className="text-gray-700 capitalize">{category.toLowerCase()}</span>
-                <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-sm font-medium">
-                  {count}
-                </span>
-              </div>
-            ))}
-            {(!stats?.byCategory || Object.keys(stats.byCategory).length === 0) && (
-              <p className="text-gray-500 text-center py-4">Nessun articolo ancora creato</p>
-            )}
+        <div className=\"bg-white rounded-xl shadow-md border border-gray-200 p-6 flex flex-col justify-between\">
+          <div>
+            <h2 className=\"text-xl font-bold text-gray-900 mb-2\">Campagne</h2>
+            <p className=\"text-gray-600 text-sm mb-4\">
+              Crea e gestisci campagne, epoch, richieste di partecipazione e refresh delle leaderboard.
+            </p>
+          </div>
+          <div className=\"flex flex-wrap gap-2\">
+            <Link
+              href=\"/admin/campaigns\"
+              className=\"inline-flex items-center px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 transition-colors\"
+            >
+              Vai a Campagne
+            </Link>
           </div>
         </div>
       </div>
