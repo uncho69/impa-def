@@ -15,6 +15,7 @@ interface ActivityItem {
   type: 'campaign' | 'news';
   title: string;
   description: string;
+}
 
 /**
  * GET: Ultime azioni admin (news + campagne) per la dashboard.
