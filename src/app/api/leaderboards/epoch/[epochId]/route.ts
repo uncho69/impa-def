@@ -77,7 +77,9 @@ export async function GET(
           eq(userEpochScores.campaignIndex, campaignIndex),
           eq(userEpochScores.epochIndex, epochIndex),
           eq(userEpochScores.isActive, 1),
-          eq(users.isActive, 1)
+          eq(users.isActive, 1),
+          // Nascondi gli utenti che non hanno più punti né tweet per questo epoch
+          sql`${userEpochScores.points} > 0 OR ${userEpochScores.tweetCount} > 0`
         )
       )
       .orderBy(desc(userEpochScores.points))
@@ -97,7 +99,8 @@ export async function GET(
           eq(userEpochScores.projectId, projectId),
           eq(userEpochScores.campaignIndex, campaignIndex),
           eq(userEpochScores.epochIndex, epochIndex),
-          eq(userEpochScores.isActive, 1)
+          eq(userEpochScores.isActive, 1),
+          sql`${userEpochScores.points} > 0 OR ${userEpochScores.tweetCount} > 0`
         )
       );
 
