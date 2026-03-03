@@ -109,7 +109,7 @@ export default function AdminDashboard() {
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold text-gray-900">Admin Logs</h2>
           <span className="text-xs uppercase tracking-wide text-gray-400">
-            Ultime attività
+            Attività amministrative
           </span>
         </div>
         {activityError && (
@@ -118,24 +118,26 @@ export default function AdminDashboard() {
         {activity.length === 0 && !activityError ? (
           <p className="text-sm text-gray-500">Nessuna attività recente.</p>
         ) : (
-          <ul className="divide-y divide-gray-100">
-            {activity.map((item, idx) => (
-              <li key={idx} className="py-3 flex items-start justify-between">
-                <div>
-                  <p className="text-sm text-gray-900">
-                    <span className="font-semibold">
-                      {formatActor(item.actorUsername, item.actorEmail)}
-                    </span>{" "}
-                    {item.description}
-                  </p>
-                  <p className="text-xs text-gray-500 mt-1">
-                    {item.type === "campaign" ? "Campagna" : "Articolo"} ·{" "}
-                    {formatDateTime(item.timestamp)}
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ul>
+          <div className="max-h-80 overflow-y-auto">
+            <ul className="divide-y divide-gray-100">
+              {activity.map((item, idx) => (
+                <li key={idx} className="py-3 flex items-start justify-between">
+                  <div>
+                    <p className="text-sm text-gray-900">
+                      <span className="font-semibold">
+                        {formatActor(item.actorUsername, item.actorEmail)}
+                      </span>{" "}
+                      {item.description}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {item.type === "campaign" ? "Campagna" : "Articolo"} ·{" "}
+                      {formatDateTime(item.timestamp)}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
       </div>
     </div>

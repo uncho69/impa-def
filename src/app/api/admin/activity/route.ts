@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { campaigns, news, users } from '@/lib/db/schema';
-import { eq, desc, sql, and } from 'drizzle-orm';
+import { eq, desc, and, isNotNull, isNull } from 'drizzle-orm';
 import { getUserIdFromRequest } from '@/lib/auth/middleware';
 import { canManageAdmin } from '@/lib/auth/admin';
 
@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
       };
     });
 
-    // News: usiamo updatedAt/authorEmail
+    // News non eliminate: updatedAt/authorEmail
     const newsRows = await db
       .select({
         title: news.title,
@@ -78,32 +78,62 @@ export async function GET(request: NextRequest) {
       })
       .from(news)
       .leftJoin(users, eq(users.email, news.authorEmail))
+      .where(and(isNull(news.deletedAt), isNotNull(news.updatedAt)))
       .orderBy(desc(news.updatedAt))
       .limit(10);
 
     const newsActivities: ActivityItem[] = newsRows.map((row) => {
-      const statusLabel =
+      const actionLabel =
         row.status === 'PUBLISHED'
-          ? 'pubblicato'
+          ? 'ha pubblicato'
           : row.status === 'DRAFT'
-          ? 'salvato come bozza'
-          : 'aggiornato';
+          ? 'ha salvato come bozza'
+          : 'ha aggiornato';
 
       return {
-        timestamp: row.updatedAt,
+        timestamp: row.updatedAt!,
         actorUserId: row.actorUserId ?? null,
         actorUsername: row.actorUsername ?? null,
         actorEmail: row.actorEmail ?? null,
         type: 'news',
         title: row.title,
-        description: `${statusLabel} l'articolo "${row.title}"`,
+        description: `${actionLabel} l'articolo "${row.title}"`,
       };
     });
 
-    const allActivities = [...campaignActivities, ...newsActivities]
+    // News eliminate: deletedAt/deletedBy (soft delete) – così compare "ha cancellato l'articolo"
+    const newsDeletedRows = await db
+      .select({
+        title: news.title,
+        deletedAt: news.deletedAt,
+        actorUserId: users.id,
+        actorUsername: users.username,
+        actorEmail: users.email,
+        authorEmail: news.authorEmail,
+      })
+      .from(news)
+      .leftJoin(users, eq(news.deletedBy, users.id))
+      .where(isNotNull(news.deletedAt))
+      .orderBy(desc(news.deletedAt))
+      .limit(10);
+
+    const newsDeletedActivities: ActivityItem[] = newsDeletedRows.map((row) => ({
+      timestamp: row.deletedAt!,
+      actorUserId: row.actorUserId ?? null,
+      actorUsername: row.actorUsername ?? null,
+      actorEmail: row.actorEmail ?? row.authorEmail ?? null,
+      type: 'news' as const,
+      title: row.title,
+      description: `ha cancellato l'articolo "${row.title}"`,
+    }));
+
+    const allNewsActivities = [...newsActivities, ...newsDeletedActivities];
+
+    const allActivities = [...campaignActivities, ...allNewsActivities]
       .filter((a) => !!a.timestamp)
       .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
-      .slice(0, 5);
+      // niente slice: vogliamo poter vedere tutta la cronologia (scrollabile in UI)
+      ;
 
     return NextResponse.json(
       {
