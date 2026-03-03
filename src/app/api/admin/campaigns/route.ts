@@ -24,6 +24,9 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
+    // Nascondi in UI le campagne eliminate più di 2 giorni fa
+    const cutoff = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);
+
     const campaignsList = await db
       .select({
         projectId: campaigns.projectId,
@@ -38,6 +41,7 @@ export async function GET(request: NextRequest) {
       })
       .from(campaigns)
       .innerJoin(projects, eq(campaigns.projectId, projects.id))
+      .where(sql`${campaigns.deletedAt} IS NULL OR ${campaigns.deletedAt} >= ${cutoff}`)
       .orderBy(desc(campaigns.createdAt));
 
     const rewardsList = await db

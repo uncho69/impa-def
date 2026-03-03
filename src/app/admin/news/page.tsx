@@ -76,15 +76,25 @@ export default function AdminNewsList() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Gestione News</h1>
-          <p className="text-gray-600 mt-2">Gestisci tutti gli articoli del sito</p>
+          <h1 className="text-3xl font-bold text-gray-900">Gestione Articoli</h1>
+          <p className="text-gray-600 mt-2">
+            Gestisci articoli del sito, bozze e accedi alla sezione &quot;Cosa c&apos;è di nuovo&quot;.
+          </p>
         </div>
-        <Link
-          href="/admin/news/new"
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
-        >
-          ➕ Nuovo Articolo
-        </Link>
+        <div className="flex gap-2">
+          <Link
+            href="/admin/whatsnew"
+            className="bg-purple-50 text-purple-700 px-4 py-2 rounded-lg hover:bg-purple-100 transition-colors font-medium border border-purple-200"
+          >
+            Cosa c&apos;è di nuovo
+          </Link>
+          <Link
+            href="/admin/news/new"
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+          >
+            ➕ Nuovo Articolo
+          </Link>
+        </div>
       </div>
 
       {/* Filtri */}
