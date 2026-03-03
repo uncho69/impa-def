@@ -208,7 +208,7 @@ export default function EpochLeaderboardSelectionPage() {
                           <div className="flex-1">
                             <div className="flex items-center gap-3 mb-2">
                               <h3 className="font-bold text-lg text-neutral-900">
-                                {epoch.projectId} - {epoch.campaignName ?? `Campaign ${epoch.campaignIndex}`} - Epoch {epoch.index}
+                                {epoch.campaignName ?? `${epoch.projectId} - Campaign ${epoch.campaignIndex}`} - Epoch {epoch.index}
                               </h3>
                             </div>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">

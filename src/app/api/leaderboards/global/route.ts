@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { users } from '@/lib/db/schema';
+import { users, userEpochScores } from '@/lib/db/schema';
 import { eq, desc, sql, and } from 'drizzle-orm';
 
 export const dynamic = 'force-dynamic';
 
+/**
+ * Leaderboard globale: somma di punti/tweet/like/reply/retweet/quote da tutte le
+ * campagne ed epoche (user_epoch_scores), non dalla tabella users.
+ */
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -13,24 +17,28 @@ export async function GET(request: NextRequest) {
 
     const leaderboard = await db
       .select({
-        userId: users.id,
+        userId: userEpochScores.userId,
         username: users.username,
         email: users.email,
         walletAddress: users.walletAddress,
-        totalPoints: users.totalPoints,
-        totalLikes: users.totalLikes,
-        totalReplies: users.totalReplies,
-        totalRetweets: users.totalRetweets,
-        totalQuotes: users.totalQuotes,
+        totalPoints: sql<number>`coalesce(sum(${userEpochScores.points}), 0)::bigint`.as('totalPoints'),
+        totalLikes: sql<number>`coalesce(sum(${userEpochScores.totalLikes}), 0)::bigint`.as('totalLikes'),
+        totalReplies: sql<number>`coalesce(sum(${userEpochScores.totalReplies}), 0)::bigint`.as('totalReplies'),
+        totalRetweets: sql<number>`coalesce(sum(${userEpochScores.totalRetweets}), 0)::bigint`.as('totalRetweets'),
+        totalQuotes: sql<number>`coalesce(sum(${userEpochScores.totalQuotes}), 0)::bigint`.as('totalQuotes'),
       })
-      .from(users)
+      .from(userEpochScores)
+      .innerJoin(users, eq(userEpochScores.userId, users.id))
       .where(
         and(
+          eq(userEpochScores.isActive, 1),
           eq(users.isActive, 1),
-          sql`${users.deletedAt} IS NULL`
+          sql`${users.deletedAt} IS NULL`,
+          sql`${userEpochScores.deletedAt} IS NULL`
         )
       )
-      .orderBy(desc(users.totalPoints))
+      .groupBy(userEpochScores.userId, users.id, users.username, users.email, users.walletAddress)
+      .orderBy(desc(sql`sum(${userEpochScores.points})`))
       .limit(limit)
       .offset(offset);
 
@@ -40,16 +48,19 @@ export async function GET(request: NextRequest) {
     }));
 
     const totalCountResult = await db
-      .select({ count: sql<number>`count(*)` })
-      .from(users)
+      .select({ count: sql<number>`count(distinct ${userEpochScores.userId})` })
+      .from(userEpochScores)
+      .innerJoin(users, eq(userEpochScores.userId, users.id))
       .where(
         and(
+          eq(userEpochScores.isActive, 1),
           eq(users.isActive, 1),
-          sql`${users.deletedAt} IS NULL`
+          sql`${users.deletedAt} IS NULL`,
+          sql`${userEpochScores.deletedAt} IS NULL`
         )
       );
 
-    const totalCount = totalCountResult[0]?.count || 0;
+    const totalCount = Number(totalCountResult[0]?.count ?? 0);
 
     return NextResponse.json(
       {
