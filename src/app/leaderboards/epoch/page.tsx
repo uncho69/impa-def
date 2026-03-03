@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { BackToHome } from "@/components/BackToHome";
@@ -23,8 +23,19 @@ interface Epoch {
   campaignName?: string;
 }
 
+const TWITTER_ERROR_MESSAGES: Record<string, string> = {
+  autorizzazione_annullata: "Hai annullato l’autorizzazione su X.",
+  code_mancante: "Risposta da X non valida.",
+  session_scaduta: "Sessione scaduta. Riprova a collegare X.",
+  config: "Configurazione X mancante.",
+  token_fallito: "Impossibile ottenere il token da X. Riprova più tardi.",
+  user_me_fallito: "Impossibile leggere il profilo X.",
+  id_non_trovato: "Profilo X non riconosciuto.",
+};
+
 export default function EpochLeaderboardSelectionPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { t } = useLanguage();
   const { isSignedIn, isLoaded } = useUser();
   const [epochs, setEpochs] = useState<Epoch[]>([]);
@@ -33,6 +44,9 @@ export default function EpochLeaderboardSelectionPage() {
   const [currentPage, setCurrentPage] = useState(0);
   const [total, setTotal] = useState(0);
   const [hasMore, setHasMore] = useState(false);
+  const [twitterConnected, setTwitterConnected] = useState<boolean | null>(null);
+  const [twitterMessage, setTwitterMessage] = useState<string | null>(null);
+  const [twitterMessageError, setTwitterMessageError] = useState(false);
   const limit = 20;
 
   useEffect(() => {
@@ -40,6 +54,29 @@ export default function EpochLeaderboardSelectionPage() {
       fetchEpochs();
     }
   }, [isLoaded, currentPage]);
+
+  useEffect(() => {
+    const connected = searchParams.get("twitter_connected");
+    const err = searchParams.get("twitter_error");
+    if (connected === "1") {
+      setTwitterMessage("Account X collegato. I tuoi tweet potranno essere scoperti nelle campagne.");
+      setTwitterMessageError(false);
+      setTwitterConnected(true);
+      window.history.replaceState({}, "", "/leaderboards/epoch");
+    } else if (err) {
+      setTwitterMessage(TWITTER_ERROR_MESSAGES[err] || err);
+      setTwitterMessageError(true);
+      window.history.replaceState({}, "", "/leaderboards/epoch");
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (!isLoaded || !isSignedIn) return;
+    fetch("/api/users/twitter-status")
+      .then((r) => r.json())
+      .then((data) => setTwitterConnected(data.connected ?? false))
+      .catch(() => setTwitterConnected(false));
+  }, [isLoaded, isSignedIn]);
 
   const fetchEpochs = async () => {
     try {
@@ -108,6 +145,33 @@ export default function EpochLeaderboardSelectionPage() {
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-6">
               <p className="text-red-700">{error}</p>
+            </div>
+          )}
+
+          {/* Twitter connect banner: solo se loggato e X non collegato */}
+          {isSignedIn && twitterConnected === false && (
+            <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 mb-6">
+              <p className="text-amber-900 font-medium mb-2">
+                I tuoi tweet non vengono ancora scoperti dalle campagne
+              </p>
+              <p className="text-amber-800 text-sm mb-4">
+                Il login con Clerk non fornisce il token necessario a X per leggere i tuoi tweet.
+                Collega qui il tuo account X (Twitter) con il pulsante sotto: così la piattaforma potrà
+                trovare i tweet che contengono le parole chiave delle campagne e aggiornare le metriche.
+              </p>
+              <a
+                href="/api/auth/x/connect"
+                className="inline-flex items-center gap-2 bg-black text-white px-4 py-2 rounded-lg font-medium hover:bg-neutral-800 transition-colors"
+              >
+                Collega X (Twitter)
+              </a>
+            </div>
+          )}
+
+          {/* Success / error message after OAuth */}
+          {twitterMessage && (
+            <div className={`mb-6 p-4 rounded-lg border ${twitterMessageError ? "bg-red-50 border-red-200 text-red-800" : "bg-green-50 border-green-200 text-green-800"}`}>
+              {twitterMessage}
             </div>
           )}
 

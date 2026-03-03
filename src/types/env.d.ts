@@ -31,6 +31,9 @@ declare namespace NodeJS {
     
     // X API
     X_API_BEARER_TOKEN?: string;
+    /** OAuth 2.0 per "Collega X" (callback in Developer Portal deve essere es. https://tudominio.com/api/auth/x/callback) */
+    X_OAUTH2_CLIENT_ID?: string;
+    X_OAUTH2_CLIENT_SECRET?: string;
     
     // Node Environment
     NODE_ENV: 'development' | 'production' | 'test';

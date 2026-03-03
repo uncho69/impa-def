@@ -49,10 +49,12 @@ export default function AdminDashboard() {
       } else {
         const updated = data?.metrics?.tweetsUpdated ?? 0;
         const recalculated = data?.stats?.tweetsRecalculated ?? 0;
+        const hint = data?.discovery?.hint;
         setRefreshMessage(
-          `Refresh completato: ${updated} tweet aggiornati, stats ricalcolate per ${recalculated} tweet.`
+          hint
+            ? `${hint} (${data?.discovery?.totalUsers ?? 0} utenti con X collegato.)`
+            : `Refresh completato: ${updated} tweet aggiornati, stats ricalcolate per ${recalculated} tweet.`
         );
-        // opzionale: ricarichiamo le stats dashboard
         fetchStats();
       }
     } catch (e) {

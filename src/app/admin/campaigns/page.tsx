@@ -192,8 +192,11 @@ export default function AdminCampaignsPage() {
       } else {
         const processed = data?.discovery?.totalTweetsVerified ?? 0;
         const updated = data?.metrics?.tweetsUpdated ?? 0;
+        const hint = data?.discovery?.hint;
         setRefreshMessage(
-          `Refresh completato: ${processed} tweet verificati, ${updated} tweet aggiornati.`
+          hint
+            ? `${hint} (${data?.discovery?.totalUsers ?? 0} utenti con X collegato, ${updated} tweet aggiornati.)`
+            : `Refresh completato: ${processed} tweet verificati, ${updated} tweet aggiornati.`
         );
         // Ricarichiamo le campagne per avere numeri aggiornati
         fetchCampaigns();

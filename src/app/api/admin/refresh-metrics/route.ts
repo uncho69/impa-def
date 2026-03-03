@@ -58,14 +58,21 @@ export async function POST(request: NextRequest) {
       console.error('Error recalculating stats (manual refresh):', error);
     }
 
+    const totalUsers = discoveryResults.length;
+    const totalProcessed = discoveryResults.reduce((sum, r) => sum + r.tweetsProcessed, 0);
+    const totalVerified = discoveryResults.reduce((sum, r) => sum + r.tweetsVerified, 0);
+
     return NextResponse.json(
       {
         message: 'Manual discovery + metrics refresh completed',
         discovery: {
-          totalUsers: discoveryResults.length,
-          totalTweetsProcessed: discoveryResults.reduce((sum, r) => sum + r.tweetsProcessed, 0),
-          totalTweetsVerified: discoveryResults.reduce((sum, r) => sum + r.tweetsVerified, 0),
+          totalUsers,
+          totalTweetsProcessed: totalProcessed,
+          totalTweetsVerified: totalVerified,
           totalTweetsRejected: discoveryResults.reduce((sum, r) => sum + r.tweetsRejected, 0),
+          hint: totalUsers === 0
+            ? 'Nessun utente con account X collegato (OAuth). Gli utenti devono usare "Collega X" in Leaderboard, non solo il login con Clerk.'
+            : undefined,
         },
         metrics: {
           tweetsUpdated: metricsResult.tweetsUpdated,
