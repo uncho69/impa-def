@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { supportConversations, supportMessages } from '@/lib/db/schema';
-import { and, desc, eq, inArray, asc } from 'drizzle-orm';
+import { and, desc, eq, asc, or } from 'drizzle-orm';
 import { getUserIdFromRequest } from '@/lib/auth/middleware';
 
 export const dynamic = 'force-dynamic';
@@ -22,7 +22,10 @@ export async function GET(request: NextRequest) {
       .where(
         and(
           eq(supportConversations.userId, userId),
-          inArray(supportConversations.status, ACTIVE_STATUSES as unknown as string[])
+          or(
+            eq(supportConversations.status, 'OPEN'),
+            eq(supportConversations.status, 'IN_PROGRESS')
+          )
         )
       )
       .orderBy(desc(supportConversations.lastMessageAt), desc(supportConversations.createdAt))
@@ -85,7 +88,10 @@ export async function POST(request: NextRequest) {
       .where(
         and(
           eq(supportConversations.userId, userId),
-          inArray(supportConversations.status, ACTIVE_STATUSES as unknown as string[])
+          or(
+            eq(supportConversations.status, 'OPEN'),
+            eq(supportConversations.status, 'IN_PROGRESS')
+          )
         )
       )
       .orderBy(desc(supportConversations.lastMessageAt), desc(supportConversations.createdAt))

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { supportConversations, users } from '@/lib/db/schema';
-import { and, desc, eq, inArray } from 'drizzle-orm';
+import { and, desc, eq, or } from 'drizzle-orm';
 import { getUserIdFromRequest } from '@/lib/auth/middleware';
 import { canManageAdmin } from '@/lib/auth/admin';
 
@@ -48,7 +48,17 @@ export async function GET(request: NextRequest) {
       })
       .from(supportConversations)
       .leftJoin(users, eq(users.id, supportConversations.userId))
-      .where(inArray(supportConversations.status, statuses as unknown as string[]))
+      .where(
+        statuses.length === 1
+          ? eq(supportConversations.status, statuses[0] as string)
+          : or(
+              eq(supportConversations.status, 'OPEN'),
+              eq(supportConversations.status, 'IN_PROGRESS'),
+              ...(statuses.includes('CLOSED' as any)
+                ? [eq(supportConversations.status, 'CLOSED')]
+                : [])
+            )
+      )
       .orderBy(
         desc(supportConversations.lastMessageAt),
         desc(supportConversations.createdAt)

@@ -67,7 +67,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Azioni principali */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 flex flex-col justify-between">
           <div>
             <h2 className="text-xl font-bold text-gray-900 mb-2">Articoli</h2>
@@ -99,6 +99,23 @@ export default function AdminDashboard() {
               className="inline-flex items-center px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 transition-colors"
             >
               Vai a Campagne
+            </Link>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 flex flex-col justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-gray-900 mb-2">Supporto</h2>
+            <p className="text-gray-600 text-sm mb-4">
+              Gestisci le richieste di supporto degli utenti e rispondi alle chat aperte.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href="/admin/support"
+              className="inline-flex items-center px-4 py-2 rounded-lg bg-rose-600 text-white text-sm font-medium hover:bg-rose-700 transition-colors"
+            >
+              Vai al Supporto
             </Link>
           </div>
         </div>
