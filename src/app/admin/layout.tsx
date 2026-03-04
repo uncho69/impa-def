@@ -145,7 +145,7 @@ export default function AdminLayout({
                   className="text-gray-600 hover:text-blue-600 font-medium transition-colors flex items-center gap-1"
                 >
                   Supporto
-                  {supportCount !== null && (
+                  {supportCount !== null && supportCount > 0 && (
                     <span className="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[11px] font-semibold">
                       {supportCount}
                     </span>

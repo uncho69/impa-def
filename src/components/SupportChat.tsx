@@ -50,6 +50,7 @@ export function SupportChat() {
   const [sending, setSending] = useState(false);
 
   const pollIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const messagesContainerRef = useRef<HTMLDivElement | null>(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const hasActiveConversation = useMemo(
@@ -57,10 +58,10 @@ export function SupportChat() {
     [conversation]
   );
 
-  // Scroll automatico in fondo alla chat
+  // Scroll automatico in fondo alla chat (solo nel box chat)
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
     }
   }, [messages.length]);
 
@@ -270,7 +271,10 @@ export function SupportChat() {
             tuo ritorno ritroverai la conversazione.
           </div>
 
-          <div className="flex-1 border border-neutral-200 rounded-lg p-3 mb-3 overflow-y-auto bg-neutral-50">
+          <div
+            ref={messagesContainerRef}
+            className="flex-1 border border-neutral-200 rounded-lg p-3 mb-3 overflow-y-auto bg-neutral-50"
+          >
             {messages.length === 0 ? (
               <p className="text-xs text-neutral-500">
                 Nessun messaggio ancora. Invia il tuo primo messaggio qui sotto.

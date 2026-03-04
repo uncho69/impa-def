@@ -43,6 +43,7 @@ export async function GET(request: NextRequest) {
         lastMessageAt: supportConversations.lastMessageAt,
         createdAt: supportConversations.createdAt,
         updatedAt: supportConversations.updatedAt,
+        assignedAdminId: supportConversations.assignedAdminId,
         userUsername: users.username,
         userEmail: users.email,
       })
@@ -101,6 +102,7 @@ export async function PATCH(request: NextRequest) {
       .update(supportConversations)
       .set({
         status,
+        assignedAdminId: status === 'IN_PROGRESS' ? userId : undefined,
         updatedAt: now,
       })
       .where(and(eq(supportConversations.id, conversationId)))

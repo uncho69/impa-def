@@ -10,6 +10,7 @@ type AdminSupportConversation = {
   lastMessageAt: string | null;
   createdAt: string;
   updatedAt: string;
+  assignedAdminId: string | null;
   userUsername: string | null;
   userEmail: string | null;
 };
@@ -77,6 +78,7 @@ export default function AdminSupportPage() {
   const [newMessage, setNewMessage] = useState("");
   const [sending, setSending] = useState(false);
 
+  const messagesContainerRef = useRef<HTMLDivElement | null>(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const selectedConversation = useMemo(
@@ -84,10 +86,10 @@ export default function AdminSupportPage() {
     [conversations, selectedId]
   );
 
-  // Scroll automatico alla fine della chat
+  // Scroll automatico alla fine della chat (solo nel pannello chat, non tutta la pagina)
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
     }
   }, [messages.length]);
 
@@ -257,7 +259,7 @@ export default function AdminSupportPage() {
 
       {error && <p className="text-sm text-red-600">{error}</p>}
 
-      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,2fr)] gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,2fr)] gap-6 items-start">
         {/* Lista conversazioni */}
         <div className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
           <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
@@ -290,8 +292,15 @@ export default function AdminSupportPage() {
                       {formatStatus(c.status)}
                     </span>
                   </div>
-                  <div className="text-xs text-gray-600">
-                    {REASONS_LABEL[c.reason] ?? c.reason}
+                  <div className="flex flex-wrap items-center justify-between gap-1">
+                    <div className="text-xs text-gray-600">
+                      {REASONS_LABEL[c.reason] ?? c.reason}
+                    </div>
+                    {c.assignedAdminId && (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-blue-50 text-blue-700 border border-blue-100">
+                        In carico a: {c.assignedAdminId}
+                      </span>
+                    )}
                   </div>
                   <div className="text-[11px] text-gray-400">
                     Ultimo aggiornamento: {formatShortDate(c.lastMessageAt || c.updatedAt)}
@@ -303,30 +312,47 @@ export default function AdminSupportPage() {
         </div>
 
         {/* Chat */}
-        <div className="bg-white rounded-xl shadow-md border border-gray-200 flex flex-col">
+        <div className="bg-white rounded-xl shadow-md border border-gray-200 flex flex-col min-h-[360px]">
           <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
             <div>
               <h2 className="text-sm font-semibold text-gray-800">Chat</h2>
               {selectedConversation && (
-                <p className="text-xs text-gray-500">
-                  {formatUserLabel(
-                    selectedConversation.userUsername,
-                    selectedConversation.userEmail
-                  )}{" "}
-                  ·{" "}
-                  {REASONS_LABEL[selectedConversation.reason] ??
-                    selectedConversation.reason}
-                </p>
+                <>
+                  <p className="text-xs text-gray-500">
+                    {formatUserLabel(
+                      selectedConversation.userUsername,
+                      selectedConversation.userEmail
+                    )}{" "}
+                    ·{" "}
+                    {REASONS_LABEL[selectedConversation.reason] ??
+                      selectedConversation.reason}
+                  </p>
+                  {selectedConversation.assignedAdminId && (
+                    <p className="text-[11px] text-gray-400 mt-0.5">
+                      In carico a:{" "}
+                      <span className="font-semibold">
+                        {selectedConversation.assignedAdminId}
+                      </span>
+                    </p>
+                  )}
+                </>
               )}
             </div>
             {selectedConversation && (
               <div className="flex items-center gap-2">
                 <button
                   type="button"
+                  onClick={() => handleChangeStatus("IN_PROGRESS")}
+                  className="px-2 py-1 rounded-md border text-[11px] text-gray-700 hover:bg-gray-50"
+                >
+                  Prendi in carico
+                </button>
+                <button
+                  type="button"
                   onClick={() => handleChangeStatus("OPEN")}
                   className="px-2 py-1 rounded-md border text-[11px] text-gray-700 hover:bg-gray-50"
                 >
-                  Segna come aperta
+                  Riapri
                 </button>
                 <button
                   type="button"
@@ -348,7 +374,10 @@ export default function AdminSupportPage() {
             </div>
           ) : (
             <>
-              <div className="flex-1 px-4 py-3 overflow-y-auto bg-gray-50 border-b border-gray-100">
+              <div
+                ref={messagesContainerRef}
+                className="flex-1 px-4 py-3 overflow-y-auto bg-gray-50 border-b border-gray-100"
+              >
                 {loadingMessages ? (
                   <p className="text-xs text-gray-500">Caricamento messaggi…</p>
                 ) : messages.length === 0 ? (
@@ -385,7 +414,10 @@ export default function AdminSupportPage() {
                 )}
               </div>
 
-              <form onSubmit={handleSendMessage} className="px-4 py-3 flex items-center gap-2">
+              <form
+                onSubmit={handleSendMessage}
+                className="px-4 py-3 flex items-center gap-2 border-t border-gray-100 bg-white"
+              >
                 <input
                   type="text"
                   className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
