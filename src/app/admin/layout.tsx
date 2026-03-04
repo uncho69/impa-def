@@ -2,7 +2,7 @@
 
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 // import { PageLayout } from '@/components/PageLayout'; // Non più necessario
 
@@ -25,6 +25,7 @@ export default function AdminLayout({
 }) {
   const { user, isLoaded } = useUser();
   const router = useRouter();
+  const [supportCount, setSupportCount] = useState<number | null>(null);
 
   useEffect(() => {
     if (isLoaded) {
@@ -40,6 +41,38 @@ export default function AdminLayout({
       }
     }
   }, [user, isLoaded, router]);
+
+  // Carica numero richieste supporto attive per badge nel menu
+  useEffect(() => {
+    if (!isLoaded || !user) return;
+    const userEmail = user.emailAddresses?.[0]?.emailAddress;
+    if (!userEmail || !isAdminEmail(userEmail)) return;
+
+    let cancelled = false;
+    const loadSupportCount = async () => {
+      try {
+        const res = await fetch('/api/admin/support/conversations?status=ACTIVE', {
+          cache: 'no-store',
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!cancelled) {
+          const list = Array.isArray(data.conversations) ? data.conversations : [];
+          setSupportCount(list.length);
+        }
+      } catch {
+        // silenzioso: il badge è solo informativo
+      }
+    };
+
+    loadSupportCount();
+    const interval = setInterval(loadSupportCount, 15000);
+
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, [isLoaded, user]);
 
   // Loading state
   if (!isLoaded) {
@@ -106,6 +139,17 @@ export default function AdminLayout({
                   className="text-gray-600 hover:text-blue-600 font-medium transition-colors"
                 >
                   Campagne
+                </Link>
+                <Link 
+                  href="/admin/support" 
+                  className="text-gray-600 hover:text-blue-600 font-medium transition-colors flex items-center gap-1"
+                >
+                  Supporto
+                  {supportCount !== null && (
+                    <span className="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[11px] font-semibold">
+                      {supportCount}
+                    </span>
+                  )}
                 </Link>
               </nav>
             </div>
