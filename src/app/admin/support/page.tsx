@@ -110,10 +110,9 @@ export default function AdminSupportPage() {
         if (cancelled) return;
         const list: AdminSupportConversation[] = data.conversations ?? [];
         setConversations(list);
-        if (!selectedId && list.length > 0) {
-          setSelectedId(list[0].id);
-        } else if (selectedId && !list.some((c) => c.id === selectedId)) {
-          setSelectedId(list[0]?.id ?? null);
+        // Se la conversazione selezionata non esiste più, deseleziona
+        if (selectedId && !list.some((c) => c.id === selectedId)) {
+          setSelectedId(null);
         }
         setError(null);
       } catch (e) {
@@ -144,7 +143,10 @@ export default function AdminSupportPage() {
 
     let cancelled = false;
     const loadMessages = async () => {
-      setLoadingMessages(true);
+      // Mostra "Caricamento..." solo al primo load (quando non ci sono ancora messaggi)
+      if (messages.length === 0) {
+        setLoadingMessages(true);
+      }
       try {
         const res = await fetch(
           `/api/support/messages?conversationId=${encodeURIComponent(selectedId)}`,
@@ -168,6 +170,7 @@ export default function AdminSupportPage() {
       cancelled = true;
       clearInterval(interval);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedId]);
 
   async function handleSendMessage(e: React.FormEvent) {
@@ -276,36 +279,59 @@ export default function AdminSupportPage() {
               </p>
             ) : (
               conversations.map((c) => (
-                <button
+                <div
                   key={c.id}
-                  type="button"
-                  onClick={() => setSelectedId(c.id)}
-                  className={`w-full text-left px-4 py-3 flex flex-col gap-1 hover:bg-gray-50 transition-colors ${
-                    selectedId === c.id ? "bg-blue-50/60" : ""
+                  className={`w-full px-4 py-3 flex flex-col gap-1 border-l-4 ${
+                    c.status === "IN_PROGRESS"
+                      ? "border-blue-500 bg-blue-50/40"
+                      : "border-transparent hover:bg-gray-50 transition-colors"
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold text-gray-900">
-                      {formatUserLabel(c.userUsername, c.userEmail)}
-                    </span>
-                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-gray-100 text-gray-700">
-                      {formatStatus(c.status)}
-                    </span>
-                  </div>
-                  <div className="flex flex-wrap items-center justify-between gap-1">
-                    <div className="text-xs text-gray-600">
-                      {REASONS_LABEL[c.reason] ?? c.reason}
+                    <button
+                      type="button"
+                      onClick={() => setSelectedId(c.id)}
+                      className="text-left flex-1"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-semibold text-gray-900">
+                          {formatUserLabel(c.userUsername, c.userEmail)}
+                        </span>
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-gray-100 text-gray-700">
+                          {formatStatus(c.status)}
+                        </span>
+                      </div>
+                      <div className="flex flex-wrap items-center justify-between gap-1">
+                        <div className="text-xs text-gray-600">
+                          {REASONS_LABEL[c.reason] ?? c.reason}
+                        </div>
+                        {c.assignedAdminId && (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-blue-50 text-blue-700 border border-blue-100">
+                            In carico a: {c.assignedAdminId}
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-[11px] text-gray-400">
+                        Ultimo aggiornamento:{" "}
+                        {formatShortDate(c.lastMessageAt || c.updatedAt)}
+                      </div>
+                    </button>
+                    <div className="flex flex-col gap-1 ml-3">
+                      {c.status === "OPEN" && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedId(c.id);
+                            handleChangeStatus("IN_PROGRESS");
+                          }}
+                          className="px-2 py-1 rounded-md border text-[11px] text-gray-700 hover:bg-gray-50"
+                        >
+                          Prendi in carico
+                        </button>
+                      )}
                     </div>
-                    {c.assignedAdminId && (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-blue-50 text-blue-700 border border-blue-100">
-                        In carico a: {c.assignedAdminId}
-                      </span>
-                    )}
                   </div>
-                  <div className="text-[11px] text-gray-400">
-                    Ultimo aggiornamento: {formatShortDate(c.lastMessageAt || c.updatedAt)}
-                  </div>
-                </button>
+                </div>
               ))
             )}
           </div>
