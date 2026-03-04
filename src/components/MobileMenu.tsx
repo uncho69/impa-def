@@ -81,9 +81,6 @@ export function MobileMenu() {
               <Button href="/leaderboards/global" local={true} className={btnModalStyle}>
                 {t('nav.leaderboards')}
               </Button>
-              <Button href="/supporto" local={true} className={btnModalStyle}>
-                {t('nav.supporto')}
-              </Button>
               
               {/* Toggle lingua */}
               <div className="col-span-2 flex justify-center">

@@ -6,15 +6,16 @@ import Link from "next/link";
 export default function Supporto() {
   return (
     <PageLayout
-      title="Assistenza"
-      description="Hai bisogno di aiuto? Siamo qui per te"
+      title="Supporto"
+      description="Qui trovi le conversazioni aperte per te dal DeFi Mentor."
     >
       <div className="grid lg:grid-cols-[minmax(0,2fr)_minmax(0,1.2fr)] gap-6 mb-8">
         <div className="space-y-6">
           <div className="bg-white rounded-2xl shadow-lg p-8 border border-neutral-200">
             <p className="text-neutral-700">
-              Hai bisogno di aiuto con ImparoDeFi? Qui trovi risposte rapide, i canali
-              ufficiali e una chat diretta con il team.
+              Quando il DeFi Mentor rileva un problema tecnico o qualcosa di urgente, può
+              aprire per te una conversazione di supporto con il team ImparoDeFi. Da qui
+              puoi continuare quelle chat e vedere lo storico delle risposte.
             </p>
           </div>
 
