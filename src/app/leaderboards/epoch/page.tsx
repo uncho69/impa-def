@@ -137,7 +137,7 @@ export default function EpochLeaderboardSelectionPage() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8">
             <h1 className="text-4xl lg:text-5xl font-bold gradient-text mb-4">
-              Epochs
+              Campagne
             </h1>
           </div>
 
@@ -175,14 +175,14 @@ export default function EpochLeaderboardSelectionPage() {
             </div>
           )}
 
-          {/* Epochs List */}
+          {/* Lista Campagne */}
           <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 p-8">
-            <h2 className="text-2xl font-bold gradient-text mb-6">Lista Epochs</h2>
+            <h2 className="text-2xl font-bold gradient-text mb-6">Lista Campagne</h2>
             
             {loading ? (
               <div className="text-center py-12">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto mb-4"></div>
-                <p className="text-neutral-600">Caricamento epochs...</p>
+                <p className="text-neutral-600">Caricamento campagne...</p>
               </div>
             ) : epochs.length === 0 ? (
               <div className="text-center py-16">
@@ -208,7 +208,11 @@ export default function EpochLeaderboardSelectionPage() {
                           <div className="flex-1">
                             <div className="flex items-center gap-3 mb-2">
                               <h3 className="font-bold text-lg text-neutral-900">
-                                {epoch.campaignName ?? `${epoch.projectId} - Campaign ${epoch.campaignIndex}`} - Epoch {epoch.index}
+                                {(() => {
+                                  const fullName = epoch.campaignName ?? `${epoch.projectId} - Campaign ${epoch.campaignIndex}`;
+                                  const parts = fullName.split(' - ');
+                                  return parts.length >= 2 ? parts.slice(0, 2).join(' - ') : fullName;
+                                })()}
                               </h3>
                             </div>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
