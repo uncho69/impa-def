@@ -1,0 +1,20 @@
+[
+  {
+    "id": "d984d3cb-7c90-4bfe-9330-c993608d10ca",
+    "badgeKey": "principiante_receive_eth",
+    "wallet": "0x0eccdc8512cf12f188750d1b55c739d55cc27766",
+    "claimedAt": "2026-03-07T22:19:01.084Z"
+  },
+  {
+    "id": "549d1cc7-b868-4993-9e70-19da6eb59c1d",
+    "badgeKey": "principiante_swap_uniswap",
+    "wallet": "0x0eccdc8512cf12f188750d1b55c739d55cc27766",
+    "claimedAt": "2026-03-07T22:19:05.436Z"
+  },
+  {
+    "id": "012ee24c-4e48-457c-b574-e5a92ce552cf",
+    "badgeKey": "principiante_bridge_relay",
+    "wallet": "0x0eccdc8512cf12f188750d1b55c739d55cc27766",
+    "claimedAt": "2026-03-07T22:21:12.344Z"
+  }
+]

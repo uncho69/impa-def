@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useUser, SignInButton } from "@clerk/nextjs";
 import { PrivyWalletConnector } from "@/components/profile/PrivyWalletConnector";
 import { PrivySocialConnector } from "@/components/profile/PrivySocialConnector";
+import { LearningBadgesPanel } from "@/components/profile/LearningBadgesPanel";
 import { trackEvent } from "@/lib/analytics";
 
 type ProfileResponse = {
@@ -99,6 +100,7 @@ export default function ProfiloPage() {
   const [privyWalletAddress, setPrivyWalletAddress] = useState<string | null>(null);
   const [walletAddressInput, setWalletAddressInput] = useState("");
   const [walletAddresses, setWalletAddresses] = useState<string[]>([]);
+  const [activeTab, setActiveTab] = useState<"settings" | "badges" | "contents">("settings");
 
   const publicProfileHref = useMemo(() => {
     if (!data?.profile?.userId) return null;
@@ -282,21 +284,23 @@ export default function ProfiloPage() {
   return (
     <div className={PAGE_BG_CLASS}>
       <div className={GRID_OVERLAY_CLASS} />
-      <div className="relative z-10 px-6 py-10">
-        <div className="max-w-6xl mx-auto space-y-6">
+      <div className="relative z-10 px-4 sm:px-6 py-6 sm:py-8">
+        <div className="max-w-6xl mx-auto space-y-4">
         <section className={PANEL_CLASS}>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h1 className="text-3xl font-semibold tracking-tight">{profile.username}</h1>
+              <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">{profile.username}</h1>
               <p className="mt-1 text-slate-300">Rank globale #{profile.ranking.globalRank}</p>
             </div>
             {publicProfileHref ? (
-              <Link
-                href={publicProfileHref}
-                className="rounded-lg border border-indigo-400/40 px-4 py-2 text-sm text-indigo-200 hover:bg-indigo-500/20"
-              >
-                Visualizza profilo pubblico
-              </Link>
+              <div className="flex flex-wrap items-center gap-2">
+                <Link
+                  href={publicProfileHref}
+                  className="rounded-lg border border-indigo-400/40 px-4 py-2 text-sm text-indigo-200 hover:bg-indigo-500/20"
+                >
+                  Visualizza profilo pubblico
+                </Link>
+              </div>
             ) : null}
           </div>
 
@@ -317,6 +321,48 @@ export default function ProfiloPage() {
           </div>
         </section>
 
+        <section className={PANEL_CLASS}>
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setActiveTab("settings")}
+              className={`rounded-lg px-3 py-2 text-sm font-medium border transition-colors ${
+                activeTab === "settings"
+                  ? "border-indigo-300/70 bg-indigo-500/20 text-indigo-100"
+                  : "border-indigo-500/30 bg-indigo-900/25 text-slate-300 hover:bg-indigo-800/30"
+              }`}
+            >
+              Impostazioni
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab("badges")}
+              className={`rounded-lg px-3 py-2 text-sm font-medium border transition-colors ${
+                activeTab === "badges"
+                  ? "border-indigo-300/70 bg-indigo-500/20 text-indigo-100"
+                  : "border-indigo-500/30 bg-indigo-900/25 text-slate-300 hover:bg-indigo-800/30"
+              }`}
+            >
+              Badge
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab("contents")}
+              className={`rounded-lg px-3 py-2 text-sm font-medium border transition-colors ${
+                activeTab === "contents"
+                  ? "border-indigo-300/70 bg-indigo-500/20 text-indigo-100"
+                  : "border-indigo-500/30 bg-indigo-900/25 text-slate-300 hover:bg-indigo-800/30"
+              }`}
+            >
+              Contenuti campagne
+            </button>
+          </div>
+          <p className="mt-2 text-xs text-slate-400">
+            Vista compatta: scegli la sezione da gestire senza scroll infinito.
+          </p>
+        </section>
+
+        {activeTab === "settings" && (
         <section className={PANEL_CLASS}>
           <h2 className="text-xl font-semibold">Impostazioni profilo pubblico</h2>
           <p className="mt-1 text-sm text-slate-300">
@@ -491,7 +537,13 @@ export default function ProfiloPage() {
           {infoMessage ? <p className="mt-3 text-sm text-emerald-300">{infoMessage}</p> : null}
           {error ? <p className="mt-3 text-sm text-rose-300">{error}</p> : null}
         </section>
+        )}
 
+        {activeTab === "badges" && (
+        <LearningBadgesPanel wallet={resolvedWalletAddress} />
+        )}
+
+        {activeTab === "contents" && (
         <section className={PANEL_CLASS}>
           <h2 className="text-xl font-semibold">Contenuti creati per le campagne</h2>
           <p className="mt-1 text-sm text-slate-300">Qui trovi tutti i contenuti che hai pubblicato e tracciato nelle campagne.</p>
@@ -533,6 +585,7 @@ export default function ProfiloPage() {
             )}
           </div>
         </section>
+        )}
         </div>
       </div>
     </div>

@@ -122,6 +122,7 @@ export default function AdminLayout({
                 <Link href="/admin/dashboard" className="text-slate-300 hover:text-white font-medium transition-colors">Dashboard</Link>
                 <Link href="/admin/news" className="text-slate-300 hover:text-white font-medium transition-colors">Articoli</Link>
                 <Link href="/admin/campaigns" className="text-slate-300 hover:text-white font-medium transition-colors">Campagne</Link>
+                <Link href="/admin/learning-badges" className="text-slate-300 hover:text-white font-medium transition-colors">Learning &amp; Badge</Link>
                 <Link href="/admin/projects" className="text-slate-300 hover:text-white font-medium transition-colors">Gestisci progetti</Link>
                 <Link href="/admin/hacks-scams" className="text-slate-300 hover:text-white font-medium transition-colors">Hacks &amp; Scams</Link>
                 <Link href="/admin/support" className="text-slate-300 hover:text-white font-medium transition-colors flex items-center gap-1">

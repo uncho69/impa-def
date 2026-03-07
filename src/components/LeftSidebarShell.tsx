@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import imparodefiLogo from "@/assets/imparodefi-logo-nobg.webp";
 import { DEFI_SIDEBAR_ITEMS } from "@/lib/defi-sidebar";
 import { UnifiedAuthControls } from "@/components/auth/UnifiedAuthControls";
+import { SearchBar } from "@/components/SearchBar";
 
 type Theme = "dark" | "light";
 
@@ -47,7 +48,7 @@ export function LeftSidebarShell({ children }: { children: ReactNode }) {
       />
       <div className="relative flex flex-col min-h-screen w-full">
         <header
-          className={`flex items-center min-h-[4.5rem] border-b flex-shrink-0 ${
+          className={`flex items-center justify-between min-h-[4.5rem] border-b flex-shrink-0 ${
             isDark ? "border-indigo-500/20 bg-indigo-950/50" : "border-slate-200 bg-white/90"
           }`}
         >
@@ -58,11 +59,14 @@ export function LeftSidebarShell({ children }: { children: ReactNode }) {
               <span className={`text-xs font-medium rounded ${isDark ? "text-slate-400 bg-white/10 w-fit px-1.5 py-0.5" : "text-slate-500 bg-slate-200 w-fit px-1.5 py-0.5"}`}>BETA</span>
             </div>
           </Link>
-          <div className="flex-1 flex items-center justify-end gap-2 px-4 md:px-6">
+          <div className="hidden lg:block flex-1 max-w-xl mx-6">
+            <SearchBar />
+          </div>
+          <div className="flex items-center justify-end gap-2 px-4 md:px-6">
             <button
               type="button"
               onClick={() => setMobileMenuOpen((o) => !o)}
-              className="md:hidden p-2 rounded-lg border transition-colors border-slate-200 dark:border-white/20 bg-white/80 dark:bg-white/10 text-slate-700 dark:text-slate-200"
+              className="lg:hidden p-2 rounded-lg border transition-colors border-slate-200 dark:border-white/20 bg-white/80 dark:bg-white/10 text-slate-700 dark:text-slate-200"
               aria-label="Menu"
               aria-expanded={mobileMenuOpen}
             >
@@ -106,8 +110,8 @@ export function LeftSidebarShell({ children }: { children: ReactNode }) {
 
         {mobileMenuOpen && (
           <>
-            <button type="button" className="fixed inset-0 z-40 bg-black/40 md:hidden" aria-label="Chiudi menu" onClick={() => setMobileMenuOpen(false)} />
-            <aside className={`fixed top-0 right-0 z-50 h-full w-64 max-w-[85vw] shadow-xl md:hidden flex flex-col ${isDark ? "bg-indigo-950 border-l border-indigo-500/20" : "bg-white border-l border-slate-200"}`}>
+            <button type="button" className="fixed inset-0 z-40 bg-black/40 lg:hidden" aria-label="Chiudi menu" onClick={() => setMobileMenuOpen(false)} />
+            <aside className={`fixed top-0 right-0 z-50 h-full w-64 max-w-[85vw] shadow-xl lg:hidden flex flex-col ${isDark ? "bg-indigo-950 border-l border-indigo-500/20" : "bg-white border-l border-slate-200"}`}>
               <div className={`flex items-center justify-between p-4 border-b ${isDark ? "border-indigo-500/20" : "border-slate-200"}`}>
                 <span className="font-semibold text-slate-900 dark:text-white">Menu</span>
                 <button type="button" onClick={() => setMobileMenuOpen(false)} className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-white/10" aria-label="Chiudi">
@@ -130,7 +134,7 @@ export function LeftSidebarShell({ children }: { children: ReactNode }) {
         )}
 
         <div className="flex flex-1 min-h-0 relative">
-          <aside className={`hidden md:flex w-56 flex-shrink-0 backdrop-blur flex-col border-r ${isDark ? "bg-indigo-950/70 border-indigo-500/20" : "bg-white/80 border-slate-200"}`}>
+          <aside className={`hidden lg:flex w-56 flex-shrink-0 backdrop-blur flex-col border-r ${isDark ? "bg-indigo-950/70 border-indigo-500/20" : "bg-white/80 border-slate-200"}`}>
             <nav className="px-3 py-6 space-y-0.5 flex-1">
               {DEFI_SIDEBAR_ITEMS.map((item) => {
                 const isActive = isItemActive(item.href);

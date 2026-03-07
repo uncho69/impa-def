@@ -3,14 +3,15 @@
 import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import type { ProjectPageData } from "@/lib/project-page-data";
 import { MobileContainer } from "@/components/MobileContainer";
 import { getProjectMacroCategory, type MacroCategoryId } from "@/lib/admin-project-categories";
 import { getProjectLogo } from "@/lib/project-logos";
 import { getCoingeckoId } from "@/lib/project-coingecko-ids";
+import { BookmarkButton } from "@/components/bookmarks/BookmarkButton";
 
-const TAB_IDS = ["overview", "come-usarlo", "contenuti", "dati-rischi", "link-utili", "notizie"] as const;
-type TabId = (typeof TAB_IDS)[number];
+type TabId = "overview" | "come-usarlo" | "contenuti" | "dati-rischi" | "link-utili" | "notizie";
 
 const CONTENT_FILTERS = [
   { id: "all", label: "Tutti", icon: null },
@@ -184,8 +185,185 @@ function FeatureIcon({ type }: { type: ProjectPageData["featureCards"][0]["icon"
   return null;
 }
 
+type FeatureModalContent = {
+  subtitle: string;
+  objective: string;
+  checklist: string[];
+  steps: string[];
+  kpis: string[];
+  mistakes: string[];
+  ctaLabel: string;
+  ctaHref?: string;
+};
+
+function buildFeatureModalContent(
+  projectName: string,
+  card: ProjectPageData["featureCards"][0],
+  appUrl: string,
+): FeatureModalContent {
+  const base = {
+    subtitle: `${projectName} · Playbook operativo`,
+    objective: card.description,
+  };
+
+  if (card.icon === "lightning") {
+    return {
+      ...base,
+      objective: `Onboarding rapido su ${projectName}: prima operazione in sicurezza con capitale ridotto e controllo pieno dei passaggi critici.`,
+      checklist: [
+        "Wallet corretto con rete verificata",
+        "Piccola size di test pronta (es. 10-50$)",
+        "URL ufficiale controllato e bookmark salvato",
+        "Gas fee disponibili sul wallet",
+      ],
+      steps: [
+        `Apri ${projectName} dal link ufficiale e connetti il wallet.`,
+        "Conferma chain, token e importo prima della firma.",
+        "Esegui una transazione minima di test.",
+        "Verifica esito su explorer e saldo aggiornato.",
+      ],
+      kpis: [
+        "Time-to-first-successful-tx < 5 minuti",
+        "0 errori di rete/indirizzo",
+        "Slippage entro range pianificato",
+      ],
+      mistakes: [
+        "Entrare con size troppo alta al primo click",
+        "Firmare transazioni senza leggere i dettagli",
+        "Usare link trovati su fonti non ufficiali",
+      ],
+      ctaLabel: `Apri ${projectName}`,
+      ctaHref: appUrl,
+    };
+  }
+
+  if (card.icon === "droplet") {
+    return {
+      ...base,
+      objective: `Gestione liquidita e execution: massimizzare efficienza su ${projectName} riducendo costi impliciti (fee, slippage, timing).`,
+      checklist: [
+        "Volumi e profondita mercato verificati",
+        "Slippage tollerance impostata in modo conservativo",
+        "Costo gas stimato prima di confermare",
+        "Scenario exit gia definito",
+      ],
+      steps: [
+        "Scegli coppia/mercato con profondita adeguata alla tua size.",
+        "Confronta execution in fascia oraria a migliore liquidita.",
+        "Dividi ordini grandi in tranche per ridurre impatto.",
+        "Monitora prezzo medio di ingresso e costo totale.",
+      ],
+      kpis: [
+        "Slippage reale <= slippage target",
+        "Fee totali sotto soglia prefissata",
+        "Execution senza reverts/fail",
+      ],
+      mistakes: [
+        "Eseguire ordini grandi su pool sottili",
+        "Ignorare costo gas in fasi congestionate",
+        "Cambiare slippage in modo aggressivo all'ultimo",
+      ],
+      ctaLabel: "Vedi link utili",
+      ctaHref: card.href,
+    };
+  }
+
+  if (card.icon === "cap") {
+    return {
+      ...base,
+      objective: `Framework di apprendimento su ${projectName}: capire meccanica, rischio e best practice prima di scalare il capitale.`,
+      checklist: [
+        "Conosci differenza tra action base e advanced",
+        "Comprendi i rischi specifici del protocollo",
+        "Hai provato almeno 1 operazione test",
+        "Hai un piano di allocazione progressiva",
+      ],
+      steps: [
+        "Leggi la guida base e la documentazione ufficiale.",
+        "Esegui test pratico su importo minimo.",
+        "Annota rischi e regole operative personali.",
+        "Passa a size maggiori solo dopo 2-3 esecuzioni pulite.",
+      ],
+      kpis: [
+        "Completamento guida 100%",
+        "Almeno 3 esecuzioni senza errori",
+        "Checklist rischio rispettata prima di ogni tx",
+      ],
+      mistakes: [
+        "Saltare la fase tutorial per fretta",
+        "Confondere rendimento atteso con rendimento garantito",
+        "Operare senza piano di sizing",
+      ],
+      ctaLabel: "Apri guida",
+      ctaHref: card.href,
+    };
+  }
+
+  if (card.icon === "warning") {
+    return {
+      ...base,
+      objective: `Risk control operativo su ${projectName}: minimizzare errori irreversibili e proteggere il capitale nelle condizioni di mercato avverse.`,
+      checklist: [
+        "Wallet principale separato dal wallet operativo",
+        "Permessi token periodicamente revocati",
+        "Stop di perdita e limite giornaliero definiti",
+        "Controllo anti-phishing attivo",
+      ],
+      steps: [
+        "Valuta rischio smart contract e rischio liquidita.",
+        "Definisci invalidation level prima dell'ingresso.",
+        "Monitora posizione e aggiorna il piano quando il contesto cambia.",
+        "Riduci esposizione se volatilita/fee diventano anomale.",
+      ],
+      kpis: [
+        "Nessuna tx verso address errati",
+        "Max drawdown per trade entro limite",
+        "Zero approve non necessarie persistenti",
+      ],
+      mistakes: [
+        "Aumentare size dopo perdita per recuperare",
+        "Lasciare approve illimitate su token sensibili",
+        "Ignorare segnali di risk regime change",
+      ],
+      ctaLabel: "Apri manuale sicurezza",
+      ctaHref: "/manuale",
+    };
+  }
+
+  return {
+    ...base,
+    objective: `Valutazione opportunita su ${projectName}: identificare setup ad alto rapporto rischio/rendimento senza overtrading.`,
+    checklist: [
+      "Catalyst chiaro (nuovo update, incentivo, campagna)",
+      "Rischio downside definito prima dell'ingresso",
+      "Allocazione coerente col profilo personale",
+      "Orizzonte temporale dichiarato (breve/medio)",
+    ],
+    steps: [
+      "Mappa opportunita disponibili e priorita.",
+      "Stima reward potenziale vs costo/tempo richiesto.",
+      "Esegui solo se il setup supera le tue regole minime.",
+      "Review post-operazione per migliorare decisioni future.",
+    ],
+    kpis: [
+      "Reward netto positivo vs fee/costi",
+      "Hit-rate opportunita > baseline personale",
+      "Nessun trade fuori piano",
+    ],
+    mistakes: [
+      "Inseguire hype senza edge misurabile",
+      "Moltiplicare operazioni senza criterio",
+      "Confondere attivita con performance",
+    ],
+    ctaLabel: "Apri risorse progetto",
+    ctaHref: card.href || appUrl,
+  };
+}
+
 export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
+  const pathname = usePathname();
   const [activeTab, setActiveTab] = useState<TabId>("overview");
+  const [selectedContentIndex, setSelectedContentIndex] = useState<number | null>(null);
   const [contentFilter, setContentFilter] = useState<string>("all");
   const [priceData, setPriceData] = useState<{
     price: number;
@@ -225,6 +403,7 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
   const [explorerDefiSubCategory, setExplorerDefiSubCategory] = useState<DefiSubCategory>("all");
   const [explorerNftSubCategory, setExplorerNftSubCategory] = useState<NftSubCategory>("collezione");
   const [explorerCgData, setExplorerCgData] = useState<Record<string, { usd?: number; usd_market_cap?: number }>>({});
+  const [selectedFeatureIndex, setSelectedFeatureIndex] = useState<number | null>(null);
 
   const isBlockchainProject = getProjectMacroCategory(data.slug) === "blockchain";
 
@@ -417,6 +596,49 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
     return result;
   }, [explorerProjects, explorerCategory, explorerDefiSubCategory, explorerNftSubCategory, explorerSearch, explorerSortKey, explorerCgData]);
 
+  useEffect(() => {
+    const syncFromHash = () => {
+      if (typeof window === "undefined") return;
+      const raw = window.location.hash.replace(/^#/, "");
+      if (!raw) return;
+
+      if (raw === "contenuti") {
+        setActiveTab("contenuti");
+        return;
+      }
+
+      if (raw.startsWith("contenuti-")) {
+        const idx = Number(raw.replace("contenuti-", ""));
+        if (Number.isInteger(idx) && idx >= 0 && idx < resolvedContentItems.length) {
+          setActiveTab("contenuti");
+          setSelectedContentIndex(idx);
+        }
+      }
+    };
+
+    syncFromHash();
+    window.addEventListener("hashchange", syncFromHash);
+    return () => window.removeEventListener("hashchange", syncFromHash);
+  }, [resolvedContentItems.length]);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setSelectedFeatureIndex(null);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
+
+  const selectedFeatureCard =
+    selectedFeatureIndex !== null && selectedFeatureIndex >= 0 && selectedFeatureIndex < resolvedFeatureCards.length
+      ? resolvedFeatureCards[selectedFeatureIndex]
+      : null;
+  const selectedFeatureContent = selectedFeatureCard
+    ? buildFeatureModalContent(data.name, selectedFeatureCard, resolvedAppUrl)
+    : null;
+
   return (
     <MobileContainer>
       <div className="bg-white dark:bg-indigo-900/25 dark:border-indigo-500/25 dark:backdrop-blur rounded-2xl shadow-lg border border-slate-200 dark:shadow-none overflow-hidden">
@@ -428,7 +650,18 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
                 <Image src={data.logo} alt={data.name} width={64} height={64} className="object-contain" />
               </div>
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">{data.name}</h1>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">{data.name}</h1>
+                  <BookmarkButton
+                    url={pathname}
+                    title={`${data.name} - Pagina progetto`}
+                    type="page"
+                    projectId={data.slug}
+                    showLabel
+                    inactiveLabel="Salva"
+                    activeLabel="Salva"
+                  />
+                </div>
                 <div className="flex flex-wrap gap-2 mt-2">
                   {data.tags.map((t) => (
                     <span
@@ -577,13 +810,15 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
               {resolvedFeatureCards.map((card, i) => (
-                <div
+                <button
                   key={i}
+                  type="button"
+                  onClick={() => setSelectedFeatureIndex(i)}
                   className={`rounded-xl border p-4 flex flex-col ${
                     card.icon === "gift"
                       ? "bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800"
                       : "bg-white dark:bg-slate-700/50 dark:border-white/5 border-slate-200"
-                  }`}
+                  } text-left hover:border-indigo-400 dark:hover:border-indigo-400/60 transition-colors`}
                 >
                   <div className={card.icon === "gift" ? "text-amber-600 dark:text-amber-400" : "text-slate-600 dark:text-slate-400"}>
                     <FeatureIcon type={card.icon} />
@@ -592,15 +827,13 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
                     {card.title}
                   </h3>
                   <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 flex-1">{card.description}</p>
-                  {card.href && (
-                    <a href={card.href} className="self-end mt-2 text-blue-600 dark:text-blue-400 text-xs font-medium inline-flex items-center gap-1">
-                      Approfondisci
-                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </a>
-                  )}
-                </div>
+                  <span className="self-end mt-2 text-blue-600 dark:text-blue-400 text-xs font-medium inline-flex items-center gap-1">
+                    Apri dettagli
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                </button>
               ))}
             </div>
           )}
@@ -715,14 +948,25 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
                           <span className="text-green-600 dark:text-green-400">Verificato</span>
                         )}
                       </div>
-                      <a
-                        href={item.href ?? (item.embedId ? `https://www.youtube.com/watch?v=${item.embedId}` : "#")}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="mt-3 inline-block px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium"
-                      >
-                        {item.type === "video" ? "Guarda" : "Leggi"}
-                      </a>
+                      <div className="mt-3 flex flex-wrap items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setSelectedContentIndex(i)}
+                          className="inline-block px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium"
+                        >
+                          {item.type === "video" ? "Guarda" : "Leggi"}
+                        </button>
+                        <BookmarkButton
+                          url={`${pathname}#contenuti-${i}`}
+                          title={`${data.name} - Contenuto: ${item.title}`}
+                          type="content"
+                          projectId={data.slug}
+                          sectionId={`contenuti-${i}`}
+                          showLabel
+                          inactiveLabel="Salva Contenuto"
+                          activeLabel="Contenuto Salvato"
+                        />
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -775,6 +1019,137 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
           )}
         </div>
       </div>
+      {selectedContentIndex !== null && resolvedContentItems[selectedContentIndex] && (
+        <div className="fixed inset-0 z-[80] bg-black/70 backdrop-blur-sm p-4 flex items-center justify-center">
+          <div className="w-full max-w-4xl max-h-[90vh] overflow-hidden rounded-2xl border border-indigo-500/30 bg-[#141c45] text-white flex flex-col">
+            <div className="px-5 py-4 border-b border-indigo-500/20 flex items-center justify-between gap-3">
+              <div>
+                <h3 className="text-base md:text-lg font-semibold">{resolvedContentItems[selectedContentIndex].title}</h3>
+                <p className="text-xs text-slate-300">
+                  {resolvedContentItems[selectedContentIndex].type === "video" ? "Video" : "Contenuto"} • {data.name}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedContentIndex(null)}
+                className="px-3 py-1.5 rounded-lg border border-white/20 text-sm hover:bg-white/10"
+              >
+                Chiudi
+              </button>
+            </div>
+            <div className="p-5 overflow-auto">
+              {resolvedContentItems[selectedContentIndex].embedId ? (
+                <div className="aspect-video rounded-xl overflow-hidden border border-indigo-500/20">
+                  <iframe
+                    src={`https://www.youtube.com/embed/${resolvedContentItems[selectedContentIndex].embedId}`}
+                    className="w-full h-full"
+                    title={resolvedContentItems[selectedContentIndex].title}
+                    allowFullScreen
+                  />
+                </div>
+              ) : (
+                <div className="rounded-xl border border-indigo-500/20 bg-indigo-900/20 p-4">
+                  <p className="text-sm text-slate-200">
+                    Questo contenuto non ha embed interno. Aprilo nel link originale.
+                  </p>
+                  <a
+                    href={resolvedContentItems[selectedContentIndex].href ?? "#"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-3 inline-flex items-center px-3 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-sm font-medium"
+                  >
+                    Apri contenuto
+                  </a>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+      {selectedFeatureCard && selectedFeatureContent && (
+        <div className="fixed inset-0 z-[82] bg-black/70 backdrop-blur-sm p-4 flex items-center justify-center">
+          <div className="w-full max-w-4xl max-h-[90vh] overflow-hidden rounded-2xl border border-indigo-500/30 bg-[#141c45] text-white flex flex-col">
+            <div className="px-5 py-4 border-b border-indigo-500/20 flex items-start justify-between gap-3">
+              <div>
+                <p className="text-xs uppercase tracking-wide text-indigo-300">{selectedFeatureContent.subtitle}</p>
+                <h3 className="text-lg md:text-xl font-semibold mt-1">{selectedFeatureCard.title}</h3>
+                <p className="text-sm text-slate-300 mt-1">{selectedFeatureContent.objective}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedFeatureIndex(null)}
+                className="px-3 py-1.5 rounded-lg border border-white/20 text-sm hover:bg-white/10 shrink-0"
+              >
+                Chiudi
+              </button>
+            </div>
+            <div className="p-5 overflow-auto space-y-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <section className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                  <h4 className="font-semibold text-indigo-100">Checklist pre-esecuzione</h4>
+                  <ul className="mt-2 space-y-1.5 text-sm text-slate-200">
+                    {selectedFeatureContent.checklist.map((item) => (
+                      <li key={item} className="flex items-start gap-2">
+                        <span className="text-emerald-300">✓</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+                <section className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                  <h4 className="font-semibold text-indigo-100">Errori comuni da evitare</h4>
+                  <ul className="mt-2 space-y-1.5 text-sm text-slate-200">
+                    {selectedFeatureContent.mistakes.map((item) => (
+                      <li key={item} className="flex items-start gap-2">
+                        <span className="text-rose-300">•</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              </div>
+              <section className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                <h4 className="font-semibold text-indigo-100">Procedura consigliata</h4>
+                <ol className="mt-2 space-y-2 text-sm text-slate-200">
+                  {selectedFeatureContent.steps.map((step, index) => (
+                    <li key={step} className="flex items-start gap-3">
+                      <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-indigo-500/30 text-[11px] font-semibold text-indigo-100">
+                        {index + 1}
+                      </span>
+                      <span>{step}</span>
+                    </li>
+                  ))}
+                </ol>
+              </section>
+              <section className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                <h4 className="font-semibold text-indigo-100">KPI di controllo</h4>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {selectedFeatureContent.kpis.map((kpi) => (
+                    <span key={kpi} className="rounded-lg border border-indigo-400/30 bg-indigo-800/40 px-2.5 py-1 text-xs text-indigo-100">
+                      {kpi}
+                    </span>
+                  ))}
+                </div>
+              </section>
+              <div className="flex flex-wrap justify-end gap-2 pt-1">
+                {selectedFeatureContent.ctaHref && (
+                  <a
+                    href={selectedFeatureContent.ctaHref}
+                    target={selectedFeatureContent.ctaHref.startsWith("http") ? "_blank" : undefined}
+                    rel={selectedFeatureContent.ctaHref.startsWith("http") ? "noopener noreferrer" : undefined}
+                    className="inline-flex items-center gap-2 rounded-lg bg-indigo-500 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-400"
+                  >
+                    {selectedFeatureContent.ctaLabel}
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       {isBlockchainProject && explorerOpen && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm p-4 flex items-center justify-center">
           <div className="w-full max-w-5xl max-h-[85vh] overflow-hidden rounded-2xl border border-indigo-500/25 bg-[#171f49] text-white flex flex-col">

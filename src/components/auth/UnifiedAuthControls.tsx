@@ -54,7 +54,14 @@ function ClerkAuthControls() {
 }
 
 export function UnifiedAuthControls() {
+  const { isLoaded, isSignedIn, user } = useUser();
   const hasPrivy = Boolean(process.env.NEXT_PUBLIC_PRIVY_APP_ID?.trim());
+
+  // If Clerk session exists, always prefer Clerk user controls.
+  if (isLoaded && isSignedIn && user) {
+    return <UserButton afterSignOutUrl="/" />;
+  }
+
   if (hasPrivy) return <PrivyAuthControls />;
   return <ClerkAuthControls />;
 }

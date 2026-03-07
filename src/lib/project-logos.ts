@@ -20,6 +20,7 @@ import cryptocomLogo from "@/assets/cryptocomex.png";
 import youngplatformLogo from "@/assets/youngplatformcex.png";
 import wirexLogo from "@/assets/wirexcex.png";
 import metamaskLogo from "@/assets/metamask-icon.svg";
+import uniswapLogo from "@/assets/uniswap-icon.png";
 import compoundLogo from "@/assets/compound-logo.png";
 import curveLogo from "@/assets/curve-logo.png";
 import balancerLogo from "@/assets/balancer-logo.png";
@@ -117,6 +118,7 @@ export const PROJECT_LOGO: Record<string, StaticImageData> = {
   "young-platform": youngplatformLogo,
   wirex: wirexLogo,
   metamask: metamaskLogo,
+  uniswap: uniswapLogo,
   compound: compoundLogo,
   curve: curveLogo,
   balancer: balancerLogo,

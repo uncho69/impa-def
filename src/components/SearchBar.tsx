@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 
 type IndexedPage = {
   url: string;
@@ -10,6 +11,7 @@ type IndexedPage = {
 
 
 export function SearchBar() {
+  const router = useRouter();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<IndexedPage[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -97,7 +99,8 @@ export function SearchBar() {
       setSelectedIndex((prev) => (prev - 1 + Math.max(results.length, 1)) % Math.max(results.length, 1));
     } else if (e.key === "Enter") {
       if (selectedIndex >= 0 && results[selectedIndex]) {
-        window.location.href = results[selectedIndex].url;
+        router.push(results[selectedIndex].url);
+        setIsOpen(false);
       }
     } else if (e.key === "Escape") {
       setIsOpen(false);
@@ -118,7 +121,7 @@ export function SearchBar() {
       <span>
         {start > 0 ? "…" : ""}
         {before}
-        <mark className="bg-yellow-200 px-0.5 rounded">{match}</mark>
+        <mark className="bg-indigo-400/30 text-indigo-100 px-0.5 rounded">{match}</mark>
         {after}
         {end < text.length ? "…" : ""}
       </span>
@@ -131,15 +134,15 @@ export function SearchBar() {
         <input
           ref={inputRef}
           type="text"
-          placeholder={isIndexing ? "Indicizzazione in corso…" : "Cerca in tutto il sito"}
-          className="w-full min-w-0 max-w-64 px-4 py-2 pl-10 pr-4 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-indigo-900/40 dark:border-indigo-500/30 dark:text-white dark:placeholder-slate-400"
+          placeholder={isIndexing ? "Indicizzazione in corso..." : "Cerca"}
+          className="w-full min-w-0 px-4 py-2 pl-10 pr-4 text-sm border border-indigo-400/25 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/60 focus:border-transparent bg-slate-950/40 text-white placeholder-slate-400"
           value={query}
           onFocus={ensureIndex}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={onKeyDown}
         />
         <svg
-          className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+          className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -149,27 +152,30 @@ export function SearchBar() {
       </div>
 
       {isOpen && query && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-96 overflow-auto">
+        <div className="absolute top-full left-0 right-0 mt-1 bg-slate-950/95 border border-indigo-400/25 rounded-lg shadow-lg z-50 max-h-96 overflow-auto backdrop-blur">
           {results.length === 0 ? (
-            <div className="px-4 py-3 text-sm text-gray-500">Nessun risultato</div>
+            <div className="px-4 py-3 text-sm text-slate-400">Nessun risultato</div>
           ) : (
             results.map((r, idx) => (
               <button
                 key={r.url}
-                onClick={() => (window.location.href = r.url)}
-                className={`w-full text-left px-4 py-3 border-b last:border-b-0 ${
-                  selectedIndex === idx ? "bg-blue-50" : "hover:bg-gray-50"
+                onClick={() => {
+                  router.push(r.url);
+                  setIsOpen(false);
+                }}
+                className={`w-full text-left px-4 py-3 border-b border-indigo-400/15 last:border-b-0 ${
+                  selectedIndex === idx ? "bg-indigo-500/20" : "hover:bg-white/5"
                 }`}
               >
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <div className="font-semibold text-sm text-gray-900">{r.title || r.url}</div>
-                    <div className="text-xs text-gray-600 mt-1">
+                    <div className="font-semibold text-sm text-slate-100">{r.title || r.url}</div>
+                    <div className="text-xs text-slate-300 mt-1">
                       {highlight(r.content, query)}
                     </div>
                   </div>
-                  <span className="shrink-0 text-[11px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded">
-                    {new URL(r.url, window.location.origin).pathname}
+                  <span className="shrink-0 text-[11px] bg-indigo-500/20 text-indigo-200 px-2 py-0.5 rounded">
+                    {r.url}
                   </span>
                 </div>
               </button>
@@ -360,6 +366,36 @@ function getStaticIndex(): IndexedPage[] {
       url: "/supporto",
       title: "Supporto - Assistenza",
       content: "supporto assistenza aiuto faq domande frequenti contatti support help"
+    },
+    {
+      url: "/leaderboards/global",
+      title: "Leaderboard Globale",
+      content: "classifica utenti punteggi ranking globale leaderboard engagement twitter campagne"
+    },
+    {
+      url: "/leaderboards/epoch",
+      title: "Leaderboard Campagne",
+      content: "classifica per campagne epoch progetto reward punteggi attività utenti"
+    },
+    {
+      url: "/percorsi-apprendimento",
+      title: "Percorsi di Apprendimento",
+      content: "principiante intermedio avanzato percorso guidato moduli studio web3"
+    },
+    {
+      url: "/profilo",
+      title: "Profilo Utente",
+      content: "profilo wallet indirizzi social impostazioni privacy account"
+    },
+    {
+      url: "/esplora-app",
+      title: "Mappa Ecosistema",
+      content: "esplora app ecosistema web3 strumenti progetti categorie"
+    },
+    {
+      url: "/strumentiutili",
+      title: "Strumenti Utili",
+      content: "tool dashboard analisi coingecko defillama debank nansen"
     },
     {
       url: "/giochi",

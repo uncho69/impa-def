@@ -153,6 +153,23 @@ export default function AdminDashboard() {
             </Link>
           </div>
         </div>
+
+        <div className="bg-indigo-900/25 rounded-xl border border-indigo-500/20 p-6 flex flex-col justify-between backdrop-blur">
+          <div>
+            <h2 className="text-xl font-bold text-white mb-2">Learning &amp; Badge</h2>
+            <p className="text-slate-300 text-sm mb-4">
+              Configura missioni di livello, campagne speciali temporanee e reward claimabili dagli utenti.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href="/admin/learning-badges"
+              className="inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-500 transition-colors"
+            >
+              Vai a Learning &amp; Badge
+            </Link>
+          </div>
+        </div>
       </div>
 
       {/* Admin Logs */}

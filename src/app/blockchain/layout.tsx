@@ -4,15 +4,15 @@ import { ReactNode, useEffect, useLayoutEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useUser, SignInButton, UserButton } from "@clerk/nextjs";
 import imparodefiLogo from "@/assets/imparodefi-logo-nobg.webp";
 import { BLOCKCHAIN_SIDEBAR_ITEMS } from "@/lib/blockchain-sidebar";
+import { UnifiedAuthControls } from "@/components/auth/UnifiedAuthControls";
+import { SearchBar } from "@/components/SearchBar";
 
 type Theme = "dark" | "light";
 
 export default function BlockchainLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const { isSignedIn, user, isLoaded } = useUser();
   const [theme, setTheme] = useState<Theme>("dark");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -29,6 +29,7 @@ export default function BlockchainLayout({ children }: { children: ReactNode }) 
 
   const isDark = theme === "dark";
   const isBlockchainSection = pathname === "/blockchain" || pathname.startsWith("/blockchain/");
+  const isProfilePath = pathname === "/profilo" || pathname.startsWith("/profilo/");
 
   return (
     <div
@@ -44,7 +45,7 @@ export default function BlockchainLayout({ children }: { children: ReactNode }) 
         aria-hidden
       />
       <div className="relative flex flex-col min-h-screen">
-        <header className={`flex items-center min-h-[4.5rem] border-b flex-shrink-0 ${isDark ? "border-indigo-500/20 bg-indigo-950/50" : "border-slate-200 bg-white/90"}`}>
+        <header className={`flex items-center justify-between min-h-[4.5rem] border-b flex-shrink-0 ${isDark ? "border-indigo-500/20 bg-indigo-950/50" : "border-slate-200 bg-white/90"}`}>
           <Link href="/" className="flex items-center gap-2 px-4 w-56 flex-shrink-0">
             <Image src={isDark ? "/imparodefi-logo-dark.png" : imparodefiLogo} alt="ImparoDeFi" width={36} height={36} className="rounded-lg shrink-0" />
             <div className="flex flex-col min-w-0">
@@ -56,11 +57,14 @@ export default function BlockchainLayout({ children }: { children: ReactNode }) 
               </span>
             </div>
           </Link>
-          <div className="flex-1 flex items-center justify-end gap-2 px-4 md:px-6">
+          <div className="hidden lg:block flex-1 max-w-xl mx-6">
+            <SearchBar />
+          </div>
+          <div className="flex items-center justify-end gap-2 px-4 md:px-6">
             <button
               type="button"
               onClick={() => setMobileMenuOpen((o) => !o)}
-              className="md:hidden p-2 rounded-lg border border-slate-200 dark:border-white/20 bg-white/80 dark:bg-white/10 text-slate-700 dark:text-slate-200 transition-colors"
+              className="lg:hidden p-2 rounded-lg border border-slate-200 dark:border-white/20 bg-white/80 dark:bg-white/10 text-slate-700 dark:text-slate-200 transition-colors"
               aria-label="Menu"
               aria-expanded={mobileMenuOpen}
             >
@@ -100,17 +104,21 @@ export default function BlockchainLayout({ children }: { children: ReactNode }) 
                   </svg>
                 )}
               </button>
-              {isLoaded && (
-                isSignedIn && user ? (
-                  <UserButton afterSignOutUrl="/" />
-                ) : (
-                  <SignInButton mode="modal">
-                    <button className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium border border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-700 dark:border-white/20 dark:bg-white/5 dark:hover:bg-white/10 dark:text-white transition-colors">
-                      Accedi
-                    </button>
-                  </SignInButton>
-                )
-              )}
+              <Link
+                href="/profilo"
+                className={`hidden sm:flex p-2 rounded-lg border transition-colors ${
+                  isProfilePath
+                    ? "border-indigo-400/70 bg-indigo-500/20 text-indigo-100"
+                    : "border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-700 dark:border-white/20 dark:bg-white/5 dark:hover:bg-white/10 dark:text-white"
+                }`}
+                title="Profilo"
+                aria-label="Profilo"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.75 6.75a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a8.967 8.967 0 0114.998 0A17.933 17.933 0 0112 22.5c-2.676 0-5.216-.584-7.499-1.632z" />
+                </svg>
+              </Link>
+              <UnifiedAuthControls />
             </div>
           </div>
         </header>
@@ -119,11 +127,11 @@ export default function BlockchainLayout({ children }: { children: ReactNode }) 
           <>
             <button
               type="button"
-              className="fixed inset-0 z-40 bg-black/40 md:hidden"
+              className="fixed inset-0 z-40 bg-black/40 lg:hidden"
               aria-label="Chiudi menu"
               onClick={() => setMobileMenuOpen(false)}
             />
-            <aside className={`fixed top-0 right-0 z-50 h-full w-64 max-w-[85vw] shadow-xl md:hidden flex flex-col border-l ${isDark ? "bg-indigo-950 border-indigo-500/20" : "bg-white border-slate-200"}`}>
+            <aside className={`fixed top-0 right-0 z-50 h-full w-64 max-w-[85vw] shadow-xl lg:hidden flex flex-col border-l ${isDark ? "bg-indigo-950 border-indigo-500/20" : "bg-white border-slate-200"}`}>
               <div className={`flex items-center justify-between p-4 border-b ${isDark ? "border-indigo-500/20" : "border-slate-200"}`}>
                 <span className="font-semibold text-slate-900 dark:text-white">Menu</span>
                 <button type="button" onClick={() => setMobileMenuOpen(false)} className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-white/10" aria-label="Chiudi">
@@ -153,7 +161,7 @@ export default function BlockchainLayout({ children }: { children: ReactNode }) 
         )}
 
         <div className="flex flex-1 min-h-0 relative">
-          <aside className={`hidden md:flex w-56 flex-shrink-0 backdrop-blur flex-col border-r ${isDark ? "bg-indigo-950/70 border-indigo-500/20" : "bg-white/80 border-slate-200"}`}>
+          <aside className={`hidden lg:flex w-56 flex-shrink-0 backdrop-blur flex-col border-r ${isDark ? "bg-indigo-950/70 border-indigo-500/20" : "bg-white/80 border-slate-200"}`}>
             <nav className="px-3 py-6 space-y-0.5 flex-1">
               {BLOCKCHAIN_SIDEBAR_ITEMS.map((item) => {
                 const isActive = item.href === "/blockchain" ? isBlockchainSection : pathname === item.href || pathname.startsWith(item.href + "/");

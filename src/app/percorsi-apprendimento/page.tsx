@@ -26,6 +26,9 @@ export default function LearningPathsPage() {
               <span>{path.duration}</span>
               <span>{path.commitment}</span>
             </div>
+            <div className="mt-3 text-xs text-emerald-300">
+              Task reward: {path.rewardTasks.length} missioni badge
+            </div>
             <div className="mt-4 text-sm font-medium text-indigo-300">Apri percorso →</div>
           </Link>
         ))}

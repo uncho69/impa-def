@@ -14,5 +14,6 @@ export const BLOCKCHAIN_SIDEBAR_ITEMS = [
   { label: "Eventi Storici", href: "/eventi-storici", icon: "📅" },
   { label: "Mappa Ecosistema", href: "/esplora-app", icon: "🌐" },
   { label: "Notizie", href: "/news", icon: "📰" },
+  { label: "Segnalibri", href: "/segnalibri", icon: "🔖" },
   { label: "Leaderboard", href: "/leaderboards/global", icon: "🏆" },
 ];

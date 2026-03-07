@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { LEARNING_PATHS, getLearningPathBySlug } from "@/lib/learning-paths";
+import { RewardTimelineSection } from "@/components/learning/RewardTimelineSection";
 
 export function generateStaticParams() {
   return LEARNING_PATHS.map((path) => ({ slug: path.slug }));
@@ -47,6 +48,21 @@ export default function LearningPathDetailPage({ params }: { params: { slug: str
             ))}
           </ul>
         </div>
+      </section>
+
+      <section className="rounded-2xl border border-indigo-500/25 bg-indigo-900/25 backdrop-blur p-6">
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="text-2xl font-semibold text-white">Task reward del livello</h2>
+          <Link href="/profilo" className="text-sm font-medium text-indigo-300 hover:text-indigo-200">
+            Vai ai Badge →
+          </Link>
+        </div>
+        <RewardTimelineSection
+          tasks={path.rewardTasks}
+          rewardNote={path.rewardNote}
+          levelRewardUsdc={path.levelRewardUsdc}
+          levelKey={path.slug as "principiante" | "intermedio" | "avanzato"}
+        />
       </section>
 
       <section className="rounded-2xl border border-indigo-500/25 bg-indigo-900/25 backdrop-blur p-6">

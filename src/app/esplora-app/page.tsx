@@ -3,12 +3,14 @@
 import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Placeholder from "@/assets/placeholder.svg";
 import imparodefiLogo from "@/assets/imparodefi-logo-nobg.webp";
 import { getProjectMacroCategory, type MacroCategoryId } from "@/lib/admin-project-categories";
 import { getProjectLogo } from "@/lib/project-logos";
 import { getCoingeckoId } from "@/lib/project-coingecko-ids";
 import { UnifiedAuthControls } from "@/components/auth/UnifiedAuthControls";
+import { SearchBar } from "@/components/SearchBar";
 
 const SIDEBAR_ITEMS = [
   { label: "Dashboard", href: "/", icon: "📊" },
@@ -26,6 +28,7 @@ const SIDEBAR_ITEMS = [
   { label: "Eventi Storici", href: "/eventi-storici", icon: "📅" },
   { label: "Mappa Ecosistema", href: "/esplora-app", icon: "🌐" },
   { label: "Notizie", href: "/news", icon: "📰" },
+  { label: "Segnalibri", href: "/segnalibri", icon: "🔖" },
   { label: "Leaderboard", href: "/leaderboards/global", icon: "🏆" },
 ];
 
@@ -80,7 +83,9 @@ function getProjectPageHref(projectId: string): string {
 type Theme = "dark" | "light";
 
 export default function EsploraAppPage() {
+  const pathname = usePathname();
   const [theme, setTheme] = useState<Theme>("dark");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [projects, setProjects] = useState<EcosystemProject[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -173,10 +178,15 @@ export default function EsploraAppPage() {
   }, [projects, search, activeCategory, sortByMarketCap, priceData]);
 
   const isDark = theme === "dark";
+  const isProfilePath = pathname === "/profilo" || pathname.startsWith("/profilo/");
+  const isItemActive = (href: string) => {
+    if (href === "/") return pathname === "/";
+    return pathname === href || pathname.startsWith(href + "/");
+  };
 
   return (
     <div
-      className={`min-h-screen transition-colors ${
+      className={`min-h-screen overflow-x-hidden transition-colors ${
         isDark
           ? "bg-gradient-to-b from-indigo-950 via-slate-900/95 via-30% to-indigo-950 text-white"
           : "bg-gradient-to-b from-slate-100 via-indigo-50/50 to-slate-100 text-slate-900"
@@ -186,10 +196,10 @@ export default function EsploraAppPage() {
         className="fixed inset-0 pointer-events-none bg-[size:48px_48px] bg-[linear-gradient(rgba(99,102,241,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.06)_1px,transparent_1px)]"
         aria-hidden
       />
-      <div className="relative flex min-h-screen">
+      <div className="relative flex min-h-screen overflow-x-hidden">
         {/* Left sidebar - come landing */}
         <aside
-          className={`w-56 flex-shrink-0 border-r backdrop-blur py-6 ${
+          className={`hidden lg:block w-56 flex-shrink-0 border-r backdrop-blur py-6 ${
             isDark ? "border-indigo-500/20 bg-indigo-950/70" : "border-slate-200 bg-white/80"
           }`}
         >
@@ -199,7 +209,7 @@ export default function EsploraAppPage() {
                 key={item.href + item.label}
                 href={item.href}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                  item.href === "/esplora-app"
+                  isItemActive(item.href)
                     ? "bg-indigo-500/90 text-white"
                     : isDark
                       ? "text-slate-300 hover:bg-indigo-500/20 hover:text-white"
@@ -216,7 +226,7 @@ export default function EsploraAppPage() {
         <div className="flex-1 flex flex-col min-w-0">
           {/* Top header - come landing */}
           <div
-            className={`flex items-center justify-between px-6 py-4 border-b flex-shrink-0 ${
+            className={`flex items-center justify-between px-3 sm:px-6 py-4 border-b flex-shrink-0 ${
               isDark ? "border-indigo-500/20 bg-indigo-950/50" : "border-slate-200 bg-white/70"
             }`}
           >
@@ -237,10 +247,32 @@ export default function EsploraAppPage() {
                 BETA
               </span>
             </Link>
+            <div className="hidden lg:block flex-1 max-w-xl mx-6">
+              <SearchBar />
+            </div>
             <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setMobileMenuOpen((v) => !v)}
+                className={`lg:hidden p-2 rounded-lg border transition-colors ${
+                  isDark
+                    ? "border-white/20 bg-white/5 hover:bg-white/10 text-white"
+                    : "border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-700"
+                }`}
+                aria-label="Apri menu"
+                aria-expanded={mobileMenuOpen}
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                  {mobileMenuOpen ? (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  ) : (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  )}
+                </svg>
+              </button>
               <Link
                 href="/admin/dashboard"
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium border transition-colors ${
+                className={`hidden sm:flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium border transition-colors ${
                   isDark ? "border-white/20 bg-white/5 hover:bg-white/10 text-white" : "border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-700"
                 }`}
               >
@@ -267,8 +299,12 @@ export default function EsploraAppPage() {
               </button>
               <Link
                 href="/profilo"
-                className={`p-2 rounded-lg border transition-colors ${
-                  isDark ? "border-white/20 bg-white/5 hover:bg-white/10 text-white" : "border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-700"
+                className={`hidden sm:flex p-2 rounded-lg border transition-colors ${
+                  isProfilePath
+                    ? "border-indigo-400/70 bg-indigo-500/20 text-indigo-100"
+                    : isDark
+                      ? "border-white/20 bg-white/5 hover:bg-white/10 text-white"
+                      : "border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-700"
                 }`}
                 title="Profilo"
                 aria-label="Profilo"
@@ -280,6 +316,43 @@ export default function EsploraAppPage() {
               <UnifiedAuthControls />
             </div>
           </div>
+          {mobileMenuOpen && (
+            <>
+              <button
+                type="button"
+                className="fixed inset-0 z-40 bg-black/40 lg:hidden"
+                aria-label="Chiudi menu"
+                onClick={() => setMobileMenuOpen(false)}
+              />
+              <aside className={`fixed top-0 right-0 z-50 h-full w-64 max-w-[85vw] shadow-xl lg:hidden flex flex-col ${isDark ? "bg-indigo-950 border-l border-indigo-500/20" : "bg-white border-l border-slate-200"}`}>
+                <div className={`flex items-center justify-between p-4 border-b ${isDark ? "border-indigo-500/20" : "border-slate-200"}`}>
+                  <span className={`font-semibold ${isDark ? "text-white" : "text-slate-900"}`}>Menu</span>
+                  <button type="button" onClick={() => setMobileMenuOpen(false)} className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-white/10" aria-label="Chiudi">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                  </button>
+                </div>
+                <nav className="p-3 overflow-y-auto flex-1 space-y-0.5">
+                  {SIDEBAR_ITEMS.map((item) => (
+                    <Link
+                      key={item.href + item.label}
+                      href={item.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                        isItemActive(item.href)
+                          ? "bg-indigo-600/90 text-white"
+                          : isDark
+                            ? "text-slate-300 hover:bg-white/10 hover:text-white"
+                            : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                      }`}
+                    >
+                      <span className="text-lg">{item.icon}</span>
+                      {item.label}
+                    </Link>
+                  ))}
+                </nav>
+              </aside>
+            </>
+          )}
 
           {/* Main content */}
           <div className="flex-1 px-6 py-8 overflow-auto">
