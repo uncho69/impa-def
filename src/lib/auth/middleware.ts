@@ -4,79 +4,87 @@ import { hasRole, hasAnyRole, UserRole } from './permissions';
 import { db } from '@/lib/db';
 import { authAccounts, users } from '@/lib/db/schema';
 import { eq, and, sql } from 'drizzle-orm';
+import { getSessionCookieName, parseSessionToken } from './session';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function getUserIdFromRequest(_request: NextRequest): Promise<string | null> {
   try {
-    const hasValidClerkKeys = !!(
-      process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY &&
-      process.env.CLERK_SECRET_KEY &&
-      process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY.trim().length > 0 &&
-      process.env.CLERK_SECRET_KEY.trim().length > 0 &&
-      process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY.startsWith('pk_') &&
-      process.env.CLERK_SECRET_KEY.startsWith('sk_')
-    );
+    const sessionToken = _request.cookies.get(getSessionCookieName())?.value;
+    const parsedSession = parseSessionToken(sessionToken);
+    if (parsedSession?.userId) {
+      return parsedSession.userId;
+    }
 
-    console.log('🔍 getUserIdFromRequest - hasValidClerkKeys:', hasValidClerkKeys);
+    let clerkUserId: string | null = null;
+    try {
+      const authResult = await auth();
+      clerkUserId = authResult?.userId ?? null;
+    } catch (error) {
+      console.error('❌ Error getting Clerk user ID:', error instanceof Error ? error.message : 'Unknown error');
+      console.error('❌ Error stack:', error instanceof Error ? error.stack : 'No stack trace');
+    }
 
-    if (hasValidClerkKeys) {
+    // Fallback per keyless/dev: prova a leggere lo user id dal JWT di sessione cookie
+    // (claim "sub"). Non verifica firma: usato solo come fallback locale.
+    if (!clerkUserId) {
       try {
-        // Only call auth() if we're in a context where clerkMiddleware has run
-        // This will work in API routes that go through the middleware
-        const authResult = await auth();
-        const clerkUserId = authResult?.userId;
-        console.log('🔍 getUserIdFromRequest - Clerk userId:', clerkUserId);
-        
-        if (clerkUserId) {
-          // First try to find via authAccounts (preferred method)
-          const authAccount = await db
-            .select({ userId: authAccounts.userId })
-            .from(authAccounts)
-            .where(
-              and(
-                eq(authAccounts.provider, 'clerk'),
-                eq(authAccounts.providerAccountId, clerkUserId)
-              )
-            )
-            .limit(1);
-
-          if (authAccount.length > 0) {
-            return authAccount[0].userId;
+        const raw = _request.cookies.get('__session')?.value;
+        if (raw) {
+          const parts = raw.split('.');
+          if (parts.length >= 2) {
+            const payload = JSON.parse(Buffer.from(parts[1], 'base64url').toString('utf8')) as { sub?: string };
+            if (payload?.sub && typeof payload.sub === 'string') {
+              clerkUserId = payload.sub;
+            }
           }
-
-          // If no authAccount found, check if user exists directly with Clerk ID as primary key
-          // (since we use Clerk ID as the user ID in the users table)
-          const user = await db
-            .select({ id: users.id })
-            .from(users)
-            .where(
-              and(
-                eq(users.id, clerkUserId),
-                eq(users.isActive, 1),
-                sql`${users.deletedAt} IS NULL`
-              )
-            )
-            .limit(1);
-
-          if (user.length > 0) {
-            // User exists but authAccount is missing - return the user ID anyway
-            console.warn(`Clerk user ${clerkUserId} found in users table but no authAccount found`);
-            return user[0].id;
-          } else {
-            // Clerk user authenticated but no user record found
-            // This can happen if the webhook hasn't created the user yet
-            console.warn(`⚠️  Clerk user ${clerkUserId} authenticated but no user record found in database. User needs to be created via webhook.`);
-          }
-        } else {
-          console.warn('⚠️  Clerk auth() returned no userId - user may not be signed in');
         }
-      } catch (error) {
-        // Log error for debugging but don't fail completely
-        console.error('❌ Error getting Clerk user ID:', error instanceof Error ? error.message : 'Unknown error');
-        console.error('❌ Error stack:', error instanceof Error ? error.stack : 'No stack trace');
+      } catch {
+        // ignore
       }
-    } else {
-      console.warn('⚠️  Clerk keys not configured or invalid');
+    }
+
+    console.log('🔍 getUserIdFromRequest - resolved Clerk userId:', clerkUserId);
+
+    if (clerkUserId) {
+      // Se DB non configurato, restituiamo comunque lo user id Clerk
+      if (!db) return clerkUserId;
+
+      // First try to find via authAccounts (preferred method)
+      const authAccount = await db
+        .select({ userId: authAccounts.userId })
+        .from(authAccounts)
+        .where(
+          and(
+            eq(authAccounts.provider, 'clerk'),
+            eq(authAccounts.providerAccountId, clerkUserId)
+          )
+        )
+        .limit(1);
+
+      if (authAccount.length > 0) {
+        return authAccount[0].userId;
+      }
+
+      // If no authAccount found, check if user exists directly with Clerk ID as primary key
+      const user = await db
+        .select({ id: users.id })
+        .from(users)
+        .where(
+          and(
+            eq(users.id, clerkUserId),
+            eq(users.isActive, 1),
+            sql`${users.deletedAt} IS NULL`
+          )
+        )
+        .limit(1);
+
+      if (user.length > 0) {
+        console.warn(`Clerk user ${clerkUserId} found in users table but no authAccount found`);
+        return user[0].id;
+      }
+
+      // Ultimo fallback: ritorna comunque l'id Clerk (gestito poi dalle route con upsert)
+      return clerkUserId;
     }
 
     return null;

@@ -105,7 +105,7 @@ export default function GlobalLeaderboardPage() {
   const showComingSoon = hasCampaigns === false;
 
   return (
-    <div className="w-full">
+    <div className="w-full relative z-10">
       <div className="flex justify-end mb-6">
         <BackToHome />
       </div>
@@ -114,7 +114,7 @@ export default function GlobalLeaderboardPage() {
         <h1 className="text-4xl lg:text-5xl font-bold gradient-text mb-6 py-2">
           {t('leaderboards.globalTitle')}
         </h1>
-        <p className="text-xl text-neutral-600 max-w-3xl mx-auto">
+        <p className="text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">
           {t('leaderboards.globalDescription')}
         </p>
       </div>
@@ -123,13 +123,13 @@ export default function GlobalLeaderboardPage() {
         <div className="flex justify-center py-16">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto mb-4" />
-            <p className="text-neutral-600">{t('common.loading')}</p>
+            <p className="text-slate-600 dark:text-slate-400">{t('common.loading')}</p>
           </div>
         </div>
       )}
 
       {showComingSoon && (
-        <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 p-8">
+        <div className="bg-white dark:bg-indigo-900/25 rounded-2xl border border-slate-200 dark:border-indigo-500/20 p-8">
           <div className="text-center py-16">
             <p className="text-2xl font-semibold gradient-text">
               {t('leaderboards.comingSoon')}
@@ -139,12 +139,12 @@ export default function GlobalLeaderboardPage() {
       )}
 
       {showError && (
-        <div className="bg-red-50 border border-red-200 rounded-2xl p-8 text-center">
+        <div className="bg-red-50/80 dark:bg-red-900/20 border border-red-200 dark:border-red-500/30 rounded-2xl p-8 text-center">
           <h2 className="text-2xl font-bold gradient-text mb-4">{t('leaderboards.error')}</h2>
-          <p className="text-neutral-600 mb-6">{error}</p>
+          <p className="text-slate-700 dark:text-slate-300 mb-6">{error}</p>
           <button
             onClick={fetchLeaderboard}
-            className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition-colors"
+            className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-500 transition-colors"
           >
             {t('common.retry')}
           </button>
@@ -154,37 +154,37 @@ export default function GlobalLeaderboardPage() {
       {showTable && data && (
           <>
             {/* Leaderboard Table */}
-            <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden mb-8">
+            <div className="bg-white dark:bg-indigo-900/25 rounded-2xl border border-slate-200 dark:border-indigo-500/20 overflow-hidden mb-8">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-primary-50">
+                  <thead className="bg-indigo-50 dark:bg-indigo-900/40">
                     <tr>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">{t('leaderboards.rank')}</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">{t('leaderboards.user')}</th>
-                      <th className="px-6 py-4 text-right text-sm font-semibold text-neutral-700">{t('leaderboards.points')}</th>
-                      <th className="px-6 py-4 text-right text-sm font-semibold text-neutral-700 hidden md:table-cell">{t('leaderboards.likes')}</th>
-                      <th className="px-6 py-4 text-right text-sm font-semibold text-neutral-700 hidden lg:table-cell">{t('leaderboards.replies')}</th>
-                      <th className="px-6 py-4 text-right text-sm font-semibold text-neutral-700 hidden lg:table-cell">{t('leaderboards.retweets')}</th>
-                      <th className="px-6 py-4 text-right text-sm font-semibold text-neutral-700 hidden xl:table-cell">{t('leaderboards.quotes')}</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700 dark:text-slate-200">{t('leaderboards.rank')}</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700 dark:text-slate-200">{t('leaderboards.user')}</th>
+                      <th className="px-6 py-4 text-right text-sm font-semibold text-slate-700 dark:text-slate-200">{t('leaderboards.points')}</th>
+                      <th className="px-6 py-4 text-right text-sm font-semibold text-slate-700 dark:text-slate-200 hidden md:table-cell">{t('leaderboards.likes')}</th>
+                      <th className="px-6 py-4 text-right text-sm font-semibold text-slate-700 dark:text-slate-200 hidden lg:table-cell">{t('leaderboards.replies')}</th>
+                      <th className="px-6 py-4 text-right text-sm font-semibold text-slate-700 dark:text-slate-200 hidden lg:table-cell">{t('leaderboards.retweets')}</th>
+                      <th className="px-6 py-4 text-right text-sm font-semibold text-slate-700 dark:text-slate-200 hidden xl:table-cell">{t('leaderboards.quotes')}</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-neutral-200">
+                  <tbody className="divide-y divide-slate-200 dark:divide-indigo-500/20">
                     {data.leaderboard.length === 0 ? (
                       <tr>
-                        <td colSpan={7} className="px-6 py-12 text-center text-neutral-500">
+                        <td colSpan={7} className="px-6 py-12 text-center text-slate-500 dark:text-slate-400">
                           {t('leaderboards.noData')}
                         </td>
                       </tr>
                     ) : (
                       data.leaderboard.map((entry) => (
-                        <tr key={entry.userId} className="hover:bg-primary-50/50 transition-colors">
+                        <tr key={entry.userId} className="hover:bg-indigo-50/60 dark:hover:bg-white/5 transition-colors">
                           <td className="px-6 py-4">
                             <div className="flex items-center">
                               <span className={`text-lg font-bold ${
                                 entry.rank === 1 ? 'text-yellow-500' :
                                 entry.rank === 2 ? 'text-gray-400' :
                                 entry.rank === 3 ? 'text-amber-600' :
-                                'text-neutral-600'
+                                'text-slate-600 dark:text-slate-300'
                               }`}>
                                 #{entry.rank}
                               </span>
@@ -197,30 +197,30 @@ export default function GlobalLeaderboardPage() {
                           </td>
                           <td className="px-6 py-4">
                             <div className="flex flex-col">
-                              <span className="font-semibold text-neutral-900">{getDisplayName(entry)}</span>
+                              <span className="font-semibold text-slate-900 dark:text-white">{getDisplayName(entry)}</span>
                               {entry.walletAddress && (
-                                <span className="text-xs text-neutral-500 font-mono">
+                                <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">
                                   {entry.walletAddress.slice(0, 6)}...{entry.walletAddress.slice(-4)}
                                 </span>
                               )}
                             </div>
                           </td>
                           <td className="px-6 py-4 text-right">
-                            <span className="font-bold text-primary-600 text-lg">
+                            <span className="font-bold text-indigo-600 dark:text-indigo-300 text-lg">
                               {formatNumber(entry.totalPoints)}
                             </span>
                           </td>
                           <td className="px-6 py-4 text-right hidden md:table-cell">
-                            <span className="text-neutral-600">{formatNumber(entry.totalLikes)}</span>
+                            <span className="text-slate-600 dark:text-slate-300">{formatNumber(entry.totalLikes)}</span>
                           </td>
                           <td className="px-6 py-4 text-right hidden lg:table-cell">
-                            <span className="text-neutral-600">{formatNumber(entry.totalReplies)}</span>
+                            <span className="text-slate-600 dark:text-slate-300">{formatNumber(entry.totalReplies)}</span>
                           </td>
                           <td className="px-6 py-4 text-right hidden lg:table-cell">
-                            <span className="text-neutral-600">{formatNumber(entry.totalRetweets)}</span>
+                            <span className="text-slate-600 dark:text-slate-300">{formatNumber(entry.totalRetweets)}</span>
                           </td>
                           <td className="px-6 py-4 text-right hidden xl:table-cell">
-                            <span className="text-neutral-600">{formatNumber(entry.totalQuotes)}</span>
+                            <span className="text-slate-600 dark:text-slate-300">{formatNumber(entry.totalQuotes)}</span>
                           </td>
                         </tr>
                       ))
@@ -232,22 +232,22 @@ export default function GlobalLeaderboardPage() {
 
             {/* Pagination */}
             {data.pagination.total > 0 && (
-              <div className="flex items-center justify-between bg-white rounded-2xl shadow-lg border border-neutral-200 p-6">
-                <div className="text-sm text-neutral-600">
+              <div className="flex items-center justify-between bg-white dark:bg-indigo-900/25 rounded-2xl border border-slate-200 dark:border-indigo-500/20 p-6">
+                <div className="text-sm text-slate-600 dark:text-slate-300">
                   {t('leaderboards.showing')} {data.pagination.offset + 1} - {Math.min(data.pagination.offset + data.pagination.limit, data.pagination.total)} {t('leaderboards.of')} {formatNumber(data.pagination.total)}
                 </div>
                 <div className="flex gap-2">
                   <button
                     onClick={() => setCurrentPage(prev => Math.max(0, prev - 1))}
                     disabled={currentPage === 0}
-                    className="px-4 py-2 rounded-lg border border-neutral-200 bg-white text-neutral-700 hover:bg-primary-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="px-4 py-2 rounded-lg border border-slate-200 dark:border-indigo-500/30 bg-white dark:bg-indigo-900/30 text-slate-700 dark:text-slate-200 hover:bg-indigo-50 dark:hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     {t('common.previous')}
                   </button>
                   <button
                     onClick={() => setCurrentPage(prev => prev + 1)}
                     disabled={!data.pagination.hasMore}
-                    className="px-4 py-2 rounded-lg border border-neutral-200 bg-white text-neutral-700 hover:bg-primary-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="px-4 py-2 rounded-lg border border-slate-200 dark:border-indigo-500/30 bg-white dark:bg-indigo-900/30 text-slate-700 dark:text-slate-200 hover:bg-indigo-50 dark:hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     {t('common.next')}
                   </button>

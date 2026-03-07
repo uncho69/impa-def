@@ -132,7 +132,7 @@ export function SearchBar() {
           ref={inputRef}
           type="text"
           placeholder={isIndexing ? "Indicizzazione in corso…" : "Cerca in tutto il sito"}
-          className="w-64 px-4 py-2 pl-10 pr-4 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+          className="w-full min-w-0 max-w-64 px-4 py-2 pl-10 pr-4 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-indigo-900/40 dark:border-indigo-500/30 dark:text-white dark:placeholder-slate-400"
           value={query}
           onFocus={ensureIndex}
           onChange={(e) => setQuery(e.target.value)}
@@ -291,7 +291,7 @@ function getStaticIndex(): IndexedPage[] {
       content: "airdrops token gratuiti farming points rewards eligibility criteria snapshot claim distribution protocol rewards"
     },
     {
-      url: "/airdrops/hyperliquid",
+      url: "/defi/hyperliquid",
       title: "Hyperliquid Airdrop",
       content: "hyperliquid airdrop HYPE token farming trading volume points rewards eligibility"
     },

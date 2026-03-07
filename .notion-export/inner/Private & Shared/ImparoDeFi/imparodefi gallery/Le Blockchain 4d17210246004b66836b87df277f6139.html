@@ -1,0 +1,713 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Le Blockchain</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="4d172102-4600-4b66-836b-87df277f6139" class="page sans"><header><div class="page-header-icon undefined"><img class="icon" src="Le%20Blockchain/Screenshot_2024-05-30_at_14.09.05.png"/></div><h1 class="page-title" dir="auto">Le Blockchain</h1><p class="page-description" dir="auto"></p><table class="properties"><tbody></tbody></table></header><div class="page-body"><div style="display:contents" dir="auto"><p id="7706d292-2fb3-45f7-8e39-ffa12e36ae4b" class="">— Video Intro —</p></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Introduzione alle Blockchain</summary><div class="indented"><div style="display:contents" dir="auto"><p id="01b9a228-d77d-4090-a2ad-4a58728087b2" class="">La <strong>blockchain</strong> è una tecnologia rivoluzionaria che sta trasformando il modo in cui memorizziamo e trasferiamo dati in internet. Originariamente sviluppata per supportare Bitcoin, la prima criptovaluta, oggi le blockchain hanno applicazioni ben oltre le valute digitali. </p></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Cos’è una Blockchain?</summary><div class="indented"><div style="display:contents" dir="auto"><p id="33db93b2-37ea-42f8-ad75-ea6a4400f61c" class="">La blockchain è un registro digitale distribuito e decentralizzato. Invece di essere conservata in un&#x27;unica posizione, una copia del registro è mantenuta su numerosi computer (noti come nodi) in tutto il mondo. Questo rende la blockchain estremamente sicura e resistente alla manipolazione.</p></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Come funziona?</summary><div class="indented"><div style="display:contents" dir="auto"><ol type="1" id="fa73e55d-17c8-4b04-a8a2-51b03732795b" class="numbered-list" start="1"><li><strong>Blocchi di Dati</strong>: Le informazioni sono memorizzate in blocchi. Ogni blocco contiene un gruppo di transazioni.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="0817faea-8b3b-402b-a112-2bb28dd46071" class="numbered-list" start="2"><li><strong>Catena di Blocchi</strong>: Ogni blocco è collegato al blocco precedente tramite un &quot;hash&quot; crittografico, formando una catena continua.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="71298b0e-8d76-4adb-a5b3-143332070afa" class="numbered-list" start="3"><li><strong>Decentralizzazione</strong>: Non c&#x27;è un&#x27;autorità centrale; la rete è mantenuta dai nodi che verificano e approvano le transazioni attraverso un processo chiamato consenso.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="f8cb81c0-230a-4dc6-b38d-f3287845e4cb" class="numbered-list" start="4"><li><strong>Trasparenza e Immutabilità</strong>: Una volta che un blocco è aggiunto alla catena, le informazioni in esso contenute non possono essere modificate. Tutte le transazioni sono visibili pubblicamente e verificabili.</li></ol></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Che vantaggi offre?</summary><div class="indented"><div style="display:contents" dir="auto"><ul id="8ac842a8-6d1f-42a8-98a9-d8c5ed2f1e2b" class="bulleted-list"><li style="list-style-type:disc"><strong>Sicurezza</strong>: La decentralizzazione e la crittografia rendono le blockchain altamente sicure.</li></ul></div><div style="display:contents" dir="auto"><ul id="7ecc9cc5-1493-4571-8f94-1736c328be4f" class="bulleted-list"><li style="list-style-type:disc"><strong>Trasparenza</strong>: Tutte le transazioni sono registrate in modo pubblico e immutabile.</li></ul></div><div style="display:contents" dir="auto"><ul id="74488d80-f1f9-4993-9ac2-d63f05618b87" class="bulleted-list"><li style="list-style-type:disc"><strong>Efficienza</strong>: Le transazioni possono essere processate più velocemente e a costi ridotti rispetto ai sistemi tradizionali.</li></ul></div><div style="display:contents" dir="auto"><ul id="d2bda835-077d-498e-9f2d-005aa6389cf5" class="bulleted-list"><li style="list-style-type:disc"><strong>Affidabilità</strong>: La mancanza di un punto centrale di controllo elimina il rischio di fallimento del sistema.</li></ul></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Applicazioni e casi d’uso</summary><div class="indented"><div style="display:contents" dir="auto"><p id="7993ba17-fb6b-443a-b666-72f63b7b56ab" class="">Oltre alle criptovalute, la blockchain ha numerose applicazioni in vari settori:</p></div><div style="display:contents" dir="auto"><ul id="cab55c6d-aec2-43a9-882e-3cb1363e38c2" class="bulleted-list"><li style="list-style-type:disc"><strong>Finanza</strong>: Pagamenti internazionali, smart contracts.</li></ul></div><div style="display:contents" dir="auto"><ul id="747c9674-992a-4434-a5d6-fa5a34e36b42" class="bulleted-list"><li style="list-style-type:disc"><strong>Supply Chain</strong>: Tracciabilità dei prodotti dall&#x27;origine al consumatore.</li></ul></div><div style="display:contents" dir="auto"><ul id="9897029a-18e8-48aa-86f1-ea25f2626b49" class="bulleted-list"><li style="list-style-type:disc"><strong>Sanità</strong>: Sicurezza e privacy dei dati sanitari.</li></ul></div><div style="display:contents" dir="auto"><ul id="6e9fc6c2-e6af-4fee-b457-da1ef8aa7673" class="bulleted-list"><li style="list-style-type:disc"><strong>Governo</strong>: Voto elettronico sicuro e trasparente.</li></ul></div><div style="display:contents" dir="auto"><ul id="509aa0d3-c204-4773-b872-3c34b06645bf" class="bulleted-list"><li style="list-style-type:disc"><strong>Tokenizzazione</strong>: Qualsiasi bene che viene tokenizzato sblocca una superiore efficienza del capitale</li></ul></div><div style="display:contents" dir="auto"><ul id="5aaa9f0d-0ef5-4f77-9c34-3727c283830d" class="bulleted-list"><li style="list-style-type:disc"><strong>NFT</strong>: arte, biglietti per eventi, chiavi e molto altro possono essere rappresentati come token non fungibili (NFT)</li></ul></div></div></details></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Cosa sono le Layer2 (L2)</summary><div class="indented"><div style="display:contents" dir="auto"><p id="ca148ca9-313c-4ebf-9ad0-f0965cb814a2" class=""><strong>Layer 2</strong> è un termine che si riferisce a soluzioni di scalabilità costruite sopra una blockchain Layer 1 come Ethereum. Queste soluzioni mirano a migliorare l&#x27;efficienza della rete riducendo le commissioni di transazione e aumentando la velocità, senza compromettere la sicurezza e la decentralizzazione della blockchain principale. Ecco una panoramica delle principali soluzioni di scalabilità di Layer 2:</p></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Optimistic Rollups</summary><div class="indented"><div style="display:contents" dir="auto"><p id="b15d2327-aaac-4b7d-b46e-68d0b5d8fa0c" class=""><strong>Optimistic Rollups</strong> sono una tecnologia di scalabilità che consente di eseguire transazioni off-chain e registrarle periodicamente sulla chain principale (Layer 1). Ecco come funzionano:</p></div><div style="display:contents" dir="auto"><ol type="1" id="9cdabd69-7208-4402-9f4a-4690158c6a45" class="numbered-list" start="1"><li><strong>Transazioni Off-Chain</strong>:<div style="display:contents" dir="auto"><ul id="ee4398f0-78de-4ed6-ae5b-c6015cfac980" class="bulleted-list"><li style="list-style-type:disc">Le transazioni sono elaborate off-chain in un ambiente Layer 2, riducendo la congestione sulla chain principale e abbassando le commissioni di gas.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="73f8d2c2-d4a0-42a2-929b-3b515793b39a" class="numbered-list" start="2"><li><strong>Validazione e Sfida</strong>:<div style="display:contents" dir="auto"><ul id="0cb4d664-bf87-4969-81d7-73af923905a9" class="bulleted-list"><li style="list-style-type:disc">Le transazioni eseguite su un Optimistic Rollup sono considerate valide per impostazione predefinita (&quot;optimistic&quot;). I validatori inviano i risultati delle transazioni al Layer 1, dove altri partecipanti possono sfidare i risultati entro un certo periodo di tempo. Se viene trovata una frode, viene applicata una penalità.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="ce050ba4-8f66-48bb-accb-4b46d8a92f3e" class="numbered-list" start="3"><li><strong>Benefici</strong>:<div style="display:contents" dir="auto"><ul id="899cbb51-96b2-4050-9a71-6701e98e454e" class="bulleted-list"><li style="list-style-type:disc">Elevata scalabilità con migliaia di transazioni al secondo (TPS).</li></ul></div><div style="display:contents" dir="auto"><ul id="be0f2777-3f86-472f-aa72-61dae8650051" class="bulleted-list"><li style="list-style-type:disc">Costi di transazione significativamente ridotti.</li></ul></div><div style="display:contents" dir="auto"><ul id="c3efcb6c-525f-4a23-97e8-7e6c4086bc9b" class="bulleted-list"><li style="list-style-type:disc">Sicurezza mantenuta dalla chain principale.</li></ul></div></li></ol></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong>ZK-Rollups (Zero-Knowledge Rollups)</strong></summary><div class="indented"><div style="display:contents" dir="auto"><ul id="15aafb85-b101-4a80-874f-93d7eaf72b64" class="bulleted-list"><li style="list-style-type:disc">Simili agli Optimistic Rollups, i ZK-Rollups eseguono transazioni off-chain, ma utilizzano prove crittografiche (Zero-Knowledge Proofs) per garantire che le transazioni siano valide.</li></ul></div><div style="display:contents" dir="auto"><ul id="ac718c19-9972-46c1-928b-1338ba525d73" class="bulleted-list"><li style="list-style-type:disc">Offrono vantaggi in termini di sicurezza e efficienza poiché le transazioni vengono verificate in batch con una singola prova di validità.</li></ul></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong>State Channels</strong></summary><div class="indented"><div style="display:contents" dir="auto"><ul id="f8fa2125-8787-4701-81ac-cd10eef8f970" class="bulleted-list"><li style="list-style-type:disc">Permettono a due o più partecipanti di creare un canale privato per eseguire un numero illimitato di transazioni off-chain.</li></ul></div><div style="display:contents" dir="auto"><ul id="8d34bb05-887b-4376-8eb8-1451a3ff96ba" class="bulleted-list"><li style="list-style-type:disc">Solo il saldo finale viene registrato sulla chain principale, riducendo il carico di lavoro e i costi di gas.</li></ul></div><div style="display:contents" dir="auto"><ul id="2d69ffa2-1873-4129-a8cb-c16667372df0" class="bulleted-list"><li style="list-style-type:disc">Esempi: Lightning Network (per Bitcoin), Raiden Network (per Ethereum).</li></ul></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong>Plasma</strong></summary><div class="indented"><div style="display:contents" dir="auto"><ul id="31d4b58e-33ca-4fd2-9d53-55ada0b02da3" class="bulleted-list"><li style="list-style-type:disc">Consiste in una serie di child chains (sotto-reti) che operano indipendentemente dalla chain principale.</li></ul></div><div style="display:contents" dir="auto"><ul id="8fd1a522-d1fa-4c5d-8cfd-d1746458a81e" class="bulleted-list"><li style="list-style-type:disc">Le transazioni sono processate su queste sotto-reti e periodicamente ancorate alla chain principale.</li></ul></div><div style="display:contents" dir="auto"><ul id="2604d986-235b-4d1e-b54a-56fe2786f4e7" class="bulleted-list"><li style="list-style-type:disc">Plasma è altamente scalabile ma più complesso da implementare rispetto ad altre soluzioni.</li></ul></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong>Sidechains</strong></summary><div class="indented"><div style="display:contents" dir="auto"><ul id="3d0afdc2-5580-4913-bb1c-159f5d06e4bb" class="bulleted-list"><li style="list-style-type:disc">Blockchain indipendenti che funzionano in parallelo alla chain principale.</li></ul></div><div style="display:contents" dir="auto"><ul id="e2086fdb-a43d-4c55-8511-89bfa92e1dca" class="bulleted-list"><li style="list-style-type:disc">Consentono trasferimenti di asset tra la chain principale e la sidechain, migliorando la scalabilità senza sovraccaricare la chain principale.</li></ul></div><div style="display:contents" dir="auto"><ul id="6548385c-5b13-432c-abf1-11b4a0aa4c08" class="bulleted-list"><li style="list-style-type:disc">Esempi: Polygon (precedentemente Matic), xDai.</li></ul></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Confronto e Utilizzo</summary><div class="indented"><div style="display:contents" dir="auto"><ul id="3437ee5b-d6f3-4dd0-9d3b-e6d5a3348bf2" class="bulleted-list"><li style="list-style-type:disc"><strong>Optimistic Rollups</strong>: Utilizzati da piattaforme come Optimism e Arbitrum, sono adatti per applicazioni che richiedono alta scalabilità e transazioni a basso costo.</li></ul></div><div style="display:contents" dir="auto"><ul id="1669afed-f9aa-4bd9-9c04-9fac7953f20e" class="bulleted-list"><li style="list-style-type:disc"><strong>ZK-Rollups</strong>: Adatti per applicazioni che richiedono maggiore sicurezza e privacy, come i DEX (exchange decentralizzati).</li></ul></div><div style="display:contents" dir="auto"><ul id="aeb6baa2-70b2-4138-bea8-0c647667ec2a" class="bulleted-list"><li style="list-style-type:disc"><strong>State Channels e Plasma</strong>: Ideali per microtransazioni e giochi blockchain.</li></ul></div><div style="display:contents" dir="auto"><ul id="6694c224-7179-4600-9349-fac647cf312c" class="bulleted-list"><li style="list-style-type:disc"><strong>Sidechains</strong>: Utilizzati per espandere l&#x27;ecosistema di applicazioni e dApps con esigenze specifiche.</li></ul></div></div></details></div><div style="display:contents" dir="auto"><p id="2a52c362-725d-45d8-982c-5c8811604fe0" class=""><a href="https://l2beat.com/glossary">https://l2beat.com/glossary</a></p></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Lista Blockchain</summary><div class="indented"><div style="display:contents" dir="ltr"><div id="8a6ea099-7542-494f-9685-ed9bb1097f10" class="collection-content"><h4 class="collection-title">imparodefi db ITA</h4><table class="collection-content"><thead><tr><th><span class="icon property-icon"><img src="https://www.notion.so/icons/font_gray.svg" style="width:14px;height:14px;display:block"/></span>Name</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>Tags</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Sito Web</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Profilo Twitter/X</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/calendar_gray.svg" style="width:14px;height:14px;display:block"/></span>Last Updated</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>Blockchain Supportate</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Token/NFT</th></tr></thead><tbody><tr id="8ebdb207-8101-4e03-9047-685b2f3dcaf5"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Bitcoin%208ebdb20781014e039047685b2f3dcaf5.html"><img class="icon" src="../imparodefi%20db%20ITA/Bitcoin/Screenshot_2024-03-21_at_16.33.33.png"/>Bitcoin</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-blue">Criptovaluta</span></td><td class="cell-zl^h"><a href="https://bitcoin.org/bitcoin.pdf" class="url-value">https://bitcoin.org/bitcoin.pdf</a></td><td class="cell-\}jJ"><a href="https://x.com/bitcoin" class="url-value">https://x.com/bitcoin</a></td><td class="cell-Z^fp"><time>@May 29, 2024</time></td><td class="cell-YExk"></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/bitcoin" class="url-value">https://www.coingecko.com/en/coins/bitcoin</a></td></tr><tr id="9d7542b4-423e-410a-a7c9-7779db5a0b3e"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Ethereum%209d7542b4423e410aa7c97779db5a0b3e.html"><img class="icon" src="../imparodefi%20db%20ITA/Ethereum/ethlogo1.png"/>Ethereum</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-blue">Criptovaluta</span></td><td class="cell-zl^h"><a href="https://ethereum.org/it/" class="url-value">https://ethereum.org/it/</a></td><td class="cell-\}jJ"><a href="https://x.com/ethereum" class="url-value">https://x.com/ethereum</a></td><td class="cell-Z^fp"><time>@May 29, 2024</time></td><td class="cell-YExk"></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/ethereum" class="url-value">https://www.coingecko.com/en/coins/ethereum</a></td></tr><tr id="7c668379-ddba-4779-8048-380a2acf62c7"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Solana%207c668379ddba47798048380a2acf62c7.html"><img class="icon" src="../imparodefi%20db%20ITA/Solana/Screenshot_2024-03-21_at_16.34.48.png"/>Solana</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-blue">Criptovaluta</span></td><td class="cell-zl^h"><a href="https://solana.com/" class="url-value">https://solana.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/solana" class="url-value">https://x.com/solana</a></td><td class="cell-Z^fp"><time>@May 29, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-purple">Solana</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/solana" class="url-value">https://www.coingecko.com/en/coins/solana</a></td></tr><tr id="5a55e520-269a-45b7-9883-9447dc3a4de0"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Base%205a55e520269a45b798839447dc3a4de0.html"><img class="icon" src="../imparodefi%20db%20ITA/Base/Screenshot_2024-03-21_at_16.40.58.png"/>Base</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-gray">L2</span></td><td class="cell-zl^h"><a href="https://www.base.org/" class="url-value">https://www.base.org/</a></td><td class="cell-\}jJ"><a href="https://x.com/base" class="url-value">https://x.com/base</a></td><td class="cell-Z^fp"><time>@May 29, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Base</span></td><td class="cell-TaD\"></td></tr><tr id="6d4a669c-2a1f-41aa-9a68-92687b9cb6af"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Arbitrum%206d4a669c2a1f41aa9a6892687b9cb6af.html"><img class="icon" src="../imparodefi%20db%20ITA/Arbitrum/Screenshot_2024-03-21_at_16.44.55.png"/>Arbitrum</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-gray">L2</span></td><td class="cell-zl^h"><a href="https://arbitrum.foundation/" class="url-value">https://arbitrum.foundation/</a></td><td class="cell-\}jJ"><a href="https://x.com/arbitrum" class="url-value">https://x.com/arbitrum</a></td><td class="cell-Z^fp"><time>@May 29, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/arbitrum" class="url-value">https://www.coingecko.com/en/coins/arbitrum</a></td></tr><tr id="2bb8a35d-2f90-8040-a6d9-d79d9682560c"><td class="cell-title"><a href="../imparodefi%20db%20ITA/HyperEVM%202bb8a35d2f908040a6d9d79d9682560c.html"><img class="icon" src="../imparodefi%20db%20ITA/HyperEVM/hyperliquidlogo.png"/>HyperEVM</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span></td><td class="cell-zl^h"><a href="https://hyperfoundation.org/" class="url-value">https://hyperfoundation.org/</a></td><td class="cell-\}jJ"><a href="https://x.com/HyperliquidX" class="url-value">https://x.com/HyperliquidX</a></td><td class="cell-Z^fp"><time>@November 30, 2025</time></td><td class="cell-YExk"></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/hyperliquid" class="url-value">https://www.coingecko.com/en/coins/hyperliquid</a></td></tr><tr id="a8cec6e4-d503-45d2-9484-2b2cfb07f0ad"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Optimism%20a8cec6e4d50345d294842b2cfb07f0ad.html"><img class="icon" src="../imparodefi%20db%20ITA/Optimism/oplogo1.png"/>Optimism</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-gray">L2</span></td><td class="cell-zl^h"><a href="https://www.optimism.io/" class="url-value">https://www.optimism.io/</a></td><td class="cell-\}jJ"><a href="https://twitter.com/Optimism" class="url-value">https://twitter.com/Optimism</a></td><td class="cell-Z^fp"><time>@March 24, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-red">Optimism</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/optimism" class="url-value">https://www.coingecko.com/en/coins/optimism</a></td></tr><tr id="10c8a35d-2f90-80e9-82a6-e0ab3497078a"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Avalanche%2010c8a35d2f9080e982a6e0ab3497078a.html"><img class="icon" src="../imparodefi%20db%20ITA/Avalanche/2Y42289I_400x400.jpg"/>Avalanche</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-gray">L2</span></td><td class="cell-zl^h"><a href="https://www.avax.network/" class="url-value">https://www.avax.network/</a></td><td class="cell-\}jJ"><a href="https://x.com/avax" class="url-value">https://x.com/avax</a></td><td class="cell-Z^fp"><time>@September 10, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-purple">Avalanche</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/avalanche" class="url-value">https://www.coingecko.com/en/coins/avalanche</a></td></tr><tr id="2ff435dc-30aa-4fc8-bfe4-364e9999d1f9"><td class="cell-title"><a href="../imparodefi%20db%20ITA/zkSync%202ff435dc30aa4fc8bfe4364e9999d1f9.html"><img class="icon" src="../imparodefi%20db%20ITA/zkSync/Screenshot_2024-03-21_at_16.43.08.png"/>zkSync</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-gray">L2</span></td><td class="cell-zl^h"><a href="https://zksync.io/" class="url-value">https://zksync.io/</a></td><td class="cell-\}jJ"><a href="https://x.com/zksync" class="url-value">https://x.com/zksync</a></td><td class="cell-Z^fp"><time>@June 18, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-green">zkSync</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/zksync" class="url-value">https://www.coingecko.com/en/coins/zksync</a></td></tr><tr id="5d03f122-e9b2-475a-b8aa-32f98d79f4b2"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Linea%205d03f122e9b2475ab8aa32f98d79f4b2.html"><img class="icon" src="../imparodefi%20db%20ITA/Linea/Screenshot_2024-03-21_at_17.02.19.png"/>Linea</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-gray">L2</span></td><td class="cell-zl^h"><a href="https://linea.build/" class="url-value">https://linea.build/</a></td><td class="cell-\}jJ"><a href="https://x.com/LineaBuild" class="url-value">https://x.com/LineaBuild</a></td><td class="cell-Z^fp"><time>@March 1, 2026</time></td><td class="cell-YExk"></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/linea" class="url-value">https://www.coingecko.com/en/coins/linea</a></td></tr><tr id="5ee97911-019a-4ecd-980e-af7cfbd3b9f3"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Polygon%20zkEVM%205ee97911019a4ecd980eaf7cfbd3b9f3.html"><img class="icon" src="../imparodefi%20db%20ITA/Polygon%20zkEVM/Screenshot_2024-03-21_at_16.43.55.png"/>Polygon zkEVM</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-gray">L2</span></td><td class="cell-zl^h"><a href="https://polygon.technology/" class="url-value">https://polygon.technology/</a></td><td class="cell-\}jJ"><a href="https://x.com/0xpolygondefi" class="url-value">https://x.com/0xpolygondefi</a></td><td class="cell-Z^fp"><time>@May 29, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-brown">Polygon zkEVM</span></td><td class="cell-TaD\"></td></tr><tr id="be2069bb-e554-4425-8aea-d153b25628cc"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Zora%20be2069bbe55444258aead153b25628cc.html"><img class="icon" src="../imparodefi%20db%20ITA/Zora/zora-logo.jpg"/>Zora</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-gray">L2</span><span class="selected-value select-value-color-yellow">Marketplace NFT</span></td><td class="cell-zl^h"><a href="https://zora.co/" class="url-value">https://zora.co/</a></td><td class="cell-\}jJ"><a href="https://x.com/ourZORA" class="url-value">https://x.com/ourZORA</a></td><td class="cell-Z^fp"><time>@March 1, 2026</time></td><td class="cell-YExk"></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/zora" class="url-value">https://www.coingecko.com/en/coins/zora</a></td></tr><tr id="1b97b298-74ed-45ea-a807-e90b69c49344"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Hyperlane%201b97b29874ed45eaa807e90b69c49344.html"><img class="icon" src="../imparodefi%20db%20ITA/Hyperlane/hyperlane-logo.jpg"/>Hyperlane</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-orange">Interoperabilità (Cross-Chain)</span></td><td class="cell-zl^h"><a href="https://www.hyperlane.xyz/" class="url-value">https://www.hyperlane.xyz/</a></td><td class="cell-\}jJ"><a href="https://x.com/hyperlane" class="url-value">https://x.com/hyperlane</a></td><td class="cell-Z^fp"><time>@March 1, 2026</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-purple">Avalanche</span><span class="selected-value select-value-color-orange">BSC</span><span class="selected-value select-value-color-pink">Celestia</span><span class="selected-value select-value-color-default">Ethereum</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/hyperlane" class="url-value">https://www.coingecko.com/en/coins/hyperlane</a></td></tr><tr id="f9db98d5-7c53-42fb-bb03-e1c4a380c0cc"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Layer3%20f9db98d57c5342fbbb03e1c4a380c0cc.html"><img class="icon" src="../imparodefi%20db%20ITA/Layer3/layer3-logo.jpg"/>Layer3</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-purple">Bridge</span><span class="selected-value select-value-color-orange">Interoperabilità (Cross-Chain)</span><span class="selected-value select-value-color-purple">L3</span></td><td class="cell-zl^h"><a href="https://layer3.xyz/" class="url-value">https://layer3.xyz/</a></td><td class="cell-\}jJ"><a href="https://x.com/layer3xyz" class="url-value">https://x.com/layer3xyz</a></td><td class="cell-Z^fp"><time>@June 21, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-purple">Avalanche</span><span class="selected-value select-value-color-orange">BSC</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-green">Blast</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-blue">Gnosis</span><span class="selected-value select-value-color-red">Linea</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span><span class="selected-value select-value-color-brown">Polygon zkEVM</span><span class="selected-value select-value-color-blue">Scroll</span><span class="selected-value select-value-color-green">zkSync</span></td><td class="cell-TaD\"></td></tr><tr id="e9a048d0-7bb8-415e-aed7-061a7a21d6c6"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Scroll%20e9a048d07bb8415eaed7061a7a21d6c6.html"><img class="icon" src="../imparodefi%20db%20ITA/Scroll/scroll-logo.jpg"/>Scroll</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-gray">L2</span></td><td class="cell-zl^h"><a href="https://scroll.io/" class="url-value">https://scroll.io/</a></td><td class="cell-\}jJ"><a href="https://x.com/Scroll_ZKP" class="url-value">https://x.com/Scroll_ZKP</a></td><td class="cell-Z^fp"><time>@March 1, 2026</time></td><td class="cell-YExk"></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/scroll" class="url-value">https://www.coingecko.com/en/coins/scroll</a></td></tr><tr id="4416c708-468e-4dc8-af8d-073ef87c5c2b"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Degen%204416c708468e4dc8af8d073ef87c5c2b.html"><img class="icon" src="../imparodefi%20db%20ITA/Degen/degen-logo.jpg"/>Degen</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-purple">L3</span><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"><a href="degen.tips" class="url-value">degen.tips</a></td><td class="cell-\}jJ"><a href="https://x.com/degentokenbase" class="url-value">https://x.com/degentokenbase</a></td><td class="cell-Z^fp"><time>@March 1, 2026</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-default">Degen</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/degen-base" class="url-value">https://www.coingecko.com/en/coins/degen-base</a></td></tr><tr id="5106c58a-5c33-4c97-82c1-f29eae3cb116"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Berachain%205106c58a5c334c9782c1f29eae3cb116.html"><img class="icon" src="../imparodefi%20db%20ITA/Berachain/berachainlogo1.png"/>Berachain</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-gray">L2</span></td><td class="cell-zl^h"><a href="https://www.berachain.com/" class="url-value">https://www.berachain.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/berachain" class="url-value">https://x.com/berachain</a></td><td class="cell-Z^fp"><time>@March 1, 2026</time></td><td class="cell-YExk"></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/berachain" class="url-value">https://www.coingecko.com/en/coins/berachain</a></td></tr><tr id="8b98e134-2fe1-4bdf-8615-25e3b02ff755"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Blast%208b98e1342fe14bdf861525e3b02ff755.html"><img class="icon" src="../imparodefi%20db%20ITA/Blast/blast-logo.jpg"/>Blast</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-gray">L2</span></td><td class="cell-zl^h"><a href="blast.io" class="url-value">blast.io</a></td><td class="cell-\}jJ"><a href="https://x.com/Blast_L2" class="url-value">https://x.com/Blast_L2</a></td><td class="cell-Z^fp"><time>@June 5, 2024</time></td><td class="cell-YExk"></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/blast" class="url-value">https://www.coingecko.com/en/coins/blast</a></td></tr><tr id="6f569e5a-a86b-42f6-917f-8f7a0cc1fc05"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Polygon%206f569e5aa86b42f6917f8f7a0cc1fc05.html"><img class="icon" src="../imparodefi%20db%20ITA/Polygon/polygon-logo.jpg"/>Polygon</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-gray">L2</span></td><td class="cell-zl^h"><a href="https://polygon.technology/" class="url-value">https://polygon.technology/</a></td><td class="cell-\}jJ"><a href="https://x.com/0xPolygon" class="url-value">https://x.com/0xPolygon</a></td><td class="cell-Z^fp"><time>@June 19, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-pink">Polygon</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/polygon" class="url-value">https://www.coingecko.com/en/coins/polygon</a></td></tr><tr id="24f8a35d-2f90-8004-9aea-c8d0ce1c5a33"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Abstract%2024f8a35d2f9080049aeac8d0ce1c5a33.html"><img class="icon" src="../imparodefi%20db%20ITA/Abstract/abstract_logo.jpg"/>Abstract</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span></td><td class="cell-zl^h"><a href="https://www.abs.xyz/" class="url-value">https://www.abs.xyz/</a></td><td class="cell-\}jJ"><a href="https://x.com/AbstractChain" class="url-value">https://x.com/AbstractChain</a></td><td class="cell-Z^fp"><time>@January 23, 2026</time></td><td class="cell-YExk"></td><td class="cell-TaD\"></td></tr><tr id="2f18a35d-2f90-8037-84a4-ea230898a9e0"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Ink%202f18a35d2f90803784a4ea230898a9e0.html"><img class="icon" src="../imparodefi%20db%20ITA/Ink/ink_logo.jpg"/>Ink</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-gray">L2</span></td><td class="cell-zl^h"><a href="https://inkonchain.com/" class="url-value">https://inkonchain.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/inkonchain" class="url-value">https://x.com/inkonchain</a></td><td class="cell-Z^fp"><time>@March 1, 2026</time></td><td class="cell-YExk"></td><td class="cell-TaD\"></td></tr><tr id="1028a35d-2f90-80b2-b864-dc65bbce4dba"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Sonic%20(rename)%201028a35d2f9080b2b864dc65bbce4dba.html"><img class="icon" src="../imparodefi%20db%20ITA/Sonic%20(rename)/fantom-logo.png"/>Sonic (rename)</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span></td><td class="cell-zl^h"><a href="https://www.soniclabs.com/" class="url-value">https://www.soniclabs.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/FantomFDN" class="url-value">https://x.com/FantomFDN</a></td><td class="cell-Z^fp"><time>@September 15, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-green">Fantom</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/fantom" class="url-value">https://www.coingecko.com/en/coins/fantom</a></td></tr></tbody></table><br/><br/></div></div></div></details></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

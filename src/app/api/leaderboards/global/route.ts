@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
+import { db, hasDatabase } from '@/lib/db';
 import { users, userEpochScores } from '@/lib/db/schema';
 import { eq, desc, sql, and } from 'drizzle-orm';
 
@@ -17,6 +17,21 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const limit = parseInt(searchParams.get('limit') || '50', 10);
     const offset = parseInt(searchParams.get('offset') || '0', 10);
+
+    if (!hasDatabase || !db) {
+      return NextResponse.json(
+        {
+          leaderboard: [],
+          pagination: {
+            limit,
+            offset,
+            total: 0,
+            hasMore: false,
+          },
+        },
+        { status: 200 }
+      );
+    }
 
     // Prima aggreghiamo i punteggi per utente su user_epoch_scores
     const userTotals = db

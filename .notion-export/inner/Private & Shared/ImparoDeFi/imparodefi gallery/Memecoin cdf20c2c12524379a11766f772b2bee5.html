@@ -1,0 +1,713 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Memecoin</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="cdf20c2c-1252-4379-a117-66f772b2bee5" class="page sans"><header><div class="page-header-icon undefined"><img class="icon" src="Memecoin/memecoins-logo.png"/></div><h1 class="page-title" dir="auto">Memecoin</h1><p class="page-description" dir="auto"></p><table class="properties"><tbody></tbody></table></header><div class="page-body"><div style="display:contents" dir="auto"><p id="c9643e74-1ef7-43da-aed0-cebdf3f55745" class="">— Video Intro —</p></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Cosa sono i Memecoin?</summary><div class="indented"><div style="display:contents" dir="auto"><p id="50b734a0-d671-4151-9bea-27b0f27ec9a7" class="">I memecoin sono un tipo di criptovaluta che nasce come scherzo o meme su internet, ma che può guadagnare valore e popolarità grazie alla comunità che li supporta. A differenza delle criptovalute come Bitcoin o Ethereum, che sono progettate per avere utilità specifiche o innovazioni tecniche, i memecoin sono spesso creati senza uno scopo particolare oltre a essere divertenti o virali.</p></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong>Caratteristiche Principali</strong></summary><div class="indented"><div style="display:contents" dir="auto"><ol type="1" id="81e39eff-a60d-4d11-9b21-a7e1d335a53d" class="numbered-list" start="1"><li><strong>Origine e Tematica</strong>: I memecoin sono generalmente basati su meme di internet o personaggi di cultura popolare. Un esempio famoso è Dogecoin, che è nato come parodia del boom delle criptovalute e si basa su un meme di un cane Shiba Inu.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="a9e11f8f-032d-462d-a368-7ecb618ead49" class="numbered-list" start="2"><li><strong>Comunità</strong>: La forza dei memecoin risiede spesso nella loro comunità. Gli utenti e gli investitori di memecoin tendono ad essere molto attivi sui social media, creando un forte senso di comunità e partecipazione.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="85a64b79-9a9b-4933-b073-05119d042999" class="numbered-list" start="3"><li><strong>Volatilità</strong>: I memecoin tendono ad essere estremamente volatili. Il loro valore può aumentare rapidamente grazie a campagne virali o endorsement da parte di figure pubbliche, ma può anche diminuire altrettanto velocemente.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="9f95e1f6-e333-4302-b02a-a863941c8263" class="numbered-list" start="4"><li><strong>Speculazione</strong>: Molti investitori acquistano memecoin con l&#x27;aspettativa di rapidi guadagni, spesso motivati da hype piuttosto che da fondamentali tecnici o economici.</li></ol></div></div></details></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Lista Memecoin</summary><div class="indented"><div style="display:contents" dir="ltr"><div id="6091751a-86fe-4477-b1ad-43087841f2f9" class="collection-content"><h4 class="collection-title">imparodefi db ITA</h4><table class="collection-content"><thead><tr><th><span class="icon property-icon"><img src="https://www.notion.so/icons/font_gray.svg" style="width:14px;height:14px;display:block"/></span>Name</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>Tags</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Sito Web</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Profilo Twitter/X</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Token/NFT</th></tr></thead><tbody><tr id="e72c654c-97f4-4e20-be38-af4d3c7ed10f"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Apu%20e72c654c97f44e20be38af4d3c7ed10f.html"><img class="icon" src="../imparodefi%20db%20ITA/Apu/apu-logo.jpg"/>Apu</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"><a href="https://apu.com/" class="url-value">https://apu.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/ApusCoin" class="url-value">https://x.com/ApusCoin</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/apu-apustaja" class="url-value">https://www.coingecko.com/en/coins/apu-apustaja</a></td></tr><tr id="2cb86bf8-be80-4aec-8e75-2307cf0e87b0"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Pepe%20(coin)%202cb86bf8be804aec8e752307cf0e87b0.html"><img class="icon" src="../imparodefi%20db%20ITA/Pepe%20(coin)/pepe-logo.jpg"/>Pepe (coin)</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"><a href="https://www.pepe.vip/" class="url-value">https://www.pepe.vip/</a></td><td class="cell-\}jJ"><a href="https://x.com/pepecoineth" class="url-value">https://x.com/pepecoineth</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/pepe" class="url-value">https://www.coingecko.com/en/coins/pepe</a></td></tr><tr id="dcce004d-4301-4c14-9386-b16cb5b34d6e"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Dogwifhat%20(WIF)%20dcce004d43014c149386b16cb5b34d6e.html"><img class="icon" src="../imparodefi%20db%20ITA/Dogwifhat%20(WIF)/wif-logo.jpg"/>Dogwifhat (WIF)</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"><a href="Dogwifcoin.org" class="url-value">Dogwifcoin.org</a></td><td class="cell-\}jJ"><a href="https://x.com/dogwifcoin" class="url-value">https://x.com/dogwifcoin</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/dogwifhat" class="url-value">https://www.coingecko.com/en/coins/dogwifhat</a></td></tr><tr id="2d061b00-49f5-47ee-893c-3976d84f4d9a"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Dogecoin%202d061b0049f547ee893c3976d84f4d9a.html"><img class="icon" src="../imparodefi%20db%20ITA/Dogecoin/dogecoin-logo.png"/>Dogecoin</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"><a href="https://dogecoin.com/" class="url-value">https://dogecoin.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/dogecoin" class="url-value">https://x.com/dogecoin</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/dogecoin" class="url-value">https://www.coingecko.com/en/coins/dogecoin</a></td></tr><tr id="10a7cf28-e1c3-4a61-8981-795e9a5542c8"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Shark%20Cat%2010a7cf28e1c34a618981795e9a5542c8.html"><img class="icon" src="../imparodefi%20db%20ITA/Shark%20Cat/sharkcat-logo.jpg"/>Shark Cat</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"><a href="sharkcatsolana.com" class="url-value">sharkcatsolana.com</a></td><td class="cell-\}jJ"><a href="https://x.com/SharkCatSolana" class="url-value">https://x.com/SharkCatSolana</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/shark-cat" class="url-value">https://www.coingecko.com/en/coins/shark-cat</a></td></tr><tr id="1a77918c-c833-42ae-80d8-5ccdf2ad4a1c"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Kenidy%201a77918cc83342ae80d85ccdf2ad4a1c.html"><img class="icon" src="../imparodefi%20db%20ITA/Kenidy/boden-logo.jpg"/>Kenidy</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"><a href="kenidy.io" class="url-value">kenidy.io</a></td><td class="cell-\}jJ"><a href="https://x.com/kenidy_on_sol" class="url-value">https://x.com/kenidy_on_sol</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/ruburt-f-kenidy-jr" class="url-value">https://www.coingecko.com/en/coins/ruburt-f-kenidy-jr</a></td></tr><tr id="25f910d6-0e6d-4ccc-a08c-921758f43c5e"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Boden%2025f910d60e6d4ccca08c921758f43c5e.html"><img class="icon" src="../imparodefi%20db%20ITA/Boden/boden-logo.jpg"/>Boden</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"><a href="boden4pres.com" class="url-value">boden4pres.com</a></td><td class="cell-\}jJ"><a href="https://x.com/boden4pres" class="url-value">https://x.com/boden4pres</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/jeo-boden" class="url-value">https://www.coingecko.com/en/coins/jeo-boden</a></td></tr><tr id="01a46c9e-8aa4-48cc-97d1-8c7c49805a95"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Tremp%2001a46c9e8aa448cc97d18c7c49805a95.html"><img class="icon" src="../imparodefi%20db%20ITA/Tremp/tremp-logo.jpg"/>Tremp</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"><a href="tremp.xyz" class="url-value">tremp.xyz</a></td><td class="cell-\}jJ"><a href="https://x.com/dolandtremp_sol" class="url-value">https://x.com/dolandtremp_sol</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/doland-tremp" class="url-value">https://www.coingecko.com/en/coins/doland-tremp</a></td></tr><tr id="d24645b4-f233-4a33-accf-cc5182378082"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Retardio%20d24645b4f2334a33accfcc5182378082.html"><img class="icon" src="../imparodefi%20db%20ITA/Retardio/retardio-logo.jpg"/>Retardio</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"><a href="https://retardio.xyz/" class="url-value">https://retardio.xyz/</a></td><td class="cell-\}jJ"><a href="https://x.com/retardiosolana" class="url-value">https://x.com/retardiosolana</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/retardio" class="url-value">https://www.coingecko.com/en/coins/retardio</a></td></tr><tr id="4416c708-468e-4dc8-af8d-073ef87c5c2b"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Degen%204416c708468e4dc8af8d073ef87c5c2b.html"><img class="icon" src="../imparodefi%20db%20ITA/Degen/degen-logo.jpg"/>Degen</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-purple">L3</span><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"><a href="degen.tips" class="url-value">degen.tips</a></td><td class="cell-\}jJ"><a href="https://x.com/degentokenbase" class="url-value">https://x.com/degentokenbase</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/degen-base" class="url-value">https://www.coingecko.com/en/coins/degen-base</a></td></tr><tr id="9dac9832-1cd7-4da9-a9a0-fd1d1aa67644"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Floppa%209dac98321cd74da9a9a0fd1d1aa67644.html"><img class="icon" src="../imparodefi%20db%20ITA/Floppa/floppa-logo.jpg"/>Floppa</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"><a href="https://floppa.wtf/" class="url-value">https://floppa.wtf/</a></td><td class="cell-\}jJ"><a href="https://x.com/floppa/" class="url-value">https://x.com/floppa/</a></td><td class="cell-TaD\"><a href="https://dexscreener.com/base/0x6caa62e48a2d9f3a8eacaadca2462ed5dfe0c685" class="url-value">https://dexscreener.com/base/0x6caa62e48a2d9f3a8eacaadca2462ed5dfe0c685</a></td></tr><tr id="ce70e987-f2d8-46e7-be70-b39d9dc360de"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Higher%20ce70e987f2d846e7be70b39d9dc360de.html"><img class="icon" src="../imparodefi%20db%20ITA/Higher/higher-logo.jpg"/>Higher</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"><a href="https://www.aimhigher.net/" class="url-value">https://www.aimhigher.net/</a></td><td class="cell-\}jJ"><a href="https://x.com/higheronchain" class="url-value">https://x.com/higheronchain</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/higher" class="url-value">https://www.coingecko.com/en/coins/higher</a></td></tr><tr id="38c1c36b-ac64-4b37-b2f4-60e0478888c8"><td class="cell-title"><a href="../imparodefi%20db%20ITA/TN100X%20(Ham%20TheLP)%2038c1c36bac644b37b2f460e0478888c8.html"><span class="icon">🍖</span>TN100X (Ham / TheLP)</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-pink">Memecoin</span><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://ham.fun/" class="url-value">https://ham.fun/</a></td><td class="cell-\}jJ"><a href="https://x.com/HamOnWarpcast" class="url-value">https://x.com/HamOnWarpcast</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/tn100x" class="url-value">https://www.coingecko.com/en/coins/tn100x</a></td></tr><tr id="2f58a35d-2f90-8038-a9b4-cd6b4727945b"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Bonk%202f58a35d2f908038a9b4cd6b4727945b.html"><img class="icon" src="../imparodefi%20db%20ITA/Bonk/bonk_logo.jpg"/>Bonk</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/bonk" class="url-value">https://www.coingecko.com/en/coins/bonk</a></td></tr><tr id="2f58a35d-2f90-80d1-9db5-e44ab884f142"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Trump%202f58a35d2f9080d19db5e44ab884f142.html">Trump</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/official-trump" class="url-value">https://www.coingecko.com/en/coins/official-trump</a></td></tr><tr id="2f68a35d-2f90-8012-9e07-d1a8d41996d9"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Pengu%202f68a35d2f9080129e07d1a8d41996d9.html">Pengu</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/pudgy-penguins" class="url-value">https://www.coingecko.com/en/coins/pudgy-penguins</a></td></tr><tr id="2f68a35d-2f90-8070-b30b-c7bc979417a5"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Spx6900%202f68a35d2f908070b30bc7bc979417a5.html">Spx6900</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/spx6900" class="url-value">https://www.coingecko.com/en/coins/spx6900</a></td></tr><tr id="2f68a35d-2f90-807f-b5d1-e2e7834b5816"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Toshi%202f68a35d2f90807fb5d1e2e7834b5816.html">Toshi</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/toshi" class="url-value">https://www.coingecko.com/en/coins/toshi</a></td></tr><tr id="2f68a35d-2f90-80e5-9bec-ca463f64f309"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Mog%202f68a35d2f9080e59becca463f64f309.html">Mog</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/mog-coin" class="url-value">https://www.coingecko.com/en/coins/mog-coin</a></td></tr></tbody></table><br/><br/></div></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Tutorial</summary><div class="indented"><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Tutorial Scritti</summary><div class="indented"><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Comprare e Vendere Memecoin</summary><div class="indented"><div style="display:contents" dir="auto"><p id="b2b1e735-7bab-463b-adfd-3ce59ca7f321" class="">Seleziona la blockchain dove si trova il memecoin da acquistare/vendere👇🏻</p></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Solana</summary><div class="indented"><div style="display:contents" dir="auto"><ol type="1" id="ba293b01-7979-43f5-b755-c4c85bafeb0e" class="numbered-list" start="1"><li>Copiare il contract address del token desiderato (si puo fare tramite Dexscreener o Coingecko)<div style="display:contents" dir="ltr"><figure id="618cac79-afbc-4f57-8b61-e09dc653289c" class="image"><a href="Memecoin/Screenshot_2024-06-06_at_19.53.40.png"><img style="width:569.9921875px" src="Memecoin/Screenshot_2024-06-06_at_19.53.40.png"/></a></figure></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="3145aa20-0519-4899-a46e-3969eee1bd80" class="numbered-list" start="2"><li>Aprire l’exchange decentralizzato che si vuole utilizzare per effettuare lo scambio (in questo esempio useremo Jupiter)</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="035049dd-b40b-4241-8109-5bbcf6e587c0" class="numbered-list" start="3"><li>Cliccare sotto a dove c’è scritto “to receive”<div style="display:contents" dir="ltr"><figure id="052dc297-a6f6-4051-8194-01009f6ba07d" class="image"><a href="Memecoin/Screenshot_2024-06-06_at_19.56.03.png"><img style="width:528px" src="Memecoin/Screenshot_2024-06-06_at_19.56.03.png"/></a></figure></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="4ee5c65a-e317-428c-a78e-a4e15acacd7a" class="numbered-list" start="4"><li>Inserire il contract address del token che si vuole acquistare<div style="display:contents" dir="ltr"><figure id="4d7aade4-fb6e-4b9d-82c0-7c5abf6c6f20" class="image"><a href="Memecoin/Screenshot_2024-06-06_at_19.57.44.png"><img style="width:528px" src="Memecoin/Screenshot_2024-06-06_at_19.57.44.png"/></a></figure></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="1f26df05-7214-4c69-acae-1e919579f35b" class="numbered-list" start="5"><li>Selezionare il token<div style="display:contents" dir="ltr"><figure id="c1f55487-03ac-4337-bd86-6a28925861f1" class="image"><a href="Memecoin/Screenshot_2024-06-06_at_19.59.21.png"><img style="width:568px" src="Memecoin/Screenshot_2024-06-06_at_19.59.21.png"/></a></figure></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="0d64aa92-9535-4e0c-a636-658febd5e31c" class="numbered-list" start="6"><li>Premere “swap”<div style="display:contents" dir="ltr"><figure id="28c1d439-7125-427c-a4c7-de873736cddd" class="image"><a href="Memecoin/Screenshot_2024-06-06_at_20.02.46.png"><img style="width:568px" src="Memecoin/Screenshot_2024-06-06_at_20.02.46.png"/></a></figure></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="7076fad4-fc0f-449e-8b06-579efe690d8f" class="numbered-list" start="7"><li>Confermare la transazione firmando tramite il wallet non-custodial (phantom)<div style="display:contents" dir="ltr"><figure id="ea5c3590-7d3e-40af-b130-01cdf4a9d485" class="image"><a href="Memecoin/Screenshot_2024-06-06_at_20.04.25.png"><img style="width:569.9921875px" src="Memecoin/Screenshot_2024-06-06_at_20.04.25.png"/></a></figure></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Problemi tecnici e come risolverli</summary><div class="indented"><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Transazione Bloccata</summary></details></div></div></details></div></li></ol></div></div></details></div></div></details></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Tutorial Video</summary></details></div></div></details></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

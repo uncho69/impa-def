@@ -74,14 +74,14 @@ export default function NewsPage() {
   ];
 
   return (
-    <div className="bg-gradient-to-br from-blue-50 via-white to-purple-50 min-h-screen">
+    <div className="relative z-10 min-h-screen">
         {/* Header compatto */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-4">
           <div className="text-center mb-8">
-            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4 leading-tight py-2">
+            <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4 leading-tight py-2">
               News Crypto & Web3
             </h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
               Le ultime notizie dal mondo crypto, sempre aggiornate
             </p>
           </div>
@@ -96,22 +96,22 @@ export default function NewsPage() {
                 href={`/news/${category.id}`}
                 className="group"
               >
-                <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:scale-105 overflow-hidden border border-gray-100 h-full">
+                <div className="bg-white dark:bg-indigo-900/25 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:scale-105 overflow-hidden border border-slate-200 dark:border-indigo-500/20 h-full">
                   <div className={`h-2 bg-gradient-to-r ${category.color}`}></div>
                   <div className="p-5">
                     <div className="text-center mb-3">
-                      <h3 className="font-bold text-base text-gray-900 group-hover:text-blue-600 transition-colors">
+                      <h3 className="font-bold text-base text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-indigo-300 transition-colors">
                         {category.title}
                       </h3>
                     </div>
-                    <p className="text-gray-600 text-xs mb-3 line-clamp-2 leading-relaxed">
+                    <p className="text-slate-600 dark:text-slate-400 text-xs mb-3 line-clamp-2 leading-relaxed">
                       {category.description}
                     </p>
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                      <span className="text-xs text-slate-500 dark:text-slate-300 bg-slate-100 dark:bg-indigo-800/40 px-2 py-1 rounded-full">
                         Categoria
                       </span>
-                      <div className="text-blue-600 text-xs font-medium group-hover:text-blue-700 flex items-center">
+                      <div className="text-blue-600 dark:text-indigo-300 text-xs font-medium group-hover:text-blue-700 dark:group-hover:text-indigo-200 flex items-center">
                         Leggi <span className="ml-1">→</span>
                       </div>
                     </div>
@@ -123,18 +123,18 @@ export default function NewsPage() {
 
           {/* Sezione articoli in evidenza */}
           <div className="mb-10">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6 text-center">
               News in evidenza
             </h2>
             {loading ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Loading skeleton */}
                 {[...Array(6)].map((_, i) => (
-                  <div key={i} className="bg-gray-200 rounded-2xl p-5 animate-pulse">
-                    <div className="h-4 bg-gray-300 rounded mb-3"></div>
-                    <div className="h-6 bg-gray-300 rounded mb-2"></div>
-                    <div className="h-4 bg-gray-300 rounded mb-4"></div>
-                    <div className="h-3 bg-gray-300 rounded"></div>
+                  <div key={i} className="bg-slate-200 dark:bg-indigo-900/25 border border-slate-300 dark:border-indigo-500/20 rounded-2xl p-5 animate-pulse">
+                    <div className="h-4 bg-slate-300 dark:bg-indigo-700/60 rounded mb-3"></div>
+                    <div className="h-6 bg-slate-300 dark:bg-indigo-700/60 rounded mb-2"></div>
+                    <div className="h-4 bg-slate-300 dark:bg-indigo-700/60 rounded mb-4"></div>
+                    <div className="h-3 bg-slate-300 dark:bg-indigo-700/60 rounded"></div>
                   </div>
                 ))}
               </div>
@@ -154,20 +154,20 @@ export default function NewsPage() {
                   const colors = categoryColors[article.category as keyof typeof categoryColors] || categoryColors.GENERAL;
                   
                   return (
-                    <div key={article.id} className={`bg-gradient-to-br ${colors.bg} rounded-2xl p-5 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1`}>
+                    <div key={article.id} className={`bg-gradient-to-br ${colors.bg} dark:from-indigo-900/35 dark:to-indigo-800/25 rounded-2xl border border-slate-200 dark:border-indigo-500/20 p-5 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1`}>
                    <div className="flex items-center justify-between mb-3">
                      <span className={`${colors.badge} text-white text-xs font-bold px-3 py-1 rounded-full`}>
                        {article.category.replace('_', ' ')}
                      </span>
                    </div>
-                      <h3 className="font-bold text-lg text-gray-900 mb-2 line-clamp-2">
+                      <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-2 line-clamp-2">
                         {article.title}
                       </h3>
-                      <p className="text-gray-700 text-sm mb-4 line-clamp-2">
+                      <p className="text-slate-700 dark:text-slate-300 text-sm mb-4 line-clamp-2">
                         {article.summary}
                       </p>
                       <div className="flex items-center justify-between">
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-slate-500 dark:text-slate-400">
                           {new Date(article.publishedAt).toLocaleDateString('it-IT')}
                         </span>
                         <Link 
@@ -183,8 +183,8 @@ export default function NewsPage() {
               </div>
             ) : (
               <div className="text-center py-12">
-                <p className="text-gray-600 text-lg mb-4">Nessun articolo in evidenza al momento</p>
-                <p className="text-gray-500 text-sm">Gli articoli pubblicati e contrassegnati come "in evidenza" appariranno qui</p>
+                <p className="text-slate-600 dark:text-slate-400 text-lg mb-4">Nessun articolo in evidenza al momento</p>
+                <p className="text-slate-500 dark:text-slate-500 text-sm">Gli articoli pubblicati e contrassegnati come "in evidenza" appariranno qui</p>
               </div>
             )}
           </div>

@@ -27,73 +27,78 @@ export default function MemecoinsNewsPage() {
   }, []);
 
   return (
-    
-      <div className="bg-gradient-to-br from-yellow-50 via-white to-orange-50 min-h-screen">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-          {/* Back button */}
-          <div className="mb-6">
-            <BackToHome href="/news" label="Torna alle News" />
-          </div>
-
-          {/* Header categoria */}
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Memecoins News</h1>
-            <p className="text-gray-600">DOGE, SHIB, PEPE e le ultime meme sensation</p>
-          </div>
-
-          {/* Lista articoli */}
-          {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Loading skeleton */}
-              {[...Array(4)].map((_, i) => (
-                <div key={i} className="bg-white rounded-lg shadow-md border border-gray-200 p-6 animate-pulse">
-                  <div className="h-4 bg-gray-300 rounded mb-3"></div>
-                  <div className="h-6 bg-gray-300 rounded mb-2"></div>
-                  <div className="h-4 bg-gray-300 rounded mb-4"></div>
-                  <div className="h-3 bg-gray-300 rounded"></div>
-                </div>
-              ))}
-            </div>
-          ) : articles.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {articles.map((article: any) => (
-                <ExpandableNewsCard
-                  key={article.id}
-                  article={article}
-                  categoryConfig={{
-                    name: 'Memecoins',
-                    color: 'text-yellow-800',
-                    bgColor: 'bg-yellow-100',
-                    buttonColor: 'bg-yellow-600 hover:bg-yellow-700'
-                  }}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-4">
-                <Image 
-                  src={degenIcon} 
-                  alt="Memecoins"
-                  width={32}
-                  height={32}
-                  className="w-8 h-8 opacity-50"
-                />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Nessun articolo Memecoins</h3>
-              <p className="text-gray-600 mb-6">
-                Non ci sono ancora articoli pubblicati nella categoria Memecoins.
-              </p>
-              <Link 
-                href="/news" 
-                className="bg-yellow-600 text-white px-6 py-3 rounded-lg hover:bg-yellow-700 transition-colors font-medium"
-              >
-                Torna alle News
-              </Link>
-            </div>
-          )}
+    <div className="relative z-10">
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-6">
+          <BackToHome href="/news" label="Torna alle News" />
         </div>
+
+        <div className="flex items-center gap-4 mb-8">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-r from-yellow-500 to-orange-600 flex items-center justify-center shrink-0">
+            <Image
+              src={degenIcon}
+              alt="Memecoins"
+              width={28}
+              height={28}
+              className="w-7 h-7"
+            />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Memecoins News</h1>
+            <p className="text-slate-600 dark:text-slate-400">DOGE, SHIB, PEPE e le ultime meme sensation</p>
+          </div>
+        </div>
+
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="rounded-2xl border border-slate-200 dark:border-indigo-500/20 bg-white dark:bg-indigo-900/25 p-5 animate-pulse">
+                <div className="h-4 bg-slate-300 dark:bg-indigo-700/60 rounded mb-3"></div>
+                <div className="h-6 bg-slate-300 dark:bg-indigo-700/60 rounded mb-2"></div>
+                <div className="h-4 bg-slate-300 dark:bg-indigo-700/60 rounded mb-4"></div>
+                <div className="h-3 bg-slate-300 dark:bg-indigo-700/60 rounded"></div>
+              </div>
+            ))}
+          </div>
+        ) : articles.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+            {articles.map((article: any) => (
+              <ExpandableNewsCard
+                key={article.id}
+                article={article}
+                categoryConfig={{
+                  name: 'Memecoins',
+                  color: 'text-yellow-800',
+                  bgColor: 'bg-yellow-100',
+                  buttonColor: 'bg-yellow-600 hover:bg-yellow-700'
+                }}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-2xl border border-slate-200 dark:border-indigo-500/20 bg-white dark:bg-indigo-900/25 p-10 text-center">
+            <div className="w-16 h-16 rounded-2xl bg-gray-100 dark:bg-indigo-800/40 flex items-center justify-center mx-auto mb-4">
+              <Image
+                src={degenIcon}
+                alt="Memecoins"
+                width={32}
+                height={32}
+                className="w-8 h-8 opacity-50"
+              />
+            </div>
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Nessun articolo Memecoins</h3>
+            <p className="text-slate-600 dark:text-slate-400 mb-6">
+              Non ci sono ancora articoli pubblicati nella categoria Memecoins.
+            </p>
+            <Link
+              href="/news"
+              className="inline-flex bg-yellow-600 text-white px-6 py-3 rounded-lg hover:bg-yellow-700 transition-colors font-medium"
+            >
+              Torna alle News
+            </Link>
+          </div>
+        )}
       </div>
-    
+    </div>
   );
 }

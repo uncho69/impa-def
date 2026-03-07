@@ -15,6 +15,14 @@ declare namespace NodeJS {
     // Optional: Redirect URLs after authentication
     NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL?: string;
     NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL?: string;
+
+    // Privy
+    NEXT_PUBLIC_PRIVY_APP_ID?: string;
+    PRIVY_VERIFICATION_KEY?: string;
+    AUTH_SESSION_SECRET?: string;
+
+    // Analytics
+    NEXT_PUBLIC_GA_MEASUREMENT_ID?: string;
     
     // Cron
     CRON_SECRET?: string;

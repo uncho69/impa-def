@@ -5,6 +5,7 @@
  * id = slug (es. usato in /blockchain/:id), name = etichetta da mostrare.
  */
 export const PLATFORM_PROJECTS: { id: string; name: string }[] = [
+  { id: 'abstract', name: 'Abstract' },
   { id: 'arbitrum', name: 'Arbitrum' },
   { id: 'avalanche', name: 'Avalanche' },
   { id: 'base', name: 'Base' },
@@ -13,9 +14,11 @@ export const PLATFORM_PROJECTS: { id: string; name: string }[] = [
   { id: 'blast', name: 'Blast' },
   { id: 'degen', name: 'Degen' },
   { id: 'ethereum', name: 'Ethereum' },
+  { id: 'hyperevm', name: 'HyperEVM' },
   { id: 'hyperlane', name: 'Hyperlane' },
   { id: 'hyperliquid', name: 'Hyperliquid' },
   { id: 'imparodefi', name: 'ImparoDefi' },
+  { id: 'ink', name: 'Ink' },
   { id: 'layer3', name: 'Layer3' },
   { id: 'linea', name: 'Linea' },
   { id: 'optimism', name: 'Optimism' },

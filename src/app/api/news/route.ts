@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
-import { db } from '@/lib/db';
+import { db, hasDatabase } from '@/lib/db';
 import { news } from '@/lib/db/schema';
 import { eq, and, desc } from 'drizzle-orm';
+import { FALLBACK_NEWS } from '@/lib/news-fallback';
 
 export const dynamic = 'force-dynamic';
 
@@ -23,6 +24,14 @@ export async function GET(request: Request) {
     const category = searchParams.get('category');
     const featured = searchParams.get('featured');
     const limit = parseInt(searchParams.get('limit') || '10');
+
+    if (!hasDatabase || !db) {
+      const filtered = FALLBACK_NEWS
+        .filter((item) => (category ? item.category === category.toUpperCase() : true))
+        .filter((item) => (featured === 'true' ? item.featured : true))
+        .slice(0, limit);
+      return NextResponse.json(filtered);
+    }
 
     const conditions = [eq(news.status, 'PUBLISHED')];
     

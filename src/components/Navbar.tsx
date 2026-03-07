@@ -67,11 +67,11 @@ export function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full backdrop-blur-lg bg-background/80 border-b border-neutral-200">
+    <header className="sticky top-0 z-50 w-full backdrop-blur-lg bg-background/80 border-b border-neutral-200 dark:bg-indigo-950/90 dark:border-indigo-500/20">
       <div className="w-full px-4 md:px-8 lg:px-12 mx-auto">
-        <nav className="flex items-center justify-between h-16 lg:h-20 py-2">
-          <Link href="/" className="group flex items-center">
-            <div className="flex items-center">
+        <nav className="flex items-center justify-between gap-4 h-16 lg:h-20 py-2">
+          <Link href="/" className="group flex items-center shrink-0 min-w-0">
+            <div className="flex items-center min-w-0">
               <Image 
                 src={logo} 
                 alt="ImparoDeFi Logo" 
@@ -91,8 +91,10 @@ export function Navbar() {
             </div>
           </Link>
           
-          <div className="hidden lg:flex items-center space-x-8">
-            <SearchBar />
+          <div className="hidden lg:flex items-center flex-1 justify-end min-w-0 gap-6 lg:gap-8">
+            <div className="min-w-0 max-w-[13rem] xl:max-w-[16rem] flex-shrink">
+              <SearchBar />
+            </div>
             <div className="flex space-x-6">
               <Link href="/manuale" className="gradient-text hover:opacity-80 transition-opacity font-bold text-sm">
                 {t('nav.manuale')}
@@ -130,11 +132,11 @@ export function Navbar() {
                   </button>
                   
                   {isAdminDropdownOpen && (
-                    <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-blue-200 rounded-lg shadow-lg py-2 z-50">
+                    <div className="absolute top-full right-0 mt-2 w-56 bg-white dark:bg-indigo-900/90 border border-blue-200 dark:border-indigo-500/30 rounded-lg shadow-lg py-2 z-50">
                       <Link 
                         href="/admin/dashboard" 
                         onClick={() => setIsAdminDropdownOpen(false)}
-                        className="block px-4 py-2 text-sm font-bold text-blue-700 hover:bg-blue-50 transition-colors"
+                        className="block px-4 py-2 text-sm font-bold text-blue-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-indigo-800/60 transition-colors"
                       >
                         📊 Dashboard
                       </Link>
@@ -153,20 +155,20 @@ export function Navbar() {
                 </button>
                 
                 {isDropdownOpen && (
-                  <div className="absolute top-full right-0 mt-2 w-48 bg-white border border-blue-200 rounded-lg shadow-lg py-2 z-50">
-                    <Link href="/compraevendicrypto" onClick={showAuthModal} className="block px-4 py-2 text-sm font-bold text-blue-700 hover:bg-blue-50 transition-colors">
+                  <div className="absolute top-full right-0 mt-2 w-48 bg-white dark:bg-indigo-900/90 border border-blue-200 dark:border-indigo-500/30 rounded-lg shadow-lg py-2 z-50">
+                    <Link href="/compraevendicrypto" onClick={showAuthModal} className="block px-4 py-2 text-sm font-bold text-blue-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-indigo-800/60 transition-colors">
                       Compra e vendi crypto
                     </Link>
-                    <Link href="/nft" onClick={showAuthModal} className="block px-4 py-2 text-sm font-bold text-blue-700 hover:bg-blue-50 transition-colors">
+                    <Link href="/nft" onClick={showAuthModal} className="block px-4 py-2 text-sm font-bold text-blue-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-indigo-800/60 transition-colors">
                       NFTs
                     </Link>
-                    <Link href="/giochi" onClick={showAuthModal} className="block px-4 py-2 text-sm font-bold text-blue-700 hover:bg-blue-50 transition-colors">
+                    <Link href="/giochi" onClick={showAuthModal} className="block px-4 py-2 text-sm font-bold text-blue-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-indigo-800/60 transition-colors">
                       Giochi & Mercati di Predizione
                     </Link>
-                    <Link href="/strumenti-utili" onClick={showAuthModal} className="block px-4 py-2 text-sm font-bold text-blue-700 hover:bg-blue-50 transition-colors">
+                    <Link href="/strumenti-utili" onClick={showAuthModal} className="block px-4 py-2 text-sm font-bold text-blue-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-indigo-800/60 transition-colors">
                       Strumenti Utili
                     </Link>
-                    <Link href="/eventi-storici" onClick={showAuthModal} className="block px-4 py-2 text-sm font-bold text-blue-700 hover:bg-blue-50 transition-colors">
+                    <Link href="/eventi-storici" onClick={showAuthModal} className="block px-4 py-2 text-sm font-bold text-blue-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-indigo-800/60 transition-colors">
                       Eventi Storici
                     </Link>
                   </div>

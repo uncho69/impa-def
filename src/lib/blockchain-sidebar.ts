@@ -1,0 +1,18 @@
+export const BLOCKCHAIN_SIDEBAR_ITEMS = [
+  { label: "Dashboard", href: "/", icon: "📊" },
+  { label: "Manuale", href: "/manuale", icon: "📚" },
+  { label: "DeFi", href: "/defi", icon: "💹" },
+  { label: "Airdrops", href: "/airdrops", icon: "🎁" },
+  { label: "Blockchains", href: "/blockchain", icon: "⛓️" },
+  { label: "Compra/Vendi Crypto", href: "/compraevendicrypto", icon: "💳" },
+  { label: "Portafogli", href: "/wallet", icon: "👛" },
+  { label: "Strumenti Utili", href: "/strumentiutili", icon: "🔧" },
+  { label: "Memecoins", href: "/memecoins", icon: "🪙" },
+  { label: "NFTs", href: "/nft", icon: "🖼️" },
+  { label: "Giochi", href: "/giochi", icon: "🎮" },
+  { label: "Mercati di Predizione", href: "/giochi/polymarket", icon: "📈" },
+  { label: "Eventi Storici", href: "/eventi-storici", icon: "📅" },
+  { label: "Mappa Ecosistema", href: "/esplora-app", icon: "🌐" },
+  { label: "Notizie", href: "/news", icon: "📰" },
+  { label: "Leaderboard", href: "/leaderboards/global", icon: "🏆" },
+];

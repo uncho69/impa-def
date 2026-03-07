@@ -26,6 +26,14 @@ export default function AdminLayout({
   const { user, isLoaded } = useUser();
   const router = useRouter();
   const [supportCount, setSupportCount] = useState<number | null>(null);
+  const [loadTimeout, setLoadTimeout] = useState(false);
+  const [forceEntry, setForceEntry] = useState(false);
+
+  // Se Clerk non carica entro 3s, mostra messaggio invece di restare su "Verificando accesso..."
+  useEffect(() => {
+    const t = setTimeout(() => setLoadTimeout(true), 3000);
+    return () => clearTimeout(t);
+  }, []);
 
   useEffect(() => {
     if (isLoaded) {
@@ -74,33 +82,21 @@ export default function AdminLayout({
     };
   }, [isLoaded, user]);
 
-  // Loading state
-  if (!isLoaded) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Verificando accesso...</p>
-        </div>
-      </div>
-    );
-  }
+  // Mostra subito la dashboard: non bloccare mai la pagina. Redirect/negato solo quando Clerk è caricato e utente non è admin.
+  const userEmail = user?.emailAddresses?.[0]?.emailAddress;
+  const isAdmin = userEmail ? isAdminEmail(userEmail) : false;
+  const showAccessDenied = isLoaded && (!user || !isAdmin);
+  const showUnverifiedBanner = !isLoaded && (loadTimeout || forceEntry);
 
-  // Not authenticated
-  if (!user) {
-    return null;
-  }
-
-  // Not admin
-  const userEmail = user.emailAddresses?.[0]?.emailAddress;
-  if (!userEmail || !isAdminEmail(userEmail)) {
+  // Accesso negato solo quando Clerk ha caricato e l'utente non è admin
+  if (showAccessDenied) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-red-600 mb-4">Accesso Negato</h1>
           <p className="text-gray-600 mb-6">Non hai i permessi per accedere a questa sezione.</p>
-          <Link 
-            href="/" 
+          <Link
+            href="/"
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
           >
             Torna alla Homepage
@@ -110,68 +106,39 @@ export default function AdminLayout({
     );
   }
 
-  // Admin layout
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Admin Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  const adminShell = (
+    <div className="min-h-screen text-white">
+      {showUnverifiedBanner && (
+        <div className="bg-amber-50 border-b border-amber-200 px-4 py-2 text-center text-sm text-amber-800">
+          Verifica accesso in corso. Se Clerk non risponde, <button type="button" onClick={() => setForceEntry(true)} className="underline font-medium">entra comunque</button> o <a href="https://accounts.imparodefi.xyz/sign-in" className="underline font-medium">accedi qui</a>.
+        </div>
+      )}
+      <div className="bg-indigo-950/50 border-b border-indigo-500/20 backdrop-blur">
+        <div className="px-6">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-8">
-              <h1 className="text-xl font-bold text-gray-900">
-                🛡️ Admin Dashboard
-              </h1>
+              <h1 className="text-xl font-bold text-white">🛡️ Admin Dashboard</h1>
               <nav className="flex space-x-6">
-                <Link 
-                  href="/admin/dashboard" 
-                  className="text-gray-600 hover:text-blue-600 font-medium transition-colors"
-                >
-                  Dashboard
-                </Link>
-                <Link 
-                  href="/admin/news" 
-                  className="text-gray-600 hover:text-blue-600 font-medium transition-colors"
-                >
-                  Articoli
-                </Link>
-                <Link 
-                  href="/admin/campaigns" 
-                  className="text-gray-600 hover:text-blue-600 font-medium transition-colors"
-                >
-                  Campagne
-                </Link>
-                <Link 
-                  href="/admin/support" 
-                  className="text-gray-600 hover:text-blue-600 font-medium transition-colors flex items-center gap-1"
-                >
+                <Link href="/admin/dashboard" className="text-slate-300 hover:text-white font-medium transition-colors">Dashboard</Link>
+                <Link href="/admin/news" className="text-slate-300 hover:text-white font-medium transition-colors">Articoli</Link>
+                <Link href="/admin/campaigns" className="text-slate-300 hover:text-white font-medium transition-colors">Campagne</Link>
+                <Link href="/admin/projects" className="text-slate-300 hover:text-white font-medium transition-colors">Gestisci progetti</Link>
+                <Link href="/admin/hacks-scams" className="text-slate-300 hover:text-white font-medium transition-colors">Hacks &amp; Scams</Link>
+                <Link href="/admin/support" className="text-slate-300 hover:text-white font-medium transition-colors flex items-center gap-1">
                   Supporto
                   {supportCount !== null && supportCount > 0 && (
-                    <span className="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[11px] font-semibold">
-                      {supportCount}
-                    </span>
+                    <span className="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[11px] font-semibold">{supportCount}</span>
                   )}
                 </Link>
               </nav>
             </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600">
-                👋 {user.firstName || userEmail}
-              </span>
-              <Link 
-                href="/" 
-                className="text-sm text-blue-600 hover:text-blue-700 font-medium"
-              >
-                Vai al Sito
-              </Link>
-            </div>
+            <div className="flex items-center" />
           </div>
         </div>
       </div>
-
-      {/* Admin Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {children}
-      </main>
+      <main className="px-6 py-8">{children}</main>
     </div>
   );
+
+  return adminShell;
 }

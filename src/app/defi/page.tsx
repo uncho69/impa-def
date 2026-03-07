@@ -1,795 +1,294 @@
-import { MobileContainer } from "@/components/MobileContainer";
-import { PageTitle } from "@/components/PageTitle";
-import { SectionTitle } from "@/components/SectionTitle";
-import { SectionBody } from "@/components/SectionBody";
-import { ClerkProtectedRoute } from "@/components/ClerkProtectedRoute";
-import { Accordion } from "@/components/Accordion";
-import { List } from "@/components/List";
-import { CardContainer } from "@/components/CardContainer";
-import { SimpleCard } from "@/components/SimpleCard";
+"use client";
+
+import { useState, useMemo, useEffect, Suspense } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { BasiDeFiModal } from "@/components/BasiDeFiModal";
 import Placeholder from "@/assets/placeholder.svg";
-// import { SectionTutorial } from "@/components/SectionTutorial";
-import { ExploreWeb3 } from "@/components/ExploreWeb3";
-
-// Import icone delle DEX
 import hyperliquidIcon from "@/assets/hyperliquid-icon.png";
-import hypervmIcon from "@/assets/hypervm-logo.png";
 import uniswapIcon from "@/assets/uniswap-icon.png";
-import orbiterIcon from "@/assets/orbiterfinance-icon.png";
-
-// Import loghi delle reti per Uniswap
-import ethereumIcon from "@/assets/ethereum-icon.svg";
-import arbitrumIcon from "@/assets/arbitrum-arb-logo.svg";
-import optimismIcon from "@/assets/optimism-ethereum-op-logo.svg";
-import polygonIcon from "@/assets/polygon-matic-logo.svg";
-import baseIcon from "@/assets/base-logo.svg";
-
-// Import loghi delle reti per Orbiter Finance
-import zksyncIcon from "@/assets/zksynk-logo.png";
 import jumperIcon from "@/assets/jumper-logo.png";
 import camelotIcon from "@/assets/camelot-logo.png";
 import curveIcon from "@/assets/curve-logo.png";
-import raydiumIcon from "@/assets/raydium-logo.svg";
-import jupiterIcon from "@/assets/jupiter-logo.png";
-import balancerIcon from "@/assets/balancer-logo.png";
-import syncswapIcon from "@/assets/syncswap-logo.png";
 import stargateIcon from "@/assets/stargate-logo.png";
 import debridgeIcon from "@/assets/debridge-logo.png";
-import layerzeroIcon from "@/assets/layerzero-logo.png";
-import yearnIcon from "@/assets/yearnfinance-logo.png";
 import compoundIcon from "@/assets/compound-logo.png";
+import jupiterIcon from "@/assets/jupiter-logo.png";
+import raydiumIcon from "@/assets/raydium-logo.svg";
+import balancerIcon from "@/assets/balancer-logo.png";
+import syncswapIcon from "@/assets/syncswap-logo.png";
+import yearnIcon from "@/assets/yearnfinance-logo.png";
 import lidoIcon from "@/assets/lidofinance-logo.png";
+import layerzeroIcon from "@/assets/layerzero-logo.png";
+import orbiterIcon from "@/assets/orbiterfinance-icon.png";
 
-// Import loghi delle reti aggiuntive
-import solanaIcon from "@/assets/solana-sol-logo.svg";
-import avalancheIcon from "@/assets/avalanche-avax-logo.svg";
-import bscIcon from "@/assets/bsc-logo.png";
-import gnosisIcon from "@/assets/gnosis-logo.png";
-import lineaIcon from "@/assets/linea-logo.svg";
-import scrollIcon from "@/assets/Scroll-Logo.svg";
-import blastIcon from "@/assets/blast-logo.webp";
-import xaiIcon from "@/assets/xai-logo.svg";
+const CATEGORIES = [
+  { id: "dex", label: "DEX" },
+  { id: "lending", label: "Lending" },
+  { id: "yield", label: "Yield" },
+  { id: "derivatives", label: "Derivatives" },
+  { id: "bridge", label: "Bridge" },
+  { id: "stablecoins", label: "Stablecoins" },
+] as const;
 
-export default function Defi() {
+type CategoryId = (typeof CATEGORIES)[number]["id"];
+
+const PROTOCOLS = [
+  { name: "Uniswap", description: "DEX leader su Ethereum e L2 per swap e liquidity.", icon: uniswapIcon, href: "/defi/uniswap", category: "dex" as CategoryId, token: "UNI", price: "$12.40", marketCap: "$7.2B", airdropPotential: false, twitterUrl: "https://x.com/Uniswap", websiteUrl: "https://uniswap.org", contractAddress: "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984" },
+  { name: "Aave", description: "Prestiti e borrowing decentralizzati su più reti.", icon: Placeholder, href: "/defi/aave", category: "lending" as CategoryId, token: "AAVE", price: "$285", marketCap: "$4.1B", airdropPotential: false, twitterUrl: "https://x.com/AaveAave", websiteUrl: "https://aave.com", contractAddress: "0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9" },
+  { name: "Hyperliquid", description: "Perpetuals on-chain e trading con potenziale airdrop.", icon: hyperliquidIcon, href: "/defi/hyperliquid", category: "dex" as CategoryId, token: "HYPE", price: "$18.20", marketCap: "$3.5B", airdropPotential: true, twitterUrl: "https://x.com/HyperliquidX", websiteUrl: "https://hyperliquid.xyz", contractAddress: "0xf4b0387084f4b2c4d7266a2c7d1a7f0c2e3d4c5b" },
+  { name: "Stargate", description: "Bridge e trasferimenti cross-chain con LayerZero.", icon: stargateIcon, href: "/defi/stargate", category: "bridge" as CategoryId, token: "STG", price: "$0.82", marketCap: "$168M", airdropPotential: false, twitterUrl: "https://x.com/StargateFinance", websiteUrl: "https://stargate.finance", contractAddress: "0xaf5191b0de278c7286d6c7cc6ab6bb8a4ba2a6b8" },
+  { name: "Jumper", description: "Swap e bridge multi-chain in un’unica interfaccia.", icon: jumperIcon, href: "/defi/jumper", category: "bridge" as CategoryId, token: "—", price: "—", marketCap: "—", airdropPotential: true, twitterUrl: "https://x.com/JumperExchange", websiteUrl: "https://jumper.exchange", contractAddress: "" },
+  { name: "deBridge", description: "Bridge e messaggeria cross-chain per asset e dati.", icon: debridgeIcon, href: "/defi/debridge", category: "bridge" as CategoryId, token: "—", price: "—", marketCap: "—", airdropPotential: false, twitterUrl: "https://x.com/deBridgeFinance", websiteUrl: "https://debridge.finance", contractAddress: "" },
+  { name: "Curve", description: "DEX specializzato in stablecoin e curve di liquidità.", icon: curveIcon, href: "/defi/curve", category: "dex" as CategoryId, token: "CRV", price: "$0.45", marketCap: "$485M", airdropPotential: false, twitterUrl: "https://x.com/CurveFinance", websiteUrl: "https://curve.fi", contractAddress: "0xD533a949740bb3306d119CC777fa900bA034cd52" },
+  { name: "Compound", description: "Lending e borrowing con algoritmi sui tassi.", icon: compoundIcon, href: "/defi/compound", category: "lending" as CategoryId, token: "COMP", price: "$52.10", marketCap: "$418M", airdropPotential: false, twitterUrl: "https://x.com/compoundfinance", websiteUrl: "https://compound.finance", contractAddress: "0xc00e94Cb662C3520282E6f5717214004A7f26888" },
+  { name: "Jupiter", description: "Aggregatore DEX su Solana per swap e route ottimali.", icon: jupiterIcon, href: "/defi/jupiter", category: "dex" as CategoryId, token: "JUP", price: "$0.92", marketCap: "$1.2B", airdropPotential: false, twitterUrl: "https://x.com/JupiterExchange", websiteUrl: "https://jup.ag", contractAddress: "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN" },
+  { name: "Raydium", description: "DEX e AMM su Solana con pool concentrati.", icon: raydiumIcon, href: "/defi/raydium", category: "dex" as CategoryId, token: "RAY", price: "$1.85", marketCap: "$485M", airdropPotential: false, twitterUrl: "https://x.com/RaydiumProtocol", websiteUrl: "https://raydium.io", contractAddress: "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R" },
+  { name: "Balancer", description: "AMM con pool configurabili e pesi dinamici.", icon: balancerIcon, href: "/defi/balancer", category: "dex" as CategoryId, token: "BAL", price: "$3.20", marketCap: "$182M", airdropPotential: false, twitterUrl: "https://x.com/Balancer", websiteUrl: "https://balancer.fi", contractAddress: "0xba100000625a3754423978a60c9317c58a424e3D" },
+  { name: "SyncSwap", description: "DEX nativo su zkSync, Linea e Scroll.", icon: syncswapIcon, href: "/defi/syncswap", category: "dex" as CategoryId, token: "—", price: "—", marketCap: "—", airdropPotential: false, twitterUrl: "https://x.com/syncswap", websiteUrl: "https://syncswap.xyz", contractAddress: "" },
+  { name: "Yearn Finance", description: "Aggregatore di yield e strategie automatizzate.", icon: yearnIcon, href: "/defi/yearn", category: "yield" as CategoryId, token: "YFI", price: "$6.420", marketCap: "$214M", airdropPotential: false, twitterUrl: "https://x.com/yearnfi", websiteUrl: "https://yearn.fi", contractAddress: "0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e" },
+  { name: "Lido Finance", description: "Liquid staking per ETH e SOL con token staked.", icon: lidoIcon, href: "/defi/lido", category: "yield" as CategoryId, token: "LDO", price: "$1.95", marketCap: "$1.8B", airdropPotential: false, twitterUrl: "https://x.com/LidoFinance", websiteUrl: "https://lido.fi", contractAddress: "0x5A98FcBEA516Cf06857215779Fd812CA3beF1B32" },
+  { name: "LayerZero", description: "Protocollo di interoperabilità cross-chain.", icon: layerzeroIcon, href: "/defi/layerzero", category: "bridge" as CategoryId, token: "ZRO", price: "$1.12", marketCap: "$—", airdropPotential: false, twitterUrl: "https://x.com/LayerZero_Labs", websiteUrl: "https://layerzero.network", contractAddress: "0x5A98FcBEA516Cf06857215779Fd812CA3beF1B32" },
+  { name: "Camelot", description: "DEX su Arbitrum con incentivi e pool dinamici.", icon: camelotIcon, href: "/defi/camelot", category: "dex" as CategoryId, token: "GRAIL", price: "$0.28", marketCap: "$—", airdropPotential: false, twitterUrl: "https://x.com/CamelotDEX", websiteUrl: "https://camelot.exchange", contractAddress: "0x3d9907F9a368ad0a51Be0f7D4EcC2e09567f8D9e" },
+  { name: "Orbiter Finance", description: "Bridge veloce tra Ethereum, L2 e rollup.", icon: orbiterIcon, href: "/defi/orbiter", category: "bridge" as CategoryId, token: "—", price: "—", marketCap: "—", airdropPotential: false, twitterUrl: "https://x.com/Orbiter_Finance", websiteUrl: "https://orbiter.finance", contractAddress: "" },
+];
+
+const RECOMMENDED_PATHS = [
+  { title: "Principianti", icon: "🔗", desc: "Inizia facile.", href: "/manuale" },
+  { title: "Yield Farming", icon: "💰", desc: "Guadagna rendimenti.", href: "/defi" },
+  { title: "Avanzato", icon: "⚙️", desc: "Strategie complesse.", href: "/airdrops" },
+];
+
+const MEDIA_EXAMPLES = [
+  { type: "video", title: "Tutorial swap su Uniswap", source: "YouTube", embedId: "dQw4w9WgXcQ", href: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" },
+  { type: "x", title: "Hyperliquid HIP-3 spiegato", handle: "@HyperliquidX", href: "https://x.com/HyperliquidX" },
+  { type: "video", title: "DeFi per principianti", source: "YouTube", embedId: "dQw4w9WgXcQ", href: "https://www.youtube.com" },
+  { type: "x", title: "Curve Finance – liquidity pool", handle: "@CurveFinance", href: "https://x.com/CurveFinance" },
+];
+
+type Theme = "dark" | "light";
+
+const VALID_CATEGORIES = new Set(CATEGORIES.map((c) => c.id));
+
+function DefiPageContent({ onOpenBasiDefi }: { onOpenBasiDefi: () => void }) {
+  const searchParams = useSearchParams();
+  const categoryFromUrl = searchParams.get("category");
+  const activeCategory: CategoryId = (categoryFromUrl && VALID_CATEGORIES.has(categoryFromUrl)) ? categoryFromUrl as CategoryId : "dex";
+
+  const [search, setSearch] = useState("");
+  const [theme, setTheme] = useState<Theme>("dark");
+
+  useEffect(() => {
+    const stored = localStorage.getItem("imparodefi-theme") as Theme | null;
+    if (stored === "dark" || stored === "light") setTheme(stored);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("imparodefi-theme", theme);
+    document.documentElement.classList.toggle("dark", theme === "dark");
+    document.documentElement.classList.toggle("light", theme === "light");
+  }, [theme]);
+
+  const isDark = theme === "dark";
+
+  const filteredProtocols = useMemo(() => {
+    return PROTOCOLS.filter((p) => {
+      const matchCategory = p.category === activeCategory;
+      const matchSearch = !search.trim() || p.name.toLowerCase().includes(search.trim().toLowerCase());
+      return matchCategory && matchSearch;
+    });
+  }, [activeCategory, search]);
+
   return (
-    <ClerkProtectedRoute title="DeFi">
-      <PageTitle description="La finanza decentralizzata aperta a tutti, senza intermediari">
-        DeFi
-      </PageTitle>
-      <MobileContainer>
-        <SectionBody>
-          La finanza decentralizzata, o DeFi, è un sistema finanziario che
-          funziona su blockchain, principalmente grazie agli smart-contract e
-          quindi su Ethereum e le sue Layer2. A differenza del sistema finanziario
-          tradizionale, DeFi è aperto a tutti e non richiede intermediari come
-          banche o broker. I prodotti DeFi permettono agli utenti di prestare o
-          prendere in prestito fondi, guadagnare interessi, fare trading di asset
-          digitali e assicurarsi contro i rischi, il tutto in modo trasparente e
-          senza un ente centrale.
-          <Accordion buttonText={"Caratteristiche Principali della DeFi"}>
-            <List ordered={true}>
-              <li>
-                <strong>Decentralizzazione</strong>: Le applicazioni DeFi operano
-                su blockchain, il che significa che non esiste un singolo punto di
-                controllo. Le decisioni e le operazioni sono gestite da smart
-                contract e una rete distribuita di nodi.
-              </li>
-              <li>
-                <strong>Trasparenza</strong>: Tutte le transazioni e i contratti
-                sono pubblicamente visibili sulla blockchain. Questo aumenta la
-                trasparenza e permette agli utenti di verificare in qualsiasi
-                momento le attività e le operazioni.
-              </li>
-              <li>
-                <strong>Accessibilità</strong>: Chiunque abbia una connessione
-                internet può accedere ai servizi DeFi. Non ci sono barriere
-                geografiche o requisiti di accesso rigidi.
-              </li>
-              <li>
-                <strong>Interoperabilità</strong>: Molte applicazioni DeFi sono
-                progettate per essere compatibili tra loro, permettendo agli
-                utenti di combinare diversi servizi e creare soluzioni finanziarie
-                personalizzate.
-              </li>
-            </List>
-          </Accordion>
-          <Accordion buttonText={"Principali Componenti della DeFi"}>
-            <List ordered={true}>
-              <li>
-                <strong>Exchange Decentralizzati (DEX)</strong>: Piattaforme che
-                permettono agli utenti di scambiare criptovalute direttamente tra
-                loro senza intermediari. I DEX utilizzano pool di liquidità
-                forniti dagli utenti stessi per facilitare le transazioni. Si
-                possono depositare i propri token nelle pool di liquidità (LP) e
-                guadagnare una percentuale delle commissioni (trading fee)
-                applicate agli utenti sugli swap.
-              </li>
-              <li>
-                <strong>Lending e Borrowing</strong>: Sono piattaforme di prestiti
-                che permettono agli utenti di depositare i loro token e guadagnare
-                un rendimento in base ai tassi d&apos;interesse pagati dall&apos;exchange,
-                che provengono da chi li prende in prestito e paga un interesse
-                più alto. Si possono quindi prestare le proprie criptovalute e
-                guadagnare interessi, o prendere in prestito criptovalute offrendo
-                altre criptovalute come garanzia (collaterale).
-              </li>
-              <li>
-                <strong>Stablecoin</strong>: Criptovalute ancorate al valore di
-                una valuta fiat (come il dollaro USA) che offrono stabilità nei
-                mercati volatili delle criptovalute. Esempi includono USDC, DAI,
-                LUSD e Tether (USDT).
-              </li>
-              <li>
-                <strong>Yield Farming e Staking</strong>: Metodi per guadagnare
-                ricompense aggiuntive bloccando o &quot;staking&quot; le proprie
-                criptovalute in smart contract. Questi meccanismi incentivano la
-                fornitura di liquidità e la partecipazione alla rete.
-              </li>
-              <li>
-                <strong>Assicurazioni Decentralizzate</strong>: Piattaforme come
-                Nexus Mutual offrono coperture assicurative per vari rischi, come
-                la vulnerabilità degli smart contract, tramite un sistema gestito
-                dalla comunità.
-              </li>
-            </List>
-          </Accordion>
-          <Accordion buttonText={"Vantaggi della DeFi"}>
-            <List>
-              <li>
-                <strong>Autonomia Finanziaria</strong>: Gli utenti hanno il pieno
-                controllo dei propri fondi senza dover dipendere da intermediari.
-              </li>
-              <li>
-                <strong>Riduzione dei Costi</strong>: L&apos;eliminazione degli
-                intermediari riduce significativamente le commissioni e i costi
-                delle transazioni.
-              </li>
-              <li>
-                <strong>Sovranità Monetaria (indipendenza finanziaria)</strong>:
-                Gli asset (token) posseduti nei portafogli (wallet) non-custodial
-                sono al sicuro da qualsiasi confisca esterna, protetti dalla
-                chiave privata.
-              </li>
-              <li>
-                <strong>Innovazione Rapida:</strong> L&apos;ambiente aperto e
-                collaborativo favorisce lo sviluppo e l&apos;implementazione
-                rapida di nuove idee e tecnologie.
-              </li>
-            </List>
-          </Accordion>
-          <Accordion buttonText={"Sfide e Rischi della DeFi"}>
-            <List>
-              <li>
-                <strong>Sicurezza</strong>: Gli smart contract possono essere
-                vulnerabili agli attacchi informatici. È importante verificare
-                l&apos;affidabilità dei progetti e dei loro audit di sicurezza.
-              </li>
-              <li>
-                <strong>Regolamentazione</strong>: La mancanza di un quadro
-                normativo chiaro può rappresentare un rischio per gli utenti e le
-                piattaforme.
-              </li>
-              <li>
-                <strong>Volatilità</strong>: Le criptovalute sono soggette a forti
-                oscillazioni di prezzo, che possono influenzare le operazioni di
-                prestito e investimento.
-              </li>
-            </List>
-          </Accordion>
-        </SectionBody>
-        <SectionTitle>Applicazioni DeFi</SectionTitle>
-        <SectionBody>
-          <strong>Exchange Decentralizzate (DEX)</strong>
-          <Accordion buttonText="Cosa sono" defaultOpen={true}>
-            Le exchange decentralizzate (o DEX, dall&apos;inglese Decentralized
-            Exchange) sono piattaforme che permettono di scambiare criptovalute
-            direttamente tra utenti senza intermediari centrali come le banche o
-            le borse valori tradizionali. A differenza degli exchange
-            centralizzati (come Binance o Coinbase), che custodiscono i fondi
-            degli utenti e gestiscono le transazioni attraverso server controllati
-            dall&apos;azienda, le DEX operano su una rete blockchain utilizzando
-            smart contract, eliminando così la necessità di fidarsi di una terza
-            parte. Un DEX permette agli utenti di mantenere il pieno controllo dei
-            loro fondi, che vengono conservati nei loro wallet personali fino a
-            quando non vengono eseguite le transazioni. Gli scambi avvengono in
-            maniera peer-to-peer (P2P), cioè direttamente tra le persone, e ogni
-            transazione viene registrata sulla blockchain, garantendo trasparenza
-            e sicurezza. Un esempio noto di exchange decentralizzato è Uniswap,
-            che utilizza il protocollo di Ethereum per consentire il trading di
-            criptovalute senza un&apos;autorità centrale che supervisioni le
-            operazioni. Grazie ai DEX, gli utenti possono scambiare asset digitali
-            in maniera autonoma e anonima, senza il rischio di perdere i fondi a
-            causa di attacchi informatici a piattaforme centralizzate o decisioni
-            arbitrarie di queste ultime.
-            <br />
-            <br />
-            <CardContainer>
-              <SimpleCard
-                title={"Hyperliquid"}
-                icon={hyperliquidIcon}
-                subArray={[
-                  { icon: hypervmIcon, text: "" }
-                ]}
-                subArrayTitle="Reti Supportate:"
-                externalLink="https://app.hyperliquid.xyz/"
-                xPage="https://x.com/HyperliquidX"
-                href="/defi/hyperliquid"
-              />
-              <SimpleCard
-                title={"Uniswap"}
-                icon={uniswapIcon}
-                subArray={[
-                  { icon: ethereumIcon, text: "" },
-                  { icon: arbitrumIcon, text: "" },
-                  { icon: optimismIcon, text: "" },
-                  { icon: polygonIcon, text: "" },
-                  { icon: baseIcon, text: "" }
-                ]}
-                subArrayTitle="Reti Supportate:"
-                externalLink="https://app.uniswap.org/swap"
-                xPage="https://x.com/Uniswap"
-                href="/defi/uniswap"
-              />
-              <SimpleCard
-                title={"Orbiter Finance"}
-                icon={orbiterIcon}
-                subArray={[
-                  { icon: ethereumIcon, text: "" },
-                  { icon: arbitrumIcon, text: "" },
-                  { icon: optimismIcon, text: "" },
-                  { icon: zksyncIcon, text: "" }
-                ]}
-                subArrayTitle="Reti Supportate:"
-                externalLink="https://www.orbiter.finance/"
-                xPage="https://x.com/Orbiter_Finance"
-                href="/defi/orbiter"
-              />
-              <SimpleCard
-                title={"Jumper"}
-                icon={jumperIcon}
-                subArray={[
-                  { icon: ethereumIcon, text: "" },
-                  { icon: arbitrumIcon, text: "" },
-                  { icon: optimismIcon, text: "" },
-                  { icon: baseIcon, text: "" },
-                  { icon: polygonIcon, text: "" },
-                  { icon: layerzeroIcon, text: "" }
-                ]}
-                subArrayTitle="Reti Supportate:"
-                externalLink="https://jumper.exchange/"
-                xPage="https://x.com/JumperExchange"
-                href="/defi/jumper"
-              />
-              <SimpleCard
-                title={"Stargate"}
-                icon={stargateIcon}
-                subArray={[
-                  { icon: ethereumIcon, text: "" },
-                  { icon: arbitrumIcon, text: "" },
-                  { icon: optimismIcon, text: "" },
-                  { icon: polygonIcon, text: "" },
-                  { icon: baseIcon, text: "" },
-                  { icon: layerzeroIcon, text: "" }
-                ]}
-                subArrayTitle="Reti Supportate:"
-                externalLink="https://stargate.finance/"
-                xPage="https://x.com/StargateFinance"
-                href="/defi/stargate"
-              />
-              <SimpleCard
-                title={"deBridge"}
-                icon={debridgeIcon}
-                subArray={[
-                  { icon: ethereumIcon, text: "" },
-                  { icon: solanaIcon, text: "" },
-                  { icon: arbitrumIcon, text: "" },
-                  { icon: optimismIcon, text: "" },
-                  { icon: baseIcon, text: "" },
-                  { icon: lineaIcon, text: "" },
-                  { icon: zksyncIcon, text: "" },
-                  { icon: polygonIcon, text: "" },
-                  { icon: blastIcon, text: "" },
-                  { icon: avalancheIcon, text: "" }
-                ]}
-                subArrayTitle="Reti Supportate:"
-                externalLink="https://debridge.finance/"
-                xPage="https://x.com/deBridgeFinance"
-                href="/defi/debridge"
-              />
-              <SimpleCard
-                title={"Camelot"}
-                icon={camelotIcon}
-                subArray={[
-                  { icon: arbitrumIcon, text: "" },
-                  { icon: Placeholder, text: "" },
-                  { icon: xaiIcon, text: "" }
-                ]}
-                subArrayTitle="Reti Supportate:"
-                externalLink="https://app.camelot.exchange/"
-                xPage="https://x.com/CamelotDEX"
-                href="/defi/camelot"
-              />
-              <SimpleCard
-                title={"Curve"}
-                icon={curveIcon}
-                subArray={[
-                  { icon: ethereumIcon, text: "" },
-                  { icon: arbitrumIcon, text: "" },
-                  { icon: optimismIcon, text: "" },
-                  { icon: polygonIcon, text: "" },
-                  { icon: baseIcon, text: "" },
-                  { icon: avalancheIcon, text: "" },
-                  { icon: bscIcon, text: "" }
-                ]}
-                subArrayTitle="Reti Supportate:"
-                externalLink="https://curve.fi/"
-                xPage="https://x.com/CurveFinance"
-                href="/defi/curve"
-              />
-              <SimpleCard
-                title={"Jupiter"}
-                icon={jupiterIcon}
-                subArray={[
-                  { icon: solanaIcon, text: "" }
-                ]}
-                subArrayTitle="Reti Supportate:"
-                externalLink="https://jup.ag/"
-                xPage="https://x.com/JupiterExchange"
-                href="/defi/jupiter"
-              />
-              <SimpleCard
-                title={"Raydium"}
-                icon={raydiumIcon}
-                subArray={[
-                  { icon: solanaIcon, text: "" }
-                ]}
-                subArrayTitle="Reti Supportate:"
-                externalLink="https://raydium.io/"
-                xPage="https://x.com/RaydiumProtocol"
-                href="/defi/raydium"
-              />
-              <SimpleCard
-                title={"Balancer"}
-                icon={balancerIcon}
-                subArray={[
-                  { icon: ethereumIcon, text: "" },
-                  { icon: optimismIcon, text: "" },
-                  { icon: polygonIcon, text: "" },
-                  { icon: gnosisIcon, text: "" },
-                  { icon: baseIcon, text: "" },
-                  { icon: arbitrumIcon, text: "" },
-                  { icon: avalancheIcon, text: "" },
-                  { icon: Placeholder, text: "" }
-                ]}
-                subArrayTitle="Reti Supportate:"
-                externalLink="https://balancer.fi/"
-                xPage="https://x.com/Balancer"
-                href="/defi/balancer"
-              />
-              <SimpleCard
-                title={"SyncSwap"}
-                icon={syncswapIcon}
-                subArray={[
-                  { icon: zksyncIcon, text: "" },
-                  { icon: lineaIcon, text: "" },
-                  { icon: scrollIcon, text: "" }
-                ]}
-                subArrayTitle="Reti Supportate:"
-                externalLink="https://syncswap.xyz/"
-                xPage="https://twitter.com/syncswap"
-                href="/defi/syncswap"
-              />
-              <SimpleCard
-                title={"Yearn Finance"}
-                icon={yearnIcon}
-                subArray={[
-                  { icon: ethereumIcon, text: "" },
-                  { icon: arbitrumIcon, text: "" },
-                  { icon: polygonIcon, text: "" }
-                ]}
-                subArrayTitle="Reti Supportate:"
-                externalLink="https://yearn.fi/"
-                xPage="https://x.com/yearnfi"
-                href="/defi/yearn"
-              />
-              <SimpleCard
-                title={"Compound"}
-                icon={compoundIcon}
-                subArray={[
-                  { icon: ethereumIcon, text: "" },
-                  { icon: arbitrumIcon, text: "" },
-                  { icon: baseIcon, text: "" },
-                  { icon: optimismIcon, text: "" },
-                  { icon: polygonIcon, text: "" },
-                  { icon: scrollIcon, text: "" }
-                ]}
-                subArrayTitle="Reti Supportate:"
-                externalLink="https://compound.finance/"
-                xPage="https://x.com/compoundfinance"
-                href="/defi/compound"
-              />
-              <SimpleCard
-                title={"Lido Finance"}
-                icon={lidoIcon}
-                subArray={[
-                  { icon: ethereumIcon, text: "" },
-                  { icon: solanaIcon, text: "" }
-                ]}
-                subArrayTitle="Reti Supportate:"
-                externalLink="https://lido.fi/"
-                xPage="https://x.com/LidoFinance"
-                href="/defi/lido"
-              />
-              <SimpleCard
-                title={"LayerZero"}
-                icon={layerzeroIcon}
-                subArray={[
-                  { icon: layerzeroIcon, text: "" }
-                ]}
-                subArrayTitle="Reti Supportate:"
-                externalLink="https://layerzero.network/"
-                xPage="https://x.com/LayerZero_Labs"
-                href="/defi/layerzero"
-              />
-            </CardContainer>
-          </Accordion>
-          <h2 className="text-3xl font-bold gradient-text mb-6 mt-8">Prestiti e Rendimenti</h2>
-          <Accordion buttonText="Cosa sono" defaultOpen={true}>
-            Le piattaforme decentralizzate di prestiti e rendimenti permettono
-            agli utenti di prestare o prendere in prestito criptovalute in modo
-            automatico, senza intermediari come banche o istituzioni finanziarie
-            tradizionali.
-          </Accordion>
-          <Accordion buttonText="Prestiti">
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam
-            minus vitae consequuntur maiores, eum doloribus aspernatur, possimus
-            error, hic fugit culpa! Quaerat nam, reprehenderit praesentium
-            officiis harum soluta id iusto.
-            <CardContainer>
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-            </CardContainer>
-          </Accordion>
-          <Accordion buttonText="Rendimenti">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Labore
-            voluptatibus, dicta odio dolore alias expedita deleniti, vel ex dolor,
-            impedit ut quasi delectus voluptas magni nihil quis modi earum
-            consectetur?
-            <CardContainer>
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-            </CardContainer>
-          </Accordion>
-          <Accordion buttonText="Bridge">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Numquam
-            quasi, dolor possimus dignissimos expedita corporis officiis
-            doloremque iusto! Molestiae voluptatibus, qui inventore totam nesciunt
-            quia iste architecto non aspernatur eos.
-            <CardContainer>
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-              <SimpleCard
-                title={"Metamask"}
-                subArray={[{ icon: Placeholder, text: "" }]}
-                subArrayTitle="Reti"
-                externalLink="https://www.ciao.it"
-                xPage="https://x.com/varpippo"
-              />
-            </CardContainer>
-          </Accordion>
-        </SectionBody>
-        
-        <ExploreWeb3 />
-      </MobileContainer>
-    </ClerkProtectedRoute>
+    <div className="relative z-10">
+              {/* Header: titolo a sinistra, Quick Actions in alto a destra (sopra i filtri) */}
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
+                <div>
+                  <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">DeFi</h1>
+                  <p className="text-slate-600 dark:text-slate-400 text-lg">Esplora protocolli, Inizia ora.</p>
+                </div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={onOpenBasiDefi}
+                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-colors shrink-0 cursor-pointer ${isDark ? "border-white/20 bg-white/5 hover:bg-white/10 text-white" : "border-slate-200 bg-white hover:bg-slate-50 text-slate-800"}`}
+                  >
+                    <span>💡</span>
+                    <span>Basi DeFi</span>
+                  </button>
+                  <Link
+                    href="/news/defi"
+                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-amber-400 hover:bg-amber-500 text-slate-900 transition-colors"
+                  >
+                    <span>📰</span> Notizie DeFi
+                  </Link>
+                </div>
+              </div>
+
+              {/* Tabs filtri: Link così la categoria è nell'URL e il filtro funziona sempre */}
+              <div className="flex flex-wrap gap-2 mb-6">
+                {CATEGORIES.map((cat) => (
+                  <Link
+                    key={cat.id}
+                    href={`/defi?category=${cat.id}`}
+                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors cursor-pointer ${
+                      activeCategory === cat.id
+                        ? "bg-slate-900 dark:bg-white text-white dark:text-slate-900"
+                        : "bg-white dark:bg-indigo-900/40 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-indigo-800/50 border border-slate-200 dark:border-indigo-500/20"
+                    }`}
+                  >
+                    {cat.label}
+                  </Link>
+                ))}
+              </div>
+
+              {/* Search */}
+              <div className="relative mb-8 max-w-2xl">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
+                <input
+                  type="search"
+                  placeholder="Cerca protocolli DeFi"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 dark:border-indigo-500/30 bg-white dark:bg-indigo-900/40 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                />
+              </div>
+
+              {/* Grid protocolli: card = div unico, link progetto sopra, icone link sotto (niente <a> dentro <a>) */}
+              <main className="flex-1 min-w-0">
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                {filteredProtocols.map((p) => (
+                  <div
+                    key={p.href + p.name}
+                    className="rounded-2xl border border-slate-200 dark:border-indigo-500/20 bg-white dark:bg-indigo-900/25 p-5 hover:border-indigo-400 dark:hover:border-indigo-500 transition-colors"
+                  >
+                    <Link href={p.href} className="block">
+                      <div className="flex items-start justify-between gap-2 mb-2 min-w-0">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-indigo-800/40 flex items-center justify-center overflow-hidden shrink-0">
+                            <Image src={p.icon} alt={p.name} width={32} height={32} className="object-contain" />
+                          </div>
+                          <span className="font-bold text-slate-900 dark:text-white truncate">{p.name}</span>
+                        </div>
+                        {p.airdropPotential && (
+                          <span className="shrink-0 px-2 py-1 rounded-lg bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300 text-[11px] font-medium whitespace-nowrap">
+                            Airdrop
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-slate-600 dark:text-slate-400 text-sm mb-3 line-clamp-2">{p.description}</p>
+                      <div className="text-xs font-bold text-slate-700 dark:text-slate-300 space-y-1">
+                        <div>Token: {p.token}</div>
+                        <div>Prezzo: {p.price}</div>
+                        <div>Market Cap: {p.marketCap}</div>
+                      </div>
+                    </Link>
+                    <div className="flex items-center gap-2 pt-3 mt-3 border-t border-slate-200 dark:border-slate-600">
+                      <a href={p.twitterUrl} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-indigo-800/50 transition-colors" title="X (Twitter)" aria-label="X (Twitter)">
+                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
+                      </a>
+                      <a href={p.websiteUrl} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-indigo-800/50 transition-colors" title="Sito web" aria-label="Sito web">
+                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>
+                      </a>
+                      {p.contractAddress ? (
+                        <button type="button" onClick={() => void navigator.clipboard.writeText(p.contractAddress)} className="p-1.5 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-indigo-800/50 transition-colors" title="Copia contract address" aria-label="Copia contract address">
+                          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>
+                        </button>
+                      ) : null}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {filteredProtocols.length === 0 && (
+                <p className="text-center py-12 text-slate-500 dark:text-slate-400">Nessun protocollo trovato per questa categoria o ricerca.</p>
+              )}
+              </main>
+
+              {/* Percorsi Consigliati */}
+              <section className="mt-12">
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Percorsi Consigliati</h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {RECOMMENDED_PATHS.map((path) => (
+                <Link
+                  key={path.href + path.title}
+                  href={path.href}
+                  className="flex items-center gap-4 p-5 rounded-2xl border border-slate-200 dark:border-indigo-500/20 bg-white dark:bg-indigo-900/25 hover:border-indigo-400 dark:hover:border-indigo-500 transition-colors"
+                >
+                  <span className="text-2xl">{path.icon}</span>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-bold text-slate-900 dark:text-white">{path.title}</h3>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">{path.desc}</p>
+                  </div>
+                  <span className="text-slate-400">→</span>
+                </Link>
+              ))}
+                </div>
+              </section>
+
+              {/* Video / Post X */}
+              <section className="mt-12">
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Video e post X</h2>
+                <p className="text-slate-600 dark:text-slate-400 mb-6">Tutorial, spiegazioni e aggiornamenti dalla community.</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {MEDIA_EXAMPLES.map((item, i) => (
+                <div
+                  key={i}
+                  className="rounded-2xl border border-slate-200 dark:border-indigo-500/20 bg-white dark:bg-indigo-900/25 overflow-hidden"
+                >
+                  {item.type === "video" ? (
+                    <div className="aspect-video bg-slate-200 dark:bg-indigo-800/40 flex items-center justify-center">
+                      <a
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex flex-col items-center justify-center gap-2 p-6 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400"
+                      >
+                        <span className="text-4xl">▶️</span>
+                        <span className="text-sm font-medium">{item.source}</span>
+                      </a>
+                    </div>
+                  ) : (
+                    <div className="aspect-video bg-slate-100 dark:bg-slate-700/50 flex items-center justify-center p-6">
+                      <a
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex flex-col items-center justify-center gap-2 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400"
+                      >
+                        <span className="text-4xl">𝕏</span>
+                        <span className="text-sm font-medium">{item.handle}</span>
+                      </a>
+                    </div>
+                  )}
+                  <div className="p-4">
+                    <h3 className="font-semibold text-slate-900 dark:text-white">{item.title}</h3>
+                    <a
+                      href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-indigo-600 dark:text-indigo-400 hover:underline mt-1 inline-block"
+                    >
+                      Apri {item.type === "video" ? "video" : "post"} →
+                    </a>
+                  </div>
+                </div>
+              ))}
+                </div>
+              </section>
+
+    </div>
+  );
+}
+
+export default function DefiPage() {
+  const [basiDefiOpen, setBasiDefiOpen] = useState(false);
+  return (
+    <>
+      <Suspense fallback={<div className="px-6 py-8 text-slate-500 dark:text-slate-400">Caricamento...</div>}>
+        <DefiPageContent onOpenBasiDefi={() => setBasiDefiOpen(true)} />
+      </Suspense>
+      <BasiDeFiModal isOpen={basiDefiOpen} onClose={() => setBasiDefiOpen(false)} />
+    </>
   );
 }

@@ -1,25 +1,198 @@
+"use client";
+
 import { Accordion } from "@/components/Accordion";
-import { Button } from "@/components/Button";
 import { List } from "@/components/List";
-import { PageLayout } from "@/components/PageLayout";
 import Link from "next/link";
 import Image from "next/image";
-// Removed unused imports
+import { useState, useEffect } from "react";
+import { UnifiedAuthControls } from "@/components/auth/UnifiedAuthControls";
+import imparodefiLogo from "@/assets/imparodefi-logo-nobg.webp";
+import { LEARNING_PATH_CARDS } from "@/lib/learning-paths";
+
+const SIDEBAR_ITEMS = [
+  { label: "Dashboard", href: "/", icon: "📊" },
+  { label: "Manuale", href: "/manuale", icon: "📚" },
+  { label: "DeFi", href: "/defi", icon: "💹" },
+  { label: "Airdrops", href: "/airdrops", icon: "🎁" },
+  { label: "Blockchains", href: "/blockchain", icon: "⛓️" },
+  { label: "Compra/Vendi Crypto", href: "/compraevendicrypto", icon: "💳" },
+  { label: "Portafogli", href: "/wallet", icon: "👛" },
+  { label: "Strumenti Utili", href: "/strumentiutili", icon: "🔧" },
+  { label: "Memecoins", href: "/memecoins", icon: "🪙" },
+  { label: "Memecoin/NFT", href: "/nft", icon: "🖼️" },
+  { label: "Giochi", href: "/giochi", icon: "🎮" },
+  { label: "Mercati di Predizione", href: "/giochi/polymarket", icon: "📈" },
+  { label: "Eventi Storici", href: "/eventi-storici", icon: "📅" },
+  { label: "Mappa Ecosistema", href: "/esplora-app", icon: "🌐" },
+  { label: "Notizie", href: "/news", icon: "📰" },
+  { label: "Leaderboard", href: "/leaderboards/global", icon: "🏆" },
+];
+
+const QUICK_SECTIONS = [
+  { href: "#fondamenti", label: "Fondamenti Web3" },
+  { href: "#wallet", label: "Wallet e sicurezza" },
+  { href: "#onramp", label: "Accesso al mercato" },
+  { href: "#analisi", label: "Analisi progetti" },
+  { href: "#nft", label: "NFT e community" },
+  { href: "#sicurezza", label: "Anti-truffe" },
+];
+
+type Theme = "dark" | "light";
 
 export default function Manuale() {
+  const [theme, setTheme] = useState<Theme>("dark");
+
+  useEffect(() => {
+    const stored = localStorage.getItem("imparodefi-theme") as Theme | null;
+    if (stored === "dark" || stored === "light") setTheme(stored);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("imparodefi-theme", theme);
+    document.documentElement.classList.toggle("dark", theme === "dark");
+    document.documentElement.classList.toggle("light", theme === "light");
+  }, [theme]);
+
+  const isDark = theme === "dark";
+
   return (
-      <PageLayout 
-        title="Manuale A-Z" 
-        description="Guida completa al mondo Web3, crypto e DeFi dalla A alla Z"
-      >
-        <div className="bg-white rounded-2xl shadow-lg p-8 border border-neutral-200 mb-8">
-              <p className="text-neutral-900 mb-6">
+    <div
+      className={`min-h-screen transition-colors ${
+        isDark
+          ? "bg-gradient-to-b from-indigo-950 via-slate-900/95 via-30% to-indigo-950 text-white"
+          : "bg-gradient-to-b from-slate-100 via-indigo-50/50 to-slate-100 text-slate-900"
+      }`}
+    >
+      <div className={`fixed inset-0 pointer-events-none bg-[size:48px_48px] ${isDark ? "bg-[linear-gradient(rgba(99,102,241,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.06)_1px,transparent_1px)]" : "bg-[linear-gradient(rgba(99,102,241,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.06)_1px,transparent_1px)]"}`} />
+      <div className="relative flex min-h-screen">
+        <aside className={`w-56 flex-shrink-0 border-r backdrop-blur py-6 ${isDark ? "border-indigo-500/20 bg-indigo-950/70" : "border-slate-200 bg-white/80"}`}>
+          <nav className="px-3 space-y-0.5">
+            {SIDEBAR_ITEMS.map((item) => (
+              <Link
+                key={item.href + item.label}
+                href={item.href}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                  item.href === "/manuale"
+                    ? "bg-indigo-500/90 text-white"
+                    : isDark ? "text-slate-300 hover:bg-indigo-500/20 hover:text-white" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                }`}
+              >
+                <span className="text-lg">{item.icon}</span>
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+        </aside>
+        <div className="flex-1 flex flex-col min-w-0">
+          <div className={`flex items-center justify-between px-6 py-4 border-b ${isDark ? "border-indigo-500/20 bg-indigo-950/50" : "border-slate-200 bg-white/70"}`}>
+            <Link href="/" className="flex items-center gap-2">
+              <Image src={isDark ? "/imparodefi-logo-dark.png" : imparodefiLogo} alt="ImparoDeFi" width={36} height={36} className="rounded-lg" />
+              <span className={`font-bold text-lg ${isDark ? "text-white" : "text-slate-900"}`}>ImparoDeFi</span>
+              <span className={`text-xs font-medium px-1.5 py-0.5 rounded ${isDark ? "text-slate-400 bg-white/10" : "text-slate-500 bg-slate-200"}`}>BETA</span>
+            </Link>
+            <div className="flex items-center gap-3">
+              <Link href="/admin/dashboard" className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium border transition-colors ${isDark ? "border-white/20 bg-white/5 hover:bg-white/10 text-white" : "border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-700"}`}>
+                Admin Panel
+              </Link>
+              <button type="button" onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))} className={`p-2 rounded-lg border transition-colors ${isDark ? "border-white/20 bg-white/5 hover:bg-white/10" : "border-slate-300 bg-slate-100 hover:bg-slate-200"}`} title={isDark ? "Passa a tema chiaro" : "Passa a tema scuro"} aria-label={isDark ? "Passa a tema chiaro" : "Passa a tema scuro"}>
+                {isDark ? <svg className="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden><path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" /></svg> : <svg className="w-5 h-5 text-slate-600" fill="currentColor" viewBox="0 0 20 20" aria-hidden><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" /></svg>}
+              </button>
+              <Link
+                href="/profilo"
+                className={`p-2 rounded-lg border transition-colors ${isDark ? "border-white/20 bg-white/5 hover:bg-white/10 text-white" : "border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-700"}`}
+                title="Profilo"
+                aria-label="Profilo"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.75 6.75a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a8.967 8.967 0 0114.998 0A17.933 17.933 0 0112 22.5c-2.676 0-5.216-.584-7.499-1.632z" />
+                </svg>
+              </Link>
+              <UnifiedAuthControls />
+            </div>
+          </div>
+          <div className="flex-1 px-6 py-8 overflow-auto manual-modern">
+            <div className="max-w-4xl mx-auto">
+              <Link href="/" className={`inline-flex items-center gap-1.5 text-sm mb-6 ${isDark ? "text-slate-400 hover:text-white" : "text-slate-500 hover:text-slate-900"}`}>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+                Torna alla Dashboard
+              </Link>
+              <h1 className={`text-3xl font-bold mb-2 ${isDark ? "text-white" : "text-slate-900"}`}>Manuale A-Z</h1>
+              <p className={`text-lg mb-8 ${isDark ? "text-slate-400" : "text-slate-600"}`}>Guida completa al mondo Web3, crypto e DeFi dalla A alla Z</p>
+              <section className={`manual-card rounded-2xl border p-6 mb-8 ${isDark ? "bg-indigo-900/25 border-indigo-500/25" : "bg-white border-slate-200 shadow-lg"}`}>
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <p className={`text-xs uppercase tracking-wide ${isDark ? "text-indigo-300" : "text-indigo-600"}`}>Percorso consigliato</p>
+                    <p className={`mt-1 text-sm ${isDark ? "text-slate-300" : "text-slate-600"}`}>
+                      Parti dai fondamentali, passa alla pratica e chiudi con risk management e sicurezza.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs">
+                    <span className="rounded-full border border-indigo-400/40 bg-indigo-500/15 px-3 py-1 text-indigo-200">Step 1: Capire</span>
+                    <span className="rounded-full border border-emerald-400/40 bg-emerald-500/15 px-3 py-1 text-emerald-200">Step 2: Usare</span>
+                    <span className="rounded-full border border-amber-400/40 bg-amber-500/15 px-3 py-1 text-amber-200">Step 3: Proteggere</span>
+                  </div>
+                </div>
+
+                <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                  <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                    <p className="text-xs uppercase tracking-wide text-slate-400">Tipo di rete</p>
+                    <p className="mt-1 text-2xl font-semibold text-white">Layer 1 + Layer 2</p>
+                    <p className="mt-2 text-sm text-slate-300">Le L1 garantiscono sicurezza, le L2 migliorano velocita e costi.</p>
+                  </div>
+                  <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                    <p className="text-xs uppercase tracking-wide text-slate-400">Disponibilita</p>
+                    <p className="mt-1 text-2xl font-semibold text-white">24/7</p>
+                    <p className="mt-2 text-sm text-slate-300">Transazioni e applicazioni attive in modo continuo.</p>
+                  </div>
+                  <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                    <p className="text-xs uppercase tracking-wide text-slate-400">Verificabilita</p>
+                    <p className="mt-1 text-2xl font-semibold text-white">On-chain</p>
+                    <p className="mt-2 text-sm text-slate-300">Dati e transazioni pubblici e controllabili da chiunque.</p>
+                  </div>
+                </div>
+
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {QUICK_SECTIONS.map((section) => (
+                    <a
+                      key={section.href}
+                      href={section.href}
+                      className={`rounded-xl border px-3 py-2 text-sm transition-colors ${
+                        isDark
+                          ? "border-indigo-500/30 bg-indigo-900/25 text-slate-200 hover:bg-indigo-800/40"
+                          : "border-slate-200 bg-slate-100 text-slate-700 hover:bg-slate-200"
+                      }`}
+                    >
+                      {section.label}
+                    </a>
+                  ))}
+                </div>
+
+                <div className="mt-6">
+                  <p className="text-sm font-medium text-slate-200 mb-3">Percorsi guidati</p>
+                  <div className="grid gap-3 md:grid-cols-3">
+                    {LEARNING_PATH_CARDS.map((path) => (
+                      <Link
+                        key={path.level}
+                        href={path.href}
+                        className="rounded-xl border border-indigo-500/30 bg-indigo-900/20 p-4 transition-colors hover:border-indigo-400/50 hover:bg-indigo-800/25"
+                      >
+                        <p className="text-xs uppercase tracking-wide text-indigo-300">{path.sub}</p>
+                        <p className="mt-1 text-lg font-semibold text-white">{path.level}</p>
+                        <p className="mt-2 text-sm text-slate-300 line-clamp-3">{path.desc}</p>
+                        <p className="mt-3 text-sm font-medium text-indigo-300">Apri percorso →</p>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </section>
+        <div id="fondamenti" className={`manual-card scroll-mt-24 rounded-2xl border p-8 mb-8 ${isDark ? "bg-indigo-900/25 border-indigo-500/20" : "bg-white border-slate-200 shadow-lg"}`}>
+              <p className={`mb-6 ${isDark ? "text-slate-200" : "text-slate-900"}`}>
                 Cosa sono le criptovalute? Cos&apos;è il metaverso, il mondo Web3, la DeFi e l&apos;economia digitale?
               </p>
-              <p className="text-neutral-900 mb-6">
+              <p className="text-slate-900 dark:text-slate-200 mb-6">
                 Per iniziare, dovete sapere che a noi interessa usare questo mondo digitale per gli enormi vantaggi e benefici che comporta, come ad esempio:
               </p>
-              <div className="bg-neutral-50 rounded-xl p-5 border border-neutral-200 mb-8">
+              <div className="rounded-xl p-5 border dark:bg-indigo-900/25 dark:border-indigo-500/30 bg-slate-50 border-slate-200 mb-8">
                 <List>
                   <li><b>Conservare il denaro</b> in maniera sicura ed incensurabile</li>
                   <li><b>Inviare denaro istantaneamente</b> a costo quasi zero</li>
@@ -32,7 +205,7 @@ export default function Manuale() {
                   buttonText="Benefici delle tecnologie Web3"
                   showTooltip={true}
                 >
-                  <div className="p-5 space-y-4 text-neutral-900">
+                  <div className="p-5 space-y-4 text-slate-900 dark:text-slate-200">
                     <p className="mb-4">
                       Internet ha abilitato il trasferimento di dati istantaneamente attraverso il mondo, a costo quasi zero. Le blockchain fanno la stessa cosa ma per la finanza.
                     </p>
@@ -53,7 +226,7 @@ export default function Manuale() {
                     
                     <div className="space-y-3">
                       <Accordion buttonText="Per i Consumatori">
-                        <div className="p-4 space-y-4 text-neutral-900">
+                        <div className="p-4 space-y-4 text-slate-900 dark:text-slate-200">
                           <ul className="list-disc list-inside space-y-3">
                             <li>
                               <strong>Gestione del proprio capitale in maniera autonoma ed incensurabile</strong>
@@ -81,7 +254,7 @@ export default function Manuale() {
                       </Accordion>
                       
                       <Accordion buttonText="Per i Negozianti (es. retailer, piattaforme e-commerce)">
-                        <div className="p-4 space-y-4 text-neutral-900">
+                        <div className="p-4 space-y-4 text-slate-900 dark:text-slate-200">
                           <ul className="list-disc list-inside space-y-3">
                             <li>
                               <strong>Pagamenti diretti in criptovalute:</strong> Eliminano gli intermediari (banche o PSP), riducono le commissioni e abilitano transazioni globali più rapide.
@@ -106,7 +279,7 @@ export default function Manuale() {
                       </Accordion>
                       
                       <Accordion buttonText="Per i Governi">
-                        <div className="p-4 space-y-4 text-neutral-900">
+                        <div className="p-4 space-y-4 text-slate-900 dark:text-slate-200">
                           <ul className="list-disc list-inside space-y-3">
                             <li>
                               <strong>Trasparenza nella governance:</strong> I registri pubblici possono diventare più trasparenti, affidabili e immutabili, riducendo la corruzione e aumentando la fiducia.
@@ -131,7 +304,7 @@ export default function Manuale() {
                       </Accordion>
                       
                       <Accordion buttonText="Per Imprese e Grandi Aziende">
-                        <div className="p-4 space-y-4 text-neutral-900">
+                        <div className="p-4 space-y-4 text-slate-900 dark:text-slate-200">
                           <ul className="list-disc list-inside space-y-3">
                             <li>
                               <strong>Trasparenza della supply chain:</strong> Tracciabilità in tempo reale dei beni, permettendo la verifica di origine e qualità dalle materie prime al prodotto finito.
@@ -156,7 +329,7 @@ export default function Manuale() {
                       </Accordion>
                       
                       <Accordion buttonText="Per Sviluppatori e Innovatori">
-                        <div className="p-4 space-y-4 text-neutral-900">
+                        <div className="p-4 space-y-4 text-slate-900 dark:text-slate-200">
                           <ul className="list-disc list-inside space-y-3">
                             <li>
                               <strong>Collaborazione open source:</strong> Protocolli aperti favoriscono collaborazione globale, riuso dell'infrastruttura ed interoperabilità.
@@ -175,7 +348,7 @@ export default function Manuale() {
                       </Accordion>
                       
                       <Accordion buttonText="Per Artisti e Creatori">
-                        <div className="p-4 space-y-4 text-neutral-900">
+                        <div className="p-4 space-y-4 text-slate-900 dark:text-slate-200">
                           <ul className="list-disc list-inside space-y-3">
                             <li>
                               <strong>Monetizzazione diretta via NFT:</strong> Vendita di opere digitali direttamente al pubblico, eliminando intermediari e trattenendo una quota maggiore dei ricavi.
@@ -196,84 +369,113 @@ export default function Manuale() {
                 <Accordion
                   buttonText="Come navigare il mondo Web3?"
                 >
-                  <div className="p-5 space-y-4 text-neutral-900">
-                    <p>
-                      Ci sono diverse blockchain, ciascuna con la propria criptovaluta nativa (Bitcoin ha BTC, Ethereum ha ETH, Solana ha SOL, e cosi via), e ciascuna blockchain ha centinaia e migliaia di criptovalute ed applicazioni basate sopra di essa.
-                    </p>
-                    
-                    <p>
-                      Ma non spaventatevi, perché a noi interessa principalmente Ethereum e l'ecosistema di applicazioni e protocolli costruiti sopra di esso.
-                    </p>
-                    
-                    <p>
-                      Prima di tutto, è essenziale procurarsi un <strong>portafoglio ("wallet") non-custodial</strong>. Potete trovare tutte le info a riguardo nella sezione "Portafogli Crypto".
-                    </p>
-                    
-                    <p>
-                      Una volta che si ha creato il proprio portafogli, bisogna differenziare tra i portafogli che vengono usati come "Cassa depositi / Banca", ovvero dove si tengono i propri risparmi, e tra portafogli "attivi", ovvero quelli che vengono utilizzati per connettersi alle applicazioni Web3 o per investimenti più attivi.
-                    </p>
-                    
-                    <p>
-                      E' importante differenziare e tenere le chiavi private dei propri portafogli al sicuro, specialmente quelle dei portafogli con la maggior parte dei propri risparmi depositati a lungo termine, chiamati anche "cold wallet" che sta per "portafogli freddo".
-                    </p>
-                    
-                    <p>
-                      Una volta creati gli indirizzi e messe al sicuro le chiavi private, si potrà finalmente procedere ad inviarsi ai portafogli dei crypto-asset (si chiamano cosi appunto, non "criptovalute" siccome il 99% di esse sono semplicemente asset e non valute).
-                    </p>
-                    
-                    <p>
-                      Per procurarsi tali crypto-asset, bisogna passare per un "exchange centralizzata", tipo Coinbase, Kraken o Binance. Vi si crea un account in pochi minuti, ed una volta verificati potrete acquistare cripto come Bitcoin, Ethereum, Solana e molte altre usando le proprie carte di debito/credito, tramite apple pay, oppure inviando fondi dai propri conti correnti.
-                    </p>
-                    
-                    <p>
-                      Una volta acquistate le proprie cripto, si vorrà procedere a spostarle su uno degli indirizzi dei portafogli "non-custodial", quelli creati all'inizio, perchè una volta lì sono al sicuro da qualsiasi governo, istituzione, o rischio di hack/scam esterni, a differenza di quando si tengono sulle exchange centralizzate dove sono soggette a rischi esterni (al di fuori del proprio potere decisionale e previsionale).
-                    </p>
-                    
-                    <p>
-                      Una volta che disporrete di cripto asset su un portafogli non-custodial come Metamask (che è solamente un interfaccia per creare/importare ed utilizzare le proprie chiavi private su Ethereum e Layer2 compatibili), avrete finalmente accesso al mondo Web3; finanza decentralizzata (DeFi), NFTs, memecoin, giochi web3, e molto altro.
+                  <div className="p-5 space-y-5 text-slate-900 dark:text-slate-200">
+                    <div className="grid gap-3 md:grid-cols-3">
+                      <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                        <p className="text-xs uppercase tracking-wide text-slate-400">Focus</p>
+                        <p className="mt-1 font-semibold text-white">Ethereum + Layer 2</p>
+                        <p className="mt-2 text-sm text-slate-300">Poche reti, use-case chiari, esecuzione migliore.</p>
+                      </div>
+                      <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                        <p className="text-xs uppercase tracking-wide text-slate-400">Prerequisito</p>
+                        <p className="mt-1 font-semibold text-white">Wallet non-custodial</p>
+                        <p className="mt-2 text-sm text-slate-300">Controlli chiavi e fondi. Nessun intermediario.</p>
+                      </div>
+                      <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                        <p className="text-xs uppercase tracking-wide text-slate-400">Regola d&apos;oro</p>
+                        <p className="mt-1 font-semibold text-white">Sicurezza prima di tutto</p>
+                        <p className="mt-2 text-sm text-slate-300">Separare wallet cold e wallet attivo.</p>
+                      </div>
+                    </div>
+
+                    <div className="rounded-xl border border-indigo-500/25 bg-slate-950/20 p-4">
+                      <p className="text-sm text-slate-300">
+                        Ci sono molte blockchain (BTC, ETH, SOL...), ma per partire bene conviene usare un percorso semplice e ripetibile.
+                      </p>
+                    </div>
+
+                    <div className="space-y-3">
+                      {[
+                        {
+                          title: "1) Crea il wallet giusto",
+                          text: "Apri un wallet non-custodial e conserva seed phrase/chiavi offline.",
+                        },
+                        {
+                          title: "2) Separa tesoreria e operativita",
+                          text: "Usa un wallet \"cold\" per risparmio e uno \"attivo\" per app e test.",
+                        },
+                        {
+                          title: "3) Acquista asset da canale affidabile",
+                          text: "Compra su exchange/on-ramp affidabili e verifica sempre rete e indirizzo.",
+                        },
+                        {
+                          title: "4) Trasferisci al wallet personale",
+                          text: "Sposta i fondi al wallet non-custodial con una transazione test prima dell'importo pieno.",
+                        },
+                        {
+                          title: "5) Entra nelle app Web3",
+                          text: "Connetti il wallet e accedi a DeFi, NFT e strumenti on-chain in modo graduale.",
+                        },
+                      ].map((step) => (
+                        <div
+                          key={step.title}
+                          className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4 transition-colors hover:bg-indigo-800/25"
+                        >
+                          <p className="font-semibold text-white">{step.title}</p>
+                          <p className="mt-1 text-sm text-slate-300">{step.text}</p>
+                        </div>
+                      ))}
+                    </div>
+
+                    <p className="text-sm text-slate-300">
+                      In breve: evita di lasciare capitali su piattaforme custodial e tratta il wallet come la tua banca personale.
                     </p>
                   </div>
                 </Accordion>
               </div>
               
-              <p className="text-neutral-900 mb-6">
+              <p className="text-slate-900 dark:text-slate-200 mb-6">
                 Ci sono diverse Blockchain, ognuna per un caso specifico. Ma non spaventatevi, perché a noi interessano al massimo una dozzina di queste, tra cui alcune Layer2 di Ethereum ed i loro ecosistemi di progetti.
               </p>
           
               <div className="mb-4">
                 <Accordion buttonText={"Cos'è una Blockchain?"}>
-                <p className="p-5 text-neutral-900">
-              Una blockchain è una tecnologia che funziona come un registro
-              digitale distribuito su una rete di computer. Ogni dato o
-              transazione inserito viene organizzato in blocchi collegati tra loro
-              in ordine cronologico tramite crittografia, garantendo
-              l&apos;immutabilità dei dati.
-              <br />
-              <br />
-              Le blockchain sono decentralizzate, il che significa che non
-              c&apos;è un&apos;autorità centrale che gestisce le informazioni,
-              rendendo i dati sicuri, trasparenti e resistenti alla manipolazione.
-              Questo è uno dei motivi per cui la blockchain è alla base di molte
-              criptovalute, come Bitcoin, che garantiscono sovranità monetaria:
-              permettono a chiunque di possedere, trasferire e gestire il proprio
-              denaro senza bisogno di banche o intermediari, offrendo una forma di
-              libertà economica indipendente da governi o istituzioni.
-              <br />
-              <br />
-              Oltre alla funzione monetaria, la blockchain è anche una piattaforma
-              per creare applicazioni decentralizzate (dApp) grazie a reti come
-              Ethereum. Le dApp operano su contratti intelligenti, ovvero
-              programmi autoeseguibili che funzionano su blockchain senza il
-              bisogno di intermediari. Ethereum, ad esempio, consente agli
-              sviluppatori di creare soluzioni decentralizzate che spaziano dalla
-              finanza alla gestione di identità digitali, garantendo trasparenza e
-              sicurezza senza l&apos;intervento di un&apos;autorità centrale.
-              Questa tecnologia sta trasformando settori come quello finanziario,
-              legale e artistico, aprendo la strada a nuovi modelli di governance,
-              economia e innovazione.
-              <br />
-            </p>
-          </Accordion>
+                  <div className="p-5 space-y-5 text-slate-900 dark:text-slate-200">
+                    <div className="grid gap-3 md:grid-cols-3">
+                      <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                        <p className="text-xs uppercase tracking-wide text-slate-400">Struttura</p>
+                        <p className="mt-1 font-semibold text-white">Registro distribuito</p>
+                        <p className="mt-2 text-sm text-slate-300">I dati non vivono su un server unico ma su una rete di nodi.</p>
+                      </div>
+                      <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                        <p className="text-xs uppercase tracking-wide text-slate-400">Integrita</p>
+                        <p className="mt-1 font-semibold text-white">Immutabilita crittografica</p>
+                        <p className="mt-2 text-sm text-slate-300">Blocchi concatenati che rendono difficile alterare la cronologia.</p>
+                      </div>
+                      <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                        <p className="text-xs uppercase tracking-wide text-slate-400">Utilita</p>
+                        <p className="mt-1 font-semibold text-white">Valore + Applicazioni</p>
+                        <p className="mt-2 text-sm text-slate-300">Da trasferimento di denaro a smart contract e dApp.</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      {[
+                        "Le blockchain sono reti decentralizzate: non c'è un'autorità centrale che controlla i dati.",
+                        "La trasparenza on-chain permette audit pubblici e maggiore verificabilità delle transazioni.",
+                        "Bitcoin nasce come layer monetario; Ethereum amplia il modello con contratti programmabili.",
+                      ].map((point) => (
+                        <div key={point} className="rounded-xl border border-indigo-500/25 bg-slate-950/20 p-4">
+                          <p className="text-sm text-slate-300">{point}</p>
+                        </div>
+                      ))}
+                    </div>
+
+                    <p className="text-sm text-slate-300">
+                      In sintesi: una blockchain combina sicurezza, trasparenza e programmabilità per creare sistemi finanziari e applicativi senza intermediari tradizionali.
+                    </p>
+                  </div>
+                </Accordion>
               </div>
               
               <div className="mt-4">
@@ -288,8 +490,8 @@ export default function Manuale() {
               </div>
             </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-8 border border-neutral-200 mb-8">
-            <p className="text-neutral-900 mb-6">
+          <div id="defi-dapp" className="manual-card scroll-mt-24 rounded-2xl border p-8 mb-8 dark:bg-indigo-900/25 dark:border-indigo-500/20 bg-white border-slate-200 shadow-lg">
+            <p className="text-slate-900 dark:text-slate-200 mb-6">
               Ogni Blockchain ha il proprio ecosistema di applicazioni, ed è importante saper riconoscere quali sono le migliori per poter gestire al meglio le proprio risorse (tempo e denaro).
             </p>
 
@@ -297,23 +499,47 @@ export default function Manuale() {
             buttonText={"Cosa sono le applicazioni decentralizzate (DeFi)"}
               className="mb-4"
           >
-              <p className="p-5 text-neutral-900">
-              Le applicazioni decentralizzate (o dApp) sono programmi che
-              funzionano su una rete blockchain, invece che su server
-              centralizzati. A differenza delle applicazioni tradizionali, che
-              dipendono da un&apos;entità centrale (come una società o un server),
-              le dApp operano su reti distribuite, rendendole più sicure,
-              trasparenti e resistenti alla censura. Le dApp utilizzano smart
-              contract, che sono contratti programmabili auto-eseguibili su
-              blockchain. Una volta impostati, questi contratti funzionano
-              autonomamente secondo le regole stabilite nel codice, senza bisogno
-              di intermediari per far rispettare gli accordi. Un esempio noto di
-              dApp è Uniswap, un exchange decentralizzato che permette agli utenti
-              di scambiare criptovalute direttamente tra di loro, senza bisogno di
-              piattaforme centralizzate. Altri esempi includono applicazioni per
-              la finanza decentralizzata (DeFi), giochi blockchain, marketplace
-              NFT e molto altro.
-            </p>
+              <div className="p-5 space-y-5 text-slate-900 dark:text-slate-200">
+                <div className="grid gap-3 md:grid-cols-3">
+                  <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                    <p className="text-xs uppercase tracking-wide text-slate-400">Motore</p>
+                    <p className="mt-1 font-semibold text-white">Smart contract</p>
+                    <p className="mt-2 text-sm text-slate-300">Logica eseguita on-chain, senza backoffice centrale.</p>
+                  </div>
+                  <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                    <p className="text-xs uppercase tracking-wide text-slate-400">Vantaggio</p>
+                    <p className="mt-1 font-semibold text-white">Accesso permissionless</p>
+                    <p className="mt-2 text-sm text-slate-300">Chiunque con wallet può usare le app in pochi secondi.</p>
+                  </div>
+                  <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                    <p className="text-xs uppercase tracking-wide text-slate-400">Esempi</p>
+                    <p className="mt-1 font-semibold text-white">DEX, lending, NFT</p>
+                    <p className="mt-2 text-sm text-slate-300">Uniswap, Aave, marketplace NFT e app gaming.</p>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  {[
+                    {
+                      title: "dApp vs App tradizionali",
+                      text: "Le app tradizionali dipendono da server e policy aziendali; le dApp da regole codificate e verificabili pubblicamente.",
+                    },
+                    {
+                      title: "Perché sono utili",
+                      text: "Riduzione di intermediari, maggior trasparenza e integrazione rapida tra protocolli (componibilità).",
+                    },
+                    {
+                      title: "Come iniziare",
+                      text: "Scegli 1-2 protocolli affidabili, usa importi piccoli e verifica sempre URL ufficiale prima di connettere il wallet.",
+                    },
+                  ].map((item) => (
+                    <div key={item.title} className="rounded-xl border border-indigo-500/25 bg-slate-950/20 p-4">
+                      <p className="font-semibold text-white">{item.title}</p>
+                      <p className="mt-1 text-sm text-slate-300">{item.text}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
           </Accordion>
           
             <div className="mt-4">
@@ -328,8 +554,8 @@ export default function Manuale() {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-8 border border-neutral-200 mb-8">
-            <p className="text-neutral-900 mb-6">
+          <div id="wallet" className="manual-card scroll-mt-24 rounded-2xl border p-8 mb-8 dark:bg-indigo-900/25 dark:border-indigo-500/20 bg-white border-slate-200 shadow-lg">
+            <p className="text-slate-900 dark:text-slate-200 mb-6">
               Per accedere a queste applicazioni, bisogna avere un portafogli (wallet) non-custodial, che si trova sotto forma di app su dispositivi mobile oppure come estensione chrome per il computer.
             </p>
             
@@ -337,15 +563,34 @@ export default function Manuale() {
               buttonText={"Cosa sono i wallet non-custodial"}
               className="mb-4"
             >
-              <p className="p-5 text-neutral-900">
-                Il portafoglio ("wallet") non-custodial è un portafoglio virtuale utilizzato per ricevere, inviare, e conservare le criptovalute. Viene indicato anche come "self-custody wallet", che significa "a custodia personale".
-                <br />
-                <br />
-                A differenza degli exchange, o delle banche, dove l'intestatario del conto può vedersi il conto bloccato/congelato, o dove la banca/exchange può andare fallita e l'utente perdere i propri risparmi, il wallet non-custodial offre all'utente il <b>pieno controllo delle chiavi private e dei fondi in esso custoditi</b>, senza coinvolgere soggetti esterni.
-                <br />
-                <br />
-                Con il wallet non-custodial, è l'utente stesso ad avere la piena responsabilità delle proprie chiavi private e pertanto deve prendere le precauzioni necessarie per non perdere irrimediabilmente la possibilità di accedere alle proprie monete.
-              </p>
+              <div className="p-5 space-y-5 text-slate-900 dark:text-slate-200">
+                <div className="grid gap-3 md:grid-cols-3">
+                  <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                    <p className="text-xs uppercase tracking-wide text-slate-400">Custodia</p>
+                    <p className="mt-1 font-semibold text-white">Sei tu la banca</p>
+                    <p className="mt-2 text-sm text-slate-300">Controlli direttamente chiavi private e accesso ai fondi.</p>
+                  </div>
+                  <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                    <p className="text-xs uppercase tracking-wide text-slate-400">Rischio</p>
+                    <p className="mt-1 font-semibold text-white">Responsabilità totale</p>
+                    <p className="mt-2 text-sm text-slate-300">Se perdi seed phrase/chiavi, nessuno può recuperarle per te.</p>
+                  </div>
+                  <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                    <p className="text-xs uppercase tracking-wide text-slate-400">Best practice</p>
+                    <p className="mt-1 font-semibold text-white">Cold + Active wallet</p>
+                    <p className="mt-2 text-sm text-slate-300">Separare risparmio lungo termine da operatività quotidiana.</p>
+                  </div>
+                </div>
+
+                <div className="rounded-xl border border-indigo-500/25 bg-slate-950/20 p-4">
+                  <p className="font-semibold text-white">Checklist minima di sicurezza</p>
+                  <ul className="mt-2 list-disc list-inside">
+                    <li>Seed phrase scritta offline e mai condivisa.</li>
+                    <li>Verifica dominio prima di firmare transazioni.</li>
+                    <li>Usa un wallet secondario per test e dApp nuove.</li>
+                  </ul>
+                </div>
+              </div>
             </Accordion>
             
             <div className="mt-4">
@@ -360,11 +605,11 @@ export default function Manuale() {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-8 border border-neutral-200 mb-8">
-            <p className="text-neutral-900 mb-6">
+          <div id="onramp" className="manual-card scroll-mt-24 rounded-2xl border p-8 mb-8 dark:bg-indigo-900/25 dark:border-indigo-500/20 bg-white border-slate-200 shadow-lg">
+            <p className="text-slate-900 dark:text-slate-200 mb-6">
               Per ottenere le criptovalute da mandare al proprio wallet non-custodial, sarà necessario ottenerle tramite un exchange centralizzata (come Coinbase o Binance), altrimenti utilizzando un on-ramp (come Transak o Moonpay).
             </p>
-            <p className="text-neutral-900 mb-6">
+            <p className="text-slate-900 dark:text-slate-200 mb-6">
               Una volta acquistate le criptovalute con la propria carta o facendo un bonifico, si potranno inviare al proprio wallet non-custodial, dove saranno al sicuro da rischi esterni e sotto al vostro esclusivo controllo.
             </p>
             
@@ -372,18 +617,35 @@ export default function Manuale() {
               buttonText={"Come accedere al mondo Web3"}
               className="mb-4"
             >
-              <p className="p-5 text-neutral-900">
-                <b>1. CEX (Centralized Exchanges)</b>
-                <br />
-                <br />
-                Gli exchange centralizzati (CEX) permettono di inviare fondi dal proprio conto bancario o carta di debito per convertirli nella criptovaluta scelta. Gli exchange permettono anche di fare trading di criptovalute, cosa che sconsigliamo. Una volta convertiti i fondi, inviateli al vostro wallet non-custodial sulla blockchain della criptovaluta scelta.
-                <br />
-                <br />
-                <b>2. On-Ramp</b>
-                <br />
-                <br />
-                Gli On-Ramp sono servizi che permettono di acquistare criptovalute direttamente con la propria carta e riceverle immediatamente nel proprio wallet non-custodial (chiamato anche "wallet web3"). Il wallet non-custodial vi dà il controllo completo dei vostri fondi tramite le chiavi private, che dovrete tenere al sicuro per riaccedere ai vostri fondi in caso di smarrimento del dispositivo o dimenticanza della password.
-              </p>
+              <div className="p-5 space-y-5 text-slate-900 dark:text-slate-200">
+                <div className="grid gap-3 md:grid-cols-2">
+                  <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                    <p className="font-semibold text-white">1) CEX (Centralized Exchange)</p>
+                    <p className="mt-2 text-sm text-slate-300">
+                      Ideale per convertire EUR/USD in crypto. Usa piattaforme grandi e invia i fondi al tuo wallet personale dopo l&apos;acquisto.
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                    <p className="font-semibold text-white">2) On-Ramp</p>
+                    <p className="mt-2 text-sm text-slate-300">
+                      Acquisto diretto via carta nel wallet. Comodo e rapido, ma confronta fee e spread prima di confermare.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  {[
+                    "Scegli rete corretta (ETH, Arbitrum, Base, ecc.) prima dell'invio.",
+                    "Fai una transazione test con importo piccolo.",
+                    "Conferma sempre indirizzo e memo/tag se richiesti.",
+                    "Evita trading impulsivo: l'obiettivo iniziale è apprendimento operativo.",
+                  ].map((rule) => (
+                    <div key={rule} className="rounded-xl border border-indigo-500/25 bg-slate-950/20 p-4">
+                      <p className="text-sm text-slate-300">{rule}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </Accordion>
             
             <div className="mt-4">
@@ -398,49 +660,35 @@ export default function Manuale() {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-8 border border-neutral-200 mb-8">
-            <p className="text-neutral-900 mb-6">
+          <div id="strategie" className="manual-card scroll-mt-24 rounded-2xl border p-8 mb-8 dark:bg-indigo-900/25 dark:border-indigo-500/20 bg-white border-slate-200 shadow-lg">
+            <p className="text-slate-900 dark:text-slate-200 mb-6">
               Adesso che siamo riusciti ad accedere al mondo Web3, e abbiamo visto quali sono le applicazioni migliori che fanno al caso nostro, possiamo iniziare ad intraprendere le seguenti strade:
             </p>
             
-            <div className="space-y-4">
-              <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mt-0.5">
-                  <svg className="w-3 h-3 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <p className="text-neutral-900">
-                  Assistere/Partecipare allo sviluppo dei progetti e/o delle community che ci interessano seguendo i canali social e le discussioni sulla governance (sui forum ufficiali e su discord).
+            <div className="grid gap-3 md:grid-cols-3">
+              <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                <p className="font-semibold text-white">Track & Learn</p>
+                <p className="mt-2 text-sm text-slate-300">
+                  Segui governance, changelog e community ufficiali per capire come evolve un protocollo.
                 </p>
               </div>
-              
-              <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
-                  <svg className="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <p className="text-neutral-900">
-                  Acquistare Ethereum (ETH) ed inviarlo al proprio wallet non-custodial, per poi accedere alla DeFi
+              <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                <p className="font-semibold text-white">Deploy capitale graduale</p>
+                <p className="mt-2 text-sm text-slate-300">
+                  Parti con ETH su wallet personale e testa piccole operazioni prima di scalare.
                 </p>
               </div>
-              
-              <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center mt-0.5">
-                  <svg className="w-3 h-3 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <p className="text-neutral-900">
-                  Acquistare un NFT ed accedere ad una community internazionale di gente pronta a supportare altri membri della propria community
+              <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                <p className="font-semibold text-white">Costruisci network</p>
+                <p className="mt-2 text-sm text-slate-300">
+                  Entra in community ad alta qualità (anche NFT) dove ricevi feedback e opportunità reali.
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-8 border border-neutral-200 mb-8">
-            <p className="text-neutral-900 mb-6">
+          <div id="analisi" className="manual-card scroll-mt-24 rounded-2xl border p-8 mb-8 dark:bg-indigo-900/25 dark:border-indigo-500/20 bg-white border-slate-200 shadow-lg">
+            <p className="text-slate-900 dark:text-slate-200 mb-6">
               Esistono molti strumenti diversi che possiamo utilizzare per analizzare i progetti. Dai più semplici Navigatori di Blockchain ("blockchain explorers"), alle piattaforme di analisi e visualizzazione dei dati; saper utilizzare questi strumenti può offrire una marcia in più nella valutazione dei propri acquisti nel mondo Web3.
             </p>
             
@@ -456,23 +704,48 @@ export default function Manuale() {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-8 border border-neutral-200 mb-8">
-            <h3 className="text-2xl font-bold text-neutral-800 mb-6">Valutazione dei progetti</h3>
+          <div id="nft" className="manual-card scroll-mt-24 rounded-2xl border p-8 mb-8 dark:bg-indigo-900/25 dark:border-indigo-500/20 bg-white border-slate-200 shadow-lg">
+            <h3 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-6">Valutazione dei progetti</h3>
+            <p className="text-slate-900 dark:text-slate-300 mb-5">
+              Per valutare un progetto in modo professionale, combina metriche fondamentali (market cap, supply, TVL) con analisi del rischio e contesto di mercato.
+            </p>
+            <div className="grid gap-3 md:grid-cols-3 mb-6">
+              <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                <p className="text-xs uppercase tracking-wide text-slate-400">Fondamentali</p>
+                <p className="mt-1 font-semibold text-white">Market Cap + Supply</p>
+                <p className="mt-2 text-sm text-slate-300">Capire diluizione e spazio potenziale di crescita.</p>
+              </div>
+              <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                <p className="text-xs uppercase tracking-wide text-slate-400">Efficienza protocollo</p>
+                <p className="mt-1 font-semibold text-white">TVL / Market Cap</p>
+                <p className="mt-2 text-sm text-slate-300">Confronta valore d&apos;uso e valutazione attuale.</p>
+              </div>
+              <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                <p className="text-xs uppercase tracking-wide text-slate-400">Timing</p>
+                <p className="mt-1 font-semibold text-white">Price Action + Risk</p>
+                <p className="mt-2 text-sm text-slate-300">Ingresso graduale, invalidazione e gestione size.</p>
+              </div>
+            </div>
             
             <div className="space-y-4">
               <Accordion
-                buttonText="Analizzare un Cryptoasset dalla Market Cap"
+                buttonText={
+                  <div>
+                    <div className="text-lg md:text-xl">Analizzare un Cryptoasset dalla Market Cap</div>
+                    <p className="mt-1 text-sm font-normal text-slate-400">Base framework: prezzo, supply, FDV e comparables.</p>
+                  </div>
+                }
                 className="mb-4"
               >
                 <div className="p-5 space-y-6">
                   <div className="space-y-4">
-                    <p className="text-neutral-900 leading-relaxed">
+                    <p className="text-slate-900 dark:text-slate-200 leading-relaxed">
                       Prima di tutto bisogna sapere che il prezzo di una criptovaluta è dettato dall'offerta della criptovaluta e la valutazione del progetto della criptovaluta (la capitalizzazione di mercato, o market cap).
                     </p>
-                    <p className="text-neutral-900 leading-relaxed">
+                    <p className="text-slate-900 dark:text-slate-200 leading-relaxed">
                       Inversamente, si può dire che la market cap della criptovaluta sia determinata dall'offerta moltiplicata per il prezzo della criptovaluta.
                     </p>
-                    <p className="text-neutral-900 leading-relaxed">
+                    <p className="text-slate-900 dark:text-slate-200 leading-relaxed">
                       Gli investitori ragionano con la market cap per poter determinare il potenziale di crescita di una criptovaluta rispetto ad un'altra.
                     </p>
                   </div>
@@ -490,13 +763,13 @@ export default function Manuale() {
                     buttonText="Come funziona"
                     className="mb-3"
                   >
-                    <div className="p-4 space-y-4 text-neutral-900">
+                    <div className="p-4 space-y-4 text-slate-900 dark:text-slate-200">
                       <p className="mb-4">
                         La schermata sopra (accessibile da <a href="https://www.coingecko.com/it/monete/bitcoin" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">https://www.coingecko.com/it/monete/bitcoin</a>) mostra nei rettangoli evidenziati in blu le seguenti:
                       </p>
                       
                              <Accordion buttonText="1. Capitalizzazione di Mercato (Market Cap)">
-                               <div className="p-4 space-y-4 text-neutral-900">
+                               <div className="p-4 space-y-4 text-slate-900 dark:text-slate-200">
                                  <p>
                                    La capitalizzazione di mercato di un criptoasset si calcola usando la seguente formula:
                                  </p>
@@ -527,25 +800,25 @@ export default function Manuale() {
                              </Accordion>
                       
                       <Accordion buttonText="2. Valutazione 100% diluita (Fully diluted valuation, o FDV)">
-                        <p className="p-4 text-neutral-900">
+                        <p className="p-4 text-slate-900 dark:text-slate-200">
                           La FDV rappresenta la capitalizzazione di mercato se tutti i token fossero già in circolazione. È importante per capire il potenziale di inflazione futura e il vero valore del progetto.
                         </p>
                       </Accordion>
                       
                       <Accordion buttonText="3. Offerta in Circolazione (Circulating Supply)">
-                        <p className="p-4 text-neutral-900">
+                        <p className="p-4 text-slate-900 dark:text-slate-200">
                           La quantità di valute che circolano sul mercato e sono scambiabili dal pubblico. È paragonabile a guardare le azioni prontamente disponibili sul mercato (non detenute e bloccate dagli addetti ai lavori, dalle autorità governative).
                         </p>
                       </Accordion>
                       
                       <Accordion buttonText="4. Offerta totale">
-                        <p className="p-4 text-neutral-900">
+                        <p className="p-4 text-slate-900 dark:text-slate-200">
                           Le quantità di valute che sono già state create, meno le valute che sono state bruciate (rimosse dalla circolazione). È paragonabile alle azioni in circolazione nel mercato azionario.
                         </p>
                       </Accordion>
                       
                       <Accordion buttonText="5. Offerta Massima (Max Supply)">
-                        <div className="p-4 space-y-4 text-neutral-900">
+                        <div className="p-4 space-y-4 text-slate-900 dark:text-slate-200">
                           <p>
                             Il numero massimo di valute codificate per esistere nel periodo di vita della criptovaluta. È paragonabile al numero massimo di azioni emettibili nel mercato azionario.
                           </p>
@@ -590,7 +863,7 @@ export default function Manuale() {
                           
                           <div className="space-y-3">
                             <Accordion buttonText="Controllare la Market Cap del Cryptoasset">
-                              <div className="p-4 space-y-4 text-neutral-900">
+                              <div className="p-4 space-y-4 text-slate-900 dark:text-slate-200">
                                 <p>
                                   Prima di tutto, bisogna vedere se la criptovaluta che si vuole analizzare sia completamente in circolazione, o se una parte della supply debba ancora essere immessa nel mercato.
                                 </p>
@@ -650,7 +923,7 @@ export default function Manuale() {
                             </Accordion>
                             
                             <Accordion buttonText="Comparare la Market Cap con quella di progetti simili">
-                              <p className="p-4 text-neutral-900">
+                              <p className="p-4 text-slate-900 dark:text-slate-200">
                                 Confronta la Market Cap del progetto che stai analizzando con quella di progetti simili nel stesso settore. Ad esempio, se stai valutando un DEX, confrontalo con Uniswap, SushiSwap o altri exchange decentralizzati. Questo ti darà un'idea del potenziale di crescita relativo.
                               </p>
                             </Accordion>
@@ -664,10 +937,15 @@ export default function Manuale() {
               </Accordion>
               
               <Accordion
-                buttonText="Calcolare il Rischio di un Cryptoasset usando la Media del Prezzo"
+                buttonText={
+                  <div>
+                    <div className="text-lg md:text-xl">Calcolare il Rischio usando la Media del Prezzo</div>
+                    <p className="mt-1 text-sm font-normal text-slate-400">Posizionamento rispetto alle medie e volatilità.</p>
+                  </div>
+                }
                 className="mb-4"
               >
-                <div className="p-5 space-y-4 text-neutral-900">
+                <div className="p-5 space-y-4 text-slate-900 dark:text-slate-200">
                   <div className="flex justify-center">
                     <Image 
                       src="/analizing6.png" 
@@ -699,10 +977,15 @@ export default function Manuale() {
               </Accordion>
               
               <Accordion
-                buttonText="TVL to Market Cap ratio (rapporto tra valore depositato e capitalizzazione)"
+                buttonText={
+                  <div>
+                    <div className="text-lg md:text-xl">TVL to Market Cap ratio</div>
+                    <p className="mt-1 text-sm font-normal text-slate-400">Valuta se il protocollo è caro o economico rispetto all&apos;uso reale.</p>
+                  </div>
+                }
                 className="mb-4"
               >
-                <div className="p-5 space-y-4 text-neutral-900">
+                <div className="p-5 space-y-4 text-slate-900 dark:text-slate-200">
                   <p>
                     Valore fondamentale del prodotto: per esempio, il TVL ("Total Value Locked") di un progetto rappresenta il valore in dollari dei token depositati nei suoi smart-contract.
                   </p>
@@ -751,21 +1034,62 @@ export default function Manuale() {
               </Accordion>
               
               <Accordion
-                buttonText="Price Action (Analisi Tecnica)"
+                buttonText={
+                  <div>
+                    <div className="text-lg md:text-xl">Price Action (Analisi Tecnica)</div>
+                    <p className="mt-1 text-sm font-normal text-slate-400">Trend, livelli chiave e execution plan.</p>
+                  </div>
+                }
                 className="mb-4"
               >
-                <p className="p-5 text-neutral-900">
-                  [Contenuto da aggiungere]
-                </p>
+                <div className="p-5 space-y-5 text-slate-900 dark:text-slate-200">
+                  <div className="grid gap-3 md:grid-cols-3">
+                    <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                      <p className="text-xs uppercase tracking-wide text-slate-400">Trend</p>
+                      <p className="mt-1 font-semibold text-white">Higher High / Lower Low</p>
+                      <p className="mt-2 text-sm text-slate-300">Capisci se il mercato premia o distribuisce rischio.</p>
+                    </div>
+                    <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                      <p className="text-xs uppercase tracking-wide text-slate-400">Livelli</p>
+                      <p className="mt-1 font-semibold text-white">Supporti e resistenze</p>
+                      <p className="mt-2 text-sm text-slate-300">Zone dove prezzo e liquidità reagiscono più spesso.</p>
+                    </div>
+                    <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                      <p className="text-xs uppercase tracking-wide text-slate-400">Execution</p>
+                      <p className="mt-1 font-semibold text-white">Entry + invalidazione</p>
+                      <p className="mt-2 text-sm text-slate-300">Ogni trade deve avere stop logico e size coerente.</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    {[
+                      "Non entrare in breakout estesi: preferisci retest o zone value.",
+                      "Definisci prima rischio massimo per operazione (es. 0.5%-1% del capitale).",
+                      "Se il setup cambia, esci: proteggere capitale è priorità.",
+                      "Usa timeframe multipli: trend su HTF, timing su LTF.",
+                    ].map((rule) => (
+                      <div key={rule} className="rounded-xl border border-indigo-500/25 bg-slate-950/20 p-4">
+                        <p className="text-sm text-slate-300">{rule}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                    <p className="font-semibold text-white">Template pratico</p>
+                    <p className="mt-2 text-sm text-slate-300">
+                      Tesi (perché entro) → Trigger (dove entro) → Invalidazione (dove sbaglio) → Target (dove prendo profitto) → Post-analisi.
+                    </p>
+                  </div>
+                </div>
               </Accordion>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-8 border border-neutral-200 mb-8">
-            <p className="text-neutral-900 mb-6">
+          <div id="sicurezza" className="manual-card scroll-mt-24 rounded-2xl border p-8 mb-8 dark:bg-indigo-900/25 dark:border-indigo-500/20 bg-white border-slate-200 shadow-lg">
+            <p className="text-slate-900 dark:text-slate-200 mb-6">
               Gli NFT sono uno dei settori ancora meno sviluppati all&apos;interno del mondo Web3. Se ne è sentito molto parlare negli anni scorsi per via di progetti buoni che ancora esistono (come i Crypto Punk, i Pudgy Penguin, i Bored Ape..) ma anche per i molti scam che ci sono stati (come purtroppo accade in tutti i settori nascenti, anche non-Web3, quindi non preoccupatevi o per lo meno, prestate attenzione).
             </p>
-            <p className="text-neutral-900 mb-6">
+            <p className="text-slate-900 dark:text-slate-200 mb-6">
               Possono essere collezioni di PFP (profile pictures), arte digitale, arte tradizionale tokenizzata, o addirittura interi immobili, e molto altro ancora.
             </p>
             
@@ -773,46 +1097,39 @@ export default function Manuale() {
                 buttonText="Come scegliere la propria community NFT"
                 className="mb-4"
               >
-                <div className="p-5 space-y-4 text-neutral-900">
+                <div className="p-5 space-y-4 text-slate-900 dark:text-slate-200">
                   <p className="font-semibold text-lg mb-4">
                     Quando scegli una community NFT, considera i seguenti fattori:
                   </p>
                   
-                  <div className="space-y-4">
-                    <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
-                      <h4 className="font-bold text-blue-800 mb-2">1. Visione e Valori</h4>
-                      <p className="text-blue-700">
-                        La community deve riflettere i tuoi interessi e obiettivi.
-                      </p>
-                    </div>
-                    
-                    <div className="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
-                      <h4 className="font-bold text-green-800 mb-2">2. Engagement</h4>
-                      <p className="text-green-700">
-                        Cerca una community attiva su piattaforme come Discord e Twitter.
-                      </p>
-                    </div>
-                    
-                    <div className="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-500">
-                      <h4 className="font-bold text-purple-800 mb-2">3. Utilità</h4>
-                      <p className="text-purple-700">
-                        Valuta i benefici dell'NFT, come eventi esclusivi o ricompense previste per gli holders.
-                      </p>
-                    </div>
-                    
-                    <div className="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-500">
-                      <h4 className="font-bold text-orange-800 mb-2">4. Team e Trasparenza</h4>
-                      <p className="text-orange-700">
-                        Assicurati che il team sia esperto e chiaro sui piani.
-                      </p>
-                    </div>
-                    
-                    <div className="bg-red-50 p-4 rounded-lg border-l-4 border-red-500">
-                      <h4 className="font-bold text-red-800 mb-2">5. Prezzo della Collezione</h4>
-                      <p className="text-red-700">
-                        Scegli NFT che puoi permetterti senza sovra-allocare il tuo portafoglio. Evita di impegnarti troppo, a meno che tu non voglia entrarci solo temporaneamente per esplorare la community.
-                      </p>
-                    </div>
+                  <div className="space-y-3">
+                    {[
+                      {
+                        title: "1. Visione e Valori",
+                        text: "La community deve riflettere i tuoi interessi e obiettivi.",
+                      },
+                      {
+                        title: "2. Engagement",
+                        text: "Cerca una community attiva su piattaforme come Discord e Twitter.",
+                      },
+                      {
+                        title: "3. Utilita",
+                        text: "Valuta i benefici dell'NFT, come eventi esclusivi o ricompense previste per gli holders.",
+                      },
+                      {
+                        title: "4. Team e Trasparenza",
+                        text: "Assicurati che il team sia esperto e chiaro sui piani.",
+                      },
+                      {
+                        title: "5. Prezzo della Collezione",
+                        text: "Scegli NFT che puoi permetterti senza sovra-allocare il tuo portafoglio. Evita di impegnarti troppo, a meno che tu non voglia entrarci solo temporaneamente per esplorare la community.",
+                      },
+                    ].map((item) => (
+                      <div key={item.title} className="rounded-xl border border-indigo-500/25 bg-slate-950/20 p-4">
+                        <h4 className="font-semibold text-white mb-2">{item.title}</h4>
+                        <p className="text-slate-300 text-sm">{item.text}</p>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </Accordion>
@@ -829,8 +1146,8 @@ export default function Manuale() {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-8 border border-neutral-200 mb-8">
-            <p className="text-neutral-900 mb-6">
+          <div className="rounded-2xl border p-8 mb-8 dark:bg-indigo-900/25 dark:border-indigo-500/20 bg-white border-slate-200 shadow-lg">
+            <p className="text-slate-900 dark:text-slate-200 mb-6">
               È <span className="text-red-600 font-bold">importantissimo prestare molta attenzione</span> a non cadere in truffe di vario genere come <em>Phishing</em> o <em>Scam</em>. Ci sono diversi modi in cui si può perdere il proprio denaro cadendo vittima di truffe che purtroppo, sono presenti anche in questo lato del web. Seguendo i consigli che troverai nel manuale Anti Truffe qui sotto, sarai in grado di navigare questo mondo minimizzando i rischi.
             </p>
             
@@ -846,34 +1163,34 @@ export default function Manuale() {
               className="mb-4"
             >
               <div className="p-5 space-y-6">
-                <p className="text-neutral-900">
+                <p className="text-slate-900 dark:text-slate-200">
                   Il mondo delle criptovalute offre enormi opportunità, ma è anche terreno fertile per truffatori. Ecco una guida su come proteggerti dalle truffe, basata su consigli di esperti del settore.
                 </p>
 
                 <div>
-                  <h4 className="text-lg font-bold text-neutral-800 mb-3">1. Ricerca Approfondita</h4>
-                  <p className="text-neutral-900">
+                  <h4 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-3">1. Ricerca Approfondita</h4>
+                  <p className="text-slate-900 dark:text-slate-200">
                     Prima di investire in qualsiasi criptovaluta o progetto, è fondamentale fare una ricerca approfondita. Leggi il whitepaper del progetto, verifica l&apos;identità del team dietro il progetto e cerca recensioni e analisi indipendenti. Progetti con team anonimi o senza documentazione chiara sono da considerare sospetti.
                   </p>
                 </div>
 
                 <div>
-                  <h4 className="text-lg font-bold text-neutral-800 mb-3">2. Utilizza Solo Wallet Reputati</h4>
-                  <p className="text-neutral-900">
+                  <h4 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-3">2. Utilizza Solo Wallet Reputati</h4>
+                  <p className="text-slate-900 dark:text-slate-200">
                     Assicurati che i wallet che scarichi provengano da fonti affidabili. Evita di installare wallet da link ricevuti via email o messaggi privati, poiché potrebbero essere falsi e progettati per rubare le tue criptovalute. Verifica sempre che il wallet sia ufficiale e controlla le recensioni degli utenti.
                   </p>
                 </div>
 
                 <div>
-                  <h4 className="text-lg font-bold text-neutral-800 mb-3">3. Attenzione ai Link Malevoli</h4>
-                  <p className="text-neutral-900">
+                  <h4 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-3">3. Attenzione ai Link Malevoli</h4>
+                  <p className="text-slate-900 dark:text-slate-200">
                     I link malevoli possono infettare il tuo dispositivo con malware o portarti su siti fasulli che possono drenare i tuoi fondi. Verifica sempre i link accedendo direttamente dal sito ufficiale o dai canali social ufficiali del progetto. Tratta ogni link ricevuto da sconosciuti con estrema cautela.
                   </p>
                 </div>
 
                 <div>
-                  <h4 className="text-lg font-bold text-neutral-800 mb-3">4. Riconosci i Segnali di Allarme</h4>
-                  <ul className="list-disc list-inside space-y-2 text-neutral-900">
+                  <h4 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-3">4. Riconosci i Segnali di Allarme</h4>
+                  <ul className="list-disc list-inside space-y-2 text-slate-900 dark:text-slate-200">
                     <li><strong>Promesse di Guadagni Elevati</strong>: Se un&apos;offerta sembra troppo bella per essere vera, probabilmente è una truffa. Nessuna piattaforma legittima garantisce rendimenti altissimi senza rischi.</li>
                     <li><strong>Mancanza di Trasparenza</strong>: Progetti che non forniscono informazioni chiare sul loro funzionamento, il team o i loro obiettivi sono sospetti.</li>
                     <li><strong>Senso di Urgenza</strong>: I truffatori spesso cercano di creare un senso di urgenza per farti agire senza riflettere. Le opportunità di investimento genuine non richiedono decisioni affrettate.</li>
@@ -881,22 +1198,22 @@ export default function Manuale() {
                 </div>
 
                 <div>
-                  <h4 className="text-lg font-bold text-neutral-800 mb-3">5. Utilizza Exchange Reputati</h4>
-                  <p className="text-neutral-900">
+                  <h4 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-3">5. Utilizza Exchange Reputati</h4>
+                  <p className="text-slate-900 dark:text-slate-200">
                     Quando compri, vendi o scambi criptovalute, usa solo exchange ben conosciuti e con una buona reputazione. Verifica che l&apos;exchange rispetti le normative, abbia una storia di sicurezza solida e offra protezioni come l&apos;assicurazione sui depositi.
                   </p>
                 </div>
 
                 <div>
-                  <h4 className="text-lg font-bold text-neutral-800 mb-3">6. Proteggi i Tuoi Wallet</h4>
-                  <p className="text-neutral-900">
+                  <h4 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-3">6. Proteggi i Tuoi Wallet</h4>
+                  <p className="text-slate-900 dark:text-slate-200">
                     Mantieni i tuoi software sempre aggiornati per proteggerti dalle vulnerabilità. Usa hardware wallet per conservare quantità significative di criptovalute e attiva l&apos;autenticazione a due fattori (2FA) dove possibile. Utilizza un &quot;burner&quot; wallet per le transazioni quotidiane, lasciando i fondi principali in un wallet separato e più sicuro.
                   </p>
                 </div>
 
                 <div>
-                  <h4 className="text-lg font-bold text-neutral-800 mb-3">7. Evita le Truffe dei Falsi Airdrop</h4>
-                  <p className="text-neutral-900">
+                  <h4 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-3">7. Evita le Truffe dei Falsi Airdrop</h4>
+                  <p className="text-slate-900 dark:text-slate-200">
                     I falsi airdrop sono una tattica comune per indurre le persone a rivelare le loro chiavi private o a firmare transazioni malevole. Partecipa solo a airdrop da fonti affidabili e verifica sempre l&apos;autenticità dell&apos;offerta tramite i canali ufficiali del progetto.
                   </p>
                 </div>
@@ -910,6 +1227,13 @@ export default function Manuale() {
             </Accordion>
           </div>
 
-      </PageLayout>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer className={`border-t py-4 text-center text-sm ${isDark ? "border-indigo-500/20 text-slate-500" : "border-slate-200 text-slate-600"}`}>
+        ImparoDeFi © {new Date().getFullYear()}. All rights reserved.
+      </footer>
+    </div>
   );
 }

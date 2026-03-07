@@ -38,10 +38,8 @@ export default function EpochsPage() {
   const limit = 20;
 
   useEffect(() => {
-    if (isLoaded) {
-      fetchEpochs();
-    }
-  }, [isLoaded, currentPage]);
+    fetchEpochs();
+  }, [currentPage]);
 
   const fetchEpochs = async () => {
     try {
@@ -80,17 +78,6 @@ export default function EpochsPage() {
   const getEpochId = (epoch: Epoch) => {
     return `${epoch.projectId}-${epoch.campaignIndex}-${epoch.index}`;
   };
-
-  if (!isLoaded) {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-primary-50 to-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto mb-4"></div>
-          <p className="text-neutral-600">Caricamento...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <ClerkProtectedRoute title="Epochs">

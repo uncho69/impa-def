@@ -20,6 +20,31 @@ export const projects = pgTable('projects', {
     check('projects_is_active_check', sql`${table.isActive} IN (0, 1)`),
 ]);
 
+// Catalog projects: progetti aggiunti dall'admin (es. da Notion), con sito/twitter/descrizione
+export const projectCatalog = pgTable('project_catalog', {
+    id: varchar('id', { length: 80 }).primaryKey(),
+    name: varchar('name', { length: 255 }).notNull(),
+    websiteUrl: varchar('website_url', { length: 512 }),
+    twitterUrl: varchar('twitter_url', { length: 512 }),
+    description: text('description'),
+    category: varchar('category', { length: 80 }),
+    tags: text('tags'), // JSON array of tag strings, e.g. ["DeFi","Airdrop"]
+    deletedAt: timestamp('deleted_at'),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
+// Metadata per qualsiasi progetto (platform o catalog): link e descrizione modificabili
+export const projectMetadata = pgTable('project_metadata', {
+    projectId: varchar('project_id', { length: 80 }).primaryKey(),
+    websiteUrl: varchar('website_url', { length: 512 }),
+    twitterUrl: varchar('twitter_url', { length: 512 }),
+    description: text('description'),
+    category: varchar('category', { length: 80 }),
+    tags: text('tags'), // JSON array of tag strings, e.g. ["DeFi","Airdrop"]
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
 // Campaigns table
 export const campaigns = pgTable('campaigns', {
     projectId: varchar('project_id', { length: 50 }).notNull().references(() => projects.id, { onDelete: 'cascade' }),

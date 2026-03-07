@@ -4,7 +4,9 @@
  * al ritorno /api/auth/x/callback salva il token e collega l'account.
  */
 import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
 import { getUserIdFromRequest } from '@/lib/auth/middleware';
+import { pool } from '@/lib/db';
 import { randomBytes, createHash } from 'crypto';
 
 const X_AUTHORIZE_URL = 'https://x.com/i/oauth2/authorize';
@@ -24,8 +26,65 @@ function generateCodeChallenge(verifier: string): string {
   return base64UrlEncode(createHash('sha256').update(verifier).digest());
 }
 
+async function resolveAuthenticatedUserId(request: NextRequest): Promise<string | null> {
+  const fromMiddleware = await getUserIdFromRequest(request);
+  if (fromMiddleware) return fromMiddleware;
+
+  try {
+    const authResult = await auth();
+    const clerkUserId = authResult.userId;
+    if (!clerkUserId || !pool) return null;
+
+    const linked = await pool.query(
+      `
+      SELECT aa.user_id
+      FROM auth_accounts aa
+      JOIN users u ON u.id = aa.user_id
+      WHERE
+        aa.provider = 'clerk'
+        AND aa.provider_account_id = $1
+        AND aa.is_active = 1
+        AND u.is_active = 1
+        AND u.deleted_at IS NULL
+      LIMIT 1
+      `,
+      [clerkUserId]
+    );
+    if (linked.rows.length > 0) return linked.rows[0].user_id as string;
+
+    await pool.query(
+      `
+      INSERT INTO users (id, is_active, created_at, updated_at)
+      VALUES ($1, 1, now(), now())
+      ON CONFLICT (id)
+      DO UPDATE SET
+        is_active = 1,
+        deleted_at = NULL,
+        updated_at = now()
+      `,
+      [clerkUserId]
+    );
+    await pool.query(
+      `
+      INSERT INTO auth_accounts (user_id, provider, provider_account_id, provider_user_id, is_active, created_at, updated_at)
+      VALUES ($1, 'clerk', $2, $2, 1, now(), now())
+      ON CONFLICT (provider, provider_account_id)
+      DO UPDATE SET
+        user_id = EXCLUDED.user_id,
+        provider_user_id = EXCLUDED.provider_user_id,
+        is_active = 1,
+        updated_at = now()
+      `,
+      [clerkUserId, clerkUserId]
+    );
+    return clerkUserId;
+  } catch {
+    return null;
+  }
+}
+
 export async function GET(request: NextRequest) {
-  const userId = await getUserIdFromRequest(request);
+  const userId = await resolveAuthenticatedUserId(request);
   if (!userId) {
     return NextResponse.redirect(new URL('/sign-in?redirect_url=' + encodeURIComponent('/leaderboards/epoch'), request.url));
   }

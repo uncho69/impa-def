@@ -1,0 +1,714 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Ethereum</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="9d7542b4-423e-410a-a7c9-7779db5a0b3e" class="page sans"><header><div class="page-header-icon undefined"><img class="icon" src="Ethereum/ethlogo1.png"/></div><h1 class="page-title" dir="auto">Ethereum</h1><p class="page-description" dir="auto"></p><table class="properties"><tbody><tr class="property-row property-row-multi_select"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>Tags</th><td><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-blue">Criptovaluta</span></td></tr><tr class="property-row property-row-url"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Profilo Twitter/X</th><td><a href="https://x.com/ethereum" class="url-value">https://x.com/ethereum</a></td></tr><tr class="property-row property-row-url"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Sito Web</th><td><a href="https://ethereum.org/it/" class="url-value">https://ethereum.org/it/</a></td></tr><tr class="property-row property-row-url"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Token/NFT</th><td><a href="https://www.coingecko.com/en/coins/ethereum" class="url-value">https://www.coingecko.com/en/coins/ethereum</a></td></tr><tr class="property-row property-row-date"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/calendar_gray.svg" style="width:14px;height:14px;display:block"/></span>Last Updated</th><td><time>@May 29, 2024</time></td></tr><tr class="property-row property-row-multi_select"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>Blockchain Supportate</th><td></td></tr></tbody></table></header><div class="page-body"><div style="display:contents" dir="auto"><p id="467a3341-d685-412b-a39d-324ebc593cbd" class=""><strong>Ethereum</strong> è una blockchain che consente la creazione e l&#x27;esecuzione di smart contract e applicazioni decentralizzate (dApp) senza alcuna interruzione, frode, controllo o interferenza da parte di terzi. Fondata da Vitalik Buterin nel 2015, Ethereum ha rivoluzionato il mondo delle criptovalute e della blockchain, andando oltre il semplice trasferimento di valore per abilitare un&#x27;intera economia di applicazioni decentralizzate.</p></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Introduzione ad Ethereum</summary><div class="indented"><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong>Ether (ETH)</strong></summary><div class="indented"><div style="display:contents" dir="auto"><p id="da2d5b9a-4662-4cb4-bd22-55ffd501f7cf" class="">Ether è la criptovaluta nativa di Ethereum e viene utilizzata per pagare le commissioni di transazione (gas) e compensare i minatori e, successivamente, i validatori per il loro lavoro di mantenimento della rete.</p></div><div style="display:contents" dir="auto"><p id="ab288e50-575c-4a2c-a391-a72ae2296962" class="">Oltre a essere utilizzato per le transazioni, ETH funge da combustibile per eseguire smart contract e dApp sulla piattaforma.</p></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong>Smart Contracts</strong></summary><div class="indented"><div style="display:contents" dir="auto"><p id="5558bb48-c22c-4ef9-8995-bd8932ca74f3" class="">Gli smart contract sono programmi informatici autoeseguibili con i termini dell&#x27;accordo direttamente scritti nel codice. Eseguono automaticamente le condizioni definite al loro interno quando vengono soddisfatti i requisiti specificati.</p></div><div style="display:contents" dir="auto"><p id="2233a75d-aa2a-4df9-918b-48effae480f1" class=""><strong>Esempi di Uso</strong>: Utilizzati per creare contratti finanziari, gestione della supply chain, applicazioni di voto e molto altro.</p></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong>dApp (Applicazioni Decentralizzate)</strong></summary><div class="indented"><div style="display:contents" dir="auto"><p id="62c57f28-8f64-405d-81c3-cd26ea52167b" class="">Le dApp sono applicazioni che funzionano su una rete di computer decentralizzati anziché su un server centralizzato. Utilizzano smart contract per gestire la logica di business sulla blockchain.</p></div><div style="display:contents" dir="auto"><p id="618fd59a-8bb8-4906-ac0b-fed93e018545" class="">Applicazioni DeFi (Finanza Decentralizzata), giochi basati su blockchain, mercati NFT (token non fungibili) e molto altro.</p></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong>Ethereum Virtual Machine (EVM)</strong></summary><div class="indented"><div style="display:contents" dir="auto"><p id="bcee29a5-8e1e-40e4-a448-2c18187a6499" class="">La EVM è l’ambiente di programmazione che esegue gli smart contract su Ethereum. Fornisce un sistema sicuro e isolato per eseguire il codice, garantendo che le transazioni siano verificate e immutabili.</p></div><div style="display:contents" dir="auto"><p id="335d1749-1b0f-43ee-ba8b-3e0b2258f26b" class=""><strong>Funzionalità</strong>: Permette agli sviluppatori di creare e distribuire applicazioni decentralizzate in modo affidabile.</p></div><div style="display:contents" dir="auto"><p id="1e642fde-6169-44b7-924c-f21d5747101b" class="">Tutte le Layer2 come Optimism, Arbitrum, Polygon etc sono basate su EVM.</p></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong>Decentralizzazione e Governance</strong></summary><div class="indented"><div style="display:contents" dir="auto"><p id="ac3f0911-c06a-46d0-bf33-91543fa03b5b" class=""><strong>Rete di Nodi</strong>: Ethereum è mantenuto da una rete globale di nodi, ognuno dei quali conserva una copia della blockchain e verifica le transazioni, garantendo la sicurezza e l&#x27;integrità del sistema.</p></div><div style="display:contents" dir="auto"><p id="11a703b1-8810-4d45-b603-99c42d5131e1" class=""><strong>Consenso</strong>: Attualmente utilizza il meccanismo di consenso Proof of Stake (PoS), che sostituisce il precedente Proof of Work (PoW) per migliorare l&#x27;efficienza energetica e la scalabilità.</p></div><div style="display:contents" dir="auto"><p id="27c8a35d-2f90-8070-a8d0-e9b6a249d05c" class=""><strong>Chart dell’organizzazione</strong></p></div><div style="display:contents" dir="ltr"><figure id="27c8a35d-2f90-8061-b582-ea017b84a0fa" class="image"><a href="Ethereum/Screenshot_2025-09-28_at_12.03.04.png"><img style="width:654px" src="Ethereum/Screenshot_2025-09-28_at_12.03.04.png"/></a></figure></div><div style="display:contents" dir="auto"><p id="27c8a35d-2f90-8030-aae7-d05e8013108f" class=""><a href="https://ethereum.foundation/people">https://ethereum.foundation/people</a></p></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Ethereum 2.0 (Eth2)</summary><div class="indented"><div style="display:contents" dir="auto"><p id="f96bb70e-d339-44ad-8b69-91ed7521a103" class="">Ethereum 2.0, noto anche come Eth2 o Serenity, è un aggiornamento importante alla rete Ethereum che mira a migliorare la scalabilità, la sicurezza e la sostenibilità della rete. Questo aggiornamento è stato implementato in diverse fasi:</p></div><div style="display:contents" dir="auto"><ol type="1" id="c5fcd867-1f70-48be-81a0-a471e6e69fae" class="numbered-list" start="1"><li><strong>Beacon Chain</strong>:<div style="display:contents" dir="auto"><p id="07a3553f-a031-4668-bed5-5ce8fc96ca7c" class="">Lanciata a dicembre 2020, la Beacon Chain introduce il consenso Proof of Stake (PoS) alla rete Ethereum.</p></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="17f1cc10-3c31-423f-8b8d-7f0b0945c418" class="numbered-list" start="2"><li><strong>The Merge</strong>:<div style="display:contents" dir="auto"><p id="0c573a05-164a-4c6e-99c9-ffc65e2a1970" class="">Completato a settembre 2022, The Merge ha integrato la Beacon Chain con la mainnet di Ethereum, completando la transizione dal Proof of Work (PoW) al Proof of Stake (PoS).</p></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="881b6707-7fe4-45ff-aede-21e03f337e2d" class="numbered-list" start="3"><li><strong>Shard Chains</strong> (Futuro):<div style="display:contents" dir="auto"><p id="cb975cd9-d886-48fa-be95-561cc7a5af11" class="">Miglioreranno la scalabilità di Ethereum dividendo il carico di lavoro su 64 nuove catene parallele, permettendo un maggiore numero di transazioni al secondo.</p></div></li></ol></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Vantaggi di Ethereum</summary><div class="indented"><div style="display:contents" dir="auto"><ul id="69a5515c-0124-42cc-9a2d-e38e53b74a47" class="bulleted-list"><li style="list-style-type:disc"><strong>Flessibilità</strong>: La capacità di creare smart contract consente a Ethereum di supportare una vasta gamma di applicazioni decentralizzate.</li></ul></div><div style="display:contents" dir="auto"><ul id="623d9588-7b07-4994-8505-b2d57e43abe5" class="bulleted-list"><li style="list-style-type:disc"><strong>Sicurezza</strong>: La natura decentralizzata di Ethereum e il suo robusto meccanismo di consenso rendono la rete altamente sicura.</li></ul></div><div style="display:contents" dir="auto"><ul id="ba31f1b7-6247-4535-b5e6-c1b85353708d" class="bulleted-list"><li style="list-style-type:disc"><strong>Innovazione Continua</strong>: Ethereum ha una comunità di sviluppatori attiva che continua a migliorare la piattaforma e a creare nuove applicazioni.</li></ul></div></div></details></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Portafogli (”Wallet”) Supportati</summary><div class="indented"><div style="display:contents" dir="ltr"><div id="53fb38c6-afe9-4050-b50c-56e389c3a415" class="collection-content"><h4 class="collection-title">imparodefi db ITA</h4><table class="collection-content"><thead><tr><th><span class="icon property-icon"><img src="https://www.notion.so/icons/font_gray.svg" style="width:14px;height:14px;display:block"/></span>Name</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>Tags</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Sito Web</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Profilo Twitter/X</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/calendar_gray.svg" style="width:14px;height:14px;display:block"/></span>Last Updated</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>Blockchain Supportate</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Token/NFT</th></tr></thead><tbody><tr id="c985509d-f18c-4603-a97f-14cc8dc48b7c"><td class="cell-title"><a href="Metamask%20c985509df18c4603a97f14cc8dc48b7c.html"><img class="icon" src="Metamask/mmlogo.png"/>Metamask</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-yellow">Portafoglio &quot;Wallet&quot; Non-custodial (Extension)</span></td><td class="cell-zl^h"><a href="https://metamask.io/" class="url-value">https://metamask.io/</a></td><td class="cell-\}jJ"><a href="https://twitter.com/MetaMask" class="url-value">https://twitter.com/MetaMask</a></td><td class="cell-Z^fp"><time>@May 28, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-brown">HyperEVM</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span></td><td class="cell-TaD\"></td></tr><tr id="f130d92d-8f03-443d-a25f-3a38768c857f"><td class="cell-title"><a href="Rabby%20f130d92d8f03443da25f3a38768c857f.html"><img class="icon" src="Rabby/rabbylogo.jpeg"/>Rabby</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Portafoglio &quot;Wallet&quot; Non-custodial (Extension)</span></td><td class="cell-zl^h"><a href="https://rabby.io/" class="url-value">https://rabby.io/</a></td><td class="cell-\}jJ"><a href="https://x.com/Rabby_io" class="url-value">https://x.com/Rabby_io</a></td><td class="cell-Z^fp"><time>@May 28, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-purple">Avalanche</span><span class="selected-value select-value-color-orange">BSC</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-green">Fantom</span><span class="selected-value select-value-color-blue">Gnosis</span><span class="selected-value select-value-color-brown">HyperEVM</span><span class="selected-value select-value-color-red">Linea</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span><span class="selected-value select-value-color-pink">Zora</span><span class="selected-value select-value-color-green">zkSync</span></td><td class="cell-TaD\"></td></tr><tr id="dc502fae-4276-41f8-a926-d6d3f0d7e6bf"><td class="cell-title"><a href="Trezor%20dc502fae427641f8a926d6d3f0d7e6bf.html"><img class="icon" src="Trezor/trezor-logo.jpg"/>Trezor</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Portafoglio Non-custodial (Hardware Wallet)</span></td><td class="cell-zl^h"><a href="https://trezor.io/" class="url-value">https://trezor.io/</a></td><td class="cell-\}jJ"><a href="https://x.com/Trezor" class="url-value">https://x.com/Trezor</a></td><td class="cell-Z^fp"><time>@June 8, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-orange">Bitcoin</span><span class="selected-value select-value-color-gray">Cosmos</span><span class="selected-value select-value-color-yellow">Dogechain</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span><span class="selected-value select-value-color-purple">Solana</span></td><td class="cell-TaD\"></td></tr><tr id="20828b2a-e2aa-4ded-a62f-289fd33d0ce9"><td class="cell-title"><a href="Rainbow%2020828b2ae2aa4deda62f289fd33d0ce9.html"><span class="icon">🌈</span>Rainbow</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Portafoglio &quot;Wallet&quot; Non-custodial (Extension)</span></td><td class="cell-zl^h"><a href="https://rainbow.me/" class="url-value">https://rainbow.me/</a></td><td class="cell-\}jJ"><a href="https://x.com/rainbowdotme" class="url-value">https://x.com/rainbowdotme</a></td><td class="cell-Z^fp"><time>@March 1, 2026</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/rainbow-3" class="url-value">https://www.coingecko.com/en/coins/rainbow-3</a></td></tr><tr id="5072d44d-e0c0-46dd-8267-fc6fca46f4b0"><td class="cell-title"><a href="Ledger%205072d44de0c046dd8267fc6fca46f4b0.html"><img class="icon" src="Ledger/ledger-logo.jpg"/>Ledger</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Portafoglio Non-custodial (Hardware Wallet)</span></td><td class="cell-zl^h"><a href="https://shop.ledger.com/" class="url-value">https://shop.ledger.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/Ledger" class="url-value">https://x.com/Ledger</a></td><td class="cell-Z^fp"><time>@June 8, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-orange">Bitcoin</span><span class="selected-value select-value-color-gray">Cosmos</span><span class="selected-value select-value-color-yellow">Dogechain</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span><span class="selected-value select-value-color-purple">Solana</span></td><td class="cell-TaD\"></td></tr><tr id="aa9c0846-9800-4848-8055-77f2b094a222"><td class="cell-title"><a href="Phantom%20aa9c084698004848805577f2b094a222.html"><img class="icon" src="Phantom/phantomlogo1.png"/>Phantom</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-yellow">Portafoglio &quot;Wallet&quot; Non-custodial (Extension)</span></td><td class="cell-zl^h"><a href="https://phantom.app/" class="url-value">https://phantom.app/</a></td><td class="cell-\}jJ"><a href="https://x.com/phantom" class="url-value">https://x.com/phantom</a></td><td class="cell-Z^fp"><time>@May 28, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-orange">Bitcoin</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-pink">Polygon</span><span class="selected-value select-value-color-purple">Solana</span></td><td class="cell-TaD\"></td></tr></tbody></table><br/><br/></div></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Applicazioni su Ethereum</summary><div class="indented"><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Exchange Decentralizzate</summary><div class="indented"><div style="display:contents" dir="ltr"><div id="f2801111-8880-4db1-b57d-509b42028a62" class="collection-content"><h4 class="collection-title">imparodefi db ITA</h4><table class="collection-content"><thead><tr><th><span class="icon property-icon"><img src="https://www.notion.so/icons/font_gray.svg" style="width:14px;height:14px;display:block"/></span>Name</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>Tags</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Sito Web</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Profilo Twitter/X</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Token/NFT</th></tr></thead><tbody><tr id="ee077537-7556-40a7-adcf-2fdbfdcec9b6"><td class="cell-title"><a href="Jumper%20ee077537755640a7adcf2fdbfdcec9b6.html"><img class="icon" src="Jumper/Screenshot_2024-03-21_at_16.38.08.png"/>Jumper</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-purple">Bridge</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-pink">Exchange Decentralizzato (DEX)</span></td><td class="cell-zl^h"><a href="https://jumper.exchange/" class="url-value">https://jumper.exchange/</a></td><td class="cell-\}jJ"><a href="https://x.com/JumperExchange" class="url-value">https://x.com/JumperExchange</a></td><td class="cell-TaD\"></td></tr><tr id="c3cfaec6-1c1c-4dfd-87d9-2c20d3916042"><td class="cell-title"><a href="Stargate%20c3cfaec61c1c4dfd87d92c20d3916042.html"><img class="icon" src="Stargate/Screenshot_2024-03-21_at_16.39.34.png"/>Stargate</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">Bridge</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-pink">Exchange Decentralizzato (DEX)</span></td><td class="cell-zl^h"><a href="https://stargate.finance/" class="url-value">https://stargate.finance/</a></td><td class="cell-\}jJ"><a href="https://x.com/StargateFinance" class="url-value">https://x.com/StargateFinance</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/stargate-finance" class="url-value">https://www.coingecko.com/en/coins/stargate-finance</a></td></tr><tr id="f4c76acd-973c-4a28-bfe5-abbc2f087da8"><td class="cell-title"><a href="Uniswap%20f4c76acd973c4a28bfe5abbc2f087da8.html"><img class="icon" src="Uniswap/uniswap-logo.png"/>Uniswap</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-pink">Exchange Decentralizzato (DEX)</span></td><td class="cell-zl^h"><a href="https://app.uniswap.org/swap" class="url-value">https://app.uniswap.org/swap</a></td><td class="cell-\}jJ"><a href="https://x.com/Uniswap" class="url-value">https://x.com/Uniswap</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/uniswap" class="url-value">https://www.coingecko.com/en/coins/uniswap</a></td></tr><tr id="f355fc81-059e-4653-a11c-aef7c96ee22c"><td class="cell-title"><a href="Hyperliquid%20f355fc81059e4653a11caef7c96ee22c.html"><img class="icon" src="Hyperliquid/hyperliquidlogo.png"/>Hyperliquid</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-red">DEX Trading (Perpetuals)</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-pink">Exchange Decentralizzato (DEX)</span></td><td class="cell-zl^h"><a href="https://app.hyperliquid.xyz/join/HL4567" class="url-value">https://app.hyperliquid.xyz/join/HL4567</a></td><td class="cell-\}jJ"><a href="https://twitter.com/HyperliquidX" class="url-value">https://twitter.com/HyperliquidX</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/purr-2" class="url-value">https://www.coingecko.com/en/coins/purr-2</a></td></tr><tr id="bf0cf4db-b6f7-4cc4-9840-2ffecabd4ee1"><td class="cell-title"><a href="Cow%20Swap%20bf0cf4dbb6f74cc498402ffecabd4ee1.html"><img class="icon" src="Cow%20Swap/cowswap-logo.png"/>Cow Swap</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-pink">Exchange Decentralizzato (DEX)</span><span class="selected-value select-value-color-purple">Protezione MEV</span></td><td class="cell-zl^h"><a href="https://cow.fi/" class="url-value">https://cow.fi/</a></td><td class="cell-\}jJ"><a href="https://x.com/CoWSwap" class="url-value">https://x.com/CoWSwap</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/cow-protocol" class="url-value">https://www.coingecko.com/en/coins/cow-protocol</a></td></tr><tr id="5ea1591b-c5a2-4b7d-9b3b-1b4220b9bb28"><td class="cell-title"><a href="Curve%205ea1591bc5a24b7d9b3b1b4220b9bb28.html"><img class="icon" src="Curve/crvlogo.png"/>Curve</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-pink">Exchange Decentralizzato (DEX)</span><span class="selected-value select-value-color-brown">Stablecoin</span></td><td class="cell-zl^h"><a href="https://curve.fi/" class="url-value">https://curve.fi/</a></td><td class="cell-\}jJ"><a href="https://x.com/CurveFinance" class="url-value">https://x.com/CurveFinance</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/curve-dao-token" class="url-value">https://www.coingecko.com/en/coins/curve-dao-token</a></td></tr><tr id="ca9a79c3-f1b5-4d76-b08b-c7ef0544ee1e"><td class="cell-title"><a href="Balancer%20ca9a79c3f1b54d76b08bc7ef0544ee1e.html"><img class="icon" src="Balancer/balancer-logo.png"/>Balancer</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-pink">Exchange Decentralizzato (DEX)</span></td><td class="cell-zl^h"><a href="https://balancer.fi/" class="url-value">https://balancer.fi/</a></td><td class="cell-\}jJ"><a href="https://x.com/Balancer" class="url-value">https://x.com/Balancer</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/balancer" class="url-value">https://www.coingecko.com/en/coins/balancer</a></td></tr><tr id="ea6a9d53-6199-41af-8046-56cac3b0c639"><td class="cell-title"><a href="PropellerSwap%20ea6a9d53619941af804656cac3b0c639.html"><img class="icon" src="PropellerSwap/propeller-logo.jpg"/>PropellerSwap</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-pink">Exchange Decentralizzato (DEX)</span><span class="selected-value select-value-color-purple">Protezione MEV</span></td><td class="cell-zl^h"><a href="https://www.propellerheads.xyz/" class="url-value">https://www.propellerheads.xyz/</a></td><td class="cell-\}jJ"><a href="https://x.com/propellerswap" class="url-value">https://x.com/propellerswap</a></td><td class="cell-TaD\"></td></tr></tbody></table><br/><br/></div></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Derivati (margin trading)</summary><div class="indented"><div style="display:contents" dir="ltr"><div id="3279b306-688f-446a-ab45-ee39476c424d" class="collection-content"><h4 class="collection-title">imparodefi db ITA</h4><table class="collection-content"><thead><tr><th><span class="icon property-icon"><img src="https://www.notion.so/icons/font_gray.svg" style="width:14px;height:14px;display:block"/></span>Name</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>Tags</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Sito Web</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Profilo Twitter/X</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Token/NFT</th></tr></thead><tbody><tr id="f355fc81-059e-4653-a11c-aef7c96ee22c"><td class="cell-title"><a href="Hyperliquid%20f355fc81059e4653a11caef7c96ee22c.html"><img class="icon" src="Hyperliquid/hyperliquidlogo.png"/>Hyperliquid</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-red">DEX Trading (Perpetuals)</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-pink">Exchange Decentralizzato (DEX)</span></td><td class="cell-zl^h"><a href="https://app.hyperliquid.xyz/join/HL4567" class="url-value">https://app.hyperliquid.xyz/join/HL4567</a></td><td class="cell-\}jJ"><a href="https://twitter.com/HyperliquidX" class="url-value">https://twitter.com/HyperliquidX</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/purr-2" class="url-value">https://www.coingecko.com/en/coins/purr-2</a></td></tr><tr id="2718a35d-2f90-80db-8cb4-f90a030bc23b"><td class="cell-title"><a href="Lighter%202718a35d2f9080db8cb4f90a030bc23b.html"><img class="icon" src="Lighter/lighter_logo.jpg"/>Lighter</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-red">DEX Trading (Perpetuals)</span><span class="selected-value select-value-color-orange">DeFi</span></td><td class="cell-zl^h"><a href="app.lighter.xyz/?referral=3SEU75MYUJ5C" class="url-value">app.lighter.xyz/?referral=3SEU75MYUJ5C</a></td><td class="cell-\}jJ"><a href="https://x.com/Lighter_xyz" class="url-value">https://x.com/Lighter_xyz</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/lighter" class="url-value">https://www.coingecko.com/en/coins/lighter</a></td></tr><tr id="27f8a35d-2f90-8070-927a-c93b8f58d8dc"><td class="cell-title"><a href="Extended%2027f8a35d2f908070927ac93b8f58d8dc.html"><img class="icon" src="Extended/extended_logo.jpg"/>Extended</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-red">DEX Trading (Perpetuals)</span></td><td class="cell-zl^h"><a href="https://app.extended.exchange/join/EXTEND777" class="url-value">https://app.extended.exchange/join/EXTEND777</a></td><td class="cell-\}jJ"><a href="https://x.com/extendedapp" class="url-value">https://x.com/extendedapp</a></td><td class="cell-TaD\"></td></tr></tbody></table><br/><br/></div></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Prestiti</summary></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Rendimenti</summary></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Stablecoins</summary></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Staking liquido (LST)</summary></details></div><div style="display:contents" dir="ltr"><div id="2b53e072-3fdb-4f46-9adf-8d38e6d552ca" class="collection-content"><h4 class="collection-title">imparodefi db ITA</h4><table class="collection-content"><thead><tr><th><span class="icon property-icon"><img src="https://www.notion.so/icons/font_gray.svg" style="width:14px;height:14px;display:block"/></span>Name</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>Tags</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Sito Web</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Profilo Twitter/X</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/calendar_gray.svg" style="width:14px;height:14px;display:block"/></span>Last Updated</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>Blockchain Supportate</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Token/NFT</th></tr></thead><tbody><tr id="f4c76acd-973c-4a28-bfe5-abbc2f087da8"><td class="cell-title"><a href="Uniswap%20f4c76acd973c4a28bfe5abbc2f087da8.html"><img class="icon" src="Uniswap/uniswap-logo.png"/>Uniswap</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-pink">Exchange Decentralizzato (DEX)</span></td><td class="cell-zl^h"><a href="https://app.uniswap.org/swap" class="url-value">https://app.uniswap.org/swap</a></td><td class="cell-\}jJ"><a href="https://x.com/Uniswap" class="url-value">https://x.com/Uniswap</a></td><td class="cell-Z^fp"><time>@May 29, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/uniswap" class="url-value">https://www.coingecko.com/en/coins/uniswap</a></td></tr><tr id="24f95f85-5ca9-4ee5-abe7-d555f4a03e72"><td class="cell-title"><a href="Tapioca%2024f95f855ca94ee5abe7d555f4a03e72.html"><img class="icon" src="Tapioca/tapiocalogo.png"/>Tapioca</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-orange">Interoperabilità (Cross-Chain)</span><span class="selected-value select-value-color-blue">Prestiti Decentralizzati</span><span class="selected-value select-value-color-brown">Stablecoin</span></td><td class="cell-zl^h"><a href="https://genesis.permissionless.one/" class="url-value">https://genesis.permissionless.one/</a></td><td class="cell-\}jJ"><a href="https://x.com/tapioca_dao" class="url-value">https://x.com/tapioca_dao</a></td><td class="cell-Z^fp"><time>@June 14, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/tapioca-dao-token" class="url-value">https://www.coingecko.com/en/coins/tapioca-dao-token</a></td></tr><tr id="ee077537-7556-40a7-adcf-2fdbfdcec9b6"><td class="cell-title"><a href="Jumper%20ee077537755640a7adcf2fdbfdcec9b6.html"><img class="icon" src="Jumper/Screenshot_2024-03-21_at_16.38.08.png"/>Jumper</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-purple">Bridge</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-pink">Exchange Decentralizzato (DEX)</span></td><td class="cell-zl^h"><a href="https://jumper.exchange/" class="url-value">https://jumper.exchange/</a></td><td class="cell-\}jJ"><a href="https://x.com/JumperExchange" class="url-value">https://x.com/JumperExchange</a></td><td class="cell-Z^fp"><time>@June 13, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-purple">Layerzero</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span></td><td class="cell-TaD\"></td></tr><tr id="50d70457-27ed-45f3-99d4-e7768351365c"><td class="cell-title"><a href="Liquity%2050d7045727ed45f399d4e7768351365c.html"><img class="icon" src="Liquity/liquity-logo.jpg"/>Liquity</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-blue">Prestiti Decentralizzati</span></td><td class="cell-zl^h"><a href="liquity.org" class="url-value">liquity.org</a></td><td class="cell-\}jJ"><a href="https://x.com/LiquityProtocol" class="url-value">https://x.com/LiquityProtocol</a></td><td class="cell-Z^fp"><time>@June 6, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-default">Ethereum</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/liquity" class="url-value">https://www.coingecko.com/en/coins/liquity</a></td></tr><tr id="c3cfaec6-1c1c-4dfd-87d9-2c20d3916042"><td class="cell-title"><a href="Stargate%20c3cfaec61c1c4dfd87d92c20d3916042.html"><img class="icon" src="Stargate/Screenshot_2024-03-21_at_16.39.34.png"/>Stargate</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">Bridge</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-pink">Exchange Decentralizzato (DEX)</span></td><td class="cell-zl^h"><a href="https://stargate.finance/" class="url-value">https://stargate.finance/</a></td><td class="cell-\}jJ"><a href="https://x.com/StargateFinance" class="url-value">https://x.com/StargateFinance</a></td><td class="cell-Z^fp"><time>@May 29, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-purple">Layerzero</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/stargate-finance" class="url-value">https://www.coingecko.com/en/coins/stargate-finance</a></td></tr><tr id="a076bed3-645a-4344-b3dc-2df3f14d5060"><td class="cell-title"><a href="Orbiter%20a076bed3645a4344b3dc2df3f14d5060.html"><img class="icon" src="Orbiter/Screenshot_2024-03-21_at_16.37.23.png"/>Orbiter</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">Bridge</span><span class="selected-value select-value-color-orange">DeFi</span></td><td class="cell-zl^h"><a href="https://www.orbiter.finance/" class="url-value">https://www.orbiter.finance/</a></td><td class="cell-\}jJ"><a href="https://x.com/Orbiter_Finance" class="url-value">https://x.com/Orbiter_Finance</a></td><td class="cell-Z^fp"><time>@March 1, 2026</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/orbiter-finance" class="url-value">https://www.coingecko.com/en/coins/orbiter-finance</a></td></tr><tr id="e2c485cf-8a17-4525-b2d5-03ae63b13929"><td class="cell-title"><a href="AAVE%20e2c485cf8a174525b2d503ae63b13929.html"><img class="icon" src="AAVE/Screenshot_2024-03-21_at_16.56.05.png"/>AAVE</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-blue">Prestiti Decentralizzati</span></td><td class="cell-zl^h"><a href="https://app.aave.com/" class="url-value">https://app.aave.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/aave" class="url-value">https://x.com/aave</a></td><td class="cell-Z^fp"><time>@May 29, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/aave" class="url-value">https://www.coingecko.com/en/coins/aave</a></td></tr><tr id="da8812d5-1bcd-44f6-9dab-f35a9d038767"><td class="cell-title"><a href="Zerion%20da8812d51bcd44f69dabf35a9d038767.html"><img class="icon" src="Zerion/zerion-logo.jpg"/>Zerion</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-brown">Bridge Aggregator</span><span class="selected-value select-value-color-orange">DEX Aggregator</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-default">Portfolio Tracker</span></td><td class="cell-zl^h"><a href="https://zerion.io/" class="url-value">https://zerion.io/</a></td><td class="cell-\}jJ"><a href="https://x.com/zerion" class="url-value">https://x.com/zerion</a></td><td class="cell-Z^fp"><time>@June 17, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span><span class="selected-value select-value-color-green">zkSync</span></td><td class="cell-TaD\"></td></tr><tr id="f2419f5c-0232-45ec-ba74-7bf779ad065c"><td class="cell-title"><a href="Zapper%20f2419f5c023245ecba747bf779ad065c.html"><img class="icon" src="Zapper/zapper-logo.jpg"/>Zapper</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-orange">DEX Aggregator</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-default">Portfolio Tracker</span></td><td class="cell-zl^h"><a href="https://zapper.xyz/" class="url-value">https://zapper.xyz/</a></td><td class="cell-\}jJ"><a href="https://x.com/zapper_fi" class="url-value">https://x.com/zapper_fi</a></td><td class="cell-Z^fp"><time>@June 18, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span><span class="selected-value select-value-color-green">zkSync</span></td><td class="cell-TaD\"></td></tr><tr id="29146752-f14a-4baf-ac47-56bdfe14a884"><td class="cell-title"><a href="Symbiosis%2029146752f14a4bafac4756bdfe14a884.html"><img class="icon" src="Symbiosis/Symbiosis-logo.jpg"/>Symbiosis</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-orange">DeFi</span></td><td class="cell-zl^h"><a href="https://app.symbiosis.finance/" class="url-value">https://app.symbiosis.finance/</a></td><td class="cell-\}jJ"><a href="https://x.com/symbiosis_fi" class="url-value">https://x.com/symbiosis_fi</a></td><td class="cell-Z^fp"><time>@June 11, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-purple">Avalanche</span><span class="selected-value select-value-color-orange">BSC</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-orange">Bitcoin</span><span class="selected-value select-value-color-green">Blast</span><span class="selected-value select-value-color-gray">Cosmos</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-red">Linea</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span><span class="selected-value select-value-color-brown">Polygon zkEVM</span><span class="selected-value select-value-color-blue">Scroll</span><span class="selected-value select-value-color-purple">Solana</span><span class="selected-value select-value-color-green">zkSync</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/symbiosis" class="url-value">https://www.coingecko.com/en/coins/symbiosis</a></td></tr><tr id="4fa3b7fe-7bd6-485b-ade8-651e364fac55"><td class="cell-title"><a href="Safe%204fa3b7fe7bd6485bade8651e364fac55.html"><img class="icon" src="Safe/safe-logo.jpg"/>Safe</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-yellow">Multi-sig</span></td><td class="cell-zl^h"><a href="https://safe.global/" class="url-value">https://safe.global/</a></td><td class="cell-\}jJ"><a href="https://x.com/safe" class="url-value">https://x.com/safe</a></td><td class="cell-Z^fp"><time>@June 20, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/safe" class="url-value">https://www.coingecko.com/en/coins/safe</a></td></tr><tr id="0b66e15b-0930-4aa7-8393-195f55fcdf69"><td class="cell-title"><a href="Snapshot%200b66e15b09304aa78393195f55fcdf69.html"><img class="icon" src="Snapshot/snapshot-logo.jpg"/>Snapshot</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-brown">Governance</span></td><td class="cell-zl^h"><a href="snapshot.org" class="url-value">snapshot.org</a></td><td class="cell-\}jJ"><a href="https://x.com/SnapshotLabs" class="url-value">https://x.com/SnapshotLabs</a></td><td class="cell-Z^fp"><time>@June 7, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span></td><td class="cell-TaD\"></td></tr><tr id="49768823-dde9-4ef5-bae9-c4522eb59bbd"><td class="cell-title"><a href="Blur%2049768823dde94ef5bae9c4522eb59bbd.html"><img class="icon" src="Blur/blur-logo.jpg"/>Blur</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-yellow">Marketplace NFT</span></td><td class="cell-zl^h"><a href="https://blur.io/" class="url-value">https://blur.io/</a></td><td class="cell-\}jJ"><a href="https://x.com/blur_io" class="url-value">https://x.com/blur_io</a></td><td class="cell-Z^fp"><time>@June 5, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-green">Blast</span><span class="selected-value select-value-color-default">Ethereum</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/blur" class="url-value">https://www.coingecko.com/en/coins/blur</a></td></tr><tr id="2227399e-a912-4179-a387-96adab14789b"><td class="cell-title"><a href="Defillama%202227399ea9124179a38796adab14789b.html"><img class="icon" src="Defillama/Screenshot_2024-03-21_at_16.48.29.png"/>Defillama</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span><span class="selected-value select-value-color-brown">Bridge Aggregator</span><span class="selected-value select-value-color-orange">DEX Aggregator</span><span class="selected-value select-value-color-orange">DeFi</span></td><td class="cell-zl^h"><a href="https://defillama.com/" class="url-value">https://defillama.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/DefiLlama" class="url-value">https://x.com/DefiLlama</a></td><td class="cell-Z^fp"><time>@May 29, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span></td><td class="cell-TaD\"></td></tr><tr id="f355fc81-059e-4653-a11c-aef7c96ee22c"><td class="cell-title"><a href="Hyperliquid%20f355fc81059e4653a11caef7c96ee22c.html"><img class="icon" src="Hyperliquid/hyperliquidlogo.png"/>Hyperliquid</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-red">DEX Trading (Perpetuals)</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-pink">Exchange Decentralizzato (DEX)</span></td><td class="cell-zl^h"><a href="https://app.hyperliquid.xyz/join/HL4567" class="url-value">https://app.hyperliquid.xyz/join/HL4567</a></td><td class="cell-\}jJ"><a href="https://twitter.com/HyperliquidX" class="url-value">https://twitter.com/HyperliquidX</a></td><td class="cell-Z^fp"><time>@March 22, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-orange">Bitcoin</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-brown">HyperEVM</span><span class="selected-value select-value-color-yellow">Monad</span><span class="selected-value select-value-color-red">Plasma</span><span class="selected-value select-value-color-purple">Solana</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/purr-2" class="url-value">https://www.coingecko.com/en/coins/purr-2</a></td></tr><tr id="bf0cf4db-b6f7-4cc4-9840-2ffecabd4ee1"><td class="cell-title"><a href="Cow%20Swap%20bf0cf4dbb6f74cc498402ffecabd4ee1.html"><img class="icon" src="Cow%20Swap/cowswap-logo.png"/>Cow Swap</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-pink">Exchange Decentralizzato (DEX)</span><span class="selected-value select-value-color-purple">Protezione MEV</span></td><td class="cell-zl^h"><a href="https://cow.fi/" class="url-value">https://cow.fi/</a></td><td class="cell-\}jJ"><a href="https://x.com/CoWSwap" class="url-value">https://x.com/CoWSwap</a></td><td class="cell-Z^fp"><time>@May 29, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-blue">Gnosis</span><span class="selected-value select-value-color-default">Sepolia</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/cow-protocol" class="url-value">https://www.coingecko.com/en/coins/cow-protocol</a></td></tr><tr id="f36e50ac-e746-45d4-a4f4-c27624726c7a"><td class="cell-title"><a href="Compound%20f36e50ace74645d4a4f4c27624726c7a.html"><img class="icon" src="Compound/COMP.webp"/>Compound</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-blue">Prestiti Decentralizzati</span></td><td class="cell-zl^h"><a href="https://compound.finance/" class="url-value">https://compound.finance/</a></td><td class="cell-\}jJ"><a href="https://x.com/compoundfinance" class="url-value">https://x.com/compoundfinance</a></td><td class="cell-Z^fp"><time>@May 29, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span><span class="selected-value select-value-color-blue">Scroll</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/compound" class="url-value">https://www.coingecko.com/en/coins/compound</a></td></tr><tr id="64392445-3afb-4280-89dc-25b1c7414b83"><td class="cell-title"><a href="Sudoswap%20643924453afb428089dc25b1c7414b83.html"><img class="icon" src="Sudoswap/sudoswap-logo.jpg"/>Sudoswap</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-yellow">Marketplace NFT</span></td><td class="cell-zl^h"><a href="sudoswap.xyz" class="url-value">sudoswap.xyz</a></td><td class="cell-\}jJ"><a href="https://x.com/sudoswap" class="url-value">https://x.com/sudoswap</a></td><td class="cell-Z^fp"><time>@June 5, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-green">Blast</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-purple">Sanko</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/sudoswap" class="url-value">https://www.coingecko.com/en/coins/sudoswap</a></td></tr><tr id="a6de97a7-0f21-4ad9-9fff-64ebc2b6cbaf"><td class="cell-title"><a href="deBridge%20a6de97a70f214ad99fff64ebc2b6cbaf.html"><img class="icon" src="deBridge/debridge-logo.png"/>deBridge</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">Bridge</span><span class="selected-value select-value-color-orange">DeFi</span></td><td class="cell-zl^h"><a href="https://debridge.finance/" class="url-value">https://debridge.finance/</a></td><td class="cell-\}jJ"><a href="https://x.com/deBridgeFinance" class="url-value">https://x.com/deBridgeFinance</a></td><td class="cell-Z^fp"><time>@March 1, 2026</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-purple">Avalanche</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-green">Blast</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-red">Linea</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span><span class="selected-value select-value-color-purple">Solana</span><span class="selected-value select-value-color-green">zkSync</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/debridge" class="url-value">https://www.coingecko.com/en/coins/debridge</a></td></tr><tr id="5ea1591b-c5a2-4b7d-9b3b-1b4220b9bb28"><td class="cell-title"><a href="Curve%205ea1591bc5a24b7d9b3b1b4220b9bb28.html"><img class="icon" src="Curve/crvlogo.png"/>Curve</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-pink">Exchange Decentralizzato (DEX)</span><span class="selected-value select-value-color-brown">Stablecoin</span></td><td class="cell-zl^h"><a href="https://curve.fi/" class="url-value">https://curve.fi/</a></td><td class="cell-\}jJ"><a href="https://x.com/CurveFinance" class="url-value">https://x.com/CurveFinance</a></td><td class="cell-Z^fp"><time>@June 6, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-purple">Avalanche</span><span class="selected-value select-value-color-orange">BSC</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/curve-dao-token" class="url-value">https://www.coingecko.com/en/coins/curve-dao-token</a></td></tr><tr id="46baf37a-2e7e-4f1e-a5a8-0348e4f612e2"><td class="cell-title"><a href="DeBank%2046baf37a2e7e4f1ea5a80348e4f612e2.html"><img class="icon" src="DeBank/debank-logo.jpg"/>DeBank</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-orange">DEX Aggregator</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-default">Portfolio Tracker</span></td><td class="cell-zl^h"><a href="DeBank.com" class="url-value">DeBank.com</a></td><td class="cell-\}jJ"><a href="https://x.com/DeBankDeFi" class="url-value">https://x.com/DeBankDeFi</a></td><td class="cell-Z^fp"><time>@June 20, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span></td><td class="cell-TaD\"></td></tr><tr id="c191746b-544a-4273-a7b6-ab5d223c9fa8"><td class="cell-title"><a href="Relay%20Bridge%20c191746b544a4273a7b6ab5d223c9fa8.html"><img class="icon" src="Relay%20Bridge/relay_logo.jpg"/>Relay Bridge</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-purple">Bridge</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-orange">Interoperabilità (Cross-Chain)</span></td><td class="cell-zl^h"><a href="https://relay.link/" class="url-value">https://relay.link/</a></td><td class="cell-\}jJ"><a href="https://x.com/RelayProtocol" class="url-value">https://x.com/RelayProtocol</a></td><td class="cell-Z^fp"><time>@February 20, 2026</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-purple">Avalanche</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-green">Blast</span><span class="selected-value select-value-color-default">Degen</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-red">Linea</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span><span class="selected-value select-value-color-brown">Polygon zkEVM</span><span class="selected-value select-value-color-green">Redstone</span><span class="selected-value select-value-color-blue">Scroll</span><span class="selected-value select-value-color-pink">Zora</span><span class="selected-value select-value-color-green">zkSync</span></td><td class="cell-TaD\"></td></tr><tr id="c21b959b-ca78-4786-b693-35345b222a7a"><td class="cell-title"><a href="Smol%20Refuel%20c21b959bca784786b69335345b222a7a.html"><img class="icon" src="Smol%20Refuel/smolrefuel-logo.jpg"/>Smol Refuel</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">Bridge</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-orange">Interoperabilità (Cross-Chain)</span></td><td class="cell-zl^h"><a href="https://smolrefuel.com/" class="url-value">https://smolrefuel.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/smolrefuel" class="url-value">https://x.com/smolrefuel</a></td><td class="cell-Z^fp"><time>@June 23, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-orange">BSC</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-green">Blast</span><span class="selected-value select-value-color-default">Degen</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-blue">Gnosis</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span><span class="selected-value select-value-color-brown">Polygon zkEVM</span><span class="selected-value select-value-color-blue">Scroll</span><span class="selected-value select-value-color-red">XAI</span><span class="selected-value select-value-color-pink">Zora</span><span class="selected-value select-value-color-green">zkSync</span></td><td class="cell-TaD\"></td></tr><tr id="ca9a79c3-f1b5-4d76-b08b-c7ef0544ee1e"><td class="cell-title"><a href="Balancer%20ca9a79c3f1b54d76b08bc7ef0544ee1e.html"><img class="icon" src="Balancer/balancer-logo.png"/>Balancer</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-pink">Exchange Decentralizzato (DEX)</span></td><td class="cell-zl^h"><a href="https://balancer.fi/" class="url-value">https://balancer.fi/</a></td><td class="cell-\}jJ"><a href="https://x.com/Balancer" class="url-value">https://x.com/Balancer</a></td><td class="cell-Z^fp"><time>@June 22, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-purple">Avalanche</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-blue">Gnosis</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span><span class="selected-value select-value-color-brown">Polygon zkEVM</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/balancer" class="url-value">https://www.coingecko.com/en/coins/balancer</a></td></tr><tr id="ea6a9d53-6199-41af-8046-56cac3b0c639"><td class="cell-title"><a href="PropellerSwap%20ea6a9d53619941af804656cac3b0c639.html"><img class="icon" src="PropellerSwap/propeller-logo.jpg"/>PropellerSwap</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-pink">Exchange Decentralizzato (DEX)</span><span class="selected-value select-value-color-purple">Protezione MEV</span></td><td class="cell-zl^h"><a href="https://www.propellerheads.xyz/" class="url-value">https://www.propellerheads.xyz/</a></td><td class="cell-\}jJ"><a href="https://x.com/propellerswap" class="url-value">https://x.com/propellerswap</a></td><td class="cell-Z^fp"><time>@June 23, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-pink">Starknet</span><span class="selected-value select-value-color-green">zkSync</span></td><td class="cell-TaD\"></td></tr><tr id="dcac669a-97f0-498c-8b42-04a5139d40d6"><td class="cell-title"><a href="Yearn%20Finance%20dcac669a97f0498c8b4204a5139d40d6.html"><img class="icon" src="Yearn%20Finance/yearn-logo.jpg"/>Yearn Finance</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-default">Rendimento (Yield Farming)</span></td><td class="cell-zl^h"><a href="https://yearn.fi/" class="url-value">https://yearn.fi/</a></td><td class="cell-\}jJ"><a href="https://x.com/yearnfi" class="url-value">https://x.com/yearnfi</a></td><td class="cell-Z^fp"><time>@June 23, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-pink">Polygon</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/yearn-finance" class="url-value">https://www.coingecko.com/en/coins/yearn-finance</a></td></tr><tr id="6110b905-e5a4-4677-9b5b-e54cb2f47a0a"><td class="cell-title"><a href="Lido%20Finance%206110b905e5a446779b5be54cb2f47a0a.html"><img class="icon" src="Lido%20Finance/lido-logo.jpg"/>Lido Finance</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-orange">Restaking (LST)</span></td><td class="cell-zl^h"><a href="https://lido.fi/" class="url-value">https://lido.fi/</a></td><td class="cell-\}jJ"><a href="https://x.com/LidoFinance" class="url-value">https://x.com/LidoFinance</a></td><td class="cell-Z^fp"><time>@June 25, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-purple">Solana</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/lido-dao" class="url-value">https://www.coingecko.com/en/coins/lido-dao</a></td></tr><tr id="2718a35d-2f90-80db-8cb4-f90a030bc23b"><td class="cell-title"><a href="Lighter%202718a35d2f9080db8cb4f90a030bc23b.html"><img class="icon" src="Lighter/lighter_logo.jpg"/>Lighter</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-red">DEX Trading (Perpetuals)</span><span class="selected-value select-value-color-orange">DeFi</span></td><td class="cell-zl^h"><a href="app.lighter.xyz/?referral=3SEU75MYUJ5C" class="url-value">app.lighter.xyz/?referral=3SEU75MYUJ5C</a></td><td class="cell-\}jJ"><a href="https://x.com/Lighter_xyz" class="url-value">https://x.com/Lighter_xyz</a></td><td class="cell-Z^fp"><time>@January 23, 2026</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-purple">Avalanche</span><span class="selected-value select-value-color-orange">BSC</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-brown">HyperEVM</span><span class="selected-value select-value-color-yellow">Monad</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-purple">Solana</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/lighter" class="url-value">https://www.coingecko.com/en/coins/lighter</a></td></tr></tbody></table><br/><br/></div></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">NFT su Ethereum</summary><div class="indented"><div style="display:contents" dir="ltr"><div id="b3afb440-89bc-40e6-984e-2c871bd99e1c" class="collection-content"><h4 class="collection-title">imparodefi db ITA</h4><table class="collection-content"><thead><tr><th><span class="icon property-icon"><img src="https://www.notion.so/icons/font_gray.svg" style="width:14px;height:14px;display:block"/></span>Name</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>Tags</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Sito Web</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Profilo Twitter/X</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Token/NFT</th></tr></thead><tbody><tr id="ee2edcac-c9d2-48e7-9585-210a85650840"><td class="cell-title"><a href="Crypto%20Punks%20ee2edcacc9d248e79585210a85650840.html"><img class="icon" src="Crypto%20Punks/cryptopunk1.jpeg"/>Crypto Punks</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://cryptopunks.app/" class="url-value">https://cryptopunks.app/</a></td><td class="cell-\}jJ"><a href="https://x.com/cryptopunksnfts" class="url-value">https://x.com/cryptopunksnfts</a></td><td class="cell-TaD\"><a href="https://cryptopunks.app/" class="url-value">https://cryptopunks.app/</a></td></tr><tr id="7afc27fb-d3fc-438f-b6ca-6aa3185a13e7"><td class="cell-title"><a href="Shroomiez%207afc27fbd3fc438fb6ca6aa3185a13e7.html"><img class="icon" src="Shroomiez/logo_color.jpg"/>Shroomiez</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="shroomiez.world" class="url-value">shroomiez.world</a></td><td class="cell-\}jJ"><a href="https://x.com/ShroomiezNFTs" class="url-value">https://x.com/ShroomiezNFTs</a></td><td class="cell-TaD\"><a href="https://opensea.io/collection/shroomieznfts" class="url-value">https://opensea.io/collection/shroomieznfts</a></td></tr><tr id="b4f0a766-0077-4128-8b9a-d48f6db19cc4"><td class="cell-title"><a href="Tubby%20Cats%20b4f0a766007741288b9ad48f6db19cc4.html"><img class="icon" src="Tubby%20Cats/tubby.jpeg"/>Tubby Cats</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://hub.xyz/tubby-cats" class="url-value">https://hub.xyz/tubby-cats</a></td><td class="cell-\}jJ"><a href="https://x.com/tubbycatsnft" class="url-value">https://x.com/tubbycatsnft</a></td><td class="cell-TaD\"><a href="https://opensea.io/collection/tubby-cats" class="url-value">https://opensea.io/collection/tubby-cats</a></td></tr><tr id="c06b16f9-91fc-4638-bedb-85c194d968e7"><td class="cell-title"><a href="Milady%20c06b16f991fc4638bedb85c194d968e7.html"><img class="icon" src="Milady/milady.jpeg"/>Milady</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://miladymaker.net/" class="url-value">https://miladymaker.net/</a></td><td class="cell-\}jJ"><a href="https://x.com/miladymaker" class="url-value">https://x.com/miladymaker</a></td><td class="cell-TaD\"><a href="https://opensea.io/collection/milady" class="url-value">https://opensea.io/collection/milady</a></td></tr><tr id="0519f89f-a93c-4163-9018-9564dcba6753"><td class="cell-title"><a href="Radbro%200519f89fa93c416390189564dcba6753.html"><img class="icon" src="Radbro/radbro-logo.jpg"/>Radbro</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://radbro.xyz/" class="url-value">https://radbro.xyz/</a></td><td class="cell-\}jJ"><a href="https://x.com/radbro_webring" class="url-value">https://x.com/radbro_webring</a></td><td class="cell-TaD\"><a href="https://opensea.io/collection/radbro-webring" class="url-value">https://opensea.io/collection/radbro-webring</a></td></tr><tr id="94c09741-82de-43ad-ab34-666a1d955865"><td class="cell-title"><a href="Pudgy%20Penguins%2094c0974182de43adab34666a1d955865.html"><img class="icon" src="Pudgy%20Penguins/pudgy-logo.jpg"/>Pudgy Penguins</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://www.pudgypenguins.com/" class="url-value">https://www.pudgypenguins.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/pudgypenguins" class="url-value">https://x.com/pudgypenguins</a></td><td class="cell-TaD\"><a href="https://opensea.io/collection/pudgypenguins" class="url-value">https://opensea.io/collection/pudgypenguins</a></td></tr><tr id="2b799377-7998-4e0e-b8c0-1c1cea704321"><td class="cell-title"><a href="Bong%20Bears%20&amp;%20Rebase%202b79937779984e0eb8c01c1cea704321.html"><img class="icon" src="Bong%20Bears%20&amp;%20Rebase/bongbears.jpeg"/>Bong Bears &amp; Rebase</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://www.berachain.com/" class="url-value">https://www.berachain.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/BongBearsNFT" class="url-value">https://x.com/BongBearsNFT</a></td><td class="cell-TaD\"><a href="https://opensea.io/collection/bongbears" class="url-value">https://opensea.io/collection/bongbears</a></td></tr><tr id="38c1c36b-ac64-4b37-b2f4-60e0478888c8"><td class="cell-title"><a href="TN100X%20(Ham%20TheLP)%2038c1c36bac644b37b2f460e0478888c8.html"><span class="icon">🍖</span>TN100X (Ham / TheLP)</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-pink">Memecoin</span><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://ham.fun/" class="url-value">https://ham.fun/</a></td><td class="cell-\}jJ"><a href="https://x.com/HamOnWarpcast" class="url-value">https://x.com/HamOnWarpcast</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/tn100x" class="url-value">https://www.coingecko.com/en/coins/tn100x</a></td></tr><tr id="94294013-6853-46c4-ae59-11dff23c34bf"><td class="cell-title"><a href="Decentraland%2094294013685346c4ae5911dff23c34bf.html"><img class="icon" src="Decentraland/decentraland-logo.jpg"/>Decentraland</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-blue">Metaverso</span><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://decentraland.org/" class="url-value">https://decentraland.org/</a></td><td class="cell-\}jJ"><a href="https://x.com/decentraland" class="url-value">https://x.com/decentraland</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/decentraland" class="url-value">https://www.coingecko.com/en/coins/decentraland</a></td></tr><tr id="1b827de9-9ea6-49b5-9335-929ab78e57a3"><td class="cell-title"><a href="The%20Sandbox%201b827de99ea649b59335929ab78e57a3.html"><img class="icon" src="The%20Sandbox/sandbox-logo.jpg"/>The Sandbox</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-blue">Metaverso</span><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://x.com/TheSandboxGame" class="url-value">https://x.com/TheSandboxGame</a></td><td class="cell-\}jJ"><a href="https://x.com/TheSandboxGame" class="url-value">https://x.com/TheSandboxGame</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/the-sandbox" class="url-value">https://www.coingecko.com/en/coins/the-sandbox</a></td></tr><tr id="38b691e0-b8e0-45c0-b799-96af64271af5"><td class="cell-title"><a href="Redacted%20Remilio%20Babies%2038b691e0b8e045c0b79996af64271af5.html"><img class="icon" src="Redacted%20Remilio%20Babies/remilio-logo.jpg"/>Redacted Remilio Babies</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://remilio.org/" class="url-value">https://remilio.org/</a></td><td class="cell-\}jJ"><a href="https://x.com/RemilioBaby" class="url-value">https://x.com/RemilioBaby</a></td><td class="cell-TaD\"><a href="https://opensea.io/collection/remilio-babies" class="url-value">https://opensea.io/collection/remilio-babies</a></td></tr><tr id="d630fbfb-6000-40b8-9cd2-9639ea0cd8e1"><td class="cell-title"><a href="The%20Honey%20Jar%20d630fbfb600040b89cd29639ea0cd8e1.html"><img class="icon" src="The%20Honey%20Jar/SzbuWvjo_400x400.jpg"/>The Honey Jar</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span><span class="selected-value select-value-color-pink">Community</span><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://hub.xyz/honeyjar" class="url-value">https://hub.xyz/honeyjar</a></td><td class="cell-\}jJ"><a href="https://x.com/0xhoneyjar" class="url-value">https://x.com/0xhoneyjar</a></td><td class="cell-TaD\"><a href="https://opensea.io/collection/honey-comb-2" class="url-value">https://opensea.io/collection/honey-comb-2</a></td></tr><tr id="2638a35d-2f90-8023-b6fe-f92cef3b54ec"><td class="cell-title"><a href="Audioglyphs%202638a35d2f908023b6fef92cef3b54ec.html">Audioglyphs</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-TaD\"><a href="https://opensea.io/collection/autoglyphs" class="url-value">https://opensea.io/collection/autoglyphs</a></td></tr><tr id="2638a35d-2f90-8078-a7c1-c81375e14a81"><td class="cell-title"><a href="Sproto%20Gremlins%202638a35d2f908078a7c1c81375e14a81.html">Sproto Gremlins</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-TaD\"><a href="https://opensea.io/collection/sproto-gremlins" class="url-value">https://opensea.io/collection/sproto-gremlins</a></td></tr></tbody></table><br/><br/></div></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Memecoin su Ethereum</summary><div class="indented"><div style="display:contents" dir="ltr"><div id="ae8ce5af-fc65-42fd-9c5a-0f00a90f8e4d" class="collection-content"><h4 class="collection-title">imparodefi db ITA</h4><table class="collection-content"><thead><tr><th><span class="icon property-icon"><img src="https://www.notion.so/icons/font_gray.svg" style="width:14px;height:14px;display:block"/></span>Name</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>Tags</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Sito Web</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Profilo Twitter/X</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Token/NFT</th></tr></thead><tbody><tr id="2cb86bf8-be80-4aec-8e75-2307cf0e87b0"><td class="cell-title"><a href="Pepe%20(coin)%202cb86bf8be804aec8e752307cf0e87b0.html"><img class="icon" src="Pepe%20(coin)/pepe-logo.jpg"/>Pepe (coin)</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"><a href="https://www.pepe.vip/" class="url-value">https://www.pepe.vip/</a></td><td class="cell-\}jJ"><a href="https://x.com/pepecoineth" class="url-value">https://x.com/pepecoineth</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/pepe" class="url-value">https://www.coingecko.com/en/coins/pepe</a></td></tr><tr id="e72c654c-97f4-4e20-be38-af4d3c7ed10f"><td class="cell-title"><a href="Apu%20e72c654c97f44e20be38af4d3c7ed10f.html"><img class="icon" src="Apu/apu-logo.jpg"/>Apu</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"><a href="https://apu.com/" class="url-value">https://apu.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/ApusCoin" class="url-value">https://x.com/ApusCoin</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/apu-apustaja" class="url-value">https://www.coingecko.com/en/coins/apu-apustaja</a></td></tr><tr id="38c1c36b-ac64-4b37-b2f4-60e0478888c8"><td class="cell-title"><a href="TN100X%20(Ham%20TheLP)%2038c1c36bac644b37b2f460e0478888c8.html"><span class="icon">🍖</span>TN100X (Ham / TheLP)</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-pink">Memecoin</span><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://ham.fun/" class="url-value">https://ham.fun/</a></td><td class="cell-\}jJ"><a href="https://x.com/HamOnWarpcast" class="url-value">https://x.com/HamOnWarpcast</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/tn100x" class="url-value">https://www.coingecko.com/en/coins/tn100x</a></td></tr><tr id="2f68a35d-2f90-8070-b30b-c7bc979417a5"><td class="cell-title"><a href="Spx6900%202f68a35d2f908070b30bc7bc979417a5.html">Spx6900</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/spx6900" class="url-value">https://www.coingecko.com/en/coins/spx6900</a></td></tr><tr id="2f68a35d-2f90-80e5-9bec-ca463f64f309"><td class="cell-title"><a href="Mog%202f68a35d2f9080e59becca463f64f309.html">Mog</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/mog-coin" class="url-value">https://www.coingecko.com/en/coins/mog-coin</a></td></tr></tbody></table><br/><br/></div></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Tutorial</summary><div class="indented"><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Tutorial Scritti</summary><div class="indented"><div style="display:contents" dir="auto"><h3 id="652867fd-c7d4-4c09-9e33-26060a648b16" class="">Passo 1: Installa MetaMask</h3></div><div style="display:contents" dir="auto"><ol type="1" id="8e9dcce1-9575-470c-bcdf-def698e3af87" class="numbered-list" start="1"><li><strong>Scarica MetaMask</strong>:<div style="display:contents" dir="auto"><ul id="79ade147-53e6-434d-9b92-002548f81971" class="bulleted-list"><li style="list-style-type:disc">Vai al sito <a href="https://metamask.io/">MetaMask</a> e scarica l&#x27;estensione per il tuo browser preferito (Chrome, Firefox, Brave o Edge).</li></ul></div><div style="display:contents" dir="auto"><ul id="7526eee6-fc45-44a3-8ed3-45c00318e977" class="bulleted-list"><li style="list-style-type:disc">Segui le istruzioni per aggiungere l&#x27;estensione MetaMask al tuo browser.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="3569353f-ee60-4081-b663-dd4c41d9adc0" class="numbered-list" start="2"><li><strong>Crea un Nuovo Wallet</strong>:<div style="display:contents" dir="auto"><ul id="ad53f62e-9929-4425-8ae8-c4b381197656" class="bulleted-list"><li style="list-style-type:disc">Apri l&#x27;estensione MetaMask e clicca su &quot;Inizia&quot;.</li></ul></div><div style="display:contents" dir="auto"><ul id="937763e1-0e5c-422a-89e5-4f6c9300bdac" class="bulleted-list"><li style="list-style-type:disc">Scegli &quot;Crea un portafoglio&quot;.</li></ul></div><div style="display:contents" dir="auto"><ul id="fca5bf04-1c11-44bf-a115-4c410e70db3f" class="bulleted-list"><li style="list-style-type:disc">Imposta una password sicura e clicca su &quot;Crea&quot;.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><h3 id="7d606abe-21f8-4ff7-844a-f102c5bc4925" class="">Passo 2: Salva la Tua Chiave Privata e la Frase Seed</h3></div><div style="display:contents" dir="auto"><ol type="1" id="e84fbfda-3584-42fb-a3d7-ec40f14b67d1" class="numbered-list" start="1"><li><strong>Backup della Frase Seed</strong>:<div style="display:contents" dir="auto"><ul id="3b75742d-edcb-412f-ab69-862e1626c140" class="bulleted-list"><li style="list-style-type:disc">MetaMask genererà una frase seed di 12 parole. Scrivila su carta e conservala in un luogo sicuro. Questa frase è cruciale per recuperare il tuo wallet se perdi l&#x27;accesso.</li></ul></div><div style="display:contents" dir="auto"><ul id="bff0d003-ed55-47d9-b4b9-b0e8d636bd88" class="bulleted-list"><li style="list-style-type:disc">Conferma la tua frase seed selezionando le parole nell&#x27;ordine corretto.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="b06158c9-ae79-4798-960e-5faf2ee4642c" class="numbered-list" start="2"><li><strong>Salva la Tua Chiave Privata</strong>:<div style="display:contents" dir="auto"><ul id="87fbc467-cac7-4172-9af5-c42f482a7406" class="bulleted-list"><li style="list-style-type:disc">In MetaMask, clicca sull&#x27;icona dell&#x27;account e seleziona &quot;Dettagli Account&quot;.</li></ul></div><div style="display:contents" dir="auto"><ul id="56125b2a-b2c6-474d-9254-898301ea9af7" class="bulleted-list"><li style="list-style-type:disc">Clicca su &quot;Esporta chiave privata&quot;. Inserisci la tua password e prendi nota della tua chiave privata. Conservala in un luogo sicuro e non condividerla con nessuno.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><h3 id="acf0a07a-df59-41fd-897e-e806735b74f1" class="">Passo 3: Carica Fondi nel Tuo Wallet</h3></div><div style="display:contents" dir="auto"><ol type="1" id="2ac8afb7-1266-4f5c-a8cf-5e6b1adb971e" class="numbered-list" start="1"><li><strong>Acquista Ethereum</strong>:<div style="display:contents" dir="auto"><ul id="86cd1e3f-19b3-4611-bcd4-93b632c4d103" class="bulleted-list"><li style="list-style-type:disc">Puoi acquistare Ethereum su un exchange di criptovalute come Coinbase, Binance o Kraken. Segui le istruzioni dell&#x27;exchange per acquistare Ethereum utilizzando valuta fiat (USD, EUR, ecc.).</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="12e7310f-83b6-43b1-952f-da6130962238" class="numbered-list" start="2"><li><strong>Invia Ethereum a MetaMask</strong>:<div style="display:contents" dir="auto"><ul id="104a4b9b-300f-4789-b873-98b63df8d28e" class="bulleted-list"><li style="list-style-type:disc">Una volta acquistato Ethereum, vai al tuo account MetaMask e copia il tuo indirizzo pubblico (inizia con &quot;0x&quot;).</li></ul></div><div style="display:contents" dir="auto"><ul id="142d9cd3-fc71-4881-99f9-d060c8d7b941" class="bulleted-list"><li style="list-style-type:disc">Nell&#x27;exchange, seleziona l&#x27;opzione per inviare Ethereum e incolla il tuo indirizzo MetaMask come destinatario.</li></ul></div><div style="display:contents" dir="auto"><ul id="b23f18c4-902d-4759-9db5-9b2d90c5ab8a" class="bulleted-list"><li style="list-style-type:disc">Conferma la transazione e attendi che i fondi appaiano nel tuo wallet MetaMask.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><h3 id="aa83bac4-0a8f-4886-b7fb-1473987dd63b" class="">Passo 4: Connettiti alle Applicazioni Decentralizzate (DApps)</h3></div><div style="display:contents" dir="auto"><ol type="1" id="589354ad-2774-4126-9574-9eebdd6c955d" class="numbered-list" start="1"><li><strong>Accedi alle DApps</strong>:<div style="display:contents" dir="auto"><ul id="958ec28c-ac74-467a-ac71-c52a5b9ab69d" class="bulleted-list"><li style="list-style-type:disc">Visita una DApp che desideri utilizzare, come <a href="https://uniswap.org/">Uniswap</a>, <a href="https://aave.com/">Aave</a> o <a href="https://opensea.io/">OpenSea</a>.</li></ul></div><div style="display:contents" dir="auto"><ul id="a408325a-ffb3-4464-8d84-66fd3df40649" class="bulleted-list"><li style="list-style-type:disc">Clicca sul pulsante per connettere il tuo wallet. Questo pulsante potrebbe essere etichettato come &quot;Connetti Wallet&quot; o qualcosa di simile.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="aaa4b93b-893b-40d6-acc6-8bdbcaf634ae" class="numbered-list" start="2"><li><strong>Autorizza la Connessione</strong>:<div style="display:contents" dir="auto"><ul id="057f2cd9-2e72-47f5-8f08-27331356d411" class="bulleted-list"><li style="list-style-type:disc">MetaMask si aprirà automaticamente e ti chiederà di autorizzare la connessione della DApp al tuo wallet.</li></ul></div><div style="display:contents" dir="auto"><ul id="0a6d9684-722c-427a-a2f7-cbf807aec268" class="bulleted-list"><li style="list-style-type:disc">Clicca su &quot;Connetti&quot; per autorizzare.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="caaad0ef-be3c-48dd-855a-c99250096af7" class="numbered-list" start="3"><li><strong>Interagisci con la DApp</strong>:<div style="display:contents" dir="auto"><ul id="644687ee-a7e8-4b52-8ae4-3fe8c47138db" class="bulleted-list"><li style="list-style-type:disc">Una volta connesso, puoi iniziare a interagire con la DApp. Ad esempio, su Uniswap, puoi scambiare token; su Aave, puoi depositare e prendere in prestito criptovalute; su OpenSea, puoi acquistare e vendere NFT.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><h3 id="1ee85da6-4e3e-4078-98d7-e38a3b895aab" class="">Passo 5: Sicurezza</h3></div><div style="display:contents" dir="auto"><ol type="1" id="2af75f27-0b35-4c46-9414-41fef6418b92" class="numbered-list" start="1"><li><strong>Usa Autenticazione a Due Fattori (2FA)</strong>:<div style="display:contents" dir="auto"><ul id="c5d17379-cbc5-4b75-9c7d-c1f031458447" class="bulleted-list"><li style="list-style-type:disc">Se l&#x27;exchange che utilizzi supporta l&#x27;autenticazione a due fattori, attivala per una maggiore sicurezza.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="1ded96a4-a21d-474b-9257-451e4fb2850e" class="numbered-list" start="2"><li><strong>Mantieni Aggiornato il Tuo Software</strong>:<div style="display:contents" dir="auto"><ul id="cebfe70b-1d99-48f5-8967-9e0a3c6e759a" class="bulleted-list"><li style="list-style-type:disc">Assicurati che il tuo browser e l&#x27;estensione MetaMask siano sempre aggiornati all&#x27;ultima versione (gli le estensioni avvengono in automatico a meno che non si hanno disabilitati gli aggiornamenti in automatico sul proprio browser).</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="1985c20e-71f2-4a2c-8c27-fcc922b2ca80" class="numbered-list" start="3"><li><strong>Diffida dei Link Sospetti</strong>:<div style="display:contents" dir="auto"><ul id="88bf3c84-304b-492e-9351-02312e44c318" class="bulleted-list"><li style="list-style-type:disc">Non cliccare su link sospetti o fornire la tua chiave privata o frase seed a nessuno. MetaMask e le DApp legittime non ti chiederanno mai queste informazioni.</li></ul></div></li></ol></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Tutorial Video</summary></details></div></div></details></div><div style="display:contents" dir="auto"><p id="1aed3871-6d54-4982-a23a-05f2f480a22a" class="">
+</p></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

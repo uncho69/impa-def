@@ -1,14 +1,11 @@
 "use client";
 
-import { MobileContainer } from "@/components/MobileContainer";
-import { PageTitle } from "@/components/PageTitle";
-import { SectionTitle } from "@/components/SectionTitle";
-import { SectionBody } from "@/components/SectionBody";
-import { Accordion } from "@/components/Accordion";
-import { List } from "@/components/List";
-import { SimpleCard } from "@/components/SimpleCard";
-import { ExploreWeb3 } from "@/components/ExploreWeb3";
-import { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { useMemo, useState } from "react";
+import { GuidaAirdropsModal } from "@/components/GuidaAirdropsModal";
+import { getProjectLogo } from "@/lib/project-logos";
+import Placeholder from "@/assets/placeholder.svg";
 
 // Import delle immagini per i progetti di airdrop
 import baseLogo from "@/assets/base-logo.svg";
@@ -32,7 +29,8 @@ import layer3Logo from "@/assets/layer3-logo.png";
 
 
 export default function Airdrops() {
-  const [showAllProjects, setShowAllProjects] = useState(false);
+  const [search, setSearch] = useState("");
+  const [guidaOpen, setGuidaOpen] = useState(false);
 
   // Array con tutti i 34 progetti di potenziali airdrop
   const allProjects: Array<{
@@ -60,7 +58,7 @@ export default function Airdrops() {
       xProfile: "https://x.com/HyperliquidX",
       tokenNFT: "https://www.coingecko.com/en/coins/purr-2",
       description: "Exchange decentralizzato focalizzato sui perpetual futures, operante sulla blockchain Hyperliquid L1 con trading veloce e trasparente.",
-      href: "/airdrops/hyperliquid"
+      href: "/defi/hyperliquid"
     },
     {
       title: "Jumper",
@@ -352,151 +350,123 @@ export default function Airdrops() {
     }
   ];
 
-  const displayedProjects = showAllProjects ? allProjects : allProjects.slice(0, 3);
+  const projectsWithLogos = useMemo(() => {
+    const resolveSlug = (project: (typeof allProjects)[number]) => {
+      if (project.href?.startsWith("/airdrops/")) return project.href.replace("/airdrops/", "");
+      if (project.href?.startsWith("/defi/")) return project.href.replace("/defi/", "");
+      return project.title.toLowerCase().replace(/\s+/g, "-");
+    };
+
+    return allProjects.map((project) => {
+      const slug = resolveSlug(project);
+      const normalizedSlug = slug.toLowerCase();
+      const logo =
+        getProjectLogo(normalizedSlug) ??
+        getProjectLogo(normalizedSlug.replace(/_/g, "-")) ??
+        getProjectLogo(normalizedSlug.replace(/-/g, "_")) ??
+        project.image ??
+        Placeholder;
+
+      return {
+        ...project,
+        image: logo,
+      };
+    });
+  }, [allProjects]);
+
+  const filteredProjects = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return projectsWithLogos;
+    return projectsWithLogos.filter((project) =>
+      project.title.toLowerCase().includes(q) ||
+      project.description.toLowerCase().includes(q)
+    );
+  }, [projectsWithLogos, search]);
 
   return (
-    <>
-      <PageTitle description="Token gratuiti distribuiti ai primi utenti dei progetti Web3">
-        Airdrops
-      </PageTitle>
-      <MobileContainer>
+    <div className="relative z-10">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
+        <div>
+          <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">Airdrops</h1>
+          <p className="text-slate-600 dark:text-slate-400 text-lg">
+            Token gratuiti distribuiti ai primi utenti dei progetti Web3.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setGuidaOpen(true)}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-colors shrink-0 border-white/20 bg-white/5 hover:bg-white/10 text-white"
+          >
+            <span>📘</span>
+            <span>Guida Airdrops</span>
+          </button>
+          <Link
+            href="/news/airdrops"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-amber-400 hover:bg-amber-500 text-slate-900 transition-colors"
+          >
+            <span>📰</span>
+            <span>Notizie Airdrops</span>
+          </Link>
+        </div>
+      </div>
 
-        <SectionBody>
-          <div>
-            Un&apos; <strong>Airdrop</strong> è quando un progetto Web3 fino ad ora senza token, lancia il proprio token e ne distribuisce una parte agli utenti della sua piattaforma/tecnologia (in regalo). La quantità ed il valore di questi token ricevuti da ogni utente solitamente varia tra i $100 e i $50,000, in base alle attività fatte dall&apos;utente sulla piattaforma e dai criteri di distribuzione scelti dal team del progetto.
-          </div>
-          
-          <Accordion buttonText="Cosa sono le Airdrop e come guadagnarci?">
-            Un&apos; &quot;Airdrop&quot; è quando un progetto Web3 fino ad ora senza token, lancia il proprio token e ne distribuisce una parte agli utenti della sua piattaforma/tecnologia (in regalo). La quantità ed il valore di questi token ricevuti da ogni utente solitamente varia tra i $100 e i $50,000, in base alle attività fatte dall&apos;utente sulla piattaforma e dai criteri di distribuzione scelti dal team del progetto.
-          </Accordion>
-        </SectionBody>
+      <div className="relative mb-8 max-w-2xl">
+        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
+        <input
+          type="search"
+          placeholder="Cerca progetti Airdrop"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 dark:border-indigo-500/30 bg-white dark:bg-indigo-900/40 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+        />
+      </div>
 
-        <SectionTitle>Come Funzionano gli Airdrops</SectionTitle>
-        <SectionBody>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-3">Alta Ricompensa, Basso Rischio</h3>
-              <p className="text-gray-600">
-                Utilizzare progetti che ancora non hanno rilasciato il proprio token offre quindi un&apos;alta ricompensa a basso rischio, diventando molto profittevole se fatto nella giusta maniera.
-              </p>
+      <main className="flex-1 min-w-0">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+          {filteredProjects.map((project) => (
+            <div
+              key={project.href + project.title}
+              className="rounded-2xl border border-slate-200 dark:border-indigo-500/20 bg-white dark:bg-indigo-900/25 p-5 hover:border-indigo-400 dark:hover:border-indigo-500 transition-colors"
+            >
+              <Link href={project.href || "/"} className="block">
+                <div className="flex items-start justify-between gap-2 mb-2 min-w-0">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-indigo-800/40 flex items-center justify-center overflow-hidden shrink-0">
+                      <Image src={project.image} alt={project.title} width={32} height={32} className="object-contain" />
+                    </div>
+                    <span className="font-bold text-slate-900 dark:text-white truncate">{project.title}</span>
+                  </div>
+                  <span className="shrink-0 px-2 py-1 rounded-lg bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300 text-[11px] font-medium whitespace-nowrap">
+                    Airdrop
+                  </span>
+                </div>
+                <p className="text-slate-600 dark:text-slate-400 text-sm mb-3 line-clamp-3">{project.description}</p>
+              </Link>
+              <div className="flex items-center gap-2 pt-3 mt-3 border-t border-slate-200 dark:border-slate-600">
+                <a href={project.xProfile} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-indigo-800/50 transition-colors" title="X (Twitter)" aria-label="X (Twitter)">
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
+                </a>
+                <a href={project.website} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-indigo-800/50 transition-colors" title="Sito web" aria-label="Sito web">
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>
+                </a>
+                {project.tokenNFT !== "#" ? (
+                  <a href={project.tokenNFT} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-indigo-800/50 transition-colors" title="Token" aria-label="Token">
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M12 1v22" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14.5a3.5 3.5 0 0 1 0 7H6" /></svg>
+                  </a>
+                ) : null}
+              </div>
             </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-3">Costi Principali</h3>
-              <p className="text-gray-600">
-                Il costo principale di questa attività sono i costi di transazione, principalmente in gas fees. Questi sono generalmente molto bassi rispetto al potenziale valore dell&apos;airdrop.
-              </p>
-            </div>
-          </div>
-        </SectionBody>
+          ))}
+        </div>
+        {filteredProjects.length === 0 && (
+          <p className="text-center py-12 text-slate-500 dark:text-slate-400">
+            Nessun progetto trovato per questa ricerca.
+          </p>
+        )}
+      </main>
 
-        <SectionTitle>Criteri di Eligibilità</SectionTitle>
-        <SectionBody>
-          <Accordion buttonText="Volume di Trading">
-            Il volume totale delle transazioni che hai fatto sulla piattaforma. Più alto è il volume, maggiore è la probabilità di ricevere un airdrop più consistente.
-          </Accordion>
-          
-          <Accordion buttonText="Numero di Transazioni">
-            Quante transazioni individuali hai completato. La frequenza delle interazioni è importante per dimostrare il tuo impegno con la piattaforma.
-          </Accordion>
-          
-          <Accordion buttonText="Periodicità">
-            Con che regolarità interagisci con la piattaforma nel tempo. L&apos;uso costante e regolare è spesso premiato più dell&apos;uso sporadico.
-          </Accordion>
-        </SectionBody>
-
-        <SectionTitle>Progetti Senza Token (Potenziali Airdrop)</SectionTitle>
-        <SectionBody>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {displayedProjects.map((project, index) => (
-              <SimpleCard
-                key={index}
-                title={project.title}
-                image={project.image}
-                website={project.website}
-                xProfile={project.xProfile}
-                tokenNFT={project.tokenNFT}
-                description={project.description}
-                href={project.href || "/"}
-              />
-            ))}
-          </div>
-          
-          {allProjects.length > 3 && (
-            <div className="text-center mt-8">
-              <button
-                onClick={() => setShowAllProjects(!showAllProjects)}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200"
-              >
-                {showAllProjects ? "Mostra meno contenuti" : "Mostra più contenuti"}
-              </button>
-            </div>
-          )}
-        </SectionBody>
-
-        <SectionTitle>Strategie per Massimizzare gli Airdrops</SectionTitle>
-        <SectionBody>
-          <Accordion buttonText="Early Adoption">
-            <div className="space-y-3">
-              <p>• Partecipa ai progetti nelle fasi iniziali</p>
-              <p>• Testa le funzionalità beta</p>
-              <p>• Fornisci feedback alla community</p>
-              <p>• Partecipa alle discussioni sui social</p>
-            </div>
-          </Accordion>
-          
-          <Accordion buttonText="Consistent Activity">
-            <div className="space-y-3">
-              <p>• Usa regolarmente la piattaforma</p>
-              <p>• Mantieni un volume di trading costante</p>
-              <p>• Partecipa a eventi e campagne</p>
-              <p>• Interagisci con la community</p>
-            </div>
-          </Accordion>
-          
-          <Accordion buttonText="Diversificazione">
-            <div className="space-y-3">
-              <p>• Non concentrarti su un solo progetto</p>
-              <p>• Esplora diversi ecosistemi</p>
-              <p>• Partecipa a progetti su diverse blockchain</p>
-              <p>• Mantieni un portafoglio diversificato</p>
-            </div>
-          </Accordion>
-        </SectionBody>
-
-        <SectionTitle>⚠️ Attenzione alle Truffe</SectionTitle>
-        <SectionBody>
-          <Accordion buttonText="Fake Airdrop Scams">
-            <List>
-              <li>Le truffe di airdrop falsi sono molto comuni</li>
-              <li>Non rivelare mai le tue private keys</li>
-              <li>Non firmare transazioni sospette</li>
-              <li>Partecipa solo ad airdrop da fonti affidabili</li>
-              <li>Verifica sempre l'autenticità tramite canali ufficiali</li>
-            </List>
-          </Accordion>
-        </SectionBody>
-
-        <SectionTitle>Risorse Utili</SectionTitle>
-        <SectionBody>
-          <div className="space-y-3">
-            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-              <span className="text-blue-600">🔗</span>
-              <a href="https://www.coinbase.com/en-gb/learn/crypto-basics/what-is-a-crypto-airdrop" 
-                 target="_blank" 
-                 rel="noopener noreferrer"
-                 className="text-blue-600 hover:text-blue-800 underline">
-                Coinbase Guide: What is a Crypto Airdrop
-              </a>
-            </div>
-            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-              <span className="text-green-600">📱</span>
-              <span className="text-gray-700">Seguici sui social per aggiornamenti sui nuovi airdrop</span>
-            </div>
-          </div>
-        </SectionBody>
-      </MobileContainer>
-      
-      <ExploreWeb3 />
-    </>
+      <GuidaAirdropsModal isOpen={guidaOpen} onClose={() => setGuidaOpen(false)} />
+    </div>
   );
 }

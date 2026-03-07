@@ -20,12 +20,15 @@
     "test:api": "npx tsx scripts/test-api.ts",
     "test:points": "npx tsx scripts/test-points.ts",
     "test:webhooks": "npx tsx scripts/test-webhooks.ts",
-    "test:snowflake": "npx tsx scripts/test-snowflake.ts"
+    "test:snowflake": "npx tsx scripts/test-snowflake.ts",
+    "notion:extract": "python3 scripts/extract-notion-projects.py"
   },
   "dependencies": {
     "@clerk/clerk-sdk-node": "^4.13.23",
     "@clerk/nextjs": "^6.30.1",
     "@heroicons/react": "^2.2.0",
+    "@privy-io/node": "^0.10.1",
+    "@privy-io/react-auth": "^3.16.0",
     "bootstrap": "^5.3.3",
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.44.7",

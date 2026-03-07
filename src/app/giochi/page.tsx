@@ -1,224 +1,189 @@
-import { MobileContainer } from "@/components/MobileContainer";
-import { PageTitle } from "@/components/PageTitle";
-import { SectionBody } from "@/components/SectionBody";
-import { Accordion } from "@/components/Accordion";
-import { List } from "@/components/List";
-import { CardContainer } from "@/components/CardContainer";
-import { SimpleCard } from "@/components/SimpleCard";
-import { ExploreWeb3 } from "@/components/ExploreWeb3";
+"use client";
 
-// Import delle icone reali dei giochi
-import axieIcon from "@/assets/axie-icon.png";
-import decentralandIcon from "@/assets/decentraland-icon.png";
-import sandboxIcon from "@/assets/sandbox-icon.png";
+import { useMemo, useState } from "react";
+import Image, { type StaticImageData } from "next/image";
+import Link from "next/link";
+import axieLogo from "@/assets/axie-logo.png";
+import sandboxLogo from "@/assets/sandbox-logo.jpg";
+import decentralandLogo from "@/assets/decentraland-logo.jpg";
+import { IntroduzioneGiochiModal } from "@/components/IntroduzioneGiochiModal";
 
-// Import delle icone
-import polymarketIcon from "@/assets/polymarket-logo.png";
+type GameItem = {
+  title: string;
+  icon: StaticImageData;
+  description: string;
+  genre: "metaverse" | "strategy";
+  website: string;
+  xProfile: string;
+  href: string;
+};
 
-export default function Giochi() {
+const FILTERS = [
+  { id: "all", label: "Tutti" },
+  { id: "metaverse", label: "Metaverse" },
+  { id: "strategy", label: "Strategy" },
+] as const;
+
+type FilterId = (typeof FILTERS)[number]["id"];
+
+const GAMES: GameItem[] = [
+  {
+    title: "Axie Infinity",
+    icon: axieLogo,
+    description: "Pioniere del modello play-to-earn con economia basata su asset digitali.",
+    genre: "strategy",
+    website: "https://axieinfinity.com/",
+    xProfile: "https://x.com/AxieInfinity",
+    href: "/giochi/axie-infinity",
+  },
+  {
+    title: "The Sandbox",
+    icon: sandboxLogo,
+    description: "Mondo virtuale dove utenti creano, possiedono e monetizzano esperienze di gioco.",
+    genre: "metaverse",
+    website: "https://www.sandbox.game/",
+    xProfile: "https://x.com/TheSandboxGame",
+    href: "/giochi/the-sandbox",
+  },
+  {
+    title: "Decentraland",
+    icon: decentralandLogo,
+    description: "Metaverso decentralizzato con proprieta digitali, eventi e contenuti social.",
+    genre: "metaverse",
+    website: "https://decentraland.org/",
+    xProfile: "https://x.com/decentraland",
+    href: "/giochi/decentraland",
+  },
+];
+
+export default function GiochiPage() {
+  const [search, setSearch] = useState("");
+  const [activeFilter, setActiveFilter] = useState<FilterId>("all");
+  const [introOpen, setIntroOpen] = useState(false);
+
+  const filteredGames = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return GAMES.filter((game) => {
+      const matchesFilter = activeFilter === "all" ? true : game.genre === activeFilter;
+      const matchesSearch =
+        q.length === 0 ||
+        game.title.toLowerCase().includes(q) ||
+        game.description.toLowerCase().includes(q);
+      return matchesFilter && matchesSearch;
+    });
+  }, [search, activeFilter]);
+
   return (
-    <>
-      <PageTitle description="L'intersezione tra gaming e finanza decentralizzata">
-        Giochi & Mercati di Predizione
-      </PageTitle>
-      <MobileContainer>
-        <SectionBody>
-          <div className="space-y-8">
-            {/* Sezione Giochi Web3 */}
-            <div className="space-y-6">
-              <h2 className="text-2xl font-bold text-blue-600 mb-3">Giochi Web3</h2>
-              
-              <p className="text-neutral-700">
-                Esistono diverse piattaforme ed ecosistemi di giochi Web3, molti di cui sono Play-to-Earn, 
-                ovvero permettono all'utente di guadagnare giocando al loro gioco.
-              </p>
+    <div className="relative z-10">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
+        <div>
+          <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">Giochi</h1>
+          <p className="text-slate-600 dark:text-slate-400 text-lg">
+            Ecosistema gaming Web3, Play-to-Earn e ownership digitale
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setIntroOpen(true)}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-colors shrink-0 border-white/20 bg-white/5 hover:bg-white/10 text-white"
+          >
+            <span>🎮</span>
+            <span>Intro ai Giochi Web3</span>
+          </button>
+          <Link
+            href="/news/gaming"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-amber-400 hover:bg-amber-500 text-slate-900 transition-colors"
+          >
+            <span>📰</span>
+            <span>Notizie</span>
+          </Link>
+        </div>
+      </div>
 
-              <Accordion buttonText={"Lista Giochi Web3"}>
-                <div className="p-5">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-3">
-                      <h4 className="font-semibold text-neutral-900">Giochi di Strategia</h4>
-                      <List>
-                        <li>Axie Infinity</li>
-                        <li>Gods Unchained</li>
-                        <li>Splinterlands</li>
-                      </List>
+      <div className="flex flex-wrap gap-2 mb-6">
+        {FILTERS.map((filter) => (
+          <button
+            key={filter.id}
+            type="button"
+            onClick={() => setActiveFilter(filter.id)}
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
+              activeFilter === filter.id
+                ? "bg-slate-900 dark:bg-white text-white dark:text-slate-900"
+                : "bg-white dark:bg-indigo-900/40 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-indigo-800/50 border border-slate-200 dark:border-indigo-500/20"
+            }`}
+          >
+            {filter.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="relative mb-8 max-w-2xl">
+        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
+        <input
+          type="search"
+          placeholder="Cerca giochi Web3"
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+          className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 dark:border-indigo-500/30 bg-white dark:bg-indigo-900/40 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+        />
+      </div>
+
+      <main className="flex-1 min-w-0">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+          {filteredGames.map((game) => (
+            <div
+              key={game.title}
+              className="rounded-2xl border border-slate-200 dark:border-indigo-500/20 bg-white dark:bg-indigo-900/25 p-5 hover:border-indigo-400 dark:hover:border-indigo-500 transition-colors"
+            >
+              <Link href={game.href} className="block">
+                <div className="flex items-start justify-between gap-2 mb-2 min-w-0">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-indigo-800/40 flex items-center justify-center overflow-hidden shrink-0">
+                      <Image src={game.icon} alt={game.title} width={32} height={32} className="object-contain" />
                     </div>
-                    <div className="space-y-3">
-                      <h4 className="font-semibold text-neutral-900">Giochi di Ruolo</h4>
-                      <List>
-                        <li>The Sandbox</li>
-                        <li>Decentraland</li>
-                        <li>Illuvium</li>
-                      </List>
-                    </div>
-                    <div className="space-y-3">
-                      <h4 className="font-semibold text-neutral-900">Giochi di Carte</h4>
-                      <List>
-                        <li>Gods Unchained</li>
-                        <li>Splinterlands</li>
-                        <li>Skyweaver</li>
-                      </List>
-                    </div>
-                    <div className="space-y-3">
-                      <h4 className="font-semibold text-neutral-900">Giochi di Corse</h4>
-                      <List>
-                        <li>F1 Delta Time</li>
-                        <li>REVV Racing</li>
-                        <li>MotoGP Ignition</li>
-                      </List>
-                    </div>
+                    <span className="font-bold text-slate-900 dark:text-white truncate">{game.title}</span>
                   </div>
+                  <span className="shrink-0 px-2 py-1 rounded-lg bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 text-[11px] font-medium whitespace-nowrap">
+                    Web3 Game
+                  </span>
                 </div>
-              </Accordion>
-
-              <Accordion buttonText={"Come funziona il Play-to-Earn"}>
-                <div className="p-5">
-                  <List>
-                    <li>
-                      <b>Acquisto di asset iniziali</b>: NFT, token o personaggi per iniziare
-                    </li>
-                    <li>
-                      <b>Gameplay</b>: completamento di missioni, battaglie, costruzioni
-                    </li>
-                    <li>
-                      <b>Ricompense</b>: guadagno di token, NFT o altri asset digitali
-                    </li>
-                    <li>
-                      <b>Vendita</b>: possibilità di vendere asset su marketplace
-                    </li>
-                  </List>
-                </div>
-              </Accordion>
-
-              <Accordion buttonText={"Vantaggi dei Giochi Web3"}>
-                <div className="p-5">
-                  <List>
-                    <li>
-                      <b>Reddito passivo</b>: possibilità di guadagnare giocando
-                    </li>
-                    <li>
-                      <b>Proprietà reale</b>: gli asset appartengono realmente ai giocatori
-                    </li>
-                    <li>
-                      <b>Trasparenza</b>: tutte le transazioni sono visibili sulla blockchain
-                    </li>
-                    <li>
-                      <b>Interoperabilità</b>: asset utilizzabili in diversi giochi
-                    </li>
-                  </List>
-                </div>
-              </Accordion>
-
-              <Accordion buttonText={"Rischi e considerazioni"}>
-                <div className="p-5">
-                  <List>
-                    <li>
-                      <b>Volatilità</b>: i prezzi degli asset possono variare significativamente
-                    </li>
-                    <li>
-                      <b>Regolamentazione</b>: incertezza normativa in molti paesi
-                    </li>
-                    <li>
-                      <b>Scam e progetti fake</b>: attenzione ai progetti non verificati
-                    </li>
-                    <li>
-                      <b>Dipendenze</b>: rischio di dipendenza dal gioco per il reddito
-                    </li>
-                  </List>
-                </div>
-              </Accordion>
-
-              {/* Piattaforme Giochi */}
-              <div className="bg-neutral-50 rounded-xl p-5 border border-neutral-200">
-                <h3 className="font-semibold mb-4">Piattaforme Giochi</h3>
-                <CardContainer>
-                  {[
-                    { title: "Axie Infinity", href: "/giochi/axie-infinity", external: "https://axieinfinity.com/", icon: axieIcon, xProfile: "https://x.com/axieinfinity" },
-                    { title: "The Sandbox", href: "/giochi/the-sandbox", external: "https://www.sandbox.game/", icon: sandboxIcon, xProfile: "https://x.com/thesandboxgame" },
-                    { title: "Decentraland", href: "/giochi/decentraland", external: "https://decentraland.org/", icon: decentralandIcon, xProfile: "https://x.com/decentraland" },
-                  ].map((p) => (
-                    <SimpleCard key={p.title} title={p.title} href={p.href} externalLink={p.external} icon={p.icon} xProfile={p.xProfile} />
-                  ))}
-                </CardContainer>
-              </div>
-
-            </div>
-
-            {/* Sezione Mercati di Predizione */}
-            <div className="space-y-6">
-              <h2 className="text-2xl font-bold text-blue-600 mb-2">Mercati di Predizione</h2>
-              
-              <p className="text-neutral-700">
-                Le piattaforme di scommesse decentralizzate offrono una alta varietà di cose su cui si può 
-                scommettere usando le proprie criptovalute, come potrete vedere accedendo a{" "}
-                <a href="https://polymarket.com" target="_blank" rel="noopener noreferrer" 
-                   className="text-blue-600 hover:text-blue-800 underline font-semibold">
-                  Polymarket
+                <p className="text-slate-600 dark:text-slate-400 text-sm mb-3 line-clamp-3">{game.description}</p>
+              </Link>
+              <div className="flex items-center gap-2 pt-3 mt-3 border-t border-slate-200 dark:border-slate-600">
+                <a
+                  href={game.xProfile}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-1.5 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-indigo-800/50 transition-colors"
+                  title="X (Twitter)"
+                  aria-label="X (Twitter)"
+                >
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
                 </a>
-                , la principale piattaforma di scommesse Web3.
-              </p>
-
-
-              <Accordion buttonText={"Come funzionano i Mercati di Predizione"}>
-                <div className="p-5">
-                  <List>
-                    <li>
-                      <b>Creazione di mercati</b>: gli utenti possono creare mercati su eventi futuri
-                    </li>
-                    <li>
-                      <b>Trading di posizioni</b>: acquisto e vendita di posizioni "Sì" o "No"
-                    </li>
-                    <li>
-                      <b>Liquidazione automatica</b>: i mercati si chiudono automaticamente alla scadenza
-                    </li>
-                    <li>
-                      <b>Pagamento dei profitti</b>: i vincitori ricevono i loro guadagni automaticamente
-                    </li>
-                  </List>
-                </div>
-              </Accordion>
-
-              <Accordion buttonText={"Vantaggi dei Mercati di Predizione"}>
-                <div className="p-5">
-                  <List>
-                    <li>
-                      <b>Trasparenza</b>: tutte le scommesse sono pubbliche e verificabili
-                    </li>
-                    <li>
-                      <b>Decentralizzazione</b>: nessun intermediario controlla i mercati
-                    </li>
-                    <li>
-                      <b>Accessibilità globale</b>: accesso da qualsiasi parte del mondo
-                    </li>
-                    <li>
-                      <b>Liquidità</b>: mercati sempre attivi e liquidi
-                    </li>
-                  </List>
-                </div>
-              </Accordion>
-
-              {/* App per Scommesse */}
-              <div className="bg-neutral-50 rounded-xl p-5 border border-neutral-200">
-                <h3 className="font-semibold mb-4">App per Scommesse</h3>
-                <CardContainer>
-                  {[
-                    { title: "Polymarket", href: "/giochi/polymarket", external: "https://polymarket.com/", icon: polymarketIcon, xProfile: "https://x.com/Polymarket" },
-                    { title: "Kalshi", href: "/giochi/kalshi", external: "https://kalshi.com/", xProfile: "https://x.com/kalshi" }
-                  ].map((p) => (
-                    <SimpleCard key={p.title} title={p.title} href={p.href} externalLink={p.external} icon={p.icon} xProfile={p.xProfile} />
-                  ))}
-                </CardContainer>
+                <a
+                  href={game.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-1.5 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-indigo-800/50 transition-colors"
+                  title="Sito web"
+                  aria-label="Sito web"
+                >
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>
+                </a>
               </div>
             </div>
+          ))}
+        </div>
+        {filteredGames.length === 0 && (
+          <p className="text-center py-12 text-slate-500 dark:text-slate-400">
+            Nessun gioco trovato per i filtri selezionati.
+          </p>
+        )}
+      </main>
 
-
-
-            
-          </div>
-        </SectionBody>
-        <ExploreWeb3 />
-      </MobileContainer>
-    </>
+      <IntroduzioneGiochiModal isOpen={introOpen} onClose={() => setIntroOpen(false)} />
+    </div>
   );
 }
+

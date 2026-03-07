@@ -1,239 +1,433 @@
-import { MobileContainer } from "@/components/MobileContainer";
-import { PageTitle } from "@/components/PageTitle";
-import { SectionBody } from "@/components/SectionBody";
-import { ClerkProtectedRoute } from "@/components/ClerkProtectedRoute";
-import { Accordion } from "@/components/Accordion";
-import { ExploreWeb3 } from "@/components/ExploreWeb3";
-import Link from "next/link";
+"use client";
 
-export default function EventiStorici() {
+import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { Accordion } from "@/components/Accordion";
+
+type Era = "foundations" | "expansion" | "mainstream" | "institutional";
+
+type EventLink = {
+  label: string;
+  href: string;
+};
+
+type HistoricalEvent = {
+  id: number;
+  title: string;
+  yearLabel: string;
+  yearStart: number;
+  era: Era;
+  description: string;
+  impact: string;
+  tags: string[];
+  links?: EventLink[];
+};
+
+const ERA_FILTERS = [
+  { id: "all", label: "Tutti" },
+  { id: "foundations", label: "2009-2016" },
+  { id: "expansion", label: "2017-2020" },
+  { id: "mainstream", label: "2021-2022" },
+  { id: "institutional", label: "2023-2024" },
+] as const;
+
+type EraFilterId = (typeof ERA_FILTERS)[number]["id"];
+
+const HISTORICAL_EVENTS: HistoricalEvent[] = [
+  {
+    id: 1,
+    title: "Lancio di Bitcoin",
+    yearLabel: "2009",
+    yearStart: 2009,
+    era: "foundations",
+    description:
+      "Bitcoin, creato sotto lo pseudonimo di Satoshi Nakamoto, introduce la prima criptovaluta decentralizzata basata su blockchain.",
+    impact:
+      "Nasce l intero settore crypto e si pongono le basi tecniche e culturali del Web3.",
+    tags: ["Bitcoin", "Blockchain", "Origini"],
+    links: [
+      {
+        label: "Forum post storico su Bitcoin",
+        href: "https://news.bitcoin.com/13-years-ago-today-satoshi-nakamoto-published-the-first-forum-post-introducing-bitcoin/",
+      },
+    ],
+  },
+  {
+    id: 2,
+    title: "Creazione di Ethereum",
+    yearLabel: "2015",
+    yearStart: 2015,
+    era: "foundations",
+    description:
+      "Ethereum introduce smart contract e una piattaforma programmabile per dApp.",
+    impact:
+      "Espande radicalmente i casi d uso blockchain e abilita DeFi, NFT e nuovi protocolli.",
+    tags: ["Ethereum", "Smart Contract", "dApp"],
+    links: [
+      {
+        label: "Ethereum Launches (blog ufficiale)",
+        href: "https://blog.ethereum.org/2015/07/30/ethereum-launches",
+      },
+      {
+        label: "Cointelegraph - launch date",
+        href: "https://cointelegraph.com/news/ethereum-announces-official-launch-date",
+      },
+    ],
+  },
+  {
+    id: 3,
+    title: "ICO Boom",
+    yearLabel: "2017",
+    yearStart: 2017,
+    era: "expansion",
+    description:
+      "Le ICO diventano il principale strumento di fundraising per nuovi progetti blockchain.",
+    impact:
+      "Crescita esplosiva dell ecosistema, ma anche molti fallimenti e truffe che spingono verso piu regolamentazione.",
+    tags: ["ICO", "Fundraising", "Regolamentazione"],
+  },
+  {
+    id: 4,
+    title: "DeFi Summer",
+    yearLabel: "2020",
+    yearStart: 2020,
+    era: "expansion",
+    description:
+      "Protocoli come Uniswap, Compound e Aave rendono la finanza on-chain accessibile su larga scala.",
+    impact:
+      "La DeFi diventa una verticale centrale del Web3 con lending, trading e yield in modo permissionless.",
+    tags: ["DeFi", "Uniswap", "Aave"],
+  },
+  {
+    id: 5,
+    title: "NFT Boom",
+    yearLabel: "2021",
+    yearStart: 2021,
+    era: "mainstream",
+    description:
+      "Gli NFT entrano nel mainstream con vendite record e ampia adozione culturale.",
+    impact:
+      "Nuovi modelli di ownership digitale per creator, brand e comunita.",
+    tags: ["NFT", "Creator Economy", "Mainstream"],
+  },
+  {
+    id: 6,
+    title: "El Salvador adotta Bitcoin",
+    yearLabel: "2021",
+    yearStart: 2021,
+    era: "mainstream",
+    description:
+      "El Salvador diventa il primo paese ad adottare Bitcoin come moneta legale.",
+    impact:
+      "Passaggio simbolico importante verso l adozione statale delle criptovalute.",
+    tags: ["Adozione", "Bitcoin", "Stati"],
+  },
+  {
+    id: 7,
+    title: "Ethereum The Merge",
+    yearLabel: "2022",
+    yearStart: 2022,
+    era: "mainstream",
+    description:
+      "Ethereum passa da Proof-of-Work a Proof-of-Stake con The Merge.",
+    impact:
+      "Riduzione drastica dei consumi energetici e base piu solida per la scalabilita futura.",
+    tags: ["Ethereum", "PoS", "Scalabilita"],
+  },
+  {
+    id: 8,
+    title: "Crescita ecosistemi Layer 2",
+    yearLabel: "2022-2023",
+    yearStart: 2022,
+    era: "mainstream",
+    description:
+      "Arbitrum, Optimism e zk-rollup accelerano adozione e usabilita dell ecosistema Ethereum.",
+    impact:
+      "Fee piu basse e maggiore throughput rendono possibili use case consumer su larga scala.",
+    tags: ["Layer 2", "Arbitrum", "Optimism"],
+  },
+  {
+    id: 9,
+    title: "Crollo di FTX",
+    yearLabel: "Nov 2022",
+    yearStart: 2022,
+    era: "mainstream",
+    description:
+      "FTX dichiara bancarotta dopo gravi problemi di liquidita e governance.",
+    impact:
+      "Shock di fiducia nel mercato e forte pressione verso trasparenza, proof-of-reserves e compliance.",
+    tags: ["FTX", "Risk", "Compliance"],
+  },
+  {
+    id: 10,
+    title: "Social decentralizzati (Lens)",
+    yearLabel: "2023",
+    yearStart: 2023,
+    era: "institutional",
+    description:
+      "Piattaforme come Lens introducono nuovi modelli social basati su ownership dei contenuti.",
+    impact:
+      "Inizia la sfida ai modelli Web2 centralizzati in favore di identita e graph portabili.",
+    tags: ["SocialFi", "Lens", "Identity"],
+  },
+  {
+    id: 11,
+    title: "Interoperabilita cross-chain",
+    yearLabel: "2023",
+    yearStart: 2023,
+    era: "institutional",
+    description:
+      "Soluzioni come LayerZero facilitano comunicazione e trasferimento asset tra chain.",
+    impact:
+      "Maggiore integrazione tra ecosistemi prima isolati e UX multi-chain in crescita.",
+    tags: ["Interoperabilita", "LayerZero", "Cross-chain"],
+  },
+  {
+    id: 12,
+    title: "Approvazione Bitcoin ETF spot",
+    yearLabel: "Gen 2024",
+    yearStart: 2024,
+    era: "institutional",
+    description:
+      "La SEC approva i primi ETF spot su Bitcoin negli Stati Uniti.",
+    impact:
+      "Ingresso strutturale di capitale istituzionale e ulteriore legittimazione del settore.",
+    tags: ["ETF", "Bitcoin", "Istituzionali"],
+  },
+  {
+    id: 13,
+    title: "Celebrita e token narrativi",
+    yearLabel: "2023-2024",
+    yearStart: 2023,
+    era: "institutional",
+    description:
+      "Celebrita e personaggi pubblici promuovono o lanciano token e collezioni.",
+    impact:
+      "Aumenta la visibilita retail ma emergono rischi elevati di hype, manipolazione e scam.",
+    tags: ["Meme", "Retail", "Rischio"],
+  },
+];
+
+export default function EventiStoriciPage() {
+  const [search, setSearch] = useState("");
+  const [activeEra, setActiveEra] = useState<EraFilterId>("all");
+  const [activeEventId, setActiveEventId] = useState<number | null>(null);
+
+  const filteredEvents = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return HISTORICAL_EVENTS.filter((event) => {
+      const matchesEra = activeEra === "all" ? true : event.era === activeEra;
+      const matchesSearch =
+        q.length === 0 ||
+        event.title.toLowerCase().includes(q) ||
+        event.description.toLowerCase().includes(q) ||
+        event.impact.toLowerCase().includes(q) ||
+        event.tags.join(" ").toLowerCase().includes(q);
+      return matchesEra && matchesSearch;
+    }).sort((a, b) => b.yearStart - a.yearStart || b.id - a.id);
+  }, [search, activeEra]);
+
+  const timelineEvents = useMemo(
+    () => [...filteredEvents].sort((a, b) => a.yearStart - b.yearStart || a.id - b.id),
+    [filteredEvents]
+  );
+
+  useEffect(() => {
+    if (timelineEvents.length === 0) {
+      setActiveEventId(null);
+      return;
+    }
+    const hasCurrent = activeEventId != null && timelineEvents.some((event) => event.id === activeEventId);
+    if (!hasCurrent) {
+      setActiveEventId(timelineEvents[timelineEvents.length - 1]?.id ?? null);
+    }
+  }, [timelineEvents, activeEventId]);
+
   return (
-    <ClerkProtectedRoute title="Eventi Storici">
-      <PageTitle description="I momenti che hanno definito l'evoluzione del Web3">
-        Eventi Storici
-      </PageTitle>
-      <MobileContainer>
-        <SectionBody>
-          <div className="bg-white rounded-2xl shadow-lg p-8 border border-neutral-200 mb-8">
-            <div className="space-y-4">
-              <Accordion buttonText="1. Lancio di Bitcoin (2009)">
-                <div className="p-5 space-y-4 text-neutral-900">
-                  <ul className="list-disc list-inside space-y-3">
-                    <li>
-                      <strong>Descrizione:</strong> Bitcoin, creato da un individuo o un gruppo sotto lo pseudonimo di Satoshi Nakamoto, è stato il primo esempio di una criptovaluta basata su una blockchain decentralizzata.
-                    </li>
-                    <li>
-                      <strong>Impatto:</strong> Ha dato origine all'intero settore delle criptovalute e della blockchain, ponendo le basi per il futuro sviluppo del web3.
-                    </li>
-                  </ul>
-                  
-                  <Accordion buttonText="Articoli rilevanti">
-                    <div className="p-4">
-                      <ul className="list-disc list-inside space-y-2">
-                        <li>
-                          <Link 
-                            href="https://news.bitcoin.com/13-years-ago-today-satoshi-nakamoto-published-the-first-forum-post-introducing-bitcoin/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 hover:underline"
-                          >
-                            13 Years Ago Today, Satoshi Nakamoto Published the First Forum Post Introducing Bitcoin
-                          </Link>
-                        </li>
+    <div className="relative z-10">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
+        <div>
+          <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">Eventi Storici</h1>
+          <p className="text-slate-600 dark:text-slate-400 text-lg">
+            I momenti chiave che hanno definito l evoluzione del Web3
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <Link
+            href="/manuale"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-colors border-white/20 bg-white/5 hover:bg-white/10 text-white"
+          >
+            <span>📘</span>
+            <span>Manuale</span>
+          </Link>
+          <Link
+            href="/news"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-amber-400 hover:bg-amber-500 text-slate-900 transition-colors"
+          >
+            <span>📰</span>
+            <span>Notizie</span>
+          </Link>
+        </div>
+      </div>
+
+      <div className="rounded-2xl border border-slate-200 dark:border-indigo-500/20 bg-white/90 dark:bg-indigo-900/25 p-4 sm:p-5 mb-6">
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-300">Timeline Web3</p>
+          <p className="text-xs text-slate-500 dark:text-slate-300">
+            {timelineEvents.length} eventi • 2009-2024
+          </p>
+        </div>
+        <div className="overflow-x-auto pb-1">
+          <div className="relative min-w-[920px] h-28">
+            <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-[3px] rounded-full bg-slate-300 dark:bg-slate-600" />
+            {timelineEvents.map((event, index) => {
+              const isActive = activeEventId === event.id;
+              const ratio =
+                timelineEvents.length <= 1 ? 0.5 : index / (timelineEvents.length - 1);
+              const left = `${ratio * 100}%`;
+              const labelTop = index % 2 === 0;
+              return (
+                <div
+                  key={event.id}
+                  className="absolute top-1/2 -translate-y-1/2"
+                  style={{ left, transform: "translate(-50%, -50%)" }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActiveEventId(event.id);
+                      const el = document.getElementById(`event-${event.id}`);
+                      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+                    }}
+                    className={`relative w-5 h-5 rounded-full border-2 transition-all ${
+                      isActive
+                        ? "bg-indigo-500 border-indigo-300 shadow-[0_0_0_6px_rgba(99,102,241,0.22)]"
+                        : "bg-indigo-300 dark:bg-indigo-600 border-indigo-500 dark:border-indigo-400 hover:scale-110"
+                    }`}
+                    aria-label={`${event.title} (${event.yearLabel})`}
+                    title={`${event.title} (${event.yearLabel})`}
+                  />
+                  <div
+                    className={`absolute left-1/2 -translate-x-1/2 whitespace-nowrap text-[12px] font-medium ${
+                      isActive ? "text-indigo-600 dark:text-indigo-300" : "text-slate-600 dark:text-slate-300"
+                    } ${labelTop ? "-top-7" : "top-6"}`}
+                  >
+                    {event.yearLabel}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap gap-2 mb-5">
+        {ERA_FILTERS.map((filter) => (
+          <button
+            key={filter.id}
+            type="button"
+            onClick={() => setActiveEra(filter.id)}
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
+              activeEra === filter.id
+                ? "bg-slate-900 dark:bg-white text-white dark:text-slate-900"
+                : "bg-white dark:bg-indigo-900/40 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-indigo-800/50 border border-slate-200 dark:border-indigo-500/20"
+            }`}
+          >
+            {filter.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="relative mb-8 max-w-2xl">
+        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
+        <input
+          type="search"
+          placeholder="Cerca evento, impatto o tag"
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+          className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 dark:border-indigo-500/30 bg-white dark:bg-indigo-900/40 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+        />
+      </div>
+
+      <div className="space-y-3">
+        {filteredEvents.map((event, index) => {
+          const isActive = activeEventId === event.id;
+          return (
+            <div
+              key={event.id}
+              id={`event-${event.id}`}
+              className={`rounded-xl transition-colors ${
+                isActive ? "ring-1 ring-indigo-400/70 dark:ring-indigo-500/70" : ""
+              }`}
+            >
+              <Accordion
+                className="rounded-xl border border-slate-200 dark:border-indigo-500/20 bg-white dark:bg-indigo-900/25 p-4"
+                defaultOpen={index === 0}
+                buttonText={
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-indigo-100 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 text-xs font-bold">
+                      {event.id}
+                    </span>
+                    <span className="text-base md:text-lg font-semibold text-slate-900 dark:text-white">{event.title}</span>
+                    <span className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-medium">
+                      {event.yearLabel}
+                    </span>
+                  </div>
+                }
+              >
+                <div className="pl-9 space-y-4">
+                  <div className="rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-900/30 p-3">
+                    <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400 mb-1">Descrizione</p>
+                    <p className="text-slate-700 dark:text-slate-200">{event.description}</p>
+                  </div>
+
+                  <div className="rounded-lg border border-emerald-200 dark:border-emerald-700/40 bg-emerald-50/80 dark:bg-emerald-900/20 p-3">
+                    <p className="text-xs uppercase tracking-wide text-emerald-700 dark:text-emerald-300 mb-1">Impatto</p>
+                    <p className="text-emerald-900 dark:text-emerald-100">{event.impact}</p>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2">
+                    {event.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="px-2.5 py-1 rounded-lg text-xs font-medium bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  {event.links && event.links.length > 0 && (
+                    <div className="rounded-lg border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900/30 p-3">
+                      <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400 mb-2">Fonti utili</p>
+                      <ul className="space-y-2">
+                        {event.links.map((item) => (
+                          <li key={item.href}>
+                            <Link
+                              href={item.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-sm text-indigo-600 dark:text-indigo-300 hover:underline"
+                            >
+                              {item.label}
+                            </Link>
+                          </li>
+                        ))}
                       </ul>
                     </div>
-                  </Accordion>
-                </div>
-              </Accordion>
-              
-              <Accordion buttonText="2. Creazione di Ethereum (2015)">
-                <div className="p-5 space-y-4 text-neutral-900">
-                  <ul className="list-disc list-inside space-y-3">
-                    <li>
-                      <strong>Descrizione:</strong> Ethereum, fondato da Vitalik Buterin e altri co-fondatori, ha introdotto il concetto di smart contract e una piattaforma per applicazioni decentralizzate (dApp).
-                    </li>
-                    <li>
-                      <strong>Impatto:</strong> Ethereum ha ampliato enormemente le possibilità della tecnologia blockchain, permettendo la creazione di nuove tipologie di applicazioni decentralizzate e contribuendo all'evoluzione del web3.
-                    </li>
-                  </ul>
-                  
-                  <Accordion buttonText="Articoli rilevanti">
-                    <div className="p-4">
-                      <ul className="list-disc list-inside space-y-2">
-                        <li>
-                          <Link 
-                            href="https://blog.ethereum.org/2015/07/30/ethereum-launches"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 hover:underline"
-                          >
-                            Ethereum Launches - Blog ufficiale Ethereum Foundation
-                          </Link>
-                        </li>
-                        <li>
-                          <Link 
-                            href="https://cointelegraph.com/news/ethereum-announces-official-launch-date"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 hover:underline"
-                          >
-                            Ethereum Announces Official Launch Date - Cointelegraph
-                          </Link>
-                        </li>
-                      </ul>
-                    </div>
-                  </Accordion>
-                </div>
-              </Accordion>
-              
-              <Accordion buttonText="3. ICO Boom (2017)">
-                <div className="p-5 space-y-4 text-neutral-900">
-                  <ul className="list-disc list-inside space-y-3">
-                    <li>
-                      <strong>Descrizione:</strong> L'Initial Coin Offering (ICO) è diventato un metodo popolare per raccogliere fondi per nuovi progetti blockchain e criptovalute.
-                    </li>
-                    <li>
-                      <strong>Impatto:</strong> Ha portato a un'enorme crescita nel numero di progetti blockchain, sebbene molti fossero truffe o fallissero, evidenziando la necessità di regolamentazione e due diligence.
-                    </li>
-                  </ul>
-                </div>
-              </Accordion>
-              
-              <Accordion buttonText="4. DeFi Summer (2020)">
-                <div className="p-5 space-y-4 text-neutral-900">
-                  <ul className="list-disc list-inside space-y-3">
-                    <li>
-                      <strong>Descrizione:</strong> L'estate del 2020 ha visto un'esplosione di interesse per le applicazioni di Finanza Decentralizzata (DeFi) come Uniswap, Compound e Aave.
-                    </li>
-                    <li>
-                      <strong>Impatto:</strong> La DeFi ha rivoluzionato il settore finanziario, offrendo prestiti, scambi e altri servizi finanziari senza intermediari centralizzati.
-                    </li>
-                  </ul>
-                </div>
-              </Accordion>
-              
-              <Accordion buttonText="5. NFT Boom (2021)">
-                <div className="p-5 space-y-4 text-neutral-900">
-                  <ul className="list-disc list-inside space-y-3">
-                    <li>
-                      <strong>Descrizione:</strong> Gli NFT (Non-Fungible Tokens) sono diventati estremamente popolari, con vendite multimilionarie di opere d'arte digitale e collezionabili.
-                    </li>
-                    <li>
-                      <strong>Impatto:</strong> Gli NFT hanno aperto nuove opportunità per artisti, creatori di contenuti e collezionisti, portando alla mainstream la tecnologia blockchain.
-                    </li>
-                  </ul>
-                </div>
-              </Accordion>
-              
-              <Accordion buttonText="6. Adozione di Bitcoin come Moneta Legale in El Salvador (2021)">
-                <div className="p-5 space-y-4 text-neutral-900">
-                  <ul className="list-disc list-inside space-y-3">
-                    <li>
-                      <strong>Descrizione:</strong> El Salvador è diventato il primo paese al mondo a adottare Bitcoin come moneta legale.
-                    </li>
-                    <li>
-                      <strong>Impatto:</strong> Questo ha segnato un importante passo verso l'adozione mainstream delle criptovalute da parte degli stati nazionali.
-                    </li>
-                  </ul>
-                </div>
-              </Accordion>
-              
-              <Accordion buttonText="7. Lancio di Ethereum 2.0 (The Merge) (2022)">
-                <div className="p-5 space-y-4 text-neutral-900">
-                  <ul className="list-disc list-inside space-y-3">
-                    <li>
-                      <strong>Descrizione:</strong> Ethereum ha completato il passaggio da un meccanismo di consenso Proof-of-Work (PoW) a Proof-of-Stake (PoS), noto come "The Merge".
-                    </li>
-                    <li>
-                      <strong>Impatto:</strong> Ha migliorato l'efficienza energetica e la scalabilità di Ethereum, segnando una pietra miliare importante nell'evoluzione della rete.
-                    </li>
-                  </ul>
-                </div>
-              </Accordion>
-              
-              <Accordion buttonText="8. Crescita degli Ecosistemi Layer 2 (2022-2023)">
-                <div className="p-5 space-y-4 text-neutral-900">
-                  <ul className="list-disc list-inside space-y-3">
-                    <li>
-                      <strong>Descrizione:</strong> Soluzioni Layer 2 come Arbitrum, Optimism e zk-Rollups hanno guadagnato popolarità per migliorare la scalabilità di Ethereum.
-                    </li>
-                    <li>
-                      <strong>Impatto:</strong> Hanno consentito transazioni più veloci e meno costose, facilitando una maggiore adozione delle dApp e della DeFi.
-                    </li>
-                  </ul>
-                </div>
-              </Accordion>
-              
-              <Accordion buttonText="9. Crollo di FTX (Novembre 2022)">
-                <div className="p-5 space-y-4 text-neutral-900">
-                  <ul className="list-disc list-inside space-y-3">
-                    <li>
-                      <strong>Descrizione:</strong> A novembre 2022, l'exchange di criptovalute FTX, uno dei più grandi e rispettati al mondo, ha dichiarato bancarotta a seguito di gravi problemi di liquidità e accuse di gestione fraudolenta dei fondi dei clienti.
-                    </li>
-                    <li>
-                      <strong>Impatto:</strong> Il crollo di FTX ha avuto un impatto devastante sul mercato delle criptovalute, causando una perdita di fiducia significativa tra gli investitori e portando a un aumento della regolamentazione nel settore. Molti investitori hanno perso fondi significativi, e l'evento ha messo in luce la necessità di una maggiore trasparenza e supervisione nelle operazioni degli exchange di criptovalute.
-                    </li>
-                  </ul>
-                </div>
-              </Accordion>
-              
-              <Accordion buttonText="10. Lancio di Decentralised Social Media (Lens Protocol, 2023)">
-                <div className="p-5 space-y-4 text-neutral-900">
-                  <ul className="list-disc list-inside space-y-3">
-                    <li>
-                      <strong>Descrizione:</strong> Il lancio di piattaforme di social media decentralizzate, come Lens Protocol, ha introdotto nuovi modelli per la gestione e la monetizzazione dei contenuti online.
-                    </li>
-                    <li>
-                      <strong>Impatto:</strong> Ha iniziato a sfidare i modelli tradizionali dei social media centralizzati, dando più potere agli utenti.
-                    </li>
-                  </ul>
-                </div>
-              </Accordion>
-              
-              <Accordion buttonText="11. Adozione di Soluzioni di Interoperabilità (LayerZero, 2023)">
-                <div className="p-5 space-y-4 text-neutral-900">
-                  <ul className="list-disc list-inside space-y-3">
-                    <li>
-                      <strong>Descrizione:</strong> Soluzioni come LayerZero hanno facilitato la comunicazione e il trasferimento di asset tra diverse blockchain.
-                    </li>
-                    <li>
-                      <strong>Impatto:</strong> Hanno migliorato l'interoperabilità nel mondo delle blockchain, permettendo una maggiore collaborazione e integrazione tra vari ecosistemi.
-                    </li>
-                  </ul>
-                </div>
-              </Accordion>
-              
-              <Accordion buttonText="12. Approvazione del Bitcoin ETF (Gennaio 2024)">
-                <div className="p-5 space-y-4 text-neutral-900">
-                  <ul className="list-disc list-inside space-y-3">
-                    <li>
-                      <strong>Descrizione:</strong> A gennaio 2024, la Securities and Exchange Commission (SEC) degli Stati Uniti ha approvato il primo ETF (Exchange-Traded Fund) basato su Bitcoin.
-                    </li>
-                    <li>
-                      <strong>Impatto:</strong> L'approvazione del Bitcoin ETF ha segnato un importante passo avanti per l'adozione mainstream delle criptovalute, offrendo agli investitori tradizionali un modo più sicuro e regolamentato per investire in Bitcoin. Ha inoltre contribuito a legittimare ulteriormente il mercato delle criptovalute agli occhi del pubblico e degli istituti finanziari.
-                    </li>
-                  </ul>
-                </div>
-              </Accordion>
-              
-              <Accordion buttonText="13. Celebrità lanciano Token o supportano progetti Cripto (2023-2024)">
-                <div className="p-5 space-y-4 text-neutral-900">
-                  <ul className="list-disc list-inside space-y-3">
-                    <li>
-                      <strong>Descrizione:</strong> Tra il 2023 e il 2024, molte celebrità hanno iniziato a lanciare i propri token criptati o a supportare attivamente progetti esistenti nel mondo cripto. Figure come Donald Trump, Snoop Dogg, Kylie Jenner, Floyd Mayweather, Lindsay Lohan, ed atleti di alto profilo hanno partecipato a questo trend, promuovendo criptovalute e NFT sui social media e in altre piattaforme pubbliche.
-                    </li>
-                    <li>
-                      <strong>Impatto:</strong> Questo movimento ha contribuito a una maggiore visibilità e adozione delle criptovalute tra il pubblico generale. Tuttavia, ha anche sollevato preoccupazioni riguardo alla sicurezza e alla legittimità di alcuni progetti promossi, aumentando la necessità di educazione e vigilanza contro le truffe nel settore delle criptovalute.
-                    </li>
-                  </ul>
+                  )}
                 </div>
               </Accordion>
             </div>
-          </div>
-        </SectionBody>
-        
-        <ExploreWeb3 />
-      </MobileContainer>
-    </ClerkProtectedRoute>
+          );
+        })}
+      </div>
+
+      {filteredEvents.length === 0 && (
+        <p className="text-center py-12 text-slate-500 dark:text-slate-400">
+          Nessun evento trovato per i filtri selezionati.
+        </p>
+      )}
+    </div>
   );
 }

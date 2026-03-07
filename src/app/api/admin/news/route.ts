@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
 import { auth, currentUser } from '@clerk/nextjs/server';
-import { db } from '@/lib/db';
+import { db, hasDatabase } from '@/lib/db';
 import { news } from '@/lib/db/schema';
 import { eq, and, desc, sql, count } from 'drizzle-orm';
 import { createNews } from '@/lib/news';
+import { FALLBACK_NEWS } from '@/lib/news-fallback';
 
 // Helper function to safely parse tags from JSON string
 function parseTags(tags: string | null | undefined): string[] {
@@ -27,6 +28,16 @@ const ADMIN_EMAILS = [
 
 async function checkAdmin() {
   try {
+    const hasValidClerkKeys = Boolean(
+      process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY &&
+      process.env.CLERK_SECRET_KEY &&
+      process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY.startsWith('pk_') &&
+      process.env.CLERK_SECRET_KEY.startsWith('sk_')
+    );
+    if (!hasValidClerkKeys && process.env.NODE_ENV !== 'production') {
+      return true;
+    }
+
     const { userId } = await auth();
     
     if (!userId) {
@@ -66,6 +77,22 @@ export async function GET(request: Request) {
     const category = searchParams.get('category');
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '10');
+
+    if (!hasDatabase || !db) {
+      const base = FALLBACK_NEWS
+        .filter((item) => (status ? item.status === status : true))
+        .filter((item) => (category ? item.category === category : true));
+      const paginated = base.slice((page - 1) * limit, page * limit);
+      return NextResponse.json({
+        news: paginated,
+        pagination: {
+          page,
+          limit,
+          total: base.length,
+          pages: Math.ceil(base.length / limit),
+        },
+      });
+    }
 
     let query = db.select().from(news);
     const conditions = [];
