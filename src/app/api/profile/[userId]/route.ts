@@ -47,10 +47,11 @@ export async function GET(
       });
     }
 
-    await ensureUserProfileSettingsTable();
+    const hasProfileSettingsTable = await ensureUserProfileSettingsTable();
 
     const userResult = await pool.query(
-      `
+      hasProfileSettingsTable
+        ? `
       SELECT
         u.id,
         u.username AS default_username,
@@ -64,6 +65,22 @@ export async function GET(
         COALESCE(ups.show_wallet_address_public, 0) AS show_wallet_address_public
       FROM users u
       LEFT JOIN user_profile_settings ups ON ups.user_id = u.id
+      WHERE u.id = $1 AND u.is_active = 1 AND u.deleted_at IS NULL
+      LIMIT 1
+      `
+        : `
+      SELECT
+        u.id,
+        u.username AS default_username,
+        u.twitter_id,
+        u.wallet_address,
+        '[]'::text AS wallet_addresses,
+        u.username AS display_username,
+        NULL::varchar AS instagram_url,
+        NULL::varchar AS tiktok_url,
+        NULL::varchar AS youtube_url,
+        0 AS show_wallet_address_public
+      FROM users u
       WHERE u.id = $1 AND u.is_active = 1 AND u.deleted_at IS NULL
       LIMIT 1
       `,

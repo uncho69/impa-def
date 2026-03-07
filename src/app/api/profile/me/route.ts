@@ -171,10 +171,11 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    await ensureUserProfileSettingsTable();
+    const hasProfileSettingsTable = await ensureUserProfileSettingsTable();
 
     let userResult = await pool.query(
-      `
+      hasProfileSettingsTable
+        ? `
       SELECT
         u.id,
         u.email,
@@ -194,6 +195,28 @@ export async function GET(request: NextRequest) {
         COALESCE(ups.show_wallet_address_public, 0) AS show_wallet_address_public
       FROM users u
       LEFT JOIN user_profile_settings ups ON ups.user_id = u.id
+      WHERE u.id = $1 AND u.is_active = 1 AND u.deleted_at IS NULL
+      LIMIT 1
+      `
+        : `
+      SELECT
+        u.id,
+        u.email,
+        u.username AS default_username,
+        u.twitter_id,
+        u.wallet_address,
+        u.total_points,
+        u.total_likes,
+        u.total_replies,
+        u.total_retweets,
+        u.total_quotes,
+        NULL::varchar AS custom_username,
+        '[]'::text AS wallet_addresses,
+        NULL::varchar AS instagram_url,
+        NULL::varchar AS tiktok_url,
+        NULL::varchar AS youtube_url,
+        0 AS show_wallet_address_public
+      FROM users u
       WHERE u.id = $1 AND u.is_active = 1 AND u.deleted_at IS NULL
       LIMIT 1
       `,
@@ -216,7 +239,8 @@ export async function GET(request: NextRequest) {
       );
 
       userResult = await pool.query(
-        `
+        hasProfileSettingsTable
+          ? `
         SELECT
           u.id,
           u.email,
@@ -236,6 +260,28 @@ export async function GET(request: NextRequest) {
           COALESCE(ups.show_wallet_address_public, 0) AS show_wallet_address_public
         FROM users u
         LEFT JOIN user_profile_settings ups ON ups.user_id = u.id
+        WHERE u.id = $1 AND u.is_active = 1 AND u.deleted_at IS NULL
+        LIMIT 1
+        `
+          : `
+        SELECT
+          u.id,
+          u.email,
+          u.username AS default_username,
+          u.twitter_id,
+          u.wallet_address,
+          u.total_points,
+          u.total_likes,
+          u.total_replies,
+          u.total_retweets,
+          u.total_quotes,
+          NULL::varchar AS custom_username,
+          '[]'::text AS wallet_addresses,
+          NULL::varchar AS instagram_url,
+          NULL::varchar AS tiktok_url,
+          NULL::varchar AS youtube_url,
+          0 AS show_wallet_address_public
+        FROM users u
         WHERE u.id = $1 AND u.is_active = 1 AND u.deleted_at IS NULL
         LIMIT 1
         `,
@@ -382,7 +428,13 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: "Nessun campo da aggiornare" }, { status: 400 });
     }
 
-    await ensureUserProfileSettingsTable();
+    const hasProfileSettingsTable = await ensureUserProfileSettingsTable();
+    if (!hasProfileSettingsTable) {
+      return NextResponse.json(
+        { error: "Impostazioni profilo temporaneamente non disponibili. Riprova tra poco." },
+        { status: 503 }
+      );
+    }
 
     let nextCustomUsername: string | null | undefined = undefined;
     if (hasCustomUsername) {

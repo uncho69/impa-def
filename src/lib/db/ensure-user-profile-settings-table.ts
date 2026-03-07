@@ -3,10 +3,18 @@ import { pool } from "@/lib/db";
 /**
  * Crea tabella impostazioni profilo pubblico se non esiste.
  */
-export async function ensureUserProfileSettingsTable(): Promise<void> {
-  if (!pool) return;
+export async function ensureUserProfileSettingsTable(): Promise<boolean> {
+  if (!pool) return false;
   const client = await pool.connect();
   try {
+    // Se la tabella esiste gia e' subito utilizzabile: evita DDL ad ogni request.
+    try {
+      await client.query(`SELECT 1 FROM user_profile_settings LIMIT 1`);
+      return true;
+    } catch {
+      // Tabella non trovata (o non accessibile): proviamo a crearla/migrarla.
+    }
+
     await client.query(`
       CREATE TABLE IF NOT EXISTS user_profile_settings (
         user_id varchar(50) PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
@@ -31,6 +39,12 @@ export async function ensureUserProfileSettingsTable(): Promise<void> {
       ON user_profile_settings (lower(custom_username))
       WHERE custom_username IS NOT NULL
     `);
+    return true;
+  } catch (error) {
+    // In alcuni ambienti prod il ruolo DB non puo' fare CREATE/ALTER.
+    // Non dobbiamo bloccare il caricamento del profilo per questo.
+    console.warn("ensureUserProfileSettingsTable: fallback without settings table", error);
+    return false;
   } finally {
     client.release();
   }
