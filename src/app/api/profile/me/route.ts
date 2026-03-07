@@ -50,6 +50,39 @@ function parseWalletAddresses(value: unknown): string[] {
   }
 }
 
+function buildFallbackProfilePayload(userId: string, message?: string) {
+  return {
+    degraded: true,
+    degradedReason: message ?? null,
+    profile: {
+      userId,
+      email: null,
+      username: `user_${userId.slice(-6)}`,
+      defaultUsername: null,
+      customUsername: null,
+      instagramUrl: null,
+      tiktokUrl: null,
+      youtubeUrl: null,
+      xProfileUrl: null,
+      walletAddress: null,
+      walletAddresses: [],
+      showWalletAddressPublic: false,
+      ranking: {
+        globalRank: 0,
+        totalPoints: 0,
+        totalTweets: 0,
+      },
+      totals: {
+        likes: 0,
+        replies: 0,
+        retweets: 0,
+        quotes: 0,
+      },
+    },
+    contents: [],
+  };
+}
+
 async function upsertClerkAuthAccount(userId: string, clerkUserId: string): Promise<void> {
   if (!pool) return;
   await pool.query(
@@ -194,10 +227,11 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    const hasProfileSettingsTable = await ensureUserProfileSettingsTable();
-    const walletVisibilityColumn = hasProfileSettingsTable ? await resolveWalletVisibilityColumn() : null;
+    try {
+      const hasProfileSettingsTable = await ensureUserProfileSettingsTable();
+      const walletVisibilityColumn = hasProfileSettingsTable ? await resolveWalletVisibilityColumn() : null;
 
-    let userResult = await pool.query(
+      let userResult = await pool.query(
       hasProfileSettingsTable
         ? `
       SELECT
@@ -244,12 +278,12 @@ export async function GET(request: NextRequest) {
       WHERE u.id = $1 AND u.is_active = 1 AND u.deleted_at IS NULL
       LIMIT 1
       `,
-      [userId]
-    );
+        [userId]
+      );
 
-    if (userResult.rows.length === 0) {
-      // In ambienti keyless/dev l'utente puo' essere autenticato ma non ancora creato nel DB.
-      await pool.query(
+      if (userResult.rows.length === 0) {
+        // In ambienti keyless/dev l'utente puo' essere autenticato ma non ancora creato nel DB.
+        await pool.query(
         `
         INSERT INTO users (id, is_active, created_at, updated_at)
         VALUES ($1, 1, now(), now())
@@ -259,10 +293,10 @@ export async function GET(request: NextRequest) {
           deleted_at = NULL,
           updated_at = now()
         `,
-        [userId]
-      );
+          [userId]
+        );
 
-      userResult = await pool.query(
+        userResult = await pool.query(
         hasProfileSettingsTable
           ? `
         SELECT
@@ -309,17 +343,17 @@ export async function GET(request: NextRequest) {
         WHERE u.id = $1 AND u.is_active = 1 AND u.deleted_at IS NULL
         LIMIT 1
         `,
-        [userId]
-      );
-    }
+          [userId]
+        );
+      }
 
-    if (userResult.rows.length === 0) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
+      if (userResult.rows.length === 0) {
+        return NextResponse.json({ error: "User not found" }, { status: 404 });
+      }
 
-    const user = userResult.rows[0];
+      const user = userResult.rows[0];
 
-    const rankResult = await pool.query(
+      const rankResult = await pool.query(
       `
       WITH totals AS (
         SELECT
@@ -340,10 +374,10 @@ export async function GET(request: NextRequest) {
         COALESCE((SELECT points FROM me), 0) AS total_points,
         COALESCE((SELECT tweet_count FROM totals WHERE user_id = $1), 0) AS total_tweets
       `,
-      [userId]
-    );
+        [userId]
+      );
 
-    const contentsResult = await pool.query(
+      const contentsResult = await pool.query(
       `
       SELECT
         t.id,
@@ -366,55 +400,59 @@ export async function GET(request: NextRequest) {
       ORDER BY t.posted_at DESC NULLS LAST, t.created_at DESC
       LIMIT 100
       `,
-      [userId]
-    );
+        [userId]
+      );
 
-    const rankRow = rankResult.rows[0] || { rank: 0, total_points: 0, total_tweets: 0 };
-    const displayUsername = user.custom_username || user.default_username || `user_${user.id.slice(-6)}`;
-    const xProfileUrl = user.twitter_id ? `https://x.com/i/user/${user.twitter_id}` : null;
+      const rankRow = rankResult.rows[0] || { rank: 0, total_points: 0, total_tweets: 0 };
+      const displayUsername = user.custom_username || user.default_username || `user_${user.id.slice(-6)}`;
+      const xProfileUrl = user.twitter_id ? `https://x.com/i/user/${user.twitter_id}` : null;
 
-    return NextResponse.json({
-      profile: {
-        userId: user.id,
-        email: user.email,
-        username: displayUsername,
-        defaultUsername: user.default_username,
-        customUsername: user.custom_username,
-        instagramUrl: user.instagram_url,
-        tiktokUrl: user.tiktok_url,
-        youtubeUrl: user.youtube_url,
-        xProfileUrl,
-        walletAddress: user.wallet_address,
-        walletAddresses: parseWalletAddresses(user.wallet_addresses),
-        showWalletAddressPublic: Number(user.show_wallet_address_public) === 1,
-        ranking: {
-          globalRank: Number(rankRow.rank || 0),
-          totalPoints: Number(rankRow.total_points || 0),
-          totalTweets: Number(rankRow.total_tweets || 0),
+      return NextResponse.json({
+        profile: {
+          userId: user.id,
+          email: user.email,
+          username: displayUsername,
+          defaultUsername: user.default_username,
+          customUsername: user.custom_username,
+          instagramUrl: user.instagram_url,
+          tiktokUrl: user.tiktok_url,
+          youtubeUrl: user.youtube_url,
+          xProfileUrl,
+          walletAddress: user.wallet_address,
+          walletAddresses: parseWalletAddresses(user.wallet_addresses),
+          showWalletAddressPublic: Number(user.show_wallet_address_public) === 1,
+          ranking: {
+            globalRank: Number(rankRow.rank || 0),
+            totalPoints: Number(rankRow.total_points || 0),
+            totalTweets: Number(rankRow.total_tweets || 0),
+          },
+          totals: {
+            likes: Number(user.total_likes || 0),
+            replies: Number(user.total_replies || 0),
+            retweets: Number(user.total_retweets || 0),
+            quotes: Number(user.total_quotes || 0),
+          },
         },
-        totals: {
-          likes: Number(user.total_likes || 0),
-          replies: Number(user.total_replies || 0),
-          retweets: Number(user.total_retweets || 0),
-          quotes: Number(user.total_quotes || 0),
-        },
-      },
-      contents: contentsResult.rows.map((row) => ({
-        id: row.id,
-        postId: row.post_id,
-        tweetUrl: row.post_id ? `https://x.com/i/web/status/${row.post_id}` : null,
-        text: row.content,
-        projectId: row.project_id,
-        campaignIndex: row.campaign_index,
-        epochIndex: row.epoch_index,
-        likes: Number(row.likes || 0),
-        replies: Number(row.replies || 0),
-        retweets: Number(row.retweets || 0),
-        quotes: Number(row.quotes || 0),
-        postedAt: row.posted_at,
-        isVerified: row.is_verified,
-      })),
-    });
+        contents: contentsResult.rows.map((row) => ({
+          id: row.id,
+          postId: row.post_id,
+          tweetUrl: row.post_id ? `https://x.com/i/web/status/${row.post_id}` : null,
+          text: row.content,
+          projectId: row.project_id,
+          campaignIndex: row.campaign_index,
+          epochIndex: row.epoch_index,
+          likes: Number(row.likes || 0),
+          replies: Number(row.replies || 0),
+          retweets: Number(row.retweets || 0),
+          quotes: Number(row.quotes || 0),
+          postedAt: row.posted_at,
+          isVerified: row.is_verified,
+        })),
+      });
+    } catch (dbError) {
+      console.error("Profile GET degraded fallback:", dbError);
+      return NextResponse.json(buildFallbackProfilePayload(userId, "db_query_failed"));
+    }
   } catch (error) {
     console.error("Error fetching profile me:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
