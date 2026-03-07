@@ -4,6 +4,29 @@ import { ensureUserProfileSettingsTable } from "@/lib/db/ensure-user-profile-set
 
 export const dynamic = "force-dynamic";
 
+type WalletVisibilityColumn = "show_wallet_address_public" | "show_wallet_address_pub";
+
+async function resolveWalletVisibilityColumn(): Promise<WalletVisibilityColumn | null> {
+  if (!pool) return null;
+  try {
+    const result = await pool.query(
+      `
+      SELECT column_name
+      FROM information_schema.columns
+      WHERE table_schema = 'public'
+        AND table_name = 'user_profile_settings'
+        AND column_name IN ('show_wallet_address_public', 'show_wallet_address_pub')
+      `
+    );
+    const columns = new Set(result.rows.map((row) => String(row.column_name)));
+    if (columns.has("show_wallet_address_public")) return "show_wallet_address_public";
+    if (columns.has("show_wallet_address_pub")) return "show_wallet_address_pub";
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 function parseWalletAddresses(value: unknown): string[] {
   if (typeof value !== "string" || value.trim().length === 0) return [];
   try {
@@ -48,6 +71,7 @@ export async function GET(
     }
 
     const hasProfileSettingsTable = await ensureUserProfileSettingsTable();
+    const walletVisibilityColumn = hasProfileSettingsTable ? await resolveWalletVisibilityColumn() : null;
 
     const userResult = await pool.query(
       hasProfileSettingsTable
@@ -62,7 +86,7 @@ export async function GET(
         ups.instagram_url,
         ups.tiktok_url,
         ups.youtube_url,
-        COALESCE(ups.show_wallet_address_public, 0) AS show_wallet_address_public
+        ${walletVisibilityColumn ? `COALESCE(ups.${walletVisibilityColumn}, 0)` : "0"} AS show_wallet_address_public
       FROM users u
       LEFT JOIN user_profile_settings ups ON ups.user_id = u.id
       WHERE u.id = $1 AND u.is_active = 1 AND u.deleted_at IS NULL

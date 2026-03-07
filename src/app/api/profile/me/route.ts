@@ -135,6 +135,29 @@ async function resolveAuthenticatedUserId(request: NextRequest): Promise<string 
   return null;
 }
 
+type WalletVisibilityColumn = "show_wallet_address_public" | "show_wallet_address_pub";
+
+async function resolveWalletVisibilityColumn(): Promise<WalletVisibilityColumn | null> {
+  if (!pool) return null;
+  try {
+    const result = await pool.query(
+      `
+      SELECT column_name
+      FROM information_schema.columns
+      WHERE table_schema = 'public'
+        AND table_name = 'user_profile_settings'
+        AND column_name IN ('show_wallet_address_public', 'show_wallet_address_pub')
+      `
+    );
+    const columns = new Set(result.rows.map((row) => String(row.column_name)));
+    if (columns.has("show_wallet_address_public")) return "show_wallet_address_public";
+    if (columns.has("show_wallet_address_pub")) return "show_wallet_address_pub";
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 export async function GET(request: NextRequest) {
   try {
     const userId = await resolveAuthenticatedUserId(request);
@@ -172,6 +195,7 @@ export async function GET(request: NextRequest) {
     }
 
     const hasProfileSettingsTable = await ensureUserProfileSettingsTable();
+    const walletVisibilityColumn = hasProfileSettingsTable ? await resolveWalletVisibilityColumn() : null;
 
     let userResult = await pool.query(
       hasProfileSettingsTable
@@ -192,7 +216,7 @@ export async function GET(request: NextRequest) {
         ups.instagram_url,
         ups.tiktok_url,
         ups.youtube_url,
-        COALESCE(ups.show_wallet_address_public, 0) AS show_wallet_address_public
+        ${walletVisibilityColumn ? `COALESCE(ups.${walletVisibilityColumn}, 0)` : "0"} AS show_wallet_address_public
       FROM users u
       LEFT JOIN user_profile_settings ups ON ups.user_id = u.id
       WHERE u.id = $1 AND u.is_active = 1 AND u.deleted_at IS NULL
@@ -257,7 +281,7 @@ export async function GET(request: NextRequest) {
           ups.instagram_url,
           ups.tiktok_url,
           ups.youtube_url,
-          COALESCE(ups.show_wallet_address_public, 0) AS show_wallet_address_public
+          ${walletVisibilityColumn ? `COALESCE(ups.${walletVisibilityColumn}, 0)` : "0"} AS show_wallet_address_public
         FROM users u
         LEFT JOIN user_profile_settings ups ON ups.user_id = u.id
         WHERE u.id = $1 AND u.is_active = 1 AND u.deleted_at IS NULL
@@ -429,7 +453,8 @@ export async function PATCH(request: NextRequest) {
     }
 
     const hasProfileSettingsTable = await ensureUserProfileSettingsTable();
-    if (!hasProfileSettingsTable) {
+    const walletVisibilityColumn = hasProfileSettingsTable ? await resolveWalletVisibilityColumn() : null;
+    if (!hasProfileSettingsTable || !walletVisibilityColumn) {
       return NextResponse.json(
         { error: "Impostazioni profilo temporaneamente non disponibili. Riprova tra poco." },
         { status: 503 }
@@ -491,7 +516,7 @@ export async function PATCH(request: NextRequest) {
 
     const rows = await pool.query(
       `
-      SELECT custom_username, show_wallet_address_public, wallet_addresses, instagram_url, tiktok_url, youtube_url
+      SELECT custom_username, ${walletVisibilityColumn} AS show_wallet_address_public, wallet_addresses, instagram_url, tiktok_url, youtube_url
       FROM user_profile_settings
       WHERE user_id = $1
       LIMIT 1
@@ -526,7 +551,7 @@ export async function PATCH(request: NextRequest) {
       INSERT INTO user_profile_settings (
         user_id,
         custom_username,
-        show_wallet_address_public,
+        ${walletVisibilityColumn},
         wallet_addresses,
         instagram_url,
         tiktok_url,
@@ -537,7 +562,7 @@ export async function PATCH(request: NextRequest) {
       ON CONFLICT (user_id)
       DO UPDATE SET
         custom_username = EXCLUDED.custom_username,
-        show_wallet_address_public = EXCLUDED.show_wallet_address_public,
+        ${walletVisibilityColumn} = EXCLUDED.${walletVisibilityColumn},
         wallet_addresses = EXCLUDED.wallet_addresses,
         instagram_url = EXCLUDED.instagram_url,
         tiktok_url = EXCLUDED.tiktok_url,
