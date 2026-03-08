@@ -365,6 +365,17 @@ export async function GET() {
             t.user_id = $1
             AND t.is_active = 1
             AND t.deleted_at IS NULL
+            AND t.project_id IS NOT NULL
+            AND t.campaign_index IS NOT NULL
+            AND EXISTS (
+              SELECT 1
+              FROM campaigns c
+              WHERE
+                c.project_id = t.project_id
+                AND c.index = t.campaign_index
+                AND c.is_active = 1
+                AND c.deleted_at IS NULL
+            )
           ORDER BY t.posted_at DESC NULLS LAST, t.created_at DESC
           LIMIT 100
           `,
