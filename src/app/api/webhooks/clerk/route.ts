@@ -127,7 +127,7 @@ export async function POST(request: NextRequest) {
 
     if (eventType === 'user.created') {
       console.log('👤 Processing user.created event...');
-      const { id: clerkId, email_addresses, external_accounts } = evt.data;
+      const { id: clerkId, email_addresses, username, external_accounts } = evt.data;
 
       const existingAuthAccount = await db
         .select({ userId: authAccounts.userId })
