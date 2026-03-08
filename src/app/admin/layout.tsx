@@ -38,7 +38,7 @@ export default function AdminLayout({
   useEffect(() => {
     if (isLoaded) {
       if (!user) {
-        window.location.href = 'https://accounts.imparodefi.xyz/sign-in';
+        window.location.href = '/sign-in';
         return;
       }
 
@@ -110,7 +110,7 @@ export default function AdminLayout({
     <div className="min-h-screen text-white">
       {showUnverifiedBanner && (
         <div className="bg-amber-50 border-b border-amber-200 px-4 py-2 text-center text-sm text-amber-800">
-          Verifica accesso in corso. Se Clerk non risponde, <button type="button" onClick={() => setForceEntry(true)} className="underline font-medium">entra comunque</button> o <a href="https://accounts.imparodefi.xyz/sign-in" className="underline font-medium">accedi qui</a>.
+          Verifica accesso in corso. Se Clerk non risponde, <button type="button" onClick={() => setForceEntry(true)} className="underline font-medium">entra comunque</button> o <a href="/sign-in" className="underline font-medium">accedi qui</a>.
         </div>
       )}
       <div className="bg-indigo-950/50 border-b border-indigo-500/20 backdrop-blur">

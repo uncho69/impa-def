@@ -27,6 +27,8 @@ export default function SignInPage({
           appearance={{
             elements: {
               rootBox: "mx-auto",
+              socialButtonsBlockButton: "hidden",
+              dividerRow: "hidden",
             }
           }}
           signUpUrl="/sign-up"

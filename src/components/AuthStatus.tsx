@@ -7,20 +7,20 @@ function AuthStatusClerk() {
   if (isSignedIn) {
     return (
       <div className="flex items-center gap-2">
-        <UserButton afterSignOutUrl="https://accounts.imparodefi.xyz/sign-in" />
+        <UserButton afterSignOutUrl="/sign-in" />
       </div>
     );
   }
   return (
     <div className="flex items-center gap-2">
       <a 
-        href="https://accounts.imparodefi.xyz/sign-in"
+        href="/sign-in"
         className="btn-outline"
       >
         Accedi
       </a>
       <a 
-        href="https://accounts.imparodefi.xyz/sign-up"
+        href="/sign-up"
         className="btn-primary"
       >
         Registrati

@@ -66,11 +66,11 @@ export default function RootLayout({
               {isClerkConfigured ? (
                 <>
                   <SignedOut>
-                    <a href="https://accounts.imparodefi.xyz/sign-in">Accedi</a>
-                    <a href="https://accounts.imparodefi.xyz/sign-up">Registrati</a>
+                    <a href="/sign-in">Accedi</a>
+                    <a href="/sign-up">Registrati</a>
                   </SignedOut>
                   <SignedIn>
-                    <UserButton afterSignOutUrl="https://accounts.imparodefi.xyz/sign-in" />
+                    <UserButton afterSignOutUrl="/sign-in" />
                   </SignedIn>
                 </>
               ) : null}
