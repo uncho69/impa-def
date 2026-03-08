@@ -9,12 +9,6 @@ import { getSessionCookieName, parseSessionToken } from './session';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function getUserIdFromRequest(_request: NextRequest): Promise<string | null> {
   try {
-    const sessionToken = _request.cookies.get(getSessionCookieName())?.value;
-    const parsedSession = parseSessionToken(sessionToken);
-    if (parsedSession?.userId) {
-      return parsedSession.userId;
-    }
-
     let clerkUserId: string | null = null;
     try {
       const authResult = await auth();
@@ -85,6 +79,14 @@ export async function getUserIdFromRequest(_request: NextRequest): Promise<strin
 
       // Ultimo fallback: ritorna comunque l'id Clerk (gestito poi dalle route con upsert)
       return clerkUserId;
+    }
+
+    // Fallback solo se non c'e autenticazione Clerk:
+    // usa eventuale sessione firmata (es. Privy).
+    const sessionToken = _request.cookies.get(getSessionCookieName())?.value;
+    const parsedSession = parseSessionToken(sessionToken);
+    if (parsedSession?.userId) {
+      return parsedSession.userId;
     }
 
     return null;
