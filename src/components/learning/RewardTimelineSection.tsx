@@ -198,16 +198,8 @@ export function RewardTimelineSection({
         <div className="relative min-w-[980px] px-2 py-3" style={{ width: `${timelineWidth}px` }}>
           <div className="absolute left-14 right-14 top-1/2 h-[2px] -translate-y-1/2 bg-orange-400/90" />
           <div className="relative grid" style={{ gridTemplateColumns: `repeat(${tasks.length + 1}, minmax(0, 1fr))` }}>
-            {tasks.map((task, index) => (
+            {tasks.map((task) => (
               <div key={task.badge} className="flex flex-col items-center px-3">
-                {index % 2 === 0 ? (
-                  <div className="mb-4 text-center">
-                    <p className="text-sm font-semibold text-white leading-tight">{task.title}</p>
-                    <p className="mt-1 text-xs text-slate-300 leading-tight">{task.requirement}</p>
-                  </div>
-                ) : (
-                  <div className="mb-4 h-[54px]" />
-                )}
                 <button
                   type="button"
                   onClick={() => setSelectedTask(task)}
@@ -238,14 +230,10 @@ export function RewardTimelineSection({
                 >
                   {isTaskClaimed(task) ? "Badge claimato" : claimingTaskBadge === task.badge ? "Claim..." : "Claim badge"}
                 </button>
-                {index % 2 === 1 ? (
-                  <div className="mt-4 text-center">
-                    <p className="text-sm font-semibold text-white leading-tight">{task.title}</p>
-                    <p className="mt-1 text-xs text-slate-300 leading-tight">{task.requirement}</p>
-                  </div>
-                ) : (
-                  <div className="mt-4 h-[54px]" />
-                )}
+                <div className="mt-4 text-center min-h-[54px]">
+                  <p className="text-sm font-semibold text-white leading-tight">{task.title}</p>
+                  <p className="mt-1 text-xs text-slate-300 leading-tight">{task.requirement}</p>
+                </div>
               </div>
             ))}
 

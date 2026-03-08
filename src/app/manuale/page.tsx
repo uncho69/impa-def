@@ -68,9 +68,15 @@ export default function Manuale() {
     >
       <div className={`fixed inset-0 pointer-events-none bg-[size:48px_48px] ${isDark ? "bg-[linear-gradient(rgba(99,102,241,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.06)_1px,transparent_1px)]" : "bg-[linear-gradient(rgba(99,102,241,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.06)_1px,transparent_1px)]"}`} />
       <div className="relative flex min-h-screen overflow-x-hidden">
-        <aside className={`hidden lg:flex w-56 flex-shrink-0 border-r backdrop-blur flex-col ${isDark ? "border-indigo-500/20 bg-indigo-950/70" : "border-slate-200 bg-white/80"}`}>
-          <div className={`min-h-[4.5rem] border-b ${isDark ? "border-indigo-500/20 bg-indigo-950/50" : "border-slate-200 bg-white/90"}`} />
-          <nav className="px-3 py-6 space-y-0.5">
+        <aside className={`hidden lg:flex w-56 flex-shrink-0 backdrop-blur flex-col ${isDark ? "bg-indigo-950/70" : "bg-white/80"}`}>
+          <div className={`min-h-[4.5rem] border-b px-4 flex items-center ${isDark ? "border-indigo-500/20 bg-indigo-950/50" : "border-slate-200 bg-white/90"}`}>
+            <Link href="/" className="flex items-center gap-2">
+              <Image src={isDark ? "/imparodefi-logo-dark.png" : imparodefiLogo} alt="ImparoDeFi" width={36} height={36} className="rounded-lg" />
+              <span className={`font-bold text-lg ${isDark ? "text-white" : "text-slate-900"}`}>ImparoDeFi</span>
+              <span className={`text-xs font-medium px-1.5 py-0.5 rounded ${isDark ? "text-slate-400 bg-white/10" : "text-slate-500 bg-slate-200"}`}>BETA</span>
+            </Link>
+          </div>
+          <nav className={`px-3 py-6 space-y-0.5 border-r ${isDark ? "border-indigo-500/20" : "border-slate-200"}`}>
             {SIDEBAR_ITEMS.map((item) => (
               <Link
                 key={item.href + item.label}
@@ -88,8 +94,9 @@ export default function Manuale() {
           </nav>
         </aside>
         <div className="flex-1 flex flex-col min-w-0">
-          <div className={`flex items-center justify-between px-3 sm:px-6 py-4 border-b ${isDark ? "border-indigo-500/20 bg-indigo-950/50" : "border-slate-200 bg-white/70"}`}>
-            <Link href="/" className="flex items-center gap-2">
+          <div className={`flex items-center justify-between py-4 border-b ${isDark ? "border-indigo-500/20 bg-indigo-950/50" : "border-slate-200 bg-white/70"}`}>
+            <div className="hidden lg:block w-56 flex-shrink-0" />
+            <Link href="/" className="flex items-center gap-2 lg:hidden">
               <Image src={isDark ? "/imparodefi-logo-dark.png" : imparodefiLogo} alt="ImparoDeFi" width={36} height={36} className="rounded-lg" />
               <span className={`hidden sm:inline font-bold text-lg ${isDark ? "text-white" : "text-slate-900"}`}>ImparoDeFi</span>
               <span className={`text-xs font-medium px-1.5 py-0.5 rounded ${isDark ? "text-slate-400 bg-white/10" : "text-slate-500 bg-slate-200"}`}>BETA</span>
@@ -97,7 +104,7 @@ export default function Manuale() {
             <div className="hidden lg:block flex-1 max-w-xl mx-6">
               <SearchBar />
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center justify-end gap-2 px-4 md:px-6">
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen((v) => !v)}

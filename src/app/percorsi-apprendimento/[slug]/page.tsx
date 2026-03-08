@@ -52,14 +52,14 @@ export default function LearningPathDetailPage({ params }: { params: { slug: str
 
       <section className="rounded-2xl border border-indigo-500/25 bg-indigo-900/25 backdrop-blur p-6">
         <div className="flex items-center justify-between gap-3">
-          <h2 className="text-2xl font-semibold text-white">Task reward del livello</h2>
+          <h2 className="text-2xl font-semibold text-white">Complete le task e ottieni ricompense</h2>
           <Link href="/profilo" className="text-sm font-medium text-indigo-300 hover:text-indigo-200">
             Vai ai Badge →
           </Link>
         </div>
         <RewardTimelineSection
           tasks={path.rewardTasks}
-          rewardNote={path.rewardNote}
+          rewardNote="Completa le azioni per ricevere i badge; ottienili tutti e ottieni la ricompensa finale"
           levelRewardUsdc={path.levelRewardUsdc}
           levelKey={path.slug as "principiante" | "intermedio" | "avanzato"}
         />
