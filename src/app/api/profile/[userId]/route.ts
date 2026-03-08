@@ -41,6 +41,29 @@ function parseWalletAddresses(value: unknown): string[] {
   }
 }
 
+function buildPublicFallbackProfilePayload(userId: string, message?: string) {
+  return {
+    degraded: true,
+    degradedReason: message ?? null,
+    profile: {
+      userId,
+      username: userId || "utente",
+      xProfileUrl: null,
+      instagramUrl: null,
+      tiktokUrl: null,
+      youtubeUrl: null,
+      walletAddress: null,
+      walletAddresses: [],
+      ranking: {
+        globalRank: 0,
+        totalPoints: 0,
+        totalTweets: 0,
+      },
+    },
+    contents: [],
+  };
+}
+
 export async function GET(
   _request: NextRequest,
   { params }: { params: { userId: string } }
@@ -70,19 +93,20 @@ export async function GET(
       });
     }
 
-    let hasProfileSettingsTable = false;
-    let walletVisibilityColumn: WalletVisibilityColumn | null = null;
     try {
-      hasProfileSettingsTable = await ensureUserProfileSettingsTable();
-      walletVisibilityColumn = hasProfileSettingsTable ? await resolveWalletVisibilityColumn() : null;
-    } catch {
-      hasProfileSettingsTable = false;
-      walletVisibilityColumn = null;
-    }
+      let hasProfileSettingsTable = false;
+      let walletVisibilityColumn: WalletVisibilityColumn | null = null;
+      try {
+        hasProfileSettingsTable = await ensureUserProfileSettingsTable();
+        walletVisibilityColumn = hasProfileSettingsTable ? await resolveWalletVisibilityColumn() : null;
+      } catch {
+        hasProfileSettingsTable = false;
+        walletVisibilityColumn = null;
+      }
 
-    const userResult = await pool.query(
-      hasProfileSettingsTable
-        ? `
+      const userResult = await pool.query(
+        hasProfileSettingsTable
+          ? `
       SELECT
         u.id,
         u.username AS default_username,
@@ -99,7 +123,7 @@ export async function GET(
       WHERE (u.id = $1 OR lower(COALESCE(ups.custom_username, u.username)) = lower($1)) AND u.is_active = 1 AND u.deleted_at IS NULL
       LIMIT 1
       `
-        : `
+          : `
       SELECT
         u.id,
         u.username AS default_username,
@@ -115,16 +139,16 @@ export async function GET(
       WHERE (u.id = $1 OR lower(u.username) = lower($1)) AND u.is_active = 1 AND u.deleted_at IS NULL
       LIMIT 1
       `,
-      [userId]
-    );
-    if (userResult.rows.length === 0) {
-      return NextResponse.json({ error: "Profilo non trovato" }, { status: 404 });
-    }
+        [userId]
+      );
+      if (userResult.rows.length === 0) {
+        return NextResponse.json({ error: "Profilo non trovato" }, { status: 404 });
+      }
 
-    const user = userResult.rows[0];
+      const user = userResult.rows[0];
 
-    const rankResult = await pool.query(
-      `
+      const rankResult = await pool.query(
+        `
       WITH totals AS (
         SELECT
           user_id,
@@ -144,11 +168,11 @@ export async function GET(
         COALESCE((SELECT points FROM me), 0) AS total_points,
         COALESCE((SELECT tweet_count FROM totals WHERE user_id = $1), 0) AS total_tweets
       `,
-      [userId]
-    );
+        [userId]
+      );
 
-    const contentsResult = await pool.query(
-      `
+      const contentsResult = await pool.query(
+        `
       SELECT
         t.id,
         t.post_id,
@@ -169,46 +193,50 @@ export async function GET(
       ORDER BY t.posted_at DESC NULLS LAST, t.created_at DESC
       LIMIT 100
       `,
-      [userId]
-    );
+        [userId]
+      );
 
-    const rankRow = rankResult.rows[0] || { rank: 0, total_points: 0, total_tweets: 0 };
-    const displayUsername = user.display_username || `user_${user.id.slice(-6)}`;
-    const xProfileUrl = user.twitter_id ? `https://x.com/i/user/${user.twitter_id}` : null;
-    const walletPublic = Number(user.show_wallet_address_public) === 1;
-    const walletAddresses = walletPublic ? parseWalletAddresses(user.wallet_addresses) : [];
+      const rankRow = rankResult.rows[0] || { rank: 0, total_points: 0, total_tweets: 0 };
+      const displayUsername = user.display_username || `user_${user.id.slice(-6)}`;
+      const xProfileUrl = user.twitter_id ? `https://x.com/i/user/${user.twitter_id}` : null;
+      const walletPublic = Number(user.show_wallet_address_public) === 1;
+      const walletAddresses = walletPublic ? parseWalletAddresses(user.wallet_addresses) : [];
 
-    return NextResponse.json({
-      profile: {
-        userId: user.id,
-        username: displayUsername,
-        xProfileUrl,
-        instagramUrl: user.instagram_url,
-        tiktokUrl: user.tiktok_url,
-        youtubeUrl: user.youtube_url,
-        walletAddress: walletPublic ? user.wallet_address : null,
-        walletAddresses,
-        ranking: {
-          globalRank: Number(rankRow.rank || 0),
-          totalPoints: Number(rankRow.total_points || 0),
-          totalTweets: Number(rankRow.total_tweets || 0),
+      return NextResponse.json({
+        profile: {
+          userId: user.id,
+          username: displayUsername,
+          xProfileUrl,
+          instagramUrl: user.instagram_url,
+          tiktokUrl: user.tiktok_url,
+          youtubeUrl: user.youtube_url,
+          walletAddress: walletPublic ? user.wallet_address : null,
+          walletAddresses,
+          ranking: {
+            globalRank: Number(rankRow.rank || 0),
+            totalPoints: Number(rankRow.total_points || 0),
+            totalTweets: Number(rankRow.total_tweets || 0),
+          },
         },
-      },
-      contents: contentsResult.rows.map((row) => ({
-        id: row.id,
-        postId: row.post_id,
-        tweetUrl: row.post_id ? `https://x.com/i/web/status/${row.post_id}` : null,
-        text: row.content,
-        projectId: row.project_id,
-        campaignIndex: row.campaign_index,
-        epochIndex: row.epoch_index,
-        likes: Number(row.likes || 0),
-        replies: Number(row.replies || 0),
-        retweets: Number(row.retweets || 0),
-        quotes: Number(row.quotes || 0),
-        postedAt: row.posted_at,
-      })),
-    });
+        contents: contentsResult.rows.map((row) => ({
+          id: row.id,
+          postId: row.post_id,
+          tweetUrl: row.post_id ? `https://x.com/i/web/status/${row.post_id}` : null,
+          text: row.content,
+          projectId: row.project_id,
+          campaignIndex: row.campaign_index,
+          epochIndex: row.epoch_index,
+          likes: Number(row.likes || 0),
+          replies: Number(row.replies || 0),
+          retweets: Number(row.retweets || 0),
+          quotes: Number(row.quotes || 0),
+          postedAt: row.posted_at,
+        })),
+      });
+    } catch (dbError) {
+      console.error("Public profile degraded fallback:", dbError);
+      return NextResponse.json(buildPublicFallbackProfilePayload(userId, "db_query_failed"));
+    }
   } catch (error) {
     console.error("Error fetching public profile:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

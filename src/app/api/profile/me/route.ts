@@ -101,13 +101,14 @@ async function upsertClerkAuthAccount(userId: string, clerkUserId: string): Prom
 }
 
 async function resolveAuthenticatedUserId(request: NextRequest): Promise<string | null> {
-  const fromMiddleware = await getUserIdFromRequest(request);
-  if (fromMiddleware) return fromMiddleware;
-
+  // Priorita assoluta a Clerk: evita conflitti con eventuale sessione Privy residua.
   try {
     const authResult = await auth();
     const clerkUserId = authResult.userId;
-    if (!clerkUserId || !pool) return null;
+    if (!clerkUserId || !pool) {
+      const fromMiddleware = await getUserIdFromRequest(request);
+      return fromMiddleware ?? null;
+    }
 
     const linked = await pool.query(
       `
@@ -162,10 +163,9 @@ async function resolveAuthenticatedUserId(request: NextRequest): Promise<string 
     await upsertClerkAuthAccount(clerkUserId, clerkUserId);
     return clerkUserId;
   } catch {
-    return null;
+    const fromMiddleware = await getUserIdFromRequest(request);
+    return fromMiddleware ?? null;
   }
-
-  return null;
 }
 
 type WalletVisibilityColumn = "show_wallet_address_public" | "show_wallet_address_pub";
