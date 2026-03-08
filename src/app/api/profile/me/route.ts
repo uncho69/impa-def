@@ -471,6 +471,21 @@ export async function PATCH(request: NextRequest) {
       });
     }
 
+    // Allinea il comportamento al GET: se l'utente non e' ancora presente nel DB
+    // (casi clerk/keyless), lo creiamo/riattiviamo prima di salvare il profilo.
+    await pool.query(
+      `
+      INSERT INTO users (id, is_active, created_at, updated_at)
+      VALUES ($1, 1, now(), now())
+      ON CONFLICT (id)
+      DO UPDATE SET
+        is_active = 1,
+        deleted_at = NULL,
+        updated_at = now()
+      `,
+      [userId]
+    );
+
     const body = (await request.json().catch(() => ({}))) as {
       customUsername?: string | null;
       showWalletAddressPublic?: boolean;
@@ -549,7 +564,7 @@ export async function PATCH(request: NextRequest) {
     // Persistiamo sempre anche su users.username quando viene passato customUsername,
     // cosi il valore resta disponibile al refresh anche se la tabella settings e' instabile.
     if (hasCustomUsername && typeof nextCustomUsername === "string") {
-      await pool.query(
+      const updated = await pool.query(
         `
         UPDATE users
         SET username = $2, updated_at = now()
@@ -557,6 +572,9 @@ export async function PATCH(request: NextRequest) {
         `,
         [userId, nextCustomUsername]
       );
+      if (!updated.rowCount) {
+        return NextResponse.json({ error: "Impossibile aggiornare lo username utente." }, { status: 500 });
+      }
     }
 
     if (!hasProfileSettingsTable || !walletVisibilityColumn) {
