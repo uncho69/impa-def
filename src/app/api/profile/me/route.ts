@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { getUserIdFromRequest } from "@/lib/auth/middleware";
 import { pool, hasDatabase } from "@/lib/db";
 import { ensureUserProfileSettingsTable } from "@/lib/db/ensure-user-profile-settings-table";
 
@@ -100,53 +99,15 @@ async function upsertClerkAuthAccount(userId: string, clerkUserId: string): Prom
   );
 }
 
-async function resolveAuthenticatedUserId(request: NextRequest): Promise<string | null> {
-  // Priorita assoluta a Clerk: evita conflitti con eventuale sessione Privy residua.
+async function resolveAuthenticatedUserId(): Promise<string | null> {
+  // Identita canonica del profilo: Clerk userId.
+  // Evita definitivamente conflitti con sessioni app/Privy residue.
   try {
     const authResult = await auth();
     const clerkUserId = authResult.userId;
-    if (!clerkUserId || !pool) {
-      const fromMiddleware = await getUserIdFromRequest(request);
-      return fromMiddleware ?? null;
-    }
+    if (!clerkUserId) return null;
+    if (!pool) return clerkUserId;
 
-    const direct = await pool.query(
-      `
-      SELECT id
-      FROM users
-      WHERE id = $1 AND is_active = 1 AND deleted_at IS NULL
-      LIMIT 1
-      `,
-      [clerkUserId]
-    );
-    if (direct.rows.length > 0) {
-      const userId = direct.rows[0].id as string;
-      await upsertClerkAuthAccount(userId, clerkUserId);
-      return userId;
-    }
-
-    const linked = await pool.query(
-      `
-      SELECT aa.user_id
-      FROM auth_accounts aa
-      JOIN users u ON u.id = aa.user_id
-      WHERE
-        aa.provider = 'clerk'
-        AND aa.provider_account_id = $1
-        AND aa.is_active = 1
-        AND u.is_active = 1
-        AND u.deleted_at IS NULL
-      LIMIT 1
-      `,
-      [clerkUserId]
-    );
-    if (linked.rows.length > 0) {
-      const userId = linked.rows[0].user_id as string;
-      return userId;
-    }
-
-    // Fallback robusto: utente autenticato Clerk ma non ancora presente nel DB.
-    // Lo creiamo al volo per evitare Unauthorized su /profilo.
     await pool.query(
       `
       INSERT INTO users (id, is_active, created_at, updated_at)
@@ -162,8 +123,7 @@ async function resolveAuthenticatedUserId(request: NextRequest): Promise<string 
     await upsertClerkAuthAccount(clerkUserId, clerkUserId);
     return clerkUserId;
   } catch {
-    const fromMiddleware = await getUserIdFromRequest(request);
-    return fromMiddleware ?? null;
+    return null;
   }
 }
 
@@ -190,9 +150,9 @@ async function resolveWalletVisibilityColumn(): Promise<WalletVisibilityColumn |
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const userId = await resolveAuthenticatedUserId(request);
+    const userId = await resolveAuthenticatedUserId();
     if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     if (!hasDatabase || !pool) {
       return NextResponse.json({
@@ -460,7 +420,7 @@ export async function GET(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   try {
-    const userId = await resolveAuthenticatedUserId(request);
+    const userId = await resolveAuthenticatedUserId();
     if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     if (!hasDatabase || !pool) {
       return NextResponse.json({

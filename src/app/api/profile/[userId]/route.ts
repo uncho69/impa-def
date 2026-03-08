@@ -120,7 +120,7 @@ export async function GET(
         ${walletVisibilityColumn ? `COALESCE(ups.${walletVisibilityColumn}, 0)` : "0"} AS show_wallet_address_public
       FROM users u
       LEFT JOIN user_profile_settings ups ON ups.user_id = u.id
-      WHERE (u.id = $1 OR lower(COALESCE(ups.custom_username, u.username)) = lower($1)) AND u.is_active = 1 AND u.deleted_at IS NULL
+      WHERE u.id = $1 AND u.is_active = 1 AND u.deleted_at IS NULL
       LIMIT 1
       `
           : `
@@ -136,7 +136,7 @@ export async function GET(
         NULL::varchar AS youtube_url,
         0 AS show_wallet_address_public
       FROM users u
-      WHERE (u.id = $1 OR lower(u.username) = lower($1)) AND u.is_active = 1 AND u.deleted_at IS NULL
+      WHERE u.id = $1 AND u.is_active = 1 AND u.deleted_at IS NULL
       LIMIT 1
       `,
         [userId]
