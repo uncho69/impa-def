@@ -492,12 +492,6 @@ export async function PATCH(request: NextRequest) {
 
     const hasProfileSettingsTable = await ensureUserProfileSettingsTable();
     const walletVisibilityColumn = hasProfileSettingsTable ? await resolveWalletVisibilityColumn() : null;
-    if (!hasProfileSettingsTable || !walletVisibilityColumn) {
-      return NextResponse.json(
-        { error: "Impostazioni profilo temporaneamente non disponibili. Riprova tra poco." },
-        { status: 503 }
-      );
-    }
 
     let nextCustomUsername: string | null | undefined = undefined;
     if (hasCustomUsername) {
@@ -550,6 +544,48 @@ export async function PATCH(request: NextRequest) {
           : sanitizeSocialUrl(youtubeCandidate, ["youtube.com", "youtu.be"]);
     if (youtubeCandidate !== undefined && youtubeCandidate !== null && !finalYoutubeInput) {
       return NextResponse.json({ error: "URL YouTube non valida (usa https://youtube.com/...)." }, { status: 400 });
+    }
+
+    if (!hasProfileSettingsTable || !walletVisibilityColumn) {
+      // Fallback resiliente: in ambienti con tabella settings non disponibile
+      // consenti almeno il salvataggio username nel campo users.username.
+      if (!hasCustomUsername) {
+        return NextResponse.json(
+          { error: "Impostazioni profilo temporaneamente non disponibili. Riprova tra poco." },
+          { status: 503 }
+        );
+      }
+
+      if (nextCustomUsername === null) {
+        return NextResponse.json(
+          { error: "Reset username non disponibile temporaneamente. Riprova tra poco." },
+          { status: 503 }
+        );
+      }
+
+      if (typeof nextCustomUsername === "string") {
+        await pool.query(
+          `
+          UPDATE users
+          SET username = $2, updated_at = now()
+          WHERE id = $1 AND is_active = 1 AND deleted_at IS NULL
+          `,
+          [userId, nextCustomUsername]
+        );
+      }
+
+      return NextResponse.json({
+        ok: true,
+        partial: true,
+        profileSettings: {
+          customUsername: nextCustomUsername ?? null,
+          showWalletAddressPublic: false,
+          walletAddresses: [],
+          instagramUrl: null,
+          tiktokUrl: null,
+          youtubeUrl: null,
+        },
+      });
     }
 
     const rows = await pool.query(

@@ -223,9 +223,48 @@ export default function ProfiloPage() {
         setError(json?.message || "Database non configurato: modifiche non salvate.");
         return;
       }
-      setInfoMessage("Impostazioni profilo salvate.");
-      trackEvent("profile_save", { mode: "database" });
-      await loadProfile();
+      const saved = json?.profileSettings as
+        | {
+            customUsername?: string | null;
+            showWalletAddressPublic?: boolean;
+            walletAddresses?: string[];
+            instagramUrl?: string | null;
+            tiktokUrl?: string | null;
+            youtubeUrl?: string | null;
+          }
+        | undefined;
+
+      if (saved) {
+        setData((prev) =>
+          prev
+            ? {
+                ...prev,
+                profile: {
+                  ...prev.profile,
+                  customUsername: saved.customUsername ?? prev.profile.customUsername,
+                  username:
+                    saved.customUsername && saved.customUsername.trim().length > 0
+                      ? saved.customUsername
+                      : prev.profile.defaultUsername || prev.profile.username,
+                  showWalletAddressPublic:
+                    typeof saved.showWalletAddressPublic === "boolean"
+                      ? saved.showWalletAddressPublic
+                      : prev.profile.showWalletAddressPublic,
+                  walletAddresses: Array.isArray(saved.walletAddresses) ? saved.walletAddresses : prev.profile.walletAddresses,
+                  instagramUrl: saved.instagramUrl ?? prev.profile.instagramUrl,
+                  tiktokUrl: saved.tiktokUrl ?? prev.profile.tiktokUrl,
+                  youtubeUrl: saved.youtubeUrl ?? prev.profile.youtubeUrl,
+                },
+              }
+            : prev
+        );
+        if (typeof saved.customUsername === "string") {
+          setUsernameInput(saved.customUsername);
+        }
+      }
+
+      setInfoMessage(json?.partial ? "Username salvato. Alcune impostazioni avanzate non sono disponibili al momento." : "Impostazioni profilo salvate.");
+      trackEvent("profile_save", { mode: json?.partial ? "database_partial" : "database" });
     } catch (err: unknown) {
       setError(getErrorMessage(err, "Errore imprevisto"));
     } finally {
