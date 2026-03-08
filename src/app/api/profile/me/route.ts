@@ -110,6 +110,21 @@ async function resolveAuthenticatedUserId(request: NextRequest): Promise<string 
       return fromMiddleware ?? null;
     }
 
+    const direct = await pool.query(
+      `
+      SELECT id
+      FROM users
+      WHERE id = $1 AND is_active = 1 AND deleted_at IS NULL
+      LIMIT 1
+      `,
+      [clerkUserId]
+    );
+    if (direct.rows.length > 0) {
+      const userId = direct.rows[0].id as string;
+      await upsertClerkAuthAccount(userId, clerkUserId);
+      return userId;
+    }
+
     const linked = await pool.query(
       `
       SELECT aa.user_id
@@ -127,22 +142,6 @@ async function resolveAuthenticatedUserId(request: NextRequest): Promise<string 
     );
     if (linked.rows.length > 0) {
       const userId = linked.rows[0].user_id as string;
-      await upsertClerkAuthAccount(userId, clerkUserId);
-      return userId;
-    }
-
-    const direct = await pool.query(
-      `
-      SELECT id
-      FROM users
-      WHERE id = $1 AND is_active = 1 AND deleted_at IS NULL
-      LIMIT 1
-      `,
-      [clerkUserId]
-    );
-    if (direct.rows.length > 0) {
-      const userId = direct.rows[0].id as string;
-      await upsertClerkAuthAccount(userId, clerkUserId);
       return userId;
     }
 

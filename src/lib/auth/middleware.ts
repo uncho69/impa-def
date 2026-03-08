@@ -43,23 +43,8 @@ export async function getUserIdFromRequest(_request: NextRequest): Promise<strin
       // Se DB non configurato, restituiamo comunque lo user id Clerk
       if (!db) return clerkUserId;
 
-      // First try to find via authAccounts (preferred method)
-      const authAccount = await db
-        .select({ userId: authAccounts.userId })
-        .from(authAccounts)
-        .where(
-          and(
-            eq(authAccounts.provider, 'clerk'),
-            eq(authAccounts.providerAccountId, clerkUserId)
-          )
-        )
-        .limit(1);
-
-      if (authAccount.length > 0) {
-        return authAccount[0].userId;
-      }
-
-      // If no authAccount found, check if user exists directly with Clerk ID as primary key
+      // Canonical user identity: prefer direct Clerk ID row in users table.
+      // This prevents stale auth_accounts mappings from forcing a legacy user_id.
       const user = await db
         .select({ id: users.id })
         .from(users)
@@ -73,8 +58,33 @@ export async function getUserIdFromRequest(_request: NextRequest): Promise<strin
         .limit(1);
 
       if (user.length > 0) {
-        console.warn(`Clerk user ${clerkUserId} found in users table but no authAccount found`);
+        await db.execute(sql`
+          INSERT INTO auth_accounts (user_id, provider, provider_account_id, provider_user_id, is_active, created_at, updated_at)
+          VALUES (${clerkUserId}, 'clerk', ${clerkUserId}, ${clerkUserId}, 1, now(), now())
+          ON CONFLICT (provider, provider_account_id)
+          DO UPDATE SET
+            user_id = EXCLUDED.user_id,
+            provider_user_id = EXCLUDED.provider_user_id,
+            is_active = 1,
+            updated_at = now()
+        `);
         return user[0].id;
+      }
+
+      // Fallback to auth_accounts only if direct Clerk row is not available.
+      const authAccount = await db
+        .select({ userId: authAccounts.userId })
+        .from(authAccounts)
+        .where(
+          and(
+            eq(authAccounts.provider, 'clerk'),
+            eq(authAccounts.providerAccountId, clerkUserId)
+          )
+        )
+        .limit(1);
+
+      if (authAccount.length > 0) {
+        return authAccount[0].userId;
       }
 
       // Ultimo fallback: ritorna comunque l'id Clerk (gestito poi dalle route con upsert)
