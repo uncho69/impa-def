@@ -312,55 +312,67 @@ export async function GET() {
 
       const user = userResult.rows[0];
 
-      const rankResult = await pool.query(
-      `
-      WITH totals AS (
-        SELECT
-          user_id,
-          COALESCE(SUM(points), 0) AS points,
-          COALESCE(SUM(tweet_count), 0) AS tweet_count
-        FROM user_epoch_scores
-        WHERE is_active = 1 AND deleted_at IS NULL
-        GROUP BY user_id
-      ),
-      me AS (
-        SELECT COALESCE(points, 0) AS my_points
-        FROM totals
-        WHERE user_id = $1
-      )
-      SELECT
-        (SELECT COUNT(*) FROM totals t WHERE t.points > COALESCE((SELECT my_points FROM me), 0)) + 1 AS rank,
-        COALESCE((SELECT points FROM me), 0) AS total_points,
-        COALESCE((SELECT tweet_count FROM totals WHERE user_id = $1), 0) AS total_tweets
-      `,
-        [userId]
-      );
+      let rankResult = { rows: [{ rank: 0, total_points: 0, total_tweets: 0 }] } as {
+        rows: Array<{ rank: number; total_points: number; total_tweets: number }>;
+      };
+      try {
+        rankResult = await pool.query(
+          `
+          WITH totals AS (
+            SELECT
+              user_id,
+              COALESCE(SUM(points), 0) AS points,
+              COALESCE(SUM(tweet_count), 0) AS tweet_count
+            FROM user_epoch_scores
+            WHERE is_active = 1 AND deleted_at IS NULL
+            GROUP BY user_id
+          ),
+          me AS (
+            SELECT COALESCE(points, 0) AS my_points
+            FROM totals
+            WHERE user_id = $1
+          )
+          SELECT
+            (SELECT COUNT(*) FROM totals t WHERE t.points > COALESCE((SELECT my_points FROM me), 0)) + 1 AS rank,
+            COALESCE((SELECT points FROM me), 0) AS total_points,
+            COALESCE((SELECT tweet_count FROM totals WHERE user_id = $1), 0) AS total_tweets
+          `,
+          [userId]
+        );
+      } catch (rankError) {
+        console.warn("Profile GET rank fallback:", rankError);
+      }
 
-      const contentsResult = await pool.query(
-      `
-      SELECT
-        t.id,
-        t.post_id,
-        t.content,
-        t.project_id,
-        t.campaign_index,
-        t.epoch_index,
-        t.likes,
-        t.replies,
-        t.retweets,
-        t.quotes,
-        t.posted_at,
-        t.is_verified
-      FROM tweets t
-      WHERE
-        t.user_id = $1
-        AND t.is_active = 1
-        AND t.deleted_at IS NULL
-      ORDER BY t.posted_at DESC NULLS LAST, t.created_at DESC
-      LIMIT 100
-      `,
-        [userId]
-      );
+      let contentsResult = { rows: [] as Array<Record<string, unknown>> };
+      try {
+        contentsResult = await pool.query(
+          `
+          SELECT
+            t.id,
+            t.post_id,
+            t.content,
+            t.project_id,
+            t.campaign_index,
+            t.epoch_index,
+            t.likes,
+            t.replies,
+            t.retweets,
+            t.quotes,
+            t.posted_at,
+            t.is_verified
+          FROM tweets t
+          WHERE
+            t.user_id = $1
+            AND t.is_active = 1
+            AND t.deleted_at IS NULL
+          ORDER BY t.posted_at DESC NULLS LAST, t.created_at DESC
+          LIMIT 100
+          `,
+          [userId]
+        );
+      } catch (contentsError) {
+        console.warn("Profile GET contents fallback:", contentsError);
+      }
 
       const rankRow = rankResult.rows[0] || { rank: 0, total_points: 0, total_tweets: 0 };
       const displayUsername = user.custom_username || user.default_username || `user_${user.id.slice(-6)}`;
