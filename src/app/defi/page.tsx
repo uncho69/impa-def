@@ -68,8 +68,6 @@ const MEDIA_EXAMPLES = [
   { type: "x", title: "Curve Finance – liquidity pool", handle: "@CurveFinance", href: "https://x.com/CurveFinance" },
 ];
 
-type Theme = "dark" | "light";
-
 const VALID_CATEGORIES = new Set(CATEGORIES.map((c) => c.id));
 
 function DefiPageContent({ onOpenBasiDefi }: { onOpenBasiDefi: () => void }) {
@@ -78,20 +76,16 @@ function DefiPageContent({ onOpenBasiDefi }: { onOpenBasiDefi: () => void }) {
   const activeCategory: CategoryId = (categoryFromUrl && VALID_CATEGORIES.has(categoryFromUrl)) ? categoryFromUrl as CategoryId : "dex";
 
   const [search, setSearch] = useState("");
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [isDark, setIsDark] = useState(true);
 
   useEffect(() => {
-    const stored = localStorage.getItem("imparodefi-theme") as Theme | null;
-    if (stored === "dark" || stored === "light") setTheme(stored);
+    const root = document.documentElement;
+    const syncTheme = () => setIsDark(root.classList.contains("dark"));
+    syncTheme();
+    const observer = new MutationObserver(syncTheme);
+    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
   }, []);
-
-  useEffect(() => {
-    localStorage.setItem("imparodefi-theme", theme);
-    document.documentElement.classList.toggle("dark", theme === "dark");
-    document.documentElement.classList.toggle("light", theme === "light");
-  }, [theme]);
-
-  const isDark = theme === "dark";
 
   const filteredProtocols = useMemo(() => {
     return PROTOCOLS.filter((p) => {
