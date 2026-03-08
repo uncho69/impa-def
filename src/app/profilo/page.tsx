@@ -318,7 +318,8 @@ export default function ProfiloPage() {
   }
 
   const { profile, contents } = data;
-  const resolvedWalletAddress = privyWalletAddress || walletAddresses[0] || profile.walletAddress;
+  const primaryProfileWallet = walletAddresses[0] || null;
+  const resolvedWalletAddress = primaryProfileWallet;
 
   return (
     <div className={PAGE_BG_CLASS}>
@@ -579,7 +580,7 @@ export default function ProfiloPage() {
         )}
 
         {activeTab === "badges" && (
-        <LearningBadgesPanel wallet={resolvedWalletAddress} />
+        <LearningBadgesPanel wallet={primaryProfileWallet} />
         )}
 
         {activeTab === "contents" && (

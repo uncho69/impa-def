@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { LearningPathData } from "@/lib/learning-paths";
-import { TEMPLATE_WALLET } from "@/lib/learning-badges/catalog";
 
 type RewardTask = LearningPathData["rewardTasks"][number];
 type LevelKey = "principiante" | "intermedio" | "avanzato";
@@ -39,7 +38,7 @@ export function RewardTimelineSection({
   levelKey: LevelKey;
 }) {
   const [selectedTask, setSelectedTask] = useState<RewardTask | null>(null);
-  const [walletAddress, setWalletAddress] = useState<string | null>(TEMPLATE_WALLET);
+  const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [campaign, setCampaign] = useState<LearningCampaign | null>(null);
   const [completedBadges, setCompletedBadges] = useState<Set<string>>(new Set());
   const [claimedBadges, setClaimedBadges] = useState<Set<string>>(new Set());
@@ -63,21 +62,17 @@ export function RewardTimelineSection({
         const res = await fetch("/api/profile/me", { cache: "no-store" });
         const data = await res.json().catch(() => ({}));
         if (!res.ok) {
-          setWalletAddress(TEMPLATE_WALLET);
+          setWalletAddress(null);
           return;
         }
-        const candidate =
-          (Array.isArray(data?.profile?.walletAddresses) && data.profile.walletAddresses[0]) ||
-          data?.profile?.walletAddress ||
-          TEMPLATE_WALLET;
+        const candidate = Array.isArray(data?.profile?.walletAddresses) ? data.profile.walletAddresses[0] : null;
         if (candidate && typeof candidate === "string") {
           setWalletAddress(candidate.toLowerCase());
         } else {
-          setWalletAddress(TEMPLATE_WALLET);
+          setWalletAddress(null);
         }
       } catch {
-        // fallback coerente con la pagina Profilo
-        setWalletAddress(TEMPLATE_WALLET);
+        setWalletAddress(null);
       }
     };
     loadWallet();
@@ -191,8 +186,13 @@ export function RewardTimelineSection({
       </div>
 
       <p className="mt-2 text-xs text-slate-400">
-        Wallet analizzato per avanzamento task: {walletAddress || TEMPLATE_WALLET}
+        Wallet analizzato per avanzamento task: {walletAddress || "nessun wallet connesso nel profilo"}
       </p>
+      {!walletAddress ? (
+        <p className="mt-2 text-xs text-amber-200">
+          Connetti e salva un wallet nel profilo per vedere il progresso reale dei badge.
+        </p>
+      ) : null}
 
       <div className="mt-6 hidden md:block overflow-x-auto pb-2">
         <div className="relative min-w-[980px] px-2 py-3" style={{ width: `${timelineWidth}px` }}>

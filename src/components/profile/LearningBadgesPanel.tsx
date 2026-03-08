@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { TEMPLATE_WALLET } from "@/lib/learning-badges/catalog";
 
 type Badge = {
   key: string;
@@ -68,7 +67,7 @@ function formatProgressValue(value: number, unit: string): string {
 export function LearningBadgesPanel({ wallet }: { wallet?: string | null }) {
   const targetWallet = useMemo(() => {
     const normalized = (wallet || "").trim().toLowerCase();
-    return normalized || TEMPLATE_WALLET;
+    return normalized || null;
   }, [wallet]);
 
   const [loading, setLoading] = useState(true);
@@ -80,6 +79,12 @@ export function LearningBadgesPanel({ wallet }: { wallet?: string | null }) {
   const [selectedBadge, setSelectedBadge] = useState<Badge | null>(null);
 
   const load = useCallback(async () => {
+    if (!targetWallet) {
+      setData(null);
+      setError(null);
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
@@ -104,6 +109,7 @@ export function LearningBadgesPanel({ wallet }: { wallet?: string | null }) {
   }, [load]);
 
   const handleClaim = async (campaignId: string) => {
+    if (!targetWallet) return;
     setClaimingId(campaignId);
     setError(null);
     try {
@@ -126,6 +132,7 @@ export function LearningBadgesPanel({ wallet }: { wallet?: string | null }) {
   };
 
   const handleClaimBadge = async (badgeKey: string) => {
+    if (!targetWallet) return;
     setClaimingBadgeKey(badgeKey);
     setError(null);
     try {
@@ -173,13 +180,16 @@ export function LearningBadgesPanel({ wallet }: { wallet?: string | null }) {
           <p className="mt-1 text-sm text-slate-300">
             Badge stile Abstract: ottenuti colorati, mancanti shaded.
           </p>
-          <p className="mt-1 text-xs text-slate-400">Wallet analizzato: {targetWallet}</p>
+          <p className="mt-1 text-xs text-slate-400">
+            Wallet analizzato: {targetWallet || "nessun wallet connesso nel profilo"}
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={() => load()}
             className="rounded-full border border-indigo-400/35 bg-indigo-900/55 px-4 py-2 text-sm font-medium text-indigo-100 hover:bg-indigo-800/70"
+            disabled={!targetWallet}
           >
             Refresh
           </button>
@@ -194,6 +204,11 @@ export function LearningBadgesPanel({ wallet }: { wallet?: string | null }) {
       </div>
 
       {error ? <p className="mt-4 text-sm text-rose-300">{error}</p> : null}
+      {!targetWallet ? (
+        <p className="mt-4 text-sm text-amber-200">
+          Collega e salva almeno un wallet nel profilo per vedere badge e reward reali.
+        </p>
+      ) : null}
       {loading ? (
         <p className="mt-4 text-slate-400">Caricamento badge...</p>
       ) : !data ? (
