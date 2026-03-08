@@ -4,8 +4,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 import { UnifiedAuthControls } from "@/components/auth/UnifiedAuthControls";
 import { SearchBar } from "@/components/SearchBar";
+import { CollapsibleSidebar } from "@/components/CollapsibleSidebar";
+import { isAdminEmail } from "@/lib/admin-emails";
 
 import baseLogo from "@/assets/base-logo.svg";
 import hyperliquidLogo from "@/assets/hyperliquid-logo.png";
@@ -29,7 +32,7 @@ const SIDEBAR_ITEMS = [
   { label: "Portafogli", href: "/wallet", icon: "👛" },
   { label: "Strumenti Utili", href: "/strumentiutili", icon: "🔧" },
   { label: "Memecoins", href: "/memecoins", icon: "🪙" },
-  { label: "Memecoin/NFT", href: "/nft", icon: "🖼️" },
+  { label: "NFTs", href: "/nft", icon: "🖼️" },
   { label: "Giochi", href: "/giochi", icon: "🎮" },
   { label: "Mercati di Predizione", href: "/giochi/polymarket", icon: "📈" },
   { label: "Eventi Storici", href: "/eventi-storici", icon: "📅" },
@@ -105,6 +108,8 @@ type PublicHackAlert = { name: string; desc: string; link: string | null };
 
 export default function Home() {
   const pathname = usePathname();
+  const { user } = useUser();
+  const isAdmin = Boolean(user?.emailAddresses?.[0]?.emailAddress && isAdminEmail(user.emailAddresses[0].emailAddress));
   const [theme, setTheme] = useState<Theme>("dark");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
@@ -221,12 +226,14 @@ export default function Home() {
                 )}
               </svg>
             </button>
-            <Link
-              href="/admin/dashboard"
-              className={`hidden sm:flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium border transition-colors ${isDark ? "border-white/20 bg-white/5 hover:bg-white/10 text-white" : "border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-700"}`}
-            >
-              Admin Panel
-            </Link>
+            {isAdmin && (
+              <Link
+                href="/admin/dashboard"
+                className={`hidden sm:flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium border transition-colors ${isDark ? "border-white/20 bg-white/5 hover:bg-white/10 text-white" : "border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-700"}`}
+              >
+                Admin Panel
+              </Link>
+            )}
             <button
               type="button"
               onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
@@ -299,24 +306,11 @@ export default function Home() {
           )}
 
           <div className="flex flex-1 min-h-0">
-            <aside className={`hidden lg:flex w-56 flex-shrink-0 border-r backdrop-blur flex-col ${isDark ? "border-indigo-500/20 bg-indigo-950/70" : "border-slate-200 bg-white/80"}`}>
-              <nav className="px-3 py-6 space-y-0.5">
-                {SIDEBAR_ITEMS.map((item) => (
-                  <Link
-                    key={item.href + item.label}
-                    href={item.href}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                      item.href === "/"
-                        ? "bg-indigo-500/90 text-white"
-                        : isDark ? "text-slate-300 hover:bg-indigo-500/20 hover:text-white" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                    }`}
-                  >
-                    <span className="text-lg">{item.icon}</span>
-                    {item.label}
-                  </Link>
-                ))}
-              </nav>
-            </aside>
+            <CollapsibleSidebar
+              items={SIDEBAR_ITEMS}
+              isDark={isDark}
+              isItemActive={(href) => (href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(href + "/"))}
+            />
 
             {/* Center + Right */}
             <div className="flex-1 flex flex-col min-w-0">
@@ -325,7 +319,7 @@ export default function Home() {
             <h1 className={`text-4xl lg:text-5xl font-bold mb-2 ${isDark ? "text-white" : "text-slate-900"}`}>
               Domina la Finanza Decentralizzata
             </h1>
-            <p className={`text-lg max-w-2xl mx-auto mb-6 ${isDark ? "text-slate-400" : "text-slate-600"}`}>
+            <p className={`text-lg max-w-2xl mx-auto mb-6 ${isDark ? "text-white" : "text-slate-600"}`}>
               Il tuo hub per imparare, scoprire e monitorare il mondo Web3.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
@@ -536,7 +530,7 @@ export default function Home() {
         </div>
 
       {/* Footer minimale per la landing */}
-      <footer className={`border-t py-4 text-center text-sm ${isDark ? "border-indigo-500/20 text-slate-400" : "border-slate-200 text-slate-600"}`}>
+      <footer className={`border-t py-4 text-center text-sm ${isDark ? "border-indigo-500/20 text-white" : "border-slate-200 text-slate-600"}`}>
         ImparoDeFi © {new Date().getFullYear()}. All rights reserved.
       </footer>
     </div>

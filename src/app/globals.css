@@ -20,7 +20,28 @@
   }
 }
 
+/* Blocca rimbalzo trackpad (su/giù/laterale) che mostra bianco */
+html {
+  overflow: hidden;
+  overflow-x: hidden;
+  overscroll-behavior: none;
+  height: 100%;
+  position: fixed;
+  width: 100%;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
+
 body {
+  overflow: auto;
+  overflow-x: hidden;
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+  height: 100%;
+  min-height: 100%;
+  position: relative;
   color: var(--foreground);
   background: var(--background);
   font-family: 'Inter', sans-serif;

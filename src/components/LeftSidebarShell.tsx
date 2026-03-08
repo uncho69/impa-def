@@ -8,6 +8,7 @@ import imparodefiLogo from "@/assets/imparodefi-logo-nobg.webp";
 import { DEFI_SIDEBAR_ITEMS } from "@/lib/defi-sidebar";
 import { UnifiedAuthControls } from "@/components/auth/UnifiedAuthControls";
 import { SearchBar } from "@/components/SearchBar";
+import { CollapsibleSidebar } from "@/components/CollapsibleSidebar";
 
 type Theme = "dark" | "light";
 
@@ -54,10 +55,8 @@ export function LeftSidebarShell({ children }: { children: ReactNode }) {
         >
           <Link href="/" className="flex items-center gap-2 px-4 w-56 flex-shrink-0">
             <Image src={isDark ? "/imparodefi-logo-dark.png" : imparodefiLogo} alt="ImparoDeFi" width={36} height={36} className="rounded-lg shrink-0" />
-            <div className="flex flex-col min-w-0">
-              <span className={`font-bold text-lg leading-tight ${isDark ? "text-white" : "text-slate-900"}`}>ImparoDeFi</span>
-              <span className={`text-xs font-medium rounded ${isDark ? "text-slate-400 bg-white/10 w-fit px-1.5 py-0.5" : "text-slate-500 bg-slate-200 w-fit px-1.5 py-0.5"}`}>BETA</span>
-            </div>
+            <span className={`font-bold text-lg ${isDark ? "text-white" : "text-slate-900"}`}>ImparoDeFi</span>
+            <span className={`text-xs font-medium px-1.5 py-0.5 rounded ${isDark ? "text-slate-400 bg-white/10" : "text-slate-500 bg-slate-200"}`}>BETA</span>
           </Link>
           <div className="hidden lg:block flex-1 max-w-xl mx-6">
             <SearchBar />
@@ -79,7 +78,6 @@ export function LeftSidebarShell({ children }: { children: ReactNode }) {
               </svg>
             </button>
             <div className="flex items-center gap-2 md:gap-3">
-              <Link href="/admin/dashboard" className={`hidden sm:flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium border transition-colors ${isDark ? "border-white/20 bg-white/5 hover:bg-white/10 text-white" : "border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-700"}`}>Admin Panel</Link>
               <button type="button" onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))} className={`p-2 rounded-lg border transition-colors ${isDark ? "border-white/20 bg-white/5 hover:bg-white/10" : "border-slate-300 bg-slate-100 hover:bg-slate-200"}`} title={isDark ? "Passa a tema chiaro" : "Passa a tema scuro"} aria-label={isDark ? "Passa a tema chiaro" : "Passa a tema scuro"}>
                 {isDark ? (
                   <svg className="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden><path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" /></svg>
@@ -134,19 +132,11 @@ export function LeftSidebarShell({ children }: { children: ReactNode }) {
         )}
 
         <div className="flex flex-1 min-h-0 relative">
-          <aside className={`hidden lg:flex w-56 flex-shrink-0 backdrop-blur flex-col border-r ${isDark ? "bg-indigo-950/70 border-indigo-500/20" : "bg-white/80 border-slate-200"}`}>
-            <nav className="px-3 py-6 space-y-0.5 flex-1">
-              {DEFI_SIDEBAR_ITEMS.map((item) => {
-                const isActive = isItemActive(item.href);
-                return (
-                  <Link key={item.href + item.label} href={item.href} className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${isActive ? "bg-indigo-600/90 text-white" : isDark ? "text-slate-300 hover:bg-indigo-500/20 hover:text-white" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"}`}>
-                    <span className="text-lg">{item.icon}</span>
-                    {item.label}
-                  </Link>
-                );
-              })}
-            </nav>
-          </aside>
+          <CollapsibleSidebar
+            items={DEFI_SIDEBAR_ITEMS}
+            isDark={isDark}
+            isItemActive={isItemActive}
+          />
           <main className="flex-1 flex flex-col min-w-0 overflow-auto">
             <div className="flex-1 px-6 py-8">{children}</div>
           </main>

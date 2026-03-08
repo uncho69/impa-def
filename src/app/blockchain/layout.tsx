@@ -8,6 +8,7 @@ import imparodefiLogo from "@/assets/imparodefi-logo-nobg.webp";
 import { BLOCKCHAIN_SIDEBAR_ITEMS } from "@/lib/blockchain-sidebar";
 import { UnifiedAuthControls } from "@/components/auth/UnifiedAuthControls";
 import { SearchBar } from "@/components/SearchBar";
+import { CollapsibleSidebar } from "@/components/CollapsibleSidebar";
 
 type Theme = "dark" | "light";
 
@@ -48,14 +49,8 @@ export default function BlockchainLayout({ children }: { children: ReactNode }) 
         <header className={`flex items-center justify-between min-h-[4.5rem] border-b flex-shrink-0 ${isDark ? "border-indigo-500/20 bg-indigo-950/50" : "border-slate-200 bg-white/90"}`}>
           <Link href="/" className="flex items-center gap-2 px-4 w-56 flex-shrink-0">
             <Image src={isDark ? "/imparodefi-logo-dark.png" : imparodefiLogo} alt="ImparoDeFi" width={36} height={36} className="rounded-lg shrink-0" />
-            <div className="flex flex-col min-w-0">
-              <span className="font-bold text-lg leading-tight text-slate-900 dark:text-white">
-                ImparoDeFi
-              </span>
-              <span className="text-xs font-medium rounded text-slate-500 bg-slate-200 dark:text-slate-400 dark:bg-white/10 w-fit px-1.5 py-0.5">
-                BETA
-              </span>
-            </div>
+            <span className={`font-bold text-lg ${isDark ? "text-white" : "text-slate-900"}`}>ImparoDeFi</span>
+            <span className={`text-xs font-medium px-1.5 py-0.5 rounded ${isDark ? "text-slate-400 bg-white/10" : "text-slate-500 bg-slate-200"}`}>BETA</span>
           </Link>
           <div className="hidden lg:block flex-1 max-w-xl mx-6">
             <SearchBar />
@@ -77,12 +72,6 @@ export default function BlockchainLayout({ children }: { children: ReactNode }) 
               </svg>
             </button>
             <div className="flex items-center gap-2 md:gap-3">
-              <Link
-                href="/admin/dashboard"
-                className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium border border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-700 dark:border-white/20 dark:bg-white/5 dark:hover:bg-white/10 dark:text-white transition-colors"
-              >
-                Admin Panel
-              </Link>
               <button
                 type="button"
                 onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
@@ -161,27 +150,11 @@ export default function BlockchainLayout({ children }: { children: ReactNode }) 
         )}
 
         <div className="flex flex-1 min-h-0 relative">
-          <aside className={`hidden lg:flex w-56 flex-shrink-0 backdrop-blur flex-col border-r ${isDark ? "bg-indigo-950/70 border-indigo-500/20" : "bg-white/80 border-slate-200"}`}>
-            <nav className="px-3 py-6 space-y-0.5 flex-1">
-              {BLOCKCHAIN_SIDEBAR_ITEMS.map((item) => {
-                const isActive = item.href === "/blockchain" ? isBlockchainSection : pathname === item.href || pathname.startsWith(item.href + "/");
-                return (
-                  <Link
-                    key={item.href + item.label}
-                    href={item.href}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                        isActive
-                        ? "bg-indigo-500/90 text-white"
-                        : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-indigo-500/20 dark:hover:text-white"
-                    }`}
-                  >
-                    <span className="text-lg">{item.icon}</span>
-                    {item.label}
-                  </Link>
-                );
-              })}
-            </nav>
-          </aside>
+          <CollapsibleSidebar
+            items={BLOCKCHAIN_SIDEBAR_ITEMS}
+            isDark={isDark}
+            isItemActive={(href) => (href === "/blockchain" ? isBlockchainSection : pathname === href || pathname.startsWith(href + "/"))}
+          />
 
           <main className="flex-1 flex flex-col min-w-0 overflow-auto relative">
             <div className="flex-1 px-6 py-8">{children}</div>
