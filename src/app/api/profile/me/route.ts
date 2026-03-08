@@ -546,6 +546,19 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: "URL YouTube non valida (usa https://youtube.com/...)." }, { status: 400 });
     }
 
+    // Persistiamo sempre anche su users.username quando viene passato customUsername,
+    // cosi il valore resta disponibile al refresh anche se la tabella settings e' instabile.
+    if (hasCustomUsername && typeof nextCustomUsername === "string") {
+      await pool.query(
+        `
+        UPDATE users
+        SET username = $2, updated_at = now()
+        WHERE id = $1 AND is_active = 1 AND deleted_at IS NULL
+        `,
+        [userId, nextCustomUsername]
+      );
+    }
+
     if (!hasProfileSettingsTable || !walletVisibilityColumn) {
       // Fallback resiliente: in ambienti con tabella settings non disponibile
       // consenti almeno il salvataggio username nel campo users.username.
@@ -560,17 +573,6 @@ export async function PATCH(request: NextRequest) {
         return NextResponse.json(
           { error: "Reset username non disponibile temporaneamente. Riprova tra poco." },
           { status: 503 }
-        );
-      }
-
-      if (typeof nextCustomUsername === "string") {
-        await pool.query(
-          `
-          UPDATE users
-          SET username = $2, updated_at = now()
-          WHERE id = $1 AND is_active = 1 AND deleted_at IS NULL
-          `,
-          [userId, nextCustomUsername]
         );
       }
 
