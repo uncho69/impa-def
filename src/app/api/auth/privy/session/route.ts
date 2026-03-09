@@ -12,6 +12,7 @@ type SessionBody = {
   email?: string | null;
   twitterSubject?: string | null;
   twitterUsername?: string | null;
+  migrationFromUserId?: string | null;
 };
 const X_SUBJECT_COOKIE = "idf_x_subject";
 const X_USERNAME_COOKIE = "idf_x_username";
@@ -39,6 +40,139 @@ async function usersTableHasTwitterIdColumn(): Promise<boolean> {
   return usersTwitterIdColumnCache;
 }
 
+function normalizeWalletAddress(value: unknown): string {
+  return typeof value === "string" ? value.trim().toLowerCase() : "";
+}
+
+function parseWalletAddresses(value: unknown): string[] {
+  if (typeof value !== "string" || value.trim().length === 0) return [];
+  try {
+    const parsed = JSON.parse(value);
+    if (!Array.isArray(parsed)) return [];
+    return Array.from(
+      new Set(parsed.map((item) => normalizeWalletAddress(item)).filter((item) => item.length > 0))
+    ).slice(0, 20);
+  } catch {
+    return [];
+  }
+}
+
+async function tryMigrateWalletProfileData(sourceUserId: string, targetUserId: string): Promise<void> {
+  if (!pool) return;
+  if (!sourceUserId || !targetUserId || sourceUserId === targetUserId) return;
+
+  const sourceUserRes = await pool.query(
+    `
+    SELECT id, wallet_address
+    FROM users
+    WHERE id = $1 AND is_active = 1 AND deleted_at IS NULL
+    LIMIT 1
+    `,
+    [sourceUserId]
+  );
+  if (sourceUserRes.rows.length === 0) return;
+
+  const targetUserRes = await pool.query(
+    `
+    SELECT id, wallet_address
+    FROM users
+    WHERE id = $1
+    LIMIT 1
+    `,
+    [targetUserId]
+  );
+  if (targetUserRes.rows.length === 0) return;
+
+  const sourcePrimaryWallet = normalizeWalletAddress(sourceUserRes.rows[0]?.wallet_address);
+  const targetPrimaryWallet = normalizeWalletAddress(targetUserRes.rows[0]?.wallet_address);
+  if (!targetPrimaryWallet && sourcePrimaryWallet) {
+    await pool.query(
+      `
+      UPDATE users
+      SET wallet_address = $2, updated_at = now()
+      WHERE id = $1
+      `,
+      [targetUserId, sourcePrimaryWallet]
+    );
+  }
+
+  try {
+    const sourceSettings = await pool.query(
+      `
+      SELECT custom_username, show_wallet_address_public, wallet_addresses, instagram_url, tiktok_url, youtube_url
+      FROM user_profile_settings
+      WHERE user_id = $1
+      LIMIT 1
+      `,
+      [sourceUserId]
+    );
+    const targetSettings = await pool.query(
+      `
+      SELECT custom_username, show_wallet_address_public, wallet_addresses, instagram_url, tiktok_url, youtube_url
+      FROM user_profile_settings
+      WHERE user_id = $1
+      LIMIT 1
+      `,
+      [targetUserId]
+    );
+    const source = sourceSettings.rows[0] ?? null;
+    const target = targetSettings.rows[0] ?? null;
+    if (!source && !target) return;
+
+    const mergedWallets = Array.from(
+      new Set([
+        ...parseWalletAddresses(source?.wallet_addresses),
+        ...parseWalletAddresses(target?.wallet_addresses),
+        sourcePrimaryWallet,
+        targetPrimaryWallet,
+      ].filter((wallet) => wallet.length > 0))
+    ).slice(0, 20);
+
+    const mergedCustomUsername = target?.custom_username ?? source?.custom_username ?? null;
+    const mergedShowWallet =
+      Number(target?.show_wallet_address_public ?? 0) === 1 || Number(source?.show_wallet_address_public ?? 0) === 1 ? 1 : 0;
+    const mergedInstagram = target?.instagram_url ?? source?.instagram_url ?? null;
+    const mergedTikTok = target?.tiktok_url ?? source?.tiktok_url ?? null;
+    const mergedYoutube = target?.youtube_url ?? source?.youtube_url ?? null;
+
+    await pool.query(
+      `
+      INSERT INTO user_profile_settings (
+        user_id,
+        custom_username,
+        show_wallet_address_public,
+        wallet_addresses,
+        instagram_url,
+        tiktok_url,
+        youtube_url,
+        updated_at
+      )
+      VALUES ($1, $2, $3, $4, $5, $6, $7, now())
+      ON CONFLICT (user_id)
+      DO UPDATE SET
+        custom_username = EXCLUDED.custom_username,
+        show_wallet_address_public = EXCLUDED.show_wallet_address_public,
+        wallet_addresses = EXCLUDED.wallet_addresses,
+        instagram_url = EXCLUDED.instagram_url,
+        tiktok_url = EXCLUDED.tiktok_url,
+        youtube_url = EXCLUDED.youtube_url,
+        updated_at = now()
+      `,
+      [
+        targetUserId,
+        mergedCustomUsername,
+        mergedShowWallet,
+        JSON.stringify(mergedWallets),
+        mergedInstagram,
+        mergedTikTok,
+        mergedYoutube,
+      ]
+    );
+  } catch {
+    // Settings table might not exist or may have a legacy schema; skip without failing login.
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = (await request.json().catch(() => ({}))) as SessionBody;
@@ -56,6 +190,23 @@ export async function POST(request: NextRequest) {
     // #endregion
 
     if (hasDatabase && pool) {
+      const migrationFromUserId = body.migrationFromUserId?.trim() || null;
+      const sourceUserFromCookie = request.cookies.get(PRIVY_USER_COOKIE)?.value?.trim() || null;
+
+      if (
+        migrationFromUserId &&
+        sourceUserFromCookie &&
+        migrationFromUserId === sourceUserFromCookie &&
+        migrationFromUserId !== verified.userId &&
+        body.twitterSubject
+      ) {
+        try {
+          await tryMigrateWalletProfileData(migrationFromUserId, verified.userId);
+        } catch (migrationError) {
+          console.warn("Privy session migration warning:", migrationError);
+        }
+      }
+
       const hasTwitterIdColumn = await usersTableHasTwitterIdColumn();
       if (hasTwitterIdColumn) {
         await pool.query(

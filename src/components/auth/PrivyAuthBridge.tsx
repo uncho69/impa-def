@@ -4,6 +4,8 @@ import { useEffect, useRef } from "react";
 import { usePrivy, useWallets } from "@privy-io/react-auth";
 import { trackEvent } from "@/lib/analytics";
 
+const MIGRATION_SOURCE_USER_ID_KEY = "idf_merge_from_user_id";
+
 export function PrivyAuthBridge() {
   const { ready, authenticated, user, getAccessToken } = usePrivy();
   const { wallets } = useWallets();
@@ -27,10 +29,12 @@ export function PrivyAuthBridge() {
         | undefined;
       const twitterSubject = twitterAccount?.subject ?? null;
       const twitterUsername = twitterAccount?.username ?? null;
+      const migrationFromUserId =
+        typeof window !== "undefined" ? window.localStorage.getItem(MIGRATION_SOURCE_USER_ID_KEY) : null;
       const syncSignature = `${userId}|${walletAddress ?? ""}|${email ?? ""}|${twitterSubject ?? ""}|${twitterUsername ?? ""}`;
       if (lastSyncedSignatureRef.current === syncSignature) return;
 
-      await fetch("/api/auth/privy/session", {
+      const res = await fetch("/api/auth/privy/session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -39,8 +43,12 @@ export function PrivyAuthBridge() {
           email,
           twitterSubject,
           twitterUsername,
+          migrationFromUserId,
         }),
       }).catch(() => null);
+      if (res?.ok && typeof window !== "undefined" && migrationFromUserId) {
+        window.localStorage.removeItem(MIGRATION_SOURCE_USER_ID_KEY);
+      }
 
       trackEvent("login", { auth_provider: "privy" });
       lastSyncedSignatureRef.current = syncSignature;
@@ -51,6 +59,9 @@ export function PrivyAuthBridge() {
   useEffect(() => {
     if (!ready) return;
     if (authenticated) return;
+    const migrationInProgress =
+      typeof window !== "undefined" && Boolean(window.localStorage.getItem(MIGRATION_SOURCE_USER_ID_KEY));
+    if (migrationInProgress) return;
     lastSyncedSignatureRef.current = null;
     fetch("/api/auth/privy/session", { method: "DELETE" }).catch(() => null);
   }, [ready, authenticated]);
