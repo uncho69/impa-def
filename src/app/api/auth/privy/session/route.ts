@@ -13,6 +13,9 @@ type SessionBody = {
   twitterSubject?: string | null;
   twitterUsername?: string | null;
 };
+const X_SUBJECT_COOKIE = "idf_x_subject";
+const X_USERNAME_COOKIE = "idf_x_username";
+const PRIVY_USER_COOKIE = "idf_privy_user_id";
 
 export async function POST(request: NextRequest) {
   try {
@@ -26,6 +29,9 @@ export async function POST(request: NextRequest) {
     if (!verified?.userId) {
       return NextResponse.json({ error: "Invalid Privy token" }, { status: 401 });
     }
+    // #region agent log
+    fetch('http://127.0.0.1:7427/ingest/53de14af-f544-4874-907d-9c3852d2c5f6',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'933492'},body:JSON.stringify({sessionId:'933492',runId:'run2',hypothesisId:'H5',location:'src/app/api/auth/privy/session/route.ts:POST:verified',message:'privy session payload flags',data:{hasDatabase,hasPool:Boolean(pool),hasTwitterSubject:Boolean(body.twitterSubject),hasWalletAddress:Boolean(body.walletAddress),hasEmail:Boolean(body.email),userId:verified.userId},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
 
     if (hasDatabase && pool) {
       await pool.query(
@@ -110,6 +116,27 @@ export async function POST(request: NextRequest) {
       path: "/",
       maxAge: 60 * 60 * 24 * 30,
     });
+    response.cookies.set(PRIVY_USER_COOKIE, verified.userId, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 30,
+    });
+    response.cookies.set(X_SUBJECT_COOKIE, body.twitterSubject?.trim() || "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: body.twitterSubject ? 60 * 60 * 24 * 30 : 0,
+    });
+    response.cookies.set(X_USERNAME_COOKIE, body.twitterUsername?.trim() || "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: body.twitterUsername ? 60 * 60 * 24 * 30 : 0,
+    });
     return response;
   } catch (error) {
     console.error("Error creating Privy session:", error);
@@ -120,6 +147,27 @@ export async function POST(request: NextRequest) {
 export async function DELETE() {
   const response = NextResponse.json({ ok: true });
   response.cookies.set(getSessionCookieName(), "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: 0,
+  });
+  response.cookies.set(PRIVY_USER_COOKIE, "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: 0,
+  });
+  response.cookies.set(X_SUBJECT_COOKIE, "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: 0,
+  });
+  response.cookies.set(X_USERNAME_COOKIE, "", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",

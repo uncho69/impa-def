@@ -6,7 +6,7 @@ import { PrivySocialConnector } from "@/components/profile/PrivySocialConnector"
 import { LearningBadgesPanel } from "@/components/profile/LearningBadgesPanel";
 import { trackEvent } from "@/lib/analytics";
 import { useAppAuth } from "@/lib/auth/useAppAuth";
-import { usePrivy, useWallets } from "@privy-io/react-auth";
+import { usePrivy } from "@privy-io/react-auth";
 
 type ProfileResponse = {
   noDatabase?: boolean;
@@ -60,6 +60,7 @@ type LocalProfileSettings = {
   tiktokUrl: string | null;
   youtubeUrl: string | null;
 };
+const PUBLIC_USERNAME_COOKIE = "idf_public_username";
 
 const PRIVY_ENABLED = Boolean(process.env.NEXT_PUBLIC_PRIVY_APP_ID?.trim());
 const PANEL_CLASS = "rounded-2xl border border-indigo-500/25 bg-indigo-900/25 backdrop-blur p-6";
@@ -75,62 +76,69 @@ function shortenAddress(value?: string | null): string {
   return `${value.slice(0, 8)}...${value.slice(-6)}`;
 }
 
-function toBase64Utf8(value: string): string {
-  if (typeof window === "undefined" || typeof window.btoa !== "function") return value;
-  const bytes = new TextEncoder().encode(value);
-  let binary = "";
-  for (const byte of bytes) binary += String.fromCharCode(byte);
-  return window.btoa(binary);
-}
-
 type SignableWallet = {
   type?: string;
-  signMessage?: ((input: { message: string }) => Promise<unknown>) | ((message: string) => Promise<unknown>);
-  provider?: {
-    request?: (input: { method: string; params?: unknown[] }) => Promise<unknown>;
-  };
 };
 
-async function requestOwnershipSignature(wallet: SignableWallet, address: string): Promise<void> {
+async function requestOwnershipSignature(
+  wallet: SignableWallet,
+  address: string,
+  privySignMessage: (input: { message: string }, options?: { address?: string }) => Promise<unknown>,
+): Promise<void> {
   const message = `ImparoDeFi wallet ownership verification\nAddress: ${address}\nTimestamp: ${new Date().toISOString()}`;
 
-  if (wallet && typeof wallet.signMessage === "function") {
-    try {
-      await wallet.signMessage({ message });
-      return;
-    } catch {
-      await wallet.signMessage(message);
-      return;
-    }
-  }
+  await privySignMessage({ message }, { address });
+}
 
-  const provider = wallet?.provider;
-  if (!provider || typeof provider.request !== "function") {
-    throw new Error("Provider wallet non disponibile per la firma.");
-  }
+async function connectEvmWalletAddress(): Promise<string> {
+  const ethereum = (typeof window !== "undefined"
+    ? (window as unknown as { ethereum?: { request?: (input: { method: string; params?: unknown[] }) => Promise<unknown> } }).ethereum
+    : undefined);
+  if (!ethereum?.request) throw new Error("Provider EVM non rilevato nel browser.");
+  const accounts = (await ethereum.request({ method: "eth_requestAccounts" })) as unknown;
+  const first = Array.isArray(accounts) ? String(accounts[0] ?? "").trim().toLowerCase() : "";
+  if (!first) throw new Error("Nessun account EVM disponibile.");
+  return first;
+}
 
-  if (wallet?.type === "solana") {
-    try {
-      await provider.request({ method: "solana_signMessage", params: [message] });
-      return;
-    } catch {
-      await provider.request({ method: "solana_signMessage", params: [toBase64Utf8(message)] });
-      return;
-    }
-  }
+async function signEvmOwnership(address: string): Promise<void> {
+  const ethereum = (typeof window !== "undefined"
+    ? (window as unknown as { ethereum?: { request?: (input: { method: string; params?: unknown[] }) => Promise<unknown> } }).ethereum
+    : undefined);
+  if (!ethereum?.request) throw new Error("Provider EVM non rilevato per la firma.");
+  const message = `ImparoDeFi wallet ownership verification\nAddress: ${address}\nTimestamp: ${new Date().toISOString()}`;
+  await ethereum.request({ method: "personal_sign", params: [message, address] });
+}
 
-  try {
-    await provider.request({ method: "personal_sign", params: [message, address] });
-    return;
-  } catch {
-    await provider.request({ method: "eth_sign", params: [address, message] });
-  }
+async function connectSolanaWalletAddress(): Promise<string> {
+  const phantom = (typeof window !== "undefined"
+    ? (window as unknown as { phantom?: { solana?: { connect?: (opts?: { onlyIfTrusted?: boolean }) => Promise<{ publicKey?: { toString(): string } }> } }; solana?: { connect?: (opts?: { onlyIfTrusted?: boolean }) => Promise<{ publicKey?: { toString(): string } }> } }).phantom?.solana
+    : undefined) ||
+    (typeof window !== "undefined"
+      ? (window as unknown as { solana?: { connect?: (opts?: { onlyIfTrusted?: boolean }) => Promise<{ publicKey?: { toString(): string } }> } }).solana
+      : undefined);
+  if (!phantom?.connect) throw new Error("Provider Solana non rilevato nel browser.");
+  const res = await phantom.connect({ onlyIfTrusted: false });
+  const address = res?.publicKey?.toString()?.trim().toLowerCase() ?? "";
+  if (!address) throw new Error("Nessun account Solana disponibile.");
+  return address;
+}
+
+async function signSolanaOwnership(address: string): Promise<void> {
+  const phantom = (typeof window !== "undefined"
+    ? (window as unknown as { phantom?: { solana?: { signMessage?: (message: Uint8Array, display?: string) => Promise<unknown> } }; solana?: { signMessage?: (message: Uint8Array, display?: string) => Promise<unknown> } }).phantom?.solana
+    : undefined) ||
+    (typeof window !== "undefined"
+      ? (window as unknown as { solana?: { signMessage?: (message: Uint8Array, display?: string) => Promise<unknown> } }).solana
+      : undefined);
+  if (!phantom?.signMessage) throw new Error("Provider Solana non disponibile per la firma.");
+  const message = `ImparoDeFi wallet ownership verification\nAddress: ${address}\nTimestamp: ${new Date().toISOString()}`;
+  await phantom.signMessage(new TextEncoder().encode(message), "utf8");
 }
 
 export default function ProfiloPage() {
   const { isLoaded, isSignedIn, login } = useAppAuth();
-  const { ready: privyReady, login: privyLogin, linkWallet } = usePrivy();
-  const { wallets } = useWallets();
+  const { ready: privyReady, signMessage } = usePrivy();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -144,23 +152,7 @@ export default function ProfiloPage() {
   const [walletAddresses, setWalletAddresses] = useState<string[]>([]);
   const [pendingWalletAddresses, setPendingWalletAddresses] = useState<string[]>([]);
   const [verifyingAddress, setVerifyingAddress] = useState<string | null>(null);
-  const connectedWalletAddresses = useMemo(() => {
-    const values = (wallets || [])
-      .map((wallet) => wallet?.address?.trim().toLowerCase() || "")
-      .filter((value) => value.length > 0);
-    return Array.from(new Set(values));
-  }, [wallets]);
-  const connectedWalletsByAddress = useMemo(() => {
-    const entries = (wallets || [])
-      .map((wallet) => {
-        const address = wallet?.address?.trim().toLowerCase();
-        if (!address) return null;
-        return [address, wallet as SignableWallet] as const;
-      })
-      .filter(Boolean) as Array<readonly [string, SignableWallet]>;
-    return new Map(entries);
-  }, [wallets]);
-  const seenConnectedWalletsRef = useRef<Set<string>>(new Set());
+  const pendingWalletKindsRef = useRef<Record<string, "evm" | "solana" | "privy">>({});
 
   const [activeTab, setActiveTab] = useState<"settings" | "badges" | "contents">("settings");
 
@@ -210,6 +202,7 @@ export default function ProfiloPage() {
           : [];
       setWalletAddresses(initialWallets);
       setPendingWalletAddresses([]);
+      pendingWalletKindsRef.current = {};
       setInstagramInput(payload.profile.instagramUrl || "");
       setTiktokInput(payload.profile.tiktokUrl || "");
       setYoutubeInput(payload.profile.youtubeUrl || "");
@@ -225,33 +218,6 @@ export default function ProfiloPage() {
     if (isLoaded && isSignedIn) loadProfile();
     if (isLoaded && !isSignedIn) setLoading(false);
   }, [isLoaded, isSignedIn]);
-
-  useEffect(() => {
-    if (!privyReady) return;
-
-    const seen = seenConnectedWalletsRef.current;
-    const newAddresses = connectedWalletAddresses.filter(
-      (address) => !seen.has(address) && !walletAddresses.includes(address),
-    );
-    if (newAddresses.length > 0) {
-      setPendingWalletAddresses((prev) => {
-        const next = [...prev];
-        for (const address of newAddresses) {
-          if (!next.includes(address)) next.push(address);
-        }
-        return next;
-      });
-    }
-
-    setPendingWalletAddresses((prev) =>
-      prev.filter(
-        (address) =>
-          connectedWalletAddresses.includes(address) && !walletAddresses.includes(address),
-      ),
-    );
-
-    seenConnectedWalletsRef.current = new Set(connectedWalletAddresses);
-  }, [connectedWalletAddresses, privyReady, walletAddresses]);
 
   async function handleSave() {
     setSaving(true);
@@ -278,6 +244,11 @@ export default function ProfiloPage() {
           youtubeUrl: payload.youtubeUrl,
         };
         localStorage.setItem(storageKey, JSON.stringify(localPayload));
+        const safeUsername = (localPayload.customUsername || "").trim();
+        if (typeof document !== "undefined") {
+          const maxAge = 60 * 60 * 24 * 30;
+          document.cookie = `${PUBLIC_USERNAME_COOKIE}=${encodeURIComponent(safeUsername)}; Path=/; Max-Age=${safeUsername ? maxAge : 0}; SameSite=Lax`;
+        }
 
         setData((prev) =>
           prev
@@ -361,22 +332,36 @@ export default function ProfiloPage() {
     }
   }
 
-  function handleConnectAnotherWallet(chain: "ethereum-and-solana" | "ethereum-only" | "solana-only" = "ethereum-and-solana") {
+  async function handleConnectEvmWallet() {
     if (!privyReady) {
       setInfoMessage("Wallet connect in inizializzazione, riprova tra qualche secondo.");
       return;
     }
-
+    setError(null);
     setInfoMessage(null);
+    try {
+      const address = await connectEvmWalletAddress();
+      pendingWalletKindsRef.current[address] = "evm";
+      setPendingWalletAddresses((prev) => (prev.includes(address) ? prev : [...prev, address]));
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, "Connessione wallet EVM fallita."));
+    }
+  }
 
-    // For authenticated users, this opens Privy's wallet-link flow.
-    if (typeof linkWallet === "function") {
-      linkWallet({ walletChainType: chain });
+  async function handleConnectSolanaWallet() {
+    if (!privyReady) {
+      setInfoMessage("Wallet connect in inizializzazione, riprova tra qualche secondo.");
       return;
     }
-
-    // Fallback for older SDK behavior.
-    privyLogin({ loginMethods: ["wallet"] });
+    setError(null);
+    setInfoMessage(null);
+    try {
+      const address = await connectSolanaWalletAddress();
+      pendingWalletKindsRef.current[address] = "solana";
+      setPendingWalletAddresses((prev) => (prev.includes(address) ? prev : [...prev, address]));
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, "Connessione wallet Solana fallita."));
+    }
   }
 
   async function handleVerifyAndAddWallet(address: string) {
@@ -384,13 +369,17 @@ export default function ProfiloPage() {
     setInfoMessage(null);
     setVerifyingAddress(address);
     try {
-      const wallet = connectedWalletsByAddress.get(address);
-      if (!wallet) {
-        throw new Error("Wallet non trovato. Riconnetti il wallet e riprova.");
+      const kind = pendingWalletKindsRef.current[address] || "privy";
+      if (kind === "evm") {
+        await signEvmOwnership(address);
+      } else if (kind === "solana") {
+        await signSolanaOwnership(address);
+      } else {
+        await requestOwnershipSignature({ type: kind }, address, signMessage);
       }
-      await requestOwnershipSignature(wallet, address);
       setWalletAddresses((prev) => (prev.includes(address) ? prev : [...prev, address]));
       setPendingWalletAddresses((prev) => prev.filter((item) => item !== address));
+      delete pendingWalletKindsRef.current[address];
       setInfoMessage("Wallet verificato e aggiunto. Ricorda di salvare le impostazioni.");
     } catch (err: unknown) {
       setError(getErrorMessage(err, "Firma wallet annullata o fallita."));
@@ -434,7 +423,7 @@ export default function ProfiloPage() {
   }
 
   const { profile, contents } = data;
-  const primaryProfileWallet = walletAddresses[0] || connectedWalletAddresses[0] || null;
+  const primaryProfileWallet = walletAddresses[0] || null;
   const resolvedWalletAddress = primaryProfileWallet;
 
   return (
@@ -551,34 +540,13 @@ export default function ProfiloPage() {
             </div>
           </div>
 
-          <div className="mt-5 grid gap-5 md:grid-cols-3">
-            <label className="space-y-2">
-              <span className="text-sm text-slate-300">Instagram (opzionale)</span>
-              <input
-                value={instagramInput}
-                onChange={(e) => setInstagramInput(e.target.value)}
-                placeholder="https://instagram.com/tuo_account"
-                className="w-full rounded-lg border border-indigo-500/30 bg-indigo-900/25 px-3 py-2 text-white outline-none focus:border-indigo-400"
-              />
-            </label>
-            <label className="space-y-2">
-              <span className="text-sm text-slate-300">TikTok (opzionale)</span>
-              <input
-                value={tiktokInput}
-                onChange={(e) => setTiktokInput(e.target.value)}
-                placeholder="https://www.tiktok.com/@tuo_account"
-                className="w-full rounded-lg border border-indigo-500/30 bg-indigo-900/25 px-3 py-2 text-white outline-none focus:border-indigo-400"
-              />
-            </label>
-            <label className="space-y-2">
-              <span className="text-sm text-slate-300">YouTube (opzionale)</span>
-              <input
-                value={youtubeInput}
-                onChange={(e) => setYoutubeInput(e.target.value)}
-                placeholder="https://youtube.com/@tuo_canale"
-                className="w-full rounded-lg border border-indigo-500/30 bg-indigo-900/25 px-3 py-2 text-white outline-none focus:border-indigo-400"
-              />
-            </label>
+          <div className="mt-5 rounded-lg border border-indigo-500/30 bg-indigo-900/25 px-4 py-3">
+            <p className="text-sm text-slate-300 mb-2">Social connect</p>
+            {!privyReady ? (
+              <p className="text-xs text-slate-400">Inizializzazione social connect...</p>
+            ) : (
+              <PrivySocialConnector />
+            )}
           </div>
 
           <div className="mt-5 rounded-lg border border-indigo-500/30 bg-indigo-900/25 px-4 py-3">
@@ -592,14 +560,14 @@ export default function ProfiloPage() {
                 <div className="flex flex-wrap gap-2">
                   <button
                     type="button"
-                    onClick={() => handleConnectAnotherWallet("ethereum-only")}
+                    onClick={handleConnectEvmWallet}
                     className="rounded-lg border border-emerald-400/40 px-3 py-2 text-sm text-emerald-200 hover:bg-emerald-500/20"
                   >
                     Connetti wallet EVM
                   </button>
                   <button
                     type="button"
-                    onClick={() => handleConnectAnotherWallet("solana-only")}
+                    onClick={handleConnectSolanaWallet}
                     className="rounded-lg border border-cyan-400/40 px-3 py-2 text-sm text-cyan-200 hover:bg-cyan-500/20"
                   >
                     Connetti wallet Solana
@@ -670,20 +638,11 @@ export default function ProfiloPage() {
                 Profilo X pubblico
               </a>
             ) : (
-              <span className="text-sm text-slate-400">Collega X dalla sezione Social connect qui sotto</span>
+              <span className="text-sm text-slate-400">Collega X dalla sezione Social connect</span>
             )}
           </div>
 
-          {PRIVY_ENABLED ? (
-            <div className="mt-4 rounded-lg border border-indigo-500/30 bg-indigo-900/25 px-4 py-3">
-              <p className="text-sm text-slate-300 mb-2">Social connect</p>
-              {!privyReady ? (
-                <p className="text-xs text-slate-400">Inizializzazione social connect...</p>
-              ) : (
-                <PrivySocialConnector />
-              )}
-            </div>
-          ) : (
+          {!PRIVY_ENABLED ? (
             <p className="mt-4 text-xs text-slate-400">
               Per abilitare wallet connect con Privy imposta `NEXT_PUBLIC_PRIVY_APP_ID` in ambiente.
             </p>

@@ -3,6 +3,8 @@ import { pool, hasDatabase } from "@/lib/db";
 import { ensureUserProfileSettingsTable } from "@/lib/db/ensure-user-profile-settings-table";
 
 export const dynamic = "force-dynamic";
+const PUBLIC_USERNAME_COOKIE = "idf_public_username";
+const X_USERNAME_COOKIE = "idf_x_username";
 
 type WalletVisibilityColumn = "show_wallet_address_public" | "show_wallet_address_pub";
 
@@ -49,6 +51,7 @@ function buildPublicFallbackProfilePayload(userId: string, message?: string) {
       userId,
       username: userId || "utente",
       xProfileUrl: null,
+      xUsername: null,
       instagramUrl: null,
       tiktokUrl: null,
       youtubeUrl: null,
@@ -70,6 +73,15 @@ function buildXProfileUrlFromId(xId: string | null | undefined): string | null {
   if (!value) return null;
   if (/^\d+$/.test(value)) return `https://x.com/i/user/${value}`;
   return `https://x.com/${value.replace(/^@+/, "")}`;
+}
+
+function safeDecode(value: string | null): string | null {
+  if (!value) return null;
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
 }
 
 async function resolveXProfileUrl(userId: string, twitterId: string | null | undefined): Promise<string | null> {
@@ -98,19 +110,32 @@ async function resolveXProfileUrl(userId: string, twitterId: string | null | und
 }
 
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: { userId: string } }
 ) {
   try {
     const userId = params.userId;
     if (!userId) return NextResponse.json({ error: "Missing userId" }, { status: 400 });
     if (!hasDatabase || !pool) {
+      const cookieUserId = request.cookies.get("idf_privy_user_id")?.value ?? null;
+      const xSubjectFromCookie = request.cookies.get("idf_x_subject")?.value ?? null;
+      const xUsernameFromCookie = request.cookies.get(X_USERNAME_COOKIE)?.value?.trim() || null;
+      const publicUsernameFromCookie = request.cookies.get(PUBLIC_USERNAME_COOKIE)?.value?.trim() || null;
+      const isOwnerSession = cookieUserId && cookieUserId === userId;
+      const xProfileUrl = isOwnerSession
+        ? (xUsernameFromCookie ? `https://x.com/${xUsernameFromCookie.replace(/^@+/, "")}` : buildXProfileUrlFromId(xSubjectFromCookie))
+        : null;
+      const fallbackUsername = isOwnerSession && publicUsernameFromCookie ? (safeDecode(publicUsernameFromCookie) || `user_${userId.slice(-6)}`) : `user_${userId.slice(-6)}`;
+      // #region agent log
+      fetch('http://127.0.0.1:7427/ingest/53de14af-f544-4874-907d-9c3852d2c5f6',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'933492'},body:JSON.stringify({sessionId:'933492',runId:'run4',hypothesisId:'H11',location:'src/app/api/profile/[userId]/route.ts:GET:noDatabase',message:'public profile no-db cookies applied',data:{userId,hasDatabase,hasPool:Boolean(pool),cookieUserIdMatches:Boolean(cookieUserId===userId),hasXSubjectCookie:Boolean(xSubjectFromCookie),hasXUsernameCookie:Boolean(xUsernameFromCookie),hasPublicUsernameCookie:Boolean(publicUsernameFromCookie),xProfileUrlExists:Boolean(xProfileUrl),fallbackUsername},timestamp:Date.now()})}).catch(()=>{});
+      // #endregion
       return NextResponse.json({
         noDatabase: true,
         profile: {
           userId,
-          username: `user_${userId.slice(-6)}`,
-          xProfileUrl: null,
+          username: fallbackUsername,
+          xProfileUrl,
+          xUsername: xUsernameFromCookie,
           instagramUrl: null,
           tiktokUrl: null,
           youtubeUrl: null,
@@ -257,12 +282,16 @@ export async function GET(
       const xProfileUrl = await resolveXProfileUrl(user.id, user.twitter_id);
       const walletPublic = Number(user.show_wallet_address_public) === 1;
       const walletAddresses = walletPublic ? parseWalletAddresses(user.wallet_addresses) : [];
+      // #region agent log
+      fetch('http://127.0.0.1:7427/ingest/53de14af-f544-4874-907d-9c3852d2c5f6',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'933492'},body:JSON.stringify({sessionId:'933492',runId:'run2',hypothesisId:'H9',location:'src/app/api/profile/[userId]/route.ts:GET:resolvedPublic',message:'public profile x resolution',data:{userId:user.id,hasTwitterId:Boolean(user.twitter_id),xProfileUrlExists:Boolean(xProfileUrl),walletPublic,walletCount:walletAddresses.length},timestamp:Date.now()})}).catch(()=>{});
+      // #endregion
 
       return NextResponse.json({
         profile: {
           userId: user.id,
           username: displayUsername,
           xProfileUrl,
+          xUsername: null,
           instagramUrl: user.instagram_url,
           tiktokUrl: user.tiktok_url,
           youtubeUrl: user.youtube_url,

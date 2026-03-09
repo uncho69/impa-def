@@ -23,6 +23,9 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const code = searchParams.get('code');
     const errorParam = searchParams.get('error');
+    // #region agent log
+    fetch('http://127.0.0.1:7427/ingest/53de14af-f544-4874-907d-9c3852d2c5f6',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'933492'},body:JSON.stringify({sessionId:'933492',runId:'run1',hypothesisId:'H4',location:'src/app/api/auth/x/callback/route.ts:GET:start',message:'x callback invoked',data:{hasCode:Boolean(code),errorParam:errorParam??null,origin:request.nextUrl.origin},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
 
     if (errorParam) {
       const redirectUrl = new URL('/leaderboards/epoch', request.nextUrl.origin);
@@ -35,6 +38,9 @@ export async function GET(request: NextRequest) {
     }
 
     const userId = await resolveAuthenticatedUserId(request);
+    // #region agent log
+    fetch('http://127.0.0.1:7427/ingest/53de14af-f544-4874-907d-9c3852d2c5f6',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'933492'},body:JSON.stringify({sessionId:'933492',runId:'run1',hypothesisId:'H4',location:'src/app/api/auth/x/callback/route.ts:GET:auth',message:'x callback auth context',data:{hasUserId:Boolean(userId),hasCodeVerifier:Boolean(request.cookies.get(CODE_VERIFIER_COOKIE)?.value),hasClientId:Boolean(process.env.X_OAUTH2_CLIENT_ID),hasDatabase},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
     if (!userId) {
       return NextResponse.redirect(new URL('/sign-in?redirect_url=' + encodeURIComponent('/profilo'), request.nextUrl.origin));
     }
@@ -73,6 +79,9 @@ export async function GET(request: NextRequest) {
       },
       body: body.toString(),
     });
+    // #region agent log
+    fetch('http://127.0.0.1:7427/ingest/53de14af-f544-4874-907d-9c3852d2c5f6',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'933492'},body:JSON.stringify({sessionId:'933492',runId:'run1',hypothesisId:'H4',location:'src/app/api/auth/x/callback/route.ts:GET:tokenExchange',message:'x token exchange result',data:{status:tokenRes.status,ok:tokenRes.ok},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
 
     if (!tokenRes.ok) {
       const errText = await tokenRes.text();
@@ -184,6 +193,9 @@ export async function GET(request: NextRequest) {
     redirect.cookies.delete(CODE_VERIFIER_COOKIE);
     return redirect;
   } catch (error) {
+    // #region agent log
+    fetch('http://127.0.0.1:7427/ingest/53de14af-f544-4874-907d-9c3852d2c5f6',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'933492'},body:JSON.stringify({sessionId:'933492',runId:'run1',hypothesisId:'H4',location:'src/app/api/auth/x/callback/route.ts:GET:catch',message:'x callback fatal error',data:{error:error instanceof Error?error.message:String(error)},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
     console.error('X callback fatal error:', error);
     return NextResponse.redirect(new URL('/leaderboards/epoch?twitter_error=errore_server', request.nextUrl.origin));
   }

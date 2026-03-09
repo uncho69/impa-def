@@ -9,6 +9,7 @@ type PublicProfileResponse = {
     userId: string;
     username: string;
     xProfileUrl?: string | null;
+    xUsername?: string | null;
     instagramUrl?: string | null;
     tiktokUrl?: string | null;
     youtubeUrl?: string | null;
@@ -50,6 +51,22 @@ function shortenAddress(value?: string | null): string {
   if (!value) return "-";
   if (value.length < 14) return value;
   return `${value.slice(0, 8)}...${value.slice(-6)}`;
+}
+
+function getXHandle(profile: { xProfileUrl?: string | null; xUsername?: string | null }): string | null {
+  if (profile.xUsername && profile.xUsername.trim().length > 0) {
+    return `@${profile.xUsername.replace(/^@+/, "")}`;
+  }
+  const url = profile.xProfileUrl;
+  if (!url) return null;
+  try {
+    const parsed = new URL(url);
+    const parts = parsed.pathname.split("/").filter(Boolean);
+    if (parts.length >= 1 && parts[0] !== "i") return `@${parts[0]}`;
+  } catch {
+    return null;
+  }
+  return null;
 }
 
 export default function PublicProfilePage() {
@@ -149,9 +166,10 @@ export default function PublicProfilePage() {
                   href={data.profile.xProfileUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-sm text-indigo-300 underline-offset-2 hover:underline"
+                  className="inline-flex items-center gap-1.5 text-sm text-indigo-300 underline-offset-2 hover:underline"
                 >
-                  Profilo X
+                  <span aria-hidden>𝕏</span>
+                  <span>{getXHandle(data.profile) || "Account X"}</span>
                 </a>
               ) : (
                 <span className="text-sm text-slate-400">Profilo X non collegato</span>

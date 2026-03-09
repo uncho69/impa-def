@@ -162,6 +162,10 @@ export async function GET(request: NextRequest) {
     const userId = await resolveAuthenticatedUserId(request);
     if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     if (!hasDatabase || !pool) {
+      const xSubjectFromCookie = request.cookies.get("idf_x_subject")?.value ?? null;
+      // #region agent log
+      fetch('http://127.0.0.1:7427/ingest/53de14af-f544-4874-907d-9c3852d2c5f6',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'933492'},body:JSON.stringify({sessionId:'933492',runId:'run2',hypothesisId:'H6',location:'src/app/api/profile/me/route.ts:GET:noDatabase',message:'profile me served without database',data:{userId,hasDatabase,hasPool:Boolean(pool),hasXSubjectCookie:Boolean(xSubjectFromCookie)},timestamp:Date.now()})}).catch(()=>{});
+      // #endregion
       return NextResponse.json({
         noDatabase: true,
         profile: {
@@ -173,7 +177,7 @@ export async function GET(request: NextRequest) {
           instagramUrl: null,
           tiktokUrl: null,
           youtubeUrl: null,
-          xProfileUrl: null,
+          xProfileUrl: buildXProfileUrlFromId(xSubjectFromCookie),
           walletAddress: null,
           walletAddresses: [],
           showWalletAddressPublic: false,
@@ -395,6 +399,9 @@ export async function GET(request: NextRequest) {
       const rankRow = rankResult.rows[0] || { rank: 0, total_points: 0, total_tweets: 0 };
       const displayUsername = user.custom_username || user.default_username || `user_${user.id.slice(-6)}`;
       const xProfileUrl = await resolveXProfileUrl(user.id, user.twitter_id);
+      // #region agent log
+      fetch('http://127.0.0.1:7427/ingest/53de14af-f544-4874-907d-9c3852d2c5f6',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'933492'},body:JSON.stringify({sessionId:'933492',runId:'run2',hypothesisId:'H7',location:'src/app/api/profile/me/route.ts:GET:resolvedX',message:'profile me x resolution',data:{userId:user.id,hasTwitterId:Boolean(user.twitter_id),xProfileUrlExists:Boolean(xProfileUrl)},timestamp:Date.now()})}).catch(()=>{});
+      // #endregion
 
       return NextResponse.json({
         profile: {

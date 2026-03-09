@@ -2,7 +2,7 @@
 
 import { usePrivy } from "@privy-io/react-auth";
 
-type LinkedType = "twitter_oauth" | "instagram_oauth" | "tiktok_oauth" | "google_oauth";
+type LinkedType = "twitter_oauth" | "tiktok_oauth" | "google_oauth";
 
 function hasLinkedAccount(
   linkedAccounts: Array<{ type?: string | null }> | undefined,
@@ -17,7 +17,6 @@ export function PrivySocialConnector() {
     authenticated,
     user,
     linkTwitter,
-    linkInstagram,
     linkTiktok,
     linkGoogle,
   } = usePrivy();
@@ -34,7 +33,6 @@ export function PrivySocialConnector() {
 
   const linkedAccounts = (user?.linkedAccounts || []) as Array<{ type?: string | null }>;
   const xConnected = hasLinkedAccount(linkedAccounts, "twitter_oauth");
-  const instagramConnected = hasLinkedAccount(linkedAccounts, "instagram_oauth");
   const tiktokConnected = hasLinkedAccount(linkedAccounts, "tiktok_oauth");
   const googleConnected = hasLinkedAccount(linkedAccounts, "google_oauth");
 
@@ -47,14 +45,6 @@ export function PrivySocialConnector() {
         className="rounded-lg border border-indigo-400/40 px-3 py-2 text-xs text-indigo-200 hover:bg-indigo-500/20 disabled:opacity-60"
       >
         {xConnected ? "X collegato" : "Collega X"}
-      </button>
-      <button
-        type="button"
-        onClick={() => linkInstagram()}
-        disabled={instagramConnected}
-        className="rounded-lg border border-indigo-400/40 px-3 py-2 text-xs text-indigo-200 hover:bg-indigo-500/20 disabled:opacity-60"
-      >
-        {instagramConnected ? "Instagram collegato" : "Collega Instagram"}
       </button>
       <button
         type="button"
