@@ -20,6 +20,7 @@ export function PrivyWalletConnector({
   const [showInitWarning, setShowInitWarning] = useState(false);
 
   const walletAddress = wallets?.[0]?.address ?? null;
+  const hasWalletConnected = Boolean(walletAddress);
 
   useEffect(() => {
     onAddressChange(walletAddress);
@@ -55,10 +56,10 @@ export function PrivyWalletConnector({
       <span className="text-sm text-slate-300">
         Wallet Privy: <span className="text-white">{shortenAddress(walletAddress)}</span>
       </span>
-      {!authenticated ? (
+      {!authenticated || !hasWalletConnected ? (
         <button
           type="button"
-          onClick={login}
+          onClick={() => login({ loginMethods: ["wallet"] })}
           className="rounded-lg border border-emerald-400/40 px-4 py-2 text-sm text-emerald-200 hover:bg-emerald-500/20"
         >
           Connetti wallet

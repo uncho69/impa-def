@@ -137,8 +137,14 @@ export function LeftSidebarShell({ children }: { children: ReactNode }) {
             isDark={isDark}
             isItemActive={isItemActive}
           />
-          <main className="flex-1 flex flex-col min-w-0 overflow-auto">
-            <div className="flex-1 px-6 py-8">{children}</div>
+          <main
+            className={`flex-1 flex flex-col min-w-0 overflow-auto ${
+              isDark
+                ? "bg-gradient-to-b from-indigo-950/40 via-slate-900/70 to-indigo-950/60"
+                : "bg-slate-50"
+            }`}
+          >
+            <div className="flex-1 min-h-full px-6 py-8">{children}</div>
           </main>
         </div>
       </div>
