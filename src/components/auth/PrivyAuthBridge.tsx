@@ -7,7 +7,7 @@ import { trackEvent } from "@/lib/analytics";
 export function PrivyAuthBridge() {
   const { ready, authenticated, user, getAccessToken } = usePrivy();
   const { wallets } = useWallets();
-  const lastSyncedUserRef = useRef<string | null>(null);
+  const lastSyncedSignatureRef = useRef<string | null>(null);
 
   useEffect(() => {
     const run = async () => {
@@ -15,7 +15,6 @@ export function PrivyAuthBridge() {
 
       const userId = user?.id ?? null;
       if (!userId) return;
-      if (lastSyncedUserRef.current === userId) return;
 
       const accessToken = await getAccessToken();
       if (!accessToken) return;
@@ -23,6 +22,13 @@ export function PrivyAuthBridge() {
       const walletAddress = wallets?.[0]?.address ?? null;
       const emailAccount = user?.linkedAccounts?.find((a) => a.type === "email");
       const email = emailAccount && "address" in emailAccount ? (emailAccount.address as string) : null;
+      const twitterAccount = user?.linkedAccounts?.find((a) => a.type === "twitter_oauth") as
+        | { subject?: string | null; username?: string | null }
+        | undefined;
+      const twitterSubject = twitterAccount?.subject ?? null;
+      const twitterUsername = twitterAccount?.username ?? null;
+      const syncSignature = `${userId}|${walletAddress ?? ""}|${email ?? ""}|${twitterSubject ?? ""}|${twitterUsername ?? ""}`;
+      if (lastSyncedSignatureRef.current === syncSignature) return;
 
       await fetch("/api/auth/privy/session", {
         method: "POST",
@@ -31,11 +37,13 @@ export function PrivyAuthBridge() {
           accessToken,
           walletAddress,
           email,
+          twitterSubject,
+          twitterUsername,
         }),
       }).catch(() => null);
 
       trackEvent("login", { auth_provider: "privy" });
-      lastSyncedUserRef.current = userId;
+      lastSyncedSignatureRef.current = syncSignature;
     };
     run();
   }, [ready, authenticated, user, wallets, getAccessToken]);
@@ -43,7 +51,7 @@ export function PrivyAuthBridge() {
   useEffect(() => {
     if (!ready) return;
     if (authenticated) return;
-    lastSyncedUserRef.current = null;
+    lastSyncedSignatureRef.current = null;
     fetch("/api/auth/privy/session", { method: "DELETE" }).catch(() => null);
   }, [ready, authenticated]);
 

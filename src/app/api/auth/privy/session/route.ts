@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { pool, hasDatabase } from "@/lib/db";
 import { createSessionToken, getSessionCookieName } from "@/lib/auth/session";
 import { verifyPrivyAccessToken } from "@/lib/auth/privy";
+import { ensureAccessControlTables } from "@/lib/db/ensure-access-control-tables";
 
 export const dynamic = "force-dynamic";
 
@@ -9,6 +10,8 @@ type SessionBody = {
   accessToken?: string;
   walletAddress?: string | null;
   email?: string | null;
+  twitterSubject?: string | null;
+  twitterUsername?: string | null;
 };
 
 export async function POST(request: NextRequest) {
@@ -27,17 +30,18 @@ export async function POST(request: NextRequest) {
     if (hasDatabase && pool) {
       await pool.query(
         `
-        INSERT INTO users (id, email, wallet_address, is_active, created_at, updated_at)
-        VALUES ($1, $2, $3, 1, now(), now())
+        INSERT INTO users (id, email, wallet_address, twitter_id, is_active, created_at, updated_at)
+        VALUES ($1, $2, $3, $4, 1, now(), now())
         ON CONFLICT (id)
         DO UPDATE SET
           email = COALESCE(EXCLUDED.email, users.email),
           wallet_address = COALESCE(EXCLUDED.wallet_address, users.wallet_address),
           is_active = 1,
           deleted_at = NULL,
+          twitter_id = COALESCE(EXCLUDED.twitter_id, users.twitter_id),
           updated_at = now()
         `,
-        [verified.userId, body.email ?? null, body.walletAddress ?? null]
+        [verified.userId, body.email ?? null, body.walletAddress ?? null, body.twitterSubject ?? null]
       );
 
       await pool.query(
@@ -64,6 +68,33 @@ export async function POST(request: NextRequest) {
         `,
         [verified.userId, verified.userId, body.walletAddress ?? null, body.email ?? null]
       );
+
+      if (body.twitterSubject) {
+        await ensureAccessControlTables();
+        await pool.query(
+          `
+          INSERT INTO social_accounts (
+            user_id,
+            provider,
+            provider_user_id,
+            status,
+            verified_at,
+            last_revalidated_at,
+            created_at,
+            updated_at
+          )
+          VALUES ($1, 'x', $2, 'verified', now(), now(), now(), now())
+          ON CONFLICT (user_id, provider)
+          DO UPDATE SET
+            provider_user_id = EXCLUDED.provider_user_id,
+            status = 'verified',
+            verified_at = COALESCE(social_accounts.verified_at, now()),
+            last_revalidated_at = now(),
+            updated_at = now()
+          `,
+          [verified.userId, body.twitterSubject]
+        );
+      }
     }
 
     const sessionToken = createSessionToken(verified.userId, "privy");

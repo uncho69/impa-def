@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { PrivySocialConnector } from "@/components/profile/PrivySocialConnector";
 import { LearningBadgesPanel } from "@/components/profile/LearningBadgesPanel";
@@ -96,6 +96,7 @@ export default function ProfiloPage() {
       .filter((value) => value.length > 0);
     return Array.from(new Set(values));
   }, [wallets]);
+  const seenConnectedWalletsRef = useRef<Set<string>>(new Set());
 
   const [activeTab, setActiveTab] = useState<"settings" | "badges" | "contents">("settings");
 
@@ -159,6 +160,24 @@ export default function ProfiloPage() {
     if (isLoaded && isSignedIn) loadProfile();
     if (isLoaded && !isSignedIn) setLoading(false);
   }, [isLoaded, isSignedIn]);
+
+  useEffect(() => {
+    if (!privyReady) return;
+
+    const seen = seenConnectedWalletsRef.current;
+    const newAddresses = connectedWalletAddresses.filter((address) => !seen.has(address));
+    if (newAddresses.length > 0) {
+      setWalletAddresses((prev) => {
+        const next = [...prev];
+        for (const address of newAddresses) {
+          if (!next.includes(address)) next.push(address);
+        }
+        return next;
+      });
+    }
+
+    seenConnectedWalletsRef.current = new Set(connectedWalletAddresses);
+  }, [connectedWalletAddresses, privyReady]);
 
   async function handleSave() {
     setSaving(true);
@@ -278,7 +297,7 @@ export default function ProfiloPage() {
 
     // For authenticated users, this opens Privy's wallet-link flow.
     if (typeof linkWallet === "function") {
-      linkWallet();
+      linkWallet({ walletChainType: "ethereum-and-solana" });
       return;
     }
 
@@ -484,8 +503,7 @@ export default function ProfiloPage() {
                   {connectedWalletAddresses.length === 0 ? "Connetti e aggiungi wallet" : "Connetti un altro wallet"}
                 </button>
 
-                {connectedWalletAddresses.map((address) => {
-                  const isAdded = walletAddresses.includes(address);
+                {walletAddresses.map((address) => {
                   return (
                     <div
                       key={address}
@@ -494,18 +512,12 @@ export default function ProfiloPage() {
                       <span className="text-xs text-slate-100">{shortenAddress(address)}</span>
                       <button
                         type="button"
-                        onClick={() =>
-                          setWalletAddresses((prev) =>
-                            isAdded ? prev.filter((item) => item !== address) : [...prev, address],
-                          )
-                        }
-                        className={`rounded-lg border px-3 py-1.5 text-xs ${
-                          isAdded
-                            ? "border-rose-400/40 text-rose-200 hover:bg-rose-500/20"
-                            : "border-emerald-400/40 text-emerald-200 hover:bg-emerald-500/20"
-                        }`}
+                        onClick={() => setWalletAddresses((prev) => prev.filter((item) => item !== address))}
+                        className="rounded-md border border-rose-400/40 px-2 py-1 text-sm font-semibold leading-none text-rose-200 hover:bg-rose-500/20"
+                        aria-label={`Rimuovi ${address}`}
+                        title="Rimuovi address"
                       >
-                        {isAdded ? "Rimuovi wallet" : "Aggiungi wallet"}
+                        ×
                       </button>
                     </div>
                   );

@@ -82,6 +82,39 @@ function buildFallbackProfilePayload(userId: string, message?: string) {
   };
 }
 
+function buildXProfileUrlFromId(xId: string | null | undefined): string | null {
+  if (!xId) return null;
+  const value = xId.trim();
+  if (!value) return null;
+  if (/^\d+$/.test(value)) return `https://x.com/i/user/${value}`;
+  return `https://x.com/${value.replace(/^@+/, "")}`;
+}
+
+async function resolveXProfileUrl(userId: string, twitterId: string | null | undefined): Promise<string | null> {
+  const direct = buildXProfileUrlFromId(twitterId);
+  if (direct) return direct;
+  if (!pool) return null;
+
+  try {
+    const row = await pool.query(
+      `
+      SELECT provider_user_id
+      FROM social_accounts
+      WHERE user_id = $1
+        AND provider = 'x'
+        AND status = 'verified'
+        AND provider_user_id IS NOT NULL
+      ORDER BY updated_at DESC
+      LIMIT 1
+      `,
+      [userId]
+    );
+    return buildXProfileUrlFromId(row.rows?.[0]?.provider_user_id as string | null | undefined);
+  } catch {
+    return null;
+  }
+}
+
 async function resolveAuthenticatedUserId(request: NextRequest): Promise<string | null> {
   const userId = await getUserIdFromRequest(request);
   if (!userId) return null;
@@ -361,7 +394,7 @@ export async function GET(request: NextRequest) {
 
       const rankRow = rankResult.rows[0] || { rank: 0, total_points: 0, total_tweets: 0 };
       const displayUsername = user.custom_username || user.default_username || `user_${user.id.slice(-6)}`;
-      const xProfileUrl = user.twitter_id ? `https://x.com/i/user/${user.twitter_id}` : null;
+      const xProfileUrl = await resolveXProfileUrl(user.id, user.twitter_id);
 
       return NextResponse.json({
         profile: {
