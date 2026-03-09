@@ -458,42 +458,40 @@ export default function ProfiloPage() {
 
             {PRIVY_ENABLED ? (
               <div className="mt-3 space-y-2">
-                {connectedWalletAddresses.length === 0 ? (
-                  <button
-                    type="button"
-                    onClick={() => privyLogin({ loginMethods: ["wallet"] })}
-                    className="rounded-lg border border-emerald-400/40 px-3 py-2 text-sm text-emerald-200 hover:bg-emerald-500/20"
-                  >
-                    Connetti e aggiungi wallet
-                  </button>
-                ) : (
-                  connectedWalletAddresses.map((address) => {
-                    const isAdded = walletAddresses.includes(address);
-                    return (
-                      <div
-                        key={address}
-                        className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-indigo-500/30 bg-indigo-950/40 px-3 py-2"
+                <button
+                  type="button"
+                  onClick={() => privyLogin({ loginMethods: ["wallet"] })}
+                  className="rounded-lg border border-emerald-400/40 px-3 py-2 text-sm text-emerald-200 hover:bg-emerald-500/20"
+                >
+                  {connectedWalletAddresses.length === 0 ? "Connetti e aggiungi wallet" : "Connetti un altro wallet"}
+                </button>
+
+                {connectedWalletAddresses.map((address) => {
+                  const isAdded = walletAddresses.includes(address);
+                  return (
+                    <div
+                      key={address}
+                      className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-indigo-500/30 bg-indigo-950/40 px-3 py-2"
+                    >
+                      <span className="text-xs text-slate-100">{shortenAddress(address)}</span>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setWalletAddresses((prev) =>
+                            isAdded ? prev.filter((item) => item !== address) : [...prev, address],
+                          )
+                        }
+                        className={`rounded-lg border px-3 py-1.5 text-xs ${
+                          isAdded
+                            ? "border-rose-400/40 text-rose-200 hover:bg-rose-500/20"
+                            : "border-emerald-400/40 text-emerald-200 hover:bg-emerald-500/20"
+                        }`}
                       >
-                        <span className="text-xs text-slate-100">{shortenAddress(address)}</span>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setWalletAddresses((prev) =>
-                              isAdded ? prev.filter((item) => item !== address) : [...prev, address],
-                            )
-                          }
-                          className={`rounded-lg border px-3 py-1.5 text-xs ${
-                            isAdded
-                              ? "border-rose-400/40 text-rose-200 hover:bg-rose-500/20"
-                              : "border-emerald-400/40 text-emerald-200 hover:bg-emerald-500/20"
-                          }`}
-                        >
-                          {isAdded ? "Rimuovi wallet" : "Connetti e aggiungi wallet"}
-                        </button>
-                      </div>
-                    );
-                  })
-                )}
+                        {isAdded ? "Rimuovi wallet" : "Aggiungi wallet"}
+                      </button>
+                    </div>
+                  );
+                })}
               </div>
             ) : null}
           </div>
