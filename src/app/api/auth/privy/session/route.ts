@@ -16,6 +16,28 @@ type SessionBody = {
 const X_SUBJECT_COOKIE = "idf_x_subject";
 const X_USERNAME_COOKIE = "idf_x_username";
 const PRIVY_USER_COOKIE = "idf_privy_user_id";
+let usersTwitterIdColumnCache: boolean | null = null;
+
+async function usersTableHasTwitterIdColumn(): Promise<boolean> {
+  if (!pool) return false;
+  if (usersTwitterIdColumnCache !== null) return usersTwitterIdColumnCache;
+  try {
+    const result = await pool.query(
+      `
+      SELECT 1
+      FROM information_schema.columns
+      WHERE table_schema = 'public'
+        AND table_name = 'users'
+        AND column_name = 'twitter_id'
+      LIMIT 1
+      `
+    );
+    usersTwitterIdColumnCache = result.rows.length > 0;
+  } catch {
+    usersTwitterIdColumnCache = false;
+  }
+  return usersTwitterIdColumnCache;
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -34,21 +56,39 @@ export async function POST(request: NextRequest) {
     // #endregion
 
     if (hasDatabase && pool) {
-      await pool.query(
-        `
-        INSERT INTO users (id, email, wallet_address, twitter_id, is_active, created_at, updated_at)
-        VALUES ($1, $2, $3, $4, 1, now(), now())
-        ON CONFLICT (id)
-        DO UPDATE SET
-          email = COALESCE(EXCLUDED.email, users.email),
-          wallet_address = COALESCE(EXCLUDED.wallet_address, users.wallet_address),
-          is_active = 1,
-          deleted_at = NULL,
-          twitter_id = COALESCE(EXCLUDED.twitter_id, users.twitter_id),
-          updated_at = now()
-        `,
-        [verified.userId, body.email ?? null, body.walletAddress ?? null, body.twitterSubject ?? null]
-      );
+      const hasTwitterIdColumn = await usersTableHasTwitterIdColumn();
+      if (hasTwitterIdColumn) {
+        await pool.query(
+          `
+          INSERT INTO users (id, email, wallet_address, twitter_id, is_active, created_at, updated_at)
+          VALUES ($1, $2, $3, $4, 1, now(), now())
+          ON CONFLICT (id)
+          DO UPDATE SET
+            email = COALESCE(EXCLUDED.email, users.email),
+            wallet_address = COALESCE(EXCLUDED.wallet_address, users.wallet_address),
+            is_active = 1,
+            deleted_at = NULL,
+            twitter_id = COALESCE(EXCLUDED.twitter_id, users.twitter_id),
+            updated_at = now()
+          `,
+          [verified.userId, body.email ?? null, body.walletAddress ?? null, body.twitterSubject ?? null]
+        );
+      } else {
+        await pool.query(
+          `
+          INSERT INTO users (id, email, wallet_address, is_active, created_at, updated_at)
+          VALUES ($1, $2, $3, 1, now(), now())
+          ON CONFLICT (id)
+          DO UPDATE SET
+            email = COALESCE(EXCLUDED.email, users.email),
+            wallet_address = COALESCE(EXCLUDED.wallet_address, users.wallet_address),
+            is_active = 1,
+            deleted_at = NULL,
+            updated_at = now()
+          `,
+          [verified.userId, body.email ?? null, body.walletAddress ?? null]
+        );
+      }
 
       await pool.query(
         `
@@ -76,30 +116,34 @@ export async function POST(request: NextRequest) {
       );
 
       if (body.twitterSubject) {
-        await ensureAccessControlTables();
-        await pool.query(
-          `
-          INSERT INTO social_accounts (
-            user_id,
-            provider,
-            provider_user_id,
-            status,
-            verified_at,
-            last_revalidated_at,
-            created_at,
-            updated_at
-          )
-          VALUES ($1, 'x', $2, 'verified', now(), now(), now(), now())
-          ON CONFLICT (user_id, provider)
-          DO UPDATE SET
-            provider_user_id = EXCLUDED.provider_user_id,
-            status = 'verified',
-            verified_at = COALESCE(social_accounts.verified_at, now()),
-            last_revalidated_at = now(),
-            updated_at = now()
-          `,
-          [verified.userId, body.twitterSubject]
-        );
+        try {
+          await ensureAccessControlTables();
+          await pool.query(
+            `
+            INSERT INTO social_accounts (
+              user_id,
+              provider,
+              provider_user_id,
+              status,
+              verified_at,
+              last_revalidated_at,
+              created_at,
+              updated_at
+            )
+            VALUES ($1, 'x', $2, 'verified', now(), now(), now(), now())
+            ON CONFLICT (user_id, provider)
+            DO UPDATE SET
+              provider_user_id = EXCLUDED.provider_user_id,
+              status = 'verified',
+              verified_at = COALESCE(social_accounts.verified_at, now()),
+              last_revalidated_at = now(),
+              updated_at = now()
+            `,
+            [verified.userId, body.twitterSubject]
+          );
+        } catch (socialSyncError) {
+          console.warn("Privy session social sync warning:", socialSyncError);
+        }
       }
     }
 
