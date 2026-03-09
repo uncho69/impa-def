@@ -6,7 +6,7 @@ import { PrivySocialConnector } from "@/components/profile/PrivySocialConnector"
 import { LearningBadgesPanel } from "@/components/profile/LearningBadgesPanel";
 import { trackEvent } from "@/lib/analytics";
 import { useAppAuth } from "@/lib/auth/useAppAuth";
-import { usePrivy } from "@privy-io/react-auth";
+import { usePrivy, useWallets } from "@privy-io/react-auth";
 
 type ProfileResponse = {
   noDatabase?: boolean;
@@ -138,7 +138,8 @@ async function signSolanaOwnership(address: string): Promise<void> {
 
 export default function ProfiloPage() {
   const { isLoaded, isSignedIn, login } = useAppAuth();
-  const { ready: privyReady, signMessage } = usePrivy();
+  const { ready: privyReady, signMessage, linkWallet } = usePrivy();
+  const { wallets } = useWallets();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -218,6 +219,25 @@ export default function ProfiloPage() {
     if (isLoaded && isSignedIn) loadProfile();
     if (isLoaded && !isSignedIn) setLoading(false);
   }, [isLoaded, isSignedIn]);
+
+  useEffect(() => {
+    if (!privyReady) return;
+    const connectedWalletAddresses = (wallets || [])
+      .map((wallet) => String(wallet?.address ?? "").trim().toLowerCase())
+      .filter((address) => address.length > 0);
+    if (connectedWalletAddresses.length === 0) return;
+
+    setPendingWalletAddresses((prev) => {
+      const next = [...prev];
+      for (const address of connectedWalletAddresses) {
+        if (walletAddresses.includes(address)) continue;
+        if (next.includes(address)) continue;
+        pendingWalletKindsRef.current[address] = "privy";
+        next.push(address);
+      }
+      return next;
+    });
+  }, [privyReady, wallets, walletAddresses]);
 
   async function handleSave() {
     setSaving(true);
@@ -341,9 +361,22 @@ export default function ProfiloPage() {
     setInfoMessage(null);
     try {
       const address = await connectEvmWalletAddress();
+      if (walletAddresses.includes(address)) {
+        setInfoMessage("Questo wallet EVM è già presente nella lista.");
+        return;
+      }
       pendingWalletKindsRef.current[address] = "evm";
       setPendingWalletAddresses((prev) => (prev.includes(address) ? prev : [...prev, address]));
     } catch (err: unknown) {
+      if (typeof linkWallet === "function") {
+        try {
+          await linkWallet({ walletChainType: "ethereum-only" });
+          setInfoMessage("Wallet EVM collegato tramite Privy. Se è nuovo apparirà tra i wallet da confermare.");
+          return;
+        } catch {
+          // noop: show original error below
+        }
+      }
       setError(getErrorMessage(err, "Connessione wallet EVM fallita."));
     }
   }
@@ -357,9 +390,22 @@ export default function ProfiloPage() {
     setInfoMessage(null);
     try {
       const address = await connectSolanaWalletAddress();
+      if (walletAddresses.includes(address)) {
+        setInfoMessage("Questo wallet Solana è già presente nella lista.");
+        return;
+      }
       pendingWalletKindsRef.current[address] = "solana";
       setPendingWalletAddresses((prev) => (prev.includes(address) ? prev : [...prev, address]));
     } catch (err: unknown) {
+      if (typeof linkWallet === "function") {
+        try {
+          await linkWallet({ walletChainType: "solana-only" });
+          setInfoMessage("Wallet Solana collegato tramite Privy. Se è nuovo apparirà tra i wallet da confermare.");
+          return;
+        } catch {
+          // noop: show original error below
+        }
+      }
       setError(getErrorMessage(err, "Connessione wallet Solana fallita."));
     }
   }
