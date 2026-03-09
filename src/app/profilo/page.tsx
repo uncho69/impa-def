@@ -75,6 +75,58 @@ function shortenAddress(value?: string | null): string {
   return `${value.slice(0, 8)}...${value.slice(-6)}`;
 }
 
+function toBase64Utf8(value: string): string {
+  if (typeof window === "undefined" || typeof window.btoa !== "function") return value;
+  const bytes = new TextEncoder().encode(value);
+  let binary = "";
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return window.btoa(binary);
+}
+
+type SignableWallet = {
+  type?: string;
+  signMessage?: ((input: { message: string }) => Promise<unknown>) | ((message: string) => Promise<unknown>);
+  provider?: {
+    request?: (input: { method: string; params?: unknown[] }) => Promise<unknown>;
+  };
+};
+
+async function requestOwnershipSignature(wallet: SignableWallet, address: string): Promise<void> {
+  const message = `ImparoDeFi wallet ownership verification\nAddress: ${address}\nTimestamp: ${new Date().toISOString()}`;
+
+  if (wallet && typeof wallet.signMessage === "function") {
+    try {
+      await wallet.signMessage({ message });
+      return;
+    } catch {
+      await wallet.signMessage(message);
+      return;
+    }
+  }
+
+  const provider = wallet?.provider;
+  if (!provider || typeof provider.request !== "function") {
+    throw new Error("Provider wallet non disponibile per la firma.");
+  }
+
+  if (wallet?.type === "solana") {
+    try {
+      await provider.request({ method: "solana_signMessage", params: [message] });
+      return;
+    } catch {
+      await provider.request({ method: "solana_signMessage", params: [toBase64Utf8(message)] });
+      return;
+    }
+  }
+
+  try {
+    await provider.request({ method: "personal_sign", params: [message, address] });
+    return;
+  } catch {
+    await provider.request({ method: "eth_sign", params: [address, message] });
+  }
+}
+
 export default function ProfiloPage() {
   const { isLoaded, isSignedIn, login } = useAppAuth();
   const { ready: privyReady, login: privyLogin, linkWallet } = usePrivy();
@@ -90,11 +142,23 @@ export default function ProfiloPage() {
   const [youtubeInput, setYoutubeInput] = useState("");
   const [infoMessage, setInfoMessage] = useState<string | null>(null);
   const [walletAddresses, setWalletAddresses] = useState<string[]>([]);
+  const [pendingWalletAddresses, setPendingWalletAddresses] = useState<string[]>([]);
+  const [verifyingAddress, setVerifyingAddress] = useState<string | null>(null);
   const connectedWalletAddresses = useMemo(() => {
     const values = (wallets || [])
       .map((wallet) => wallet?.address?.trim().toLowerCase() || "")
       .filter((value) => value.length > 0);
     return Array.from(new Set(values));
+  }, [wallets]);
+  const connectedWalletsByAddress = useMemo(() => {
+    const entries = (wallets || [])
+      .map((wallet) => {
+        const address = wallet?.address?.trim().toLowerCase();
+        if (!address) return null;
+        return [address, wallet as SignableWallet] as const;
+      })
+      .filter(Boolean) as Array<readonly [string, SignableWallet]>;
+    return new Map(entries);
   }, [wallets]);
   const seenConnectedWalletsRef = useRef<Set<string>>(new Set());
 
@@ -145,6 +209,7 @@ export default function ProfiloPage() {
           ? [payload.profile.walletAddress]
           : [];
       setWalletAddresses(initialWallets);
+      setPendingWalletAddresses([]);
       setInstagramInput(payload.profile.instagramUrl || "");
       setTiktokInput(payload.profile.tiktokUrl || "");
       setYoutubeInput(payload.profile.youtubeUrl || "");
@@ -165,9 +230,11 @@ export default function ProfiloPage() {
     if (!privyReady) return;
 
     const seen = seenConnectedWalletsRef.current;
-    const newAddresses = connectedWalletAddresses.filter((address) => !seen.has(address));
+    const newAddresses = connectedWalletAddresses.filter(
+      (address) => !seen.has(address) && !walletAddresses.includes(address),
+    );
     if (newAddresses.length > 0) {
-      setWalletAddresses((prev) => {
+      setPendingWalletAddresses((prev) => {
         const next = [...prev];
         for (const address of newAddresses) {
           if (!next.includes(address)) next.push(address);
@@ -176,8 +243,15 @@ export default function ProfiloPage() {
       });
     }
 
+    setPendingWalletAddresses((prev) =>
+      prev.filter(
+        (address) =>
+          connectedWalletAddresses.includes(address) && !walletAddresses.includes(address),
+      ),
+    );
+
     seenConnectedWalletsRef.current = new Set(connectedWalletAddresses);
-  }, [connectedWalletAddresses, privyReady]);
+  }, [connectedWalletAddresses, privyReady, walletAddresses]);
 
   async function handleSave() {
     setSaving(true);
@@ -287,7 +361,7 @@ export default function ProfiloPage() {
     }
   }
 
-  function handleConnectAnotherWallet() {
+  function handleConnectAnotherWallet(chain: "ethereum-and-solana" | "ethereum-only" | "solana-only" = "ethereum-and-solana") {
     if (!privyReady) {
       setInfoMessage("Wallet connect in inizializzazione, riprova tra qualche secondo.");
       return;
@@ -297,12 +371,32 @@ export default function ProfiloPage() {
 
     // For authenticated users, this opens Privy's wallet-link flow.
     if (typeof linkWallet === "function") {
-      linkWallet({ walletChainType: "ethereum-and-solana" });
+      linkWallet({ walletChainType: chain });
       return;
     }
 
     // Fallback for older SDK behavior.
     privyLogin({ loginMethods: ["wallet"] });
+  }
+
+  async function handleVerifyAndAddWallet(address: string) {
+    setError(null);
+    setInfoMessage(null);
+    setVerifyingAddress(address);
+    try {
+      const wallet = connectedWalletsByAddress.get(address);
+      if (!wallet) {
+        throw new Error("Wallet non trovato. Riconnetti il wallet e riprova.");
+      }
+      await requestOwnershipSignature(wallet, address);
+      setWalletAddresses((prev) => (prev.includes(address) ? prev : [...prev, address]));
+      setPendingWalletAddresses((prev) => prev.filter((item) => item !== address));
+      setInfoMessage("Wallet verificato e aggiunto. Ricorda di salvare le impostazioni.");
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, "Firma wallet annullata o fallita."));
+    } finally {
+      setVerifyingAddress(null);
+    }
   }
 
   if (!isLoaded || loading) {
@@ -495,13 +589,44 @@ export default function ProfiloPage() {
 
             {PRIVY_ENABLED ? (
               <div className="mt-3 space-y-2">
-                <button
-                  type="button"
-                  onClick={handleConnectAnotherWallet}
-                  className="rounded-lg border border-emerald-400/40 px-3 py-2 text-sm text-emerald-200 hover:bg-emerald-500/20"
-                >
-                  {connectedWalletAddresses.length === 0 ? "Connetti e aggiungi wallet" : "Connetti un altro wallet"}
-                </button>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleConnectAnotherWallet("ethereum-only")}
+                    className="rounded-lg border border-emerald-400/40 px-3 py-2 text-sm text-emerald-200 hover:bg-emerald-500/20"
+                  >
+                    Connetti wallet EVM
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleConnectAnotherWallet("solana-only")}
+                    className="rounded-lg border border-cyan-400/40 px-3 py-2 text-sm text-cyan-200 hover:bg-cyan-500/20"
+                  >
+                    Connetti wallet Solana
+                  </button>
+                </div>
+
+                {pendingWalletAddresses.length > 0 ? (
+                  <div className="space-y-2 rounded-md border border-amber-400/30 bg-amber-950/20 p-3">
+                    <p className="text-xs text-amber-200">Wallet connessi da confermare con firma:</p>
+                    {pendingWalletAddresses.map((address) => (
+                      <div
+                        key={`pending-${address}`}
+                        className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-amber-400/30 bg-indigo-950/40 px-3 py-2"
+                      >
+                        <span className="text-xs text-slate-100">{shortenAddress(address)}</span>
+                        <button
+                          type="button"
+                          onClick={() => handleVerifyAndAddWallet(address)}
+                          disabled={verifyingAddress === address}
+                          className="rounded-md border border-amber-400/40 px-3 py-1 text-xs text-amber-100 hover:bg-amber-500/20 disabled:opacity-70"
+                        >
+                          {verifyingAddress === address ? "Firma..." : "Conferma firma e aggiungi"}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                ) : null}
 
                 {walletAddresses.map((address) => {
                   return (
@@ -545,12 +670,7 @@ export default function ProfiloPage() {
                 Profilo X pubblico
               </a>
             ) : (
-              <a
-                href="/api/auth/x/connect"
-                className="rounded-lg border border-indigo-400/40 px-4 py-2 text-sm text-indigo-200 hover:bg-indigo-500/20"
-              >
-                Collega account X
-              </a>
+              <span className="text-sm text-slate-400">Collega X dalla sezione Social connect qui sotto</span>
             )}
           </div>
 
