@@ -3,10 +3,10 @@
 import { Button } from "./Button";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useUser, SignOutButton } from '@clerk/nextjs';
 import LanguageToggle from "./LanguageToggle";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { AuthModal } from "@/components/auth/AuthModal";
+import { useAppAuth } from "@/lib/auth/useAppAuth";
 
 const btnModalStyle =
   "bg-white text-primary-600 border-2 border-primary-200 hover:bg-primary-50 hover:border-primary-300 leading-6 text-base font-medium items-center justify-center w-full rounded-lg shadow-sm text-center no-underline flex flex-grow transition-all duration-200";
@@ -16,7 +16,7 @@ export function MobileMenu() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
   const pathname = usePathname();
-  const { isSignedIn, isLoaded } = useUser();
+  const { isSignedIn, isLoaded, logout } = useAppAuth();
   const { t } = useLanguage();
 
   // Funzione per mostrare il modale di autenticazione
@@ -90,11 +90,9 @@ export function MobileMenu() {
               {/* Pulsanti di autenticazione (Clerk) */}
               {isLoaded && (
                 isSignedIn ? (
-                  <SignOutButton>
-                    <button className={btnModalStyle}>
-                      {t('auth.logout')}
-                    </button>
-                  </SignOutButton>
+                  <button onClick={logout} className={btnModalStyle}>
+                    {t('auth.logout')}
+                  </button>
                 ) : (
                   <>
                     <button 

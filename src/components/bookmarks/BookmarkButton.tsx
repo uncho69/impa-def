@@ -1,8 +1,8 @@
 "use client";
 
 import { useMemo } from "react";
-import { useUser } from "@clerk/nextjs";
 import { useBookmarks, type BookmarkItem, type BookmarkType } from "@/components/bookmarks/useBookmarks";
+import { useAppAuth } from "@/lib/auth/useAppAuth";
 
 function BookmarkIcon({ active }: { active: boolean }) {
   return (
@@ -35,7 +35,7 @@ export function BookmarkButton({
   activeLabel = "Salvato",
   className = "",
 }: Props) {
-  const { isLoaded, isSignedIn } = useUser();
+  const { isLoaded, isSignedIn } = useAppAuth();
   const { isBookmarked, toggleBookmark } = useBookmarks();
   const active = useMemo(() => isBookmarked(url), [isBookmarked, url]);
 

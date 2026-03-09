@@ -1,54 +1,13 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { isStaticFile, matchesPublicRoute } from '@/lib/middleware-utils';
-
-// Try to use Clerk middleware
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let middleware: any;
-
-try {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
-  const { clerkMiddleware } = require('@clerk/nextjs/server');
-
-  middleware = clerkMiddleware(
-    async (
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      auth: any,
-      request: NextRequest
-    ) => {
-      const pathname = request.nextUrl.pathname;
-
-      if (isStaticFile(pathname)) {
-        return NextResponse.next();
-      }
-
-      if (pathname.startsWith('/api')) {
-        await auth();
-        return NextResponse.next();
-      }
-
-      if (!matchesPublicRoute(pathname)) {
-        await auth.protect();
-      }
-
-      return NextResponse.next();
-    },
-    {
-      signInUrl: '/sign-in',
-      signUpUrl: '/sign-up',
-    }
-  );
-} catch {
-  middleware = async function (request: NextRequest) {
-    const pathname = request.nextUrl.pathname;
-    if (isStaticFile(pathname)) {
-      return NextResponse.next();
-    }
-    return NextResponse.next();
-  };
+export default async function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+  if (isStaticFile(pathname)) return NextResponse.next();
+  if (pathname.startsWith('/api')) return NextResponse.next();
+  if (!matchesPublicRoute(pathname)) return NextResponse.next();
+  return NextResponse.next();
 }
-
-export default middleware;
 
 export const config = {
   matcher: [

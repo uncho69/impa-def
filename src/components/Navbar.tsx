@@ -5,18 +5,19 @@ import Image from "next/image";
 import logo from "@/assets/imparodefi-logo-nobg.webp";
 import { MobileMenu } from "./MobileMenu";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { ClerkAuthStatus } from "./ClerkAuthStatus";
+import { UnifiedAuthControls } from "@/components/auth/UnifiedAuthControls";
 import { useState, useEffect, useRef } from "react";
 import { SearchBar } from "./SearchBar";
 import { AuthModal } from "@/components/auth/AuthModal";
 import { usePathname } from "next/navigation";
+import { useAppAuth } from "@/lib/auth/useAppAuth";
 
 export function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const { isSignedIn } = useUser();
+  const { isSignedIn } = useAppAuth();
   const { t } = useLanguage();
   const pathname = usePathname();
 
@@ -130,7 +131,7 @@ export function Navbar() {
               </div>
             </div>
             
-            <ClerkAuthStatus />
+            <UnifiedAuthControls />
           </div>
           
           <div className="lg:hidden">

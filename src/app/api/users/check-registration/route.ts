@@ -1,50 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
 import { db } from '@/lib/db';
-import { users, authAccounts } from '@/lib/db/schema';
+import { users } from '@/lib/db/schema';
 import { eq, and, sql } from 'drizzle-orm';
+import { getUserIdFromRequest } from '@/lib/auth/middleware';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
   try {
-    let clerkUserId: string | null = null;
-    
-    try {
-      const authResult = await auth();
-      clerkUserId = authResult.userId || null;
-    } catch (error) {
-      // Auth might not be available in this context
-      console.debug('Auth not available:', error);
-    }
-
-    if (!clerkUserId) {
+    const userId = await getUserIdFromRequest(request);
+    if (!userId) {
       return NextResponse.json(
         { registered: false, error: 'Not authenticated' },
         { status: 200 }
       );
     }
-
-    // Check if user exists in authAccounts
-    const authAccount = await db
-      .select({ userId: authAccounts.userId })
-      .from(authAccounts)
-      .where(
-        and(
-          eq(authAccounts.provider, 'clerk'),
-          eq(authAccounts.providerAccountId, clerkUserId)
-        )
-      )
-      .limit(1);
-
-    if (authAccount.length === 0) {
-      return NextResponse.json(
-        { registered: false, error: 'User not registered in database' },
-        { status: 200 }
-      );
-    }
-
-    const userId = authAccount[0].userId;
 
     // Check if user exists in users table and is active
     const user = await db

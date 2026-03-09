@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useUser } from "@clerk/nextjs";
+import { useAppAuth } from "@/lib/auth/useAppAuth";
 
 export type BookmarkType = "page" | "section" | "content";
 
@@ -45,7 +45,7 @@ function writeLocalBookmarks(items: BookmarkItem[]) {
 }
 
 export function useBookmarks() {
-  const { isLoaded, isSignedIn } = useUser();
+  const { isLoaded, isSignedIn } = useAppAuth();
   const [bookmarks, setBookmarks] = useState<BookmarkItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [noDatabase, setNoDatabase] = useState(false);

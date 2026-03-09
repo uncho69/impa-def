@@ -1,98 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
 import { hasRole, hasAnyRole, UserRole } from './permissions';
-import { db } from '@/lib/db';
-import { authAccounts, users } from '@/lib/db/schema';
-import { eq, and, sql } from 'drizzle-orm';
 import { getSessionCookieName, parseSessionToken } from './session';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function getUserIdFromRequest(_request: NextRequest): Promise<string | null> {
   try {
-    let clerkUserId: string | null = null;
-    try {
-      const authResult = await auth();
-      clerkUserId = authResult?.userId ?? null;
-    } catch (error) {
-      console.error('❌ Error getting Clerk user ID:', error instanceof Error ? error.message : 'Unknown error');
-      console.error('❌ Error stack:', error instanceof Error ? error.stack : 'No stack trace');
-    }
-
-    // Fallback per keyless/dev: prova a leggere lo user id dal JWT di sessione cookie
-    // (claim "sub"). Non verifica firma: usato solo come fallback locale.
-    if (!clerkUserId) {
-      try {
-        const raw = _request.cookies.get('__session')?.value;
-        if (raw) {
-          const parts = raw.split('.');
-          if (parts.length >= 2) {
-            const payload = JSON.parse(Buffer.from(parts[1], 'base64url').toString('utf8')) as { sub?: string };
-            if (payload?.sub && typeof payload.sub === 'string') {
-              clerkUserId = payload.sub;
-            }
-          }
-        }
-      } catch {
-        // ignore
-      }
-    }
-
-    console.log('🔍 getUserIdFromRequest - resolved Clerk userId:', clerkUserId);
-
-    if (clerkUserId) {
-      // Se DB non configurato, restituiamo comunque lo user id Clerk
-      if (!db) return clerkUserId;
-
-      // Canonical user identity: prefer direct Clerk ID row in users table.
-      // This prevents stale auth_accounts mappings from forcing a legacy user_id.
-      const user = await db
-        .select({ id: users.id })
-        .from(users)
-        .where(
-          and(
-            eq(users.id, clerkUserId),
-            eq(users.isActive, 1),
-            sql`${users.deletedAt} IS NULL`
-          )
-        )
-        .limit(1);
-
-      if (user.length > 0) {
-        await db.execute(sql`
-          INSERT INTO auth_accounts (user_id, provider, provider_account_id, provider_user_id, is_active, created_at, updated_at)
-          VALUES (${clerkUserId}, 'clerk', ${clerkUserId}, ${clerkUserId}, 1, now(), now())
-          ON CONFLICT (provider, provider_account_id)
-          DO UPDATE SET
-            user_id = EXCLUDED.user_id,
-            provider_user_id = EXCLUDED.provider_user_id,
-            is_active = 1,
-            updated_at = now()
-        `);
-        return user[0].id;
-      }
-
-      // Fallback to auth_accounts only if direct Clerk row is not available.
-      const authAccount = await db
-        .select({ userId: authAccounts.userId })
-        .from(authAccounts)
-        .where(
-          and(
-            eq(authAccounts.provider, 'clerk'),
-            eq(authAccounts.providerAccountId, clerkUserId)
-          )
-        )
-        .limit(1);
-
-      if (authAccount.length > 0) {
-        return authAccount[0].userId;
-      }
-
-      // Ultimo fallback: ritorna comunque l'id Clerk (gestito poi dalle route con upsert)
-      return clerkUserId;
-    }
-
-    // Fallback solo se non c'e autenticazione Clerk:
-    // usa eventuale sessione firmata (es. Privy).
     const sessionToken = _request.cookies.get(getSessionCookieName())?.value;
     const parsedSession = parseSessionToken(sessionToken);
     if (parsedSession?.userId) {

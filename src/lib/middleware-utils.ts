@@ -15,7 +15,7 @@ export function isStaticFile(pathname: string): boolean {
 
 const PUBLIC_PATTERNS: Array<{ exact?: string; prefix?: string }> = [
   { exact: '/' },
-  { prefix: '/api/webhooks/clerk' },
+  { prefix: '/api/webhooks/stripe' },
   { prefix: '/api/auth' },
   { prefix: '/api/cron/process-tweets' },
   { prefix: '/api/leaderboards' },

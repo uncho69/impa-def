@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
 import { getUserIdFromRequest } from "@/lib/auth/middleware";
 import { hasDatabase, pool } from "@/lib/db";
 import { ensureUserBookmarksTable } from "@/lib/db/ensure-user-bookmarks-table";
@@ -28,56 +27,7 @@ function sanitizeBookmarkType(value: unknown): BookmarkType {
 }
 
 async function resolveAuthenticatedUserId(request: NextRequest): Promise<string | null> {
-  const fromMiddleware = await getUserIdFromRequest(request);
-  if (fromMiddleware) return fromMiddleware;
-
-  try {
-    const authResult = await auth();
-    const clerkUserId = authResult.userId;
-    if (!clerkUserId) return null;
-    if (!pool) return clerkUserId;
-
-    const linked = await pool.query(
-      `
-      SELECT aa.user_id
-      FROM auth_accounts aa
-      JOIN users u ON u.id = aa.user_id
-      WHERE
-        aa.provider = 'clerk'
-        AND aa.provider_account_id = $1
-        AND aa.is_active = 1
-        AND u.is_active = 1
-        AND u.deleted_at IS NULL
-      LIMIT 1
-      `,
-      [clerkUserId],
-    );
-    if (linked.rows.length > 0) return linked.rows[0].user_id as string;
-
-    const direct = await pool.query(
-      `
-      SELECT id
-      FROM users
-      WHERE id = $1 AND is_active = 1 AND deleted_at IS NULL
-      LIMIT 1
-      `,
-      [clerkUserId],
-    );
-    if (direct.rows.length > 0) return direct.rows[0].id as string;
-
-    await pool.query(
-      `
-      INSERT INTO users (id, is_active, created_at, updated_at)
-      VALUES ($1, 1, now(), now())
-      ON CONFLICT (id)
-      DO UPDATE SET is_active = 1, deleted_at = NULL, updated_at = now()
-      `,
-      [clerkUserId],
-    );
-    return clerkUserId;
-  } catch {
-    return null;
-  }
+  return getUserIdFromRequest(request);
 }
 
 export async function GET(request: NextRequest) {

@@ -1,9 +1,8 @@
 "use client";
 
-import { SignInButton, SignUpButton } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
 import { createPortal } from "react-dom";
+import { useAppAuth } from "@/lib/auth/useAppAuth";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -12,9 +11,9 @@ interface AuthModalProps {
   redirectUrl?: string;
 }
 
-export function AuthModal({ isOpen, onClose, initialMode = "signin", redirectUrl }: AuthModalProps) {
+export function AuthModal({ isOpen, onClose, initialMode = "signin" }: AuthModalProps) {
   const [mounted, setMounted] = useState(false);
-  const pathname = usePathname();
+  const { login, hasPrivy } = useAppAuth();
 
   useEffect(() => {
     setMounted(true);
@@ -33,8 +32,6 @@ export function AuthModal({ isOpen, onClose, initialMode = "signin", redirectUrl
   }, [isOpen]);
 
   if (!isOpen || !mounted) return null;
-
-  const finalRedirectUrl = redirectUrl || pathname || '/';
 
   const modalContent = (
     <div 
@@ -69,31 +66,17 @@ export function AuthModal({ isOpen, onClose, initialMode = "signin", redirectUrl
         </div>
         
         <div className="space-y-3">
-          <SignInButton 
-            mode="modal" 
-            redirectUrl={finalRedirectUrl}
-            afterSignInUrl={finalRedirectUrl}
+          <button
+            onClick={async () => {
+              onClose();
+              if (!hasPrivy) return;
+              await login({ loginMethods: initialMode === "signup" ? ["email", "wallet"] : undefined });
+            }}
+            className="w-full bg-primary-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-primary-700 transition-colors"
           >
-            <button 
-              onClick={onClose}
-              className="w-full bg-primary-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-primary-700 transition-colors"
-            >
-              Accedi
-            </button>
-          </SignInButton>
-          
-          <SignUpButton 
-            mode="modal" 
-            redirectUrl={finalRedirectUrl}
-            afterSignUpUrl={finalRedirectUrl}
-          >
-            <button 
-              onClick={onClose}
-              className="w-full bg-white text-primary-600 py-3 px-4 rounded-xl font-semibold border-2 border-primary-600 hover:bg-primary-50 transition-colors"
-            >
-              Registrati
-            </button>
-          </SignUpButton>
+            {initialMode === "signup" ? "Registrati" : "Accedi"}
+          </button>
+          <p className="text-xs text-neutral-500">Verrai autenticato tramite Privy.</p>
         </div>
       </div>
     </div>

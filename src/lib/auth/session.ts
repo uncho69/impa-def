@@ -5,7 +5,7 @@ const DEFAULT_TTL_SECONDS = 60 * 60 * 24 * 30; // 30 giorni
 
 type SessionPayload = {
   userId: string;
-  provider: "privy" | "clerk";
+  provider: "privy";
   exp: number;
 };
 
@@ -27,7 +27,7 @@ function sign(encodedPayload: string): string {
   return createHmac("sha256", getSessionSecret()).update(encodedPayload).digest("base64url");
 }
 
-export function createSessionToken(userId: string, provider: "privy" | "clerk", ttlSeconds = DEFAULT_TTL_SECONDS): string {
+export function createSessionToken(userId: string, provider: "privy", ttlSeconds = DEFAULT_TTL_SECONDS): string {
   const payload: SessionPayload = {
     userId,
     provider,

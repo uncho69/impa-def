@@ -1,10 +1,10 @@
 "use client";
 
-import { useUser } from '@clerk/nextjs';
 import { ReactNode, useState, useEffect } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { AuthModal } from '@/components/auth/AuthModal';
 import { usePathname } from 'next/navigation';
+import { useAppAuth } from '@/lib/auth/useAppAuth';
 
 interface ClerkProtectedRouteProps {
   children: ReactNode;
@@ -13,7 +13,7 @@ interface ClerkProtectedRouteProps {
 
 export function ClerkProtectedRoute({ children, title }: ClerkProtectedRouteProps) {
   const { t } = useLanguage();
-  const { isLoaded, isSignedIn } = useUser();
+  const { isLoaded, isSignedIn } = useAppAuth();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
   const [loadTimeout, setLoadTimeout] = useState(false);

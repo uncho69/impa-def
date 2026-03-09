@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
 import { pool, hasDatabase } from "@/lib/db";
 import { ensureUserProfileSettingsTable } from "@/lib/db/ensure-user-profile-settings-table";
+import { getUserIdFromRequest } from "@/lib/auth/middleware";
 
 export const dynamic = "force-dynamic";
 
@@ -82,49 +82,23 @@ function buildFallbackProfilePayload(userId: string, message?: string) {
   };
 }
 
-async function upsertClerkAuthAccount(userId: string, clerkUserId: string): Promise<void> {
-  if (!pool) return;
+async function resolveAuthenticatedUserId(request: NextRequest): Promise<string | null> {
+  const userId = await getUserIdFromRequest(request);
+  if (!userId) return null;
+  if (!pool) return userId;
   await pool.query(
     `
-    INSERT INTO auth_accounts (user_id, provider, provider_account_id, provider_user_id, is_active, created_at, updated_at)
-    VALUES ($1, 'clerk', $2, $2, 1, now(), now())
-    ON CONFLICT (provider, provider_account_id)
+    INSERT INTO users (id, is_active, created_at, updated_at)
+    VALUES ($1, 1, now(), now())
+    ON CONFLICT (id)
     DO UPDATE SET
-      user_id = EXCLUDED.user_id,
-      provider_user_id = EXCLUDED.provider_user_id,
       is_active = 1,
+      deleted_at = NULL,
       updated_at = now()
     `,
-    [userId, clerkUserId]
+    [userId]
   );
-}
-
-async function resolveAuthenticatedUserId(): Promise<string | null> {
-  // Identita canonica del profilo: Clerk userId.
-  // Evita definitivamente conflitti con sessioni app/Privy residue.
-  try {
-    const authResult = await auth();
-    const clerkUserId = authResult.userId;
-    if (!clerkUserId) return null;
-    if (!pool) return clerkUserId;
-
-    await pool.query(
-      `
-      INSERT INTO users (id, is_active, created_at, updated_at)
-      VALUES ($1, 1, now(), now())
-      ON CONFLICT (id)
-      DO UPDATE SET
-        is_active = 1,
-        deleted_at = NULL,
-        updated_at = now()
-      `,
-      [clerkUserId]
-    );
-    await upsertClerkAuthAccount(clerkUserId, clerkUserId);
-    return clerkUserId;
-  } catch {
-    return null;
-  }
+  return userId;
 }
 
 type WalletVisibilityColumn = "show_wallet_address_public" | "show_wallet_address_pub";
@@ -150,9 +124,9 @@ async function resolveWalletVisibilityColumn(): Promise<WalletVisibilityColumn |
   }
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const userId = await resolveAuthenticatedUserId();
+    const userId = await resolveAuthenticatedUserId(request);
     if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     if (!hasDatabase || !pool) {
       return NextResponse.json({
@@ -443,7 +417,7 @@ export async function GET() {
 
 export async function PATCH(request: NextRequest) {
   try {
-    const userId = await resolveAuthenticatedUserId();
+    const userId = await resolveAuthenticatedUserId(request);
     if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     if (!hasDatabase || !pool) {
       return NextResponse.json({

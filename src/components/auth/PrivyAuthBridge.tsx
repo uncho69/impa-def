@@ -2,25 +2,15 @@
 
 import { useEffect, useRef } from "react";
 import { usePrivy, useWallets } from "@privy-io/react-auth";
-import { useUser } from "@clerk/nextjs";
 import { trackEvent } from "@/lib/analytics";
 
 export function PrivyAuthBridge() {
   const { ready, authenticated, user, getAccessToken } = usePrivy();
   const { wallets } = useWallets();
-  const { isLoaded: isClerkLoaded, isSignedIn: isClerkSignedIn } = useUser();
   const lastSyncedUserRef = useRef<string | null>(null);
 
   useEffect(() => {
     const run = async () => {
-      // Se Clerk e' attivo, evita qualunque sync sessione Privy per non
-      // sovrascrivere l'identita applicativa lato API.
-      if (isClerkLoaded && isClerkSignedIn) {
-        lastSyncedUserRef.current = null;
-        await fetch("/api/auth/privy/session", { method: "DELETE" }).catch(() => null);
-        return;
-      }
-
       if (!ready || !authenticated) return;
 
       const userId = user?.id ?? null;
@@ -48,15 +38,14 @@ export function PrivyAuthBridge() {
       lastSyncedUserRef.current = userId;
     };
     run();
-  }, [ready, authenticated, user, wallets, getAccessToken, isClerkLoaded, isClerkSignedIn]);
+  }, [ready, authenticated, user, wallets, getAccessToken]);
 
   useEffect(() => {
     if (!ready) return;
-    if (isClerkLoaded && isClerkSignedIn) return;
     if (authenticated) return;
     lastSyncedUserRef.current = null;
     fetch("/api/auth/privy/session", { method: "DELETE" }).catch(() => null);
-  }, [ready, authenticated, isClerkLoaded, isClerkSignedIn]);
+  }, [ready, authenticated]);
 
   return null;
 }

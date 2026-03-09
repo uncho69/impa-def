@@ -2,11 +2,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { useUser, SignInButton } from "@clerk/nextjs";
 import { PrivyWalletConnector } from "@/components/profile/PrivyWalletConnector";
 import { PrivySocialConnector } from "@/components/profile/PrivySocialConnector";
 import { LearningBadgesPanel } from "@/components/profile/LearningBadgesPanel";
 import { trackEvent } from "@/lib/analytics";
+import { useAppAuth } from "@/lib/auth/useAppAuth";
 
 type ProfileResponse = {
   noDatabase?: boolean;
@@ -86,7 +86,7 @@ function normalizeWalletAddress(value: string): string | null {
 }
 
 export default function ProfiloPage() {
-  const { isLoaded, isSignedIn } = useUser();
+  const { isLoaded, isSignedIn, login } = useAppAuth();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -292,11 +292,13 @@ export default function ProfiloPage() {
             <h1 className="text-2xl font-semibold">Profilo</h1>
             <p className="mt-2 text-slate-300">Per accedere al tuo profilo devi effettuare il login.</p>
             <div className="mt-5">
-              <SignInButton mode="modal">
-                <button className="rounded-lg bg-indigo-500 px-4 py-2 text-sm font-medium hover:bg-indigo-400">
-                  Accedi
-                </button>
-              </SignInButton>
+              <button
+                type="button"
+                onClick={() => login()}
+                className="rounded-lg bg-indigo-500 px-4 py-2 text-sm font-medium hover:bg-indigo-400"
+              >
+                Accedi
+              </button>
             </div>
           </div>
         </div>

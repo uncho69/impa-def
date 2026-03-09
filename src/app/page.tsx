@@ -4,11 +4,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
 import { UnifiedAuthControls } from "@/components/auth/UnifiedAuthControls";
 import { SearchBar } from "@/components/SearchBar";
 import { CollapsibleSidebar } from "@/components/CollapsibleSidebar";
-import { isAdminEmail } from "@/lib/admin-emails";
 
 import baseLogo from "@/assets/base-logo.svg";
 import hyperliquidLogo from "@/assets/hyperliquid-logo.png";
@@ -108,8 +106,7 @@ type PublicHackAlert = { name: string; desc: string; link: string | null };
 
 export default function Home() {
   const pathname = usePathname();
-  const { user } = useUser();
-  const isAdmin = Boolean(user?.emailAddresses?.[0]?.emailAddress && isAdminEmail(user.emailAddresses[0].emailAddress));
+  const isAdmin = false;
   const [theme, setTheme] = useState<Theme>("dark");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);

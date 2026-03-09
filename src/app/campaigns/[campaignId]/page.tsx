@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
 import { BackToHome } from "@/components/BackToHome";
 import { ClerkProtectedRoute } from "@/components/ClerkProtectedRoute";
 import Link from "next/link";
 import { Plus } from "lucide-react";
+import { useAppAuth } from "@/lib/auth/useAppAuth";
 
 interface Campaign {
   projectId: string;
@@ -33,7 +33,7 @@ interface Tweet {
 export default function CampaignPage() {
   const params = useParams();
   const router = useRouter();
-  const { isSignedIn, isLoaded } = useUser();
+  const { isSignedIn, isLoaded } = useAppAuth();
   const campaignId = params.campaignId as string;
   
   const [campaign, setCampaign] = useState<Campaign | null>(null);

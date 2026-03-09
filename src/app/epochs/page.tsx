@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
 import { BackToHome } from "@/components/BackToHome";
 import { ClerkProtectedRoute } from "@/components/ClerkProtectedRoute";
 import Link from "next/link";
 import { Plus } from "lucide-react";
+import { useAppAuth } from "@/lib/auth/useAppAuth";
 
 interface Epoch {
   projectId: string;
@@ -27,7 +27,7 @@ interface Epoch {
 
 export default function EpochsPage() {
   const router = useRouter();
-  const { isSignedIn, isLoaded } = useUser();
+  const { isSignedIn, isLoaded } = useAppAuth();
   const [epochs, setEpochs] = useState<Epoch[]>([]);
   const [selectedEpoch, setSelectedEpoch] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);

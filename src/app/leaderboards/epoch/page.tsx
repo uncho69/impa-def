@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { BackToHome } from "@/components/BackToHome";
+import { useAppAuth } from "@/lib/auth/useAppAuth";
 
 interface Epoch {
   projectId: string;
@@ -37,7 +37,7 @@ export default function EpochLeaderboardSelectionPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { t } = useLanguage();
-  const { isSignedIn, isLoaded } = useUser();
+  const { isSignedIn, isLoaded } = useAppAuth();
   const [epochs, setEpochs] = useState<Epoch[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -142,8 +142,7 @@ export default function EpochLeaderboardSelectionPage() {
                 I tuoi tweet non vengono ancora scoperti dalle campagne
               </p>
               <p className="text-amber-800 dark:text-amber-300 text-sm mb-4">
-                Il login con Clerk non fornisce il token necessario a X per leggere i tuoi tweet.
-                Collega qui il tuo account X (Twitter) con il pulsante sotto: così la piattaforma potrà
+                Collega qui il tuo account X (Twitter) con il pulsante sotto: cosi la piattaforma potra
                 trovare i tweet che contengono le parole chiave delle campagne e aggiornare le metriche.
               </p>
               <a

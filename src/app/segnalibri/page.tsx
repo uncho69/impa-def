@@ -1,14 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { SignInButton, useUser } from "@clerk/nextjs";
 import { useBookmarks } from "@/components/bookmarks/useBookmarks";
+import { useAppAuth } from "@/lib/auth/useAppAuth";
 
 const PANEL_CLASS = "rounded-2xl border border-slate-200 bg-white/90 backdrop-blur p-6 dark:border-indigo-500/25 dark:bg-indigo-900/25";
 
 export default function SegnalibriPage() {
   const router = useRouter();
-  const { isLoaded, isSignedIn } = useUser();
+  const { isLoaded, isSignedIn, login } = useAppAuth();
   const { bookmarks, loading, toggleBookmark } = useBookmarks();
 
   return (
@@ -28,11 +28,13 @@ export default function SegnalibriPage() {
         <section className={PANEL_CLASS}>
           <p className="text-slate-600 dark:text-slate-300">Per vedere i tuoi segnalibri devi effettuare il login.</p>
           <div className="mt-4">
-            <SignInButton mode="modal">
-              <button className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500">
-                Accedi
-              </button>
-            </SignInButton>
+            <button
+              type="button"
+              onClick={() => login()}
+              className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500"
+            >
+              Accedi
+            </button>
           </div>
         </section>
       ) : (
