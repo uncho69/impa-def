@@ -140,7 +140,7 @@ export function LeftSidebarShell({ children }: { children: ReactNode }) {
           <main
             className={`flex-1 flex flex-col min-w-0 overflow-auto ${
               isDark
-                ? "bg-gradient-to-b from-indigo-950/40 via-slate-900/70 to-indigo-950/60"
+                ? "bg-gradient-to-b from-indigo-950 via-slate-900 to-indigo-950"
                 : "bg-slate-50"
             }`}
           >

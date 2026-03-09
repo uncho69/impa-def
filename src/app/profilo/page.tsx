@@ -2,11 +2,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { PrivyWalletConnector } from "@/components/profile/PrivyWalletConnector";
 import { PrivySocialConnector } from "@/components/profile/PrivySocialConnector";
 import { LearningBadgesPanel } from "@/components/profile/LearningBadgesPanel";
 import { trackEvent } from "@/lib/analytics";
 import { useAppAuth } from "@/lib/auth/useAppAuth";
+import { usePrivy, useWallets } from "@privy-io/react-auth";
 
 type ProfileResponse = {
   noDatabase?: boolean;
@@ -62,9 +62,6 @@ type LocalProfileSettings = {
 };
 
 const PRIVY_ENABLED = Boolean(process.env.NEXT_PUBLIC_PRIVY_APP_ID?.trim());
-const PAGE_BG_CLASS = "min-h-screen text-white bg-gradient-to-b from-indigo-950 via-slate-900/95 via-30% to-indigo-950";
-const GRID_OVERLAY_CLASS =
-  "fixed inset-0 pointer-events-none bg-[size:48px_48px] bg-[linear-gradient(rgba(99,102,241,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.06)_1px,transparent_1px)]";
 const PANEL_CLASS = "rounded-2xl border border-indigo-500/25 bg-indigo-900/25 backdrop-blur p-6";
 
 function getErrorMessage(err: unknown, fallback: string): string {
@@ -78,15 +75,10 @@ function shortenAddress(value?: string | null): string {
   return `${value.slice(0, 8)}...${value.slice(-6)}`;
 }
 
-function normalizeWalletAddress(value: string): string | null {
-  const next = value.trim().toLowerCase();
-  if (!next) return null;
-  if (next.length > 255) return null;
-  return next;
-}
-
 export default function ProfiloPage() {
   const { isLoaded, isSignedIn, login } = useAppAuth();
+  const { ready: privyReady, login: privyLogin } = usePrivy();
+  const { wallets } = useWallets();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -97,9 +89,14 @@ export default function ProfiloPage() {
   const [tiktokInput, setTiktokInput] = useState("");
   const [youtubeInput, setYoutubeInput] = useState("");
   const [infoMessage, setInfoMessage] = useState<string | null>(null);
-  const [privyWalletAddress, setPrivyWalletAddress] = useState<string | null>(null);
-  const [walletAddressInput, setWalletAddressInput] = useState("");
   const [walletAddresses, setWalletAddresses] = useState<string[]>([]);
+  const connectedWalletAddresses = useMemo(() => {
+    const values = (wallets || [])
+      .map((wallet) => wallet?.address?.trim().toLowerCase() || "")
+      .filter((value) => value.length > 0);
+    return Array.from(new Set(values));
+  }, [wallets]);
+
   const [activeTab, setActiveTab] = useState<"settings" | "badges" | "contents">("settings");
 
   const publicProfileHref = useMemo(() => {
@@ -147,7 +144,6 @@ export default function ProfiloPage() {
           ? [payload.profile.walletAddress]
           : [];
       setWalletAddresses(initialWallets);
-      setWalletAddressInput("");
       setInstagramInput(payload.profile.instagramUrl || "");
       setTiktokInput(payload.profile.tiktokUrl || "");
       setYoutubeInput(payload.profile.youtubeUrl || "");
@@ -273,33 +269,23 @@ export default function ProfiloPage() {
   }
 
   if (!isLoaded || loading) {
-    return (
-      <div className={PAGE_BG_CLASS}>
-        <div className={GRID_OVERLAY_CLASS} />
-        <div className="relative z-10 px-6 py-10">
-          <div className="max-w-5xl mx-auto animate-pulse text-slate-300">Caricamento profilo...</div>
-        </div>
-      </div>
-    );
+    return <div className="max-w-5xl mx-auto animate-pulse text-slate-300 px-6 py-10">Caricamento profilo...</div>;
   }
 
   if (!isSignedIn) {
     return (
-      <div className={PAGE_BG_CLASS}>
-        <div className={GRID_OVERLAY_CLASS} />
-        <div className="relative z-10 px-6 py-10">
-          <div className={`max-w-3xl mx-auto ${PANEL_CLASS}`}>
-            <h1 className="text-2xl font-semibold">Profilo</h1>
-            <p className="mt-2 text-slate-300">Per accedere al tuo profilo devi effettuare il login.</p>
-            <div className="mt-5">
-              <button
-                type="button"
-                onClick={() => login()}
-                className="rounded-lg bg-indigo-500 px-4 py-2 text-sm font-medium hover:bg-indigo-400"
-              >
-                Accedi
-              </button>
-            </div>
+      <div className="px-6 py-10">
+        <div className={`max-w-3xl mx-auto ${PANEL_CLASS}`}>
+          <h1 className="text-2xl font-semibold">Profilo</h1>
+          <p className="mt-2 text-slate-300">Per accedere al tuo profilo devi effettuare il login.</p>
+          <div className="mt-5">
+            <button
+              type="button"
+              onClick={() => login()}
+              className="rounded-lg bg-indigo-500 px-4 py-2 text-sm font-medium hover:bg-indigo-400"
+            >
+              Accedi
+            </button>
           </div>
         </div>
       </div>
@@ -308,26 +294,21 @@ export default function ProfiloPage() {
 
   if (!data) {
     return (
-      <div className={PAGE_BG_CLASS}>
-        <div className={GRID_OVERLAY_CLASS} />
-        <div className="relative z-10 px-6 py-10">
-          <div className="max-w-3xl mx-auto rounded-2xl border border-rose-500/30 bg-rose-950/20 backdrop-blur p-6">
-            <p className="text-rose-200">{error || "Impossibile caricare il profilo."}</p>
-          </div>
+      <div className="px-6 py-10">
+        <div className="max-w-3xl mx-auto rounded-2xl border border-rose-500/30 bg-rose-950/20 backdrop-blur p-6">
+          <p className="text-rose-200">{error || "Impossibile caricare il profilo."}</p>
         </div>
       </div>
     );
   }
 
   const { profile, contents } = data;
-  const primaryProfileWallet = walletAddresses[0] || null;
+  const primaryProfileWallet = walletAddresses[0] || connectedWalletAddresses[0] || null;
   const resolvedWalletAddress = primaryProfileWallet;
 
   return (
-    <div className={PAGE_BG_CLASS}>
-      <div className={GRID_OVERLAY_CLASS} />
-      <div className="relative z-10 px-4 sm:px-6 py-6 sm:py-8">
-        <div className="max-w-6xl mx-auto space-y-4">
+    <div className="relative z-10 px-4 sm:px-6 py-6 sm:py-8">
+      <div className="max-w-6xl mx-auto space-y-4">
         <section className={PANEL_CLASS}>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
@@ -472,65 +453,49 @@ export default function ProfiloPage() {
           <div className="mt-5 rounded-lg border border-indigo-500/30 bg-indigo-900/25 px-4 py-3">
             <p className="text-sm font-medium text-white">Address wallet</p>
             <p className="mt-1 text-xs text-slate-400">
-              Aggiungi o rimuovi address da mostrare nel profilo pubblico (se visibilita attiva).
+              Connetti wallet e scegli quali address pubblicare nel profilo.
             </p>
 
-            <div className="mt-3 flex flex-wrap gap-2">
-              {walletAddresses.length === 0 ? (
-                <span className="text-xs text-slate-400">Nessun address salvato.</span>
-              ) : (
-                walletAddresses.map((address) => (
-                  <div
-                    key={address}
-                    className="flex items-center gap-2 rounded-md border border-indigo-500/30 bg-indigo-950/40 px-2 py-1"
+            {PRIVY_ENABLED ? (
+              <div className="mt-3 space-y-2">
+                {connectedWalletAddresses.length === 0 ? (
+                  <button
+                    type="button"
+                    onClick={() => privyLogin({ loginMethods: ["wallet"] })}
+                    className="rounded-lg border border-emerald-400/40 px-3 py-2 text-sm text-emerald-200 hover:bg-emerald-500/20"
                   >
-                    <span className="text-xs text-slate-100">{shortenAddress(address)}</span>
-                    <button
-                      type="button"
-                      onClick={() => setWalletAddresses((prev) => prev.filter((item) => item !== address))}
-                      className="rounded px-1 text-xs text-rose-200 hover:bg-rose-500/20"
-                      aria-label={`Rimuovi ${address}`}
-                    >
-                      X
-                    </button>
-                  </div>
-                ))
-              )}
-            </div>
-
-            <div className="mt-3 flex flex-wrap items-center gap-2">
-              <input
-                value={walletAddressInput}
-                onChange={(e) => setWalletAddressInput(e.target.value)}
-                placeholder="0x..."
-                className="min-w-[220px] flex-1 rounded-lg border border-indigo-500/30 bg-indigo-900/25 px-3 py-2 text-sm text-white outline-none focus:border-indigo-400"
-              />
-              <button
-                type="button"
-                onClick={() => {
-                  const normalized = normalizeWalletAddress(walletAddressInput);
-                  if (!normalized) return;
-                  setWalletAddresses((prev) => (prev.includes(normalized) ? prev : [...prev, normalized]));
-                  setWalletAddressInput("");
-                }}
-                className="rounded-lg border border-indigo-400/40 px-3 py-2 text-sm text-indigo-200 hover:bg-indigo-500/20"
-              >
-                Aggiungi address
-              </button>
-              {privyWalletAddress ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    const normalized = normalizeWalletAddress(privyWalletAddress);
-                    if (!normalized) return;
-                    setWalletAddresses((prev) => (prev.includes(normalized) ? prev : [...prev, normalized]));
-                  }}
-                  className="rounded-lg border border-emerald-400/40 px-3 py-2 text-sm text-emerald-200 hover:bg-emerald-500/20"
-                >
-                  Aggiungi wallet connesso
-                </button>
-              ) : null}
-            </div>
+                    Connetti e aggiungi wallet
+                  </button>
+                ) : (
+                  connectedWalletAddresses.map((address) => {
+                    const isAdded = walletAddresses.includes(address);
+                    return (
+                      <div
+                        key={address}
+                        className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-indigo-500/30 bg-indigo-950/40 px-3 py-2"
+                      >
+                        <span className="text-xs text-slate-100">{shortenAddress(address)}</span>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setWalletAddresses((prev) =>
+                              isAdded ? prev.filter((item) => item !== address) : [...prev, address],
+                            )
+                          }
+                          className={`rounded-lg border px-3 py-1.5 text-xs ${
+                            isAdded
+                              ? "border-rose-400/40 text-rose-200 hover:bg-rose-500/20"
+                              : "border-emerald-400/40 text-emerald-200 hover:bg-emerald-500/20"
+                          }`}
+                        >
+                          {isAdded ? "Rimuovi wallet" : "Connetti e aggiungi wallet"}
+                        </button>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            ) : null}
           </div>
 
           <div className="mt-5 flex flex-wrap items-center gap-3">
@@ -563,12 +528,12 @@ export default function ProfiloPage() {
 
           {PRIVY_ENABLED ? (
             <div className="mt-4 rounded-lg border border-indigo-500/30 bg-indigo-900/25 px-4 py-3">
-              <p className="text-sm text-slate-300 mb-2">Wallet (Privy)</p>
-              <PrivyWalletConnector onAddressChange={setPrivyWalletAddress} />
-              <div className="mt-3">
-                <p className="text-sm text-slate-300 mb-2">Social connect (Privy)</p>
+              <p className="text-sm text-slate-300 mb-2">Social connect</p>
+              {!privyReady ? (
+                <p className="text-xs text-slate-400">Inizializzazione social connect...</p>
+              ) : (
                 <PrivySocialConnector />
-              </div>
+              )}
             </div>
           ) : (
             <p className="mt-4 text-xs text-slate-400">
@@ -628,7 +593,6 @@ export default function ProfiloPage() {
           </div>
         </section>
         )}
-        </div>
       </div>
     </div>
   );
