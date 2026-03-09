@@ -77,7 +77,7 @@ function shortenAddress(value?: string | null): string {
 
 export default function ProfiloPage() {
   const { isLoaded, isSignedIn, login } = useAppAuth();
-  const { ready: privyReady, login: privyLogin } = usePrivy();
+  const { ready: privyReady, login: privyLogin, linkWallet } = usePrivy();
   const { wallets } = useWallets();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -266,6 +266,24 @@ export default function ProfiloPage() {
     } finally {
       setSaving(false);
     }
+  }
+
+  function handleConnectAnotherWallet() {
+    if (!privyReady) {
+      setInfoMessage("Wallet connect in inizializzazione, riprova tra qualche secondo.");
+      return;
+    }
+
+    setInfoMessage(null);
+
+    // For authenticated users, this opens Privy's wallet-link flow.
+    if (typeof linkWallet === "function") {
+      linkWallet();
+      return;
+    }
+
+    // Fallback for older SDK behavior.
+    privyLogin({ loginMethods: ["wallet"] });
   }
 
   if (!isLoaded || loading) {
@@ -460,7 +478,7 @@ export default function ProfiloPage() {
               <div className="mt-3 space-y-2">
                 <button
                   type="button"
-                  onClick={() => privyLogin({ loginMethods: ["wallet"] })}
+                  onClick={handleConnectAnotherWallet}
                   className="rounded-lg border border-emerald-400/40 px-3 py-2 text-sm text-emerald-200 hover:bg-emerald-500/20"
                 >
                   {connectedWalletAddresses.length === 0 ? "Connetti e aggiungi wallet" : "Connetti un altro wallet"}

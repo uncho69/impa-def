@@ -34,7 +34,7 @@ export default function DefiLayout({ children }: { children: ReactNode }) {
 
   return (
     <div
-      className={`min-h-screen flex flex-col transition-colors ${
+      className={`h-screen overflow-hidden flex flex-col transition-colors ${
         isDark
           ? "bg-gradient-to-b from-indigo-950 via-slate-900/95 via-30% to-indigo-950 text-white"
           : "bg-slate-50 text-slate-900"
@@ -48,7 +48,7 @@ export default function DefiLayout({ children }: { children: ReactNode }) {
             : "bg-[linear-gradient(rgba(99,102,241,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.06)_1px,transparent_1px)]"
         }`}
       />
-      <div className="relative flex flex-col min-h-screen">
+      <div className="relative flex flex-col h-full overflow-hidden">
         <header
           className={`flex items-center justify-between min-h-[4.5rem] border-b flex-shrink-0 ${
             isDark ? "border-indigo-500/20 bg-indigo-950/50" : "border-slate-200 bg-white/90"
@@ -182,8 +182,14 @@ export default function DefiLayout({ children }: { children: ReactNode }) {
             isItemActive={(href) => (href === "/defi" ? isDefiSection : pathname === href || pathname.startsWith(href + "/"))}
           />
 
-          <main className="flex-1 flex flex-col min-w-0 overflow-auto">
-            <div className="flex-1 px-6 py-8">{children}</div>
+          <main
+            className={`flex-1 flex flex-col min-w-0 overflow-y-auto overscroll-none ${
+              isDark
+                ? "bg-gradient-to-b from-indigo-950 via-slate-900 to-indigo-950"
+                : "bg-slate-50"
+            }`}
+          >
+            <div className="flex-1 min-h-full px-6 py-8">{children}</div>
           </main>
         </div>
       </div>
