@@ -596,7 +596,7 @@ export default function ProfiloPage() {
           </div>
 
           <div className="mt-5 rounded-lg border border-indigo-500/30 bg-indigo-900/25 px-4 py-3">
-            <p className="text-sm font-medium text-white">Address wallet</p>
+            <p className="text-sm font-medium text-white">Portafogli Connessi</p>
             <p className="mt-1 text-xs text-slate-400">
               Connetti wallet e scegli quali address pubblicare nel profilo.
             </p>
@@ -661,6 +661,12 @@ export default function ProfiloPage() {
                     </div>
                   );
                 })}
+
+                {walletAddresses.length === 0 && pendingWalletAddresses.length === 0 ? (
+                  <div className="rounded-md border border-indigo-500/20 bg-indigo-950/30 px-3 py-2 text-xs text-slate-300">
+                    Nessun wallet connesso al profilo. Collega un wallet e conferma la firma per aggiungerlo.
+                  </div>
+                ) : null}
               </div>
             ) : null}
           </div>
@@ -692,7 +698,7 @@ export default function ProfiloPage() {
             <p className="mt-4 text-xs text-slate-400">
               Per abilitare wallet connect con Privy imposta `NEXT_PUBLIC_PRIVY_APP_ID` in ambiente.
             </p>
-          )}
+          ) : null}
 
           {infoMessage ? <p className="mt-3 text-sm text-emerald-300">{infoMessage}</p> : null}
           {error ? <p className="mt-3 text-sm text-rose-300">{error}</p> : null}
