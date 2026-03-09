@@ -434,6 +434,12 @@ export default function ProfiloPage() {
     }
   }
 
+  function handleRemovePendingWallet(address: string) {
+    setPendingWalletAddresses((prev) => prev.filter((item) => item !== address));
+    delete pendingWalletKindsRef.current[address];
+    setInfoMessage("Wallet rimosso dalla lista di conferma.");
+  }
+
   if (!isLoaded || loading) {
     return <div className="max-w-5xl mx-auto animate-pulse text-slate-300 px-6 py-10">Caricamento profilo...</div>;
   }
@@ -629,14 +635,25 @@ export default function ProfiloPage() {
                         className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-amber-400/30 bg-indigo-950/40 px-3 py-2"
                       >
                         <span className="text-xs text-slate-100">{shortenAddress(address)}</span>
-                        <button
-                          type="button"
-                          onClick={() => handleVerifyAndAddWallet(address)}
-                          disabled={verifyingAddress === address}
-                          className="rounded-md border border-amber-400/40 px-3 py-1 text-xs text-amber-100 hover:bg-amber-500/20 disabled:opacity-70"
-                        >
-                          {verifyingAddress === address ? "Firma..." : "Conferma firma e aggiungi"}
-                        </button>
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => handleVerifyAndAddWallet(address)}
+                            disabled={verifyingAddress === address}
+                            className="rounded-md border border-amber-400/40 px-3 py-1 text-xs text-amber-100 hover:bg-amber-500/20 disabled:opacity-70"
+                          >
+                            {verifyingAddress === address ? "Firma..." : "Conferma firma e aggiungi"}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleRemovePendingWallet(address)}
+                            className="rounded-md border border-rose-400/40 px-2 py-1 text-sm font-semibold leading-none text-rose-200 hover:bg-rose-500/20"
+                            aria-label={`Rimuovi wallet in attesa ${address}`}
+                            title="Rimuovi wallet in attesa"
+                          >
+                            ×
+                          </button>
+                        </div>
                       </div>
                     ))}
                   </div>
