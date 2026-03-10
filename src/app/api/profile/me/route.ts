@@ -160,7 +160,12 @@ async function resolveWalletVisibilityColumn(): Promise<WalletVisibilityColumn |
 export async function GET(request: NextRequest) {
   try {
     const userId = await resolveAuthenticatedUserId(request);
-    if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!userId) {
+      // #region agent log
+      fetch('http://127.0.0.1:7427/ingest/53de14af-f544-4874-907d-9c3852d2c5f6',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'933492'},body:JSON.stringify({sessionId:'933492',runId:'run6',hypothesisId:'H16',location:'src/app/api/profile/me/route.ts:GET:unauthorized',message:'profile me unauthorized',data:{hasSessionCookie:Boolean(request.cookies.get('idf_session')?.value),hasPrivyUserCookie:Boolean(request.cookies.get('idf_privy_user_id')?.value),hasXSubjectCookie:Boolean(request.cookies.get('idf_x_subject')?.value)},timestamp:Date.now()})}).catch(()=>{});
+      // #endregion
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
     if (!hasDatabase || !pool) {
       const xSubjectFromCookie = request.cookies.get("idf_x_subject")?.value ?? null;
       // #region agent log

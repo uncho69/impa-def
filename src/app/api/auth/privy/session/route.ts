@@ -40,6 +40,27 @@ async function usersTableHasTwitterIdColumn(): Promise<boolean> {
   return usersTwitterIdColumnCache;
 }
 
+async function resolveCanonicalUserIdByTwitterSubject(twitterSubject: string): Promise<string | null> {
+  if (!pool || !twitterSubject) return null;
+  try {
+    const result = await pool.query(
+      `
+      SELECT id
+      FROM users
+      WHERE twitter_id = $1
+        AND is_active = 1
+        AND deleted_at IS NULL
+      ORDER BY updated_at DESC
+      LIMIT 1
+      `,
+      [twitterSubject]
+    );
+    return (result.rows?.[0]?.id as string | undefined) ?? null;
+  } catch {
+    return null;
+  }
+}
+
 function normalizeWalletAddress(value: unknown): string {
   return typeof value === "string" ? value.trim().toLowerCase() : "";
 }
@@ -188,8 +209,24 @@ export async function POST(request: NextRequest) {
     // #region agent log
     fetch('http://127.0.0.1:7427/ingest/53de14af-f544-4874-907d-9c3852d2c5f6',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'933492'},body:JSON.stringify({sessionId:'933492',runId:'run2',hypothesisId:'H5',location:'src/app/api/auth/privy/session/route.ts:POST:verified',message:'privy session payload flags',data:{hasDatabase,hasPool:Boolean(pool),hasTwitterSubject:Boolean(body.twitterSubject),hasWalletAddress:Boolean(body.walletAddress),hasEmail:Boolean(body.email),userId:verified.userId},timestamp:Date.now()})}).catch(()=>{});
     // #endregion
+    // #region agent log
+    fetch('http://127.0.0.1:7427/ingest/53de14af-f544-4874-907d-9c3852d2c5f6',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'933492'},body:JSON.stringify({sessionId:'933492',runId:'run6',hypothesisId:'H19',location:'src/app/api/auth/privy/session/route.ts:POST:requestContext',message:'privy session request context',data:{origin:request.headers.get('origin') ?? null,host:request.headers.get('host') ?? null,hasIncomingSessionCookie:Boolean(request.cookies.get(getSessionCookieName())?.value),hasIncomingPrivyCookie:Boolean(request.cookies.get(PRIVY_USER_COOKIE)?.value)},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
 
     if (hasDatabase && pool) {
+      const hasTwitterIdColumn = await usersTableHasTwitterIdColumn();
+      let sessionUserId = verified.userId;
+      const twitterSubject = body.twitterSubject?.trim() || "";
+      if (hasTwitterIdColumn && twitterSubject) {
+        const canonicalByTwitter = await resolveCanonicalUserIdByTwitterSubject(twitterSubject);
+        if (canonicalByTwitter && canonicalByTwitter !== verified.userId) {
+          sessionUserId = canonicalByTwitter;
+          // #region agent log
+          fetch('http://127.0.0.1:7427/ingest/53de14af-f544-4874-907d-9c3852d2c5f6',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'933492'},body:JSON.stringify({sessionId:'933492',runId:'run8',hypothesisId:'H21',location:'src/app/api/auth/privy/session/route.ts:POST:canonicalByTwitter',message:'session user switched to canonical twitter owner',data:{verifiedUserId:verified.userId,sessionUserId,twitterSubject},timestamp:Date.now()})}).catch(()=>{});
+          // #endregion
+        }
+      }
+
       const migrationFromUserId = body.migrationFromUserId?.trim() || null;
       const sourceUserFromCookie = request.cookies.get(PRIVY_USER_COOKIE)?.value?.trim() || null;
 
@@ -197,17 +234,24 @@ export async function POST(request: NextRequest) {
         migrationFromUserId &&
         sourceUserFromCookie &&
         migrationFromUserId === sourceUserFromCookie &&
-        migrationFromUserId !== verified.userId &&
+        migrationFromUserId !== sessionUserId &&
         body.twitterSubject
       ) {
         try {
-          await tryMigrateWalletProfileData(migrationFromUserId, verified.userId);
+          await tryMigrateWalletProfileData(migrationFromUserId, sessionUserId);
         } catch (migrationError) {
           console.warn("Privy session migration warning:", migrationError);
         }
       }
 
-      const hasTwitterIdColumn = await usersTableHasTwitterIdColumn();
+      if (sessionUserId !== verified.userId) {
+        try {
+          await tryMigrateWalletProfileData(verified.userId, sessionUserId);
+        } catch (migrationError) {
+          console.warn("Privy canonical migration warning:", migrationError);
+        }
+      }
+
       if (hasTwitterIdColumn) {
         await pool.query(
           `
@@ -222,7 +266,7 @@ export async function POST(request: NextRequest) {
             twitter_id = COALESCE(EXCLUDED.twitter_id, users.twitter_id),
             updated_at = now()
           `,
-          [verified.userId, body.email ?? null, body.walletAddress ?? null, body.twitterSubject ?? null]
+          [sessionUserId, body.email ?? null, body.walletAddress ?? null, body.twitterSubject ?? null]
         );
       } else {
         await pool.query(
@@ -237,7 +281,7 @@ export async function POST(request: NextRequest) {
             deleted_at = NULL,
             updated_at = now()
           `,
-          [verified.userId, body.email ?? null, body.walletAddress ?? null]
+          [sessionUserId, body.email ?? null, body.walletAddress ?? null]
         );
       }
 
@@ -263,7 +307,7 @@ export async function POST(request: NextRequest) {
           is_active = 1,
           updated_at = now()
         `,
-        [verified.userId, verified.userId, body.walletAddress ?? null, body.email ?? null]
+        [sessionUserId, verified.userId, body.walletAddress ?? null, body.email ?? null]
       );
 
       if (body.twitterSubject) {
@@ -290,12 +334,55 @@ export async function POST(request: NextRequest) {
               last_revalidated_at = now(),
               updated_at = now()
             `,
-            [verified.userId, body.twitterSubject]
+            [sessionUserId, body.twitterSubject]
           );
         } catch (socialSyncError) {
           console.warn("Privy session social sync warning:", socialSyncError);
         }
       }
+
+      // #region agent log
+      fetch('http://127.0.0.1:7427/ingest/53de14af-f544-4874-907d-9c3852d2c5f6',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'933492'},body:JSON.stringify({sessionId:'933492',runId:'run8',hypothesisId:'H22',location:'src/app/api/auth/privy/session/route.ts:POST:resolvedSessionUser',message:'final session user chosen after db sync',data:{verifiedUserId:verified.userId,sessionUserId,hasTwitterSubject:Boolean(body.twitterSubject),hasDatabase,hasPool:Boolean(pool)},timestamp:Date.now()})}).catch(()=>{});
+      // #endregion
+
+      const sessionToken = createSessionToken(sessionUserId, "privy");
+      const response = NextResponse.json({
+        ok: true,
+        userId: sessionUserId,
+        noDatabase: !hasDatabase || !pool,
+      });
+      response.cookies.set(getSessionCookieName(), sessionToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: 60 * 60 * 24 * 30,
+      });
+      response.cookies.set(PRIVY_USER_COOKIE, sessionUserId, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: 60 * 60 * 24 * 30,
+      });
+      response.cookies.set(X_SUBJECT_COOKIE, body.twitterSubject?.trim() || "", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: body.twitterSubject ? 60 * 60 * 24 * 30 : 0,
+      });
+      response.cookies.set(X_USERNAME_COOKIE, body.twitterUsername?.trim() || "", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: body.twitterUsername ? 60 * 60 * 24 * 30 : 0,
+      });
+      // #region agent log
+      fetch('http://127.0.0.1:7427/ingest/53de14af-f544-4874-907d-9c3852d2c5f6',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'933492'},body:JSON.stringify({sessionId:'933492',runId:'run6',hypothesisId:'H19',location:'src/app/api/auth/privy/session/route.ts:POST:responseCookies',message:'privy session response cookies set',data:{userId:sessionUserId,setSessionCookie:true,setPrivyCookie:true,setXSubjectCookie:Boolean(body.twitterSubject),setXUsernameCookie:Boolean(body.twitterUsername),isProduction:process.env.NODE_ENV==='production'},timestamp:Date.now()})}).catch(()=>{});
+      // #endregion
+      return response;
     }
 
     const sessionToken = createSessionToken(verified.userId, "privy");
@@ -332,8 +419,15 @@ export async function POST(request: NextRequest) {
       path: "/",
       maxAge: body.twitterUsername ? 60 * 60 * 24 * 30 : 0,
     });
+    // #region agent log
+    fetch('http://127.0.0.1:7427/ingest/53de14af-f544-4874-907d-9c3852d2c5f6',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'933492'},body:JSON.stringify({sessionId:'933492',runId:'run6',hypothesisId:'H19',location:'src/app/api/auth/privy/session/route.ts:POST:responseCookies',message:'privy session response cookies set',data:{userId:verified.userId,setSessionCookie:true,setPrivyCookie:true,setXSubjectCookie:Boolean(body.twitterSubject),setXUsernameCookie:Boolean(body.twitterUsername),isProduction:process.env.NODE_ENV==='production'},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
     return response;
   } catch (error) {
+    const err = error as { message?: string; code?: string };
+    // #region agent log
+    fetch('http://127.0.0.1:7427/ingest/53de14af-f544-4874-907d-9c3852d2c5f6',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'933492'},body:JSON.stringify({sessionId:'933492',runId:'run7',hypothesisId:'H20',location:'src/app/api/auth/privy/session/route.ts:POST:catch',message:'privy session route threw error',data:{message:err?.message ?? null,code:err?.code ?? null,hasDatabase,hasPool:Boolean(pool),isProduction:process.env.NODE_ENV==='production'},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
     console.error("Error creating Privy session:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }

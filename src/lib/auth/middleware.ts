@@ -7,6 +7,9 @@ export async function getUserIdFromRequest(_request: NextRequest): Promise<strin
   try {
     const sessionToken = _request.cookies.get(getSessionCookieName())?.value;
     const parsedSession = parseSessionToken(sessionToken);
+    // #region agent log
+    fetch('http://127.0.0.1:7427/ingest/53de14af-f544-4874-907d-9c3852d2c5f6',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'933492'},body:JSON.stringify({sessionId:'933492',runId:'run6',hypothesisId:'H17',location:'src/lib/auth/middleware.ts:getUserIdFromRequest',message:'session cookie parse result',data:{hasSessionCookie:Boolean(sessionToken),parsedUserId:parsedSession?.userId ?? null},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
     if (parsedSession?.userId) {
       return parsedSession.userId;
     }
