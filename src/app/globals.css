@@ -50,6 +50,47 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Keep scrollbars visually consistent across OS/browser variants. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(71, 85, 105, 0.72) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(71, 85, 105, 0.72);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* Do not switch to bright white on hover/focus. */
+*::-webkit-scrollbar-thumb:hover,
+*::-webkit-scrollbar-thumb:active {
+  background-color: rgba(71, 85, 105, 0.72);
+}
+
+.dark * {
+  scrollbar-color: rgba(99, 102, 241, 0.45) transparent;
+}
+
+.dark *::-webkit-scrollbar-thumb {
+  background-color: rgba(99, 102, 241, 0.45);
+}
+
+.dark *::-webkit-scrollbar-thumb:hover,
+.dark *::-webkit-scrollbar-thumb:active {
+  background-color: rgba(99, 102, 241, 0.45);
+}
+
 @layer components {
   .container-custom { @apply w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8; }
   .gradient-text { @apply text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-secondary-500 font-bold leading-tight; }
