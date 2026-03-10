@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { GuidaAirdropsModal } from "@/components/GuidaAirdropsModal";
 import { getProjectLogo } from "@/lib/project-logos";
+import { BookmarkButton } from "@/components/bookmarks/BookmarkButton";
 import Placeholder from "@/assets/placeholder.svg";
 
 // Import delle immagini per i progetti di airdrop
@@ -455,6 +456,13 @@ export default function Airdrops() {
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M12 1v22" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14.5a3.5 3.5 0 0 1 0 7H6" /></svg>
                   </a>
                 ) : null}
+                <BookmarkButton
+                  url={project.href || "/airdrops"}
+                  title={`${project.title} - Progetto airdrop`}
+                  type="page"
+                  projectId={(project.href || "").replace("/airdrops/", "").replace("/defi/", "") || project.title.toLowerCase().replace(/\s+/g, "-")}
+                  className="ml-auto"
+                />
               </div>
             </div>
           ))}

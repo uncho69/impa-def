@@ -22,21 +22,30 @@ export type ProjectContentOverrides = {
   }[];
 };
 
+export type ProjectTokenConfig = {
+  coingeckoId?: string;
+  symbol?: string;
+  contractAddress?: string;
+  xUrl?: string;
+};
+
 type MetadataEnvelope = {
   tags?: string[];
   contentOverrides?: ProjectContentOverrides;
+  tokenConfig?: ProjectTokenConfig;
 };
 
 export function parseProjectMetadataTags(raw: string | null | undefined): {
   tags: string[];
   contentOverrides: ProjectContentOverrides | null;
+  tokenConfig: ProjectTokenConfig | null;
 } {
-  if (!raw) return { tags: [], contentOverrides: null };
+  if (!raw) return { tags: [], contentOverrides: null, tokenConfig: null };
   try {
     const parsed: unknown = JSON.parse(raw);
     if (Array.isArray(parsed)) {
       const tags = parsed.filter((x): x is string => typeof x === "string");
-      return { tags, contentOverrides: null };
+      return { tags, contentOverrides: null, tokenConfig: null };
     }
     if (parsed && typeof parsed === "object") {
       const obj = parsed as MetadataEnvelope;
@@ -45,26 +54,33 @@ export function parseProjectMetadataTags(raw: string | null | undefined): {
         obj.contentOverrides && typeof obj.contentOverrides === "object"
           ? sanitizeContentOverrides(obj.contentOverrides)
           : null;
-      return { tags, contentOverrides };
+      const tokenConfig =
+        obj.tokenConfig && typeof obj.tokenConfig === "object"
+          ? sanitizeTokenConfig(obj.tokenConfig)
+          : null;
+      return { tags, contentOverrides, tokenConfig };
     }
-    return { tags: [], contentOverrides: null };
+    return { tags: [], contentOverrides: null, tokenConfig: null };
   } catch {
-    return { tags: [], contentOverrides: null };
+    return { tags: [], contentOverrides: null, tokenConfig: null };
   }
 }
 
 export function stringifyProjectMetadataTags(params: {
   tags?: string[];
   contentOverrides?: ProjectContentOverrides | null;
+  tokenConfig?: ProjectTokenConfig | null;
 }): string | null {
   const tags = Array.isArray(params.tags) ? params.tags.filter((x): x is string => typeof x === "string" && x.trim().length > 0) : [];
   const contentOverrides = params.contentOverrides ? sanitizeContentOverrides(params.contentOverrides) : null;
-  if (!contentOverrides) {
+  const tokenConfig = params.tokenConfig ? sanitizeTokenConfig(params.tokenConfig) : null;
+  if (!contentOverrides && !tokenConfig) {
     return tags.length > 0 ? JSON.stringify(tags) : null;
   }
   return JSON.stringify({
     tags,
     contentOverrides,
+    tokenConfig,
   });
 }
 
@@ -160,6 +176,23 @@ function sanitizeContentOverrides(input: ProjectContentOverrides): ProjectConten
       }))
       .filter((x) => x.title.length > 0);
     if (normalized.length > 0) out.contentItems = normalized;
+  }
+  return Object.keys(out).length > 0 ? out : null;
+}
+
+function sanitizeTokenConfig(input: ProjectTokenConfig): ProjectTokenConfig | null {
+  const out: ProjectTokenConfig = {};
+  if (typeof input.coingeckoId === "string" && input.coingeckoId.trim()) {
+    out.coingeckoId = input.coingeckoId.trim().toLowerCase();
+  }
+  if (typeof input.symbol === "string" && input.symbol.trim()) {
+    out.symbol = input.symbol.trim().toUpperCase();
+  }
+  if (typeof input.contractAddress === "string" && input.contractAddress.trim()) {
+    out.contractAddress = input.contractAddress.trim();
+  }
+  if (typeof input.xUrl === "string" && input.xUrl.trim()) {
+    out.xUrl = input.xUrl.trim();
   }
   return Object.keys(out).length > 0 ? out : null;
 }

@@ -6,6 +6,7 @@ import Link from "next/link";
 import polymarketLogo from "@/assets/polymarket-logo.png";
 import kalshiLogo from "@/assets/kalshi-logo.png";
 import { IntroduzioneMercatiPredizioneModal } from "@/components/IntroduzioneMercatiPredizioneModal";
+import { BookmarkButton } from "@/components/bookmarks/BookmarkButton";
 
 type PredictionApp = {
   title: string;
@@ -33,7 +34,7 @@ const APPS: PredictionApp[] = [
     type: "decentralized",
     website: "https://polymarket.com/",
     xProfile: "https://x.com/Polymarket",
-    href: "/giochi/polymarket",
+    href: "/giochi/polymarket-progetto",
   },
   {
     title: "Kalshi",
@@ -42,7 +43,7 @@ const APPS: PredictionApp[] = [
     type: "regulated",
     website: "https://kalshi.com/",
     xProfile: "https://x.com/Kalshi",
-    href: "/giochi/polymarket",
+    href: "/giochi/kalshi",
   },
 ];
 
@@ -167,6 +168,13 @@ export default function MercatiPredizionePage() {
                 >
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>
                 </a>
+                <BookmarkButton
+                  url={app.href}
+                  title={`${app.title} - Mercati di predizione`}
+                  type="page"
+                  projectId={app.title.toLowerCase().replace(/\s+/g, "-")}
+                  className="ml-auto"
+                />
               </div>
             </div>
           ))}

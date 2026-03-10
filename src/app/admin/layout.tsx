@@ -1,60 +1,60 @@
 "use client";
 
-import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useAppAuth } from '@/lib/auth/useAppAuth';
 // import { PageLayout } from '@/components/PageLayout'; // Non più necessario
-
-// AGGIORNA QUESTE EMAIL CON LE TUE REALI!
-const ADMIN_EMAILS = [
-  "jeffben69zos@gmail.com",    // La tua email per testing
-  "admin@imparodefi.com",      // Email admin principale
-  "cofounder@imparodefi.com",  // Email cofounder
-  "lordbaconf@gmail.com"       // Admin per gestione articoli
-];
-
-function isAdminEmail(email: string): boolean {
-  return ADMIN_EMAILS.includes(email.toLowerCase());
-}
 
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { user, isLoaded } = useUser();
+  const { isLoaded, isSignedIn } = useAppAuth();
   const router = useRouter();
   const [supportCount, setSupportCount] = useState<number | null>(null);
-  const [loadTimeout, setLoadTimeout] = useState(false);
-  const [forceEntry, setForceEntry] = useState(false);
-
-  // Se Clerk non carica entro 3s, mostra messaggio invece di restare su "Verificando accesso..."
-  useEffect(() => {
-    const t = setTimeout(() => setLoadTimeout(true), 3000);
-    return () => clearTimeout(t);
-  }, []);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [checkingAdmin, setCheckingAdmin] = useState(true);
 
   useEffect(() => {
-    if (isLoaded) {
-      if (!user) {
-        window.location.href = '/sign-in';
-        return;
-      }
-
-      const userEmail = user.emailAddresses?.[0]?.emailAddress;
-      if (!userEmail || !isAdminEmail(userEmail)) {
-        router.push('/');
-        return;
-      }
+    if (!isLoaded) return;
+    if (!isSignedIn) {
+      setIsAdmin(false);
+      setCheckingAdmin(false);
+      router.push('/');
+      return;
     }
-  }, [user, isLoaded, router]);
+
+    let cancelled = false;
+    const resolveAdmin = async () => {
+      setCheckingAdmin(true);
+      try {
+        const res = await fetch('/api/auth/admin-status', { cache: 'no-store' });
+        const payload = await res.json().catch(() => ({}));
+        const nextAdmin = Boolean(payload?.isAdmin);
+        if (cancelled) return;
+        setIsAdmin(nextAdmin);
+        if (!nextAdmin) {
+          router.push('/');
+        }
+      } catch {
+        if (cancelled) return;
+        setIsAdmin(false);
+        router.push('/');
+      } finally {
+        if (!cancelled) setCheckingAdmin(false);
+      }
+    };
+    resolveAdmin();
+    return () => {
+      cancelled = true;
+    };
+  }, [isLoaded, isSignedIn, router]);
 
   // Carica numero richieste supporto attive per badge nel menu
   useEffect(() => {
-    if (!isLoaded || !user) return;
-    const userEmail = user.emailAddresses?.[0]?.emailAddress;
-    if (!userEmail || !isAdminEmail(userEmail)) return;
+    if (!isLoaded || !isSignedIn || !isAdmin) return;
 
     let cancelled = false;
     const loadSupportCount = async () => {
@@ -80,16 +80,17 @@ export default function AdminLayout({
       cancelled = true;
       clearInterval(interval);
     };
-  }, [isLoaded, user]);
+  }, [isLoaded, isSignedIn, isAdmin]);
 
-  // Mostra subito la dashboard: non bloccare mai la pagina. Redirect/negato solo quando Clerk è caricato e utente non è admin.
-  const userEmail = user?.emailAddresses?.[0]?.emailAddress;
-  const isAdmin = userEmail ? isAdminEmail(userEmail) : false;
-  const showAccessDenied = isLoaded && (!user || !isAdmin);
-  const showUnverifiedBanner = !isLoaded && (loadTimeout || forceEntry);
+  if (!isLoaded || checkingAdmin) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <p className="text-gray-600">Verifica accesso admin in corso...</p>
+      </div>
+    );
+  }
 
-  // Accesso negato solo quando Clerk ha caricato e l'utente non è admin
-  if (showAccessDenied) {
+  if (!isSignedIn || !isAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
@@ -108,32 +109,25 @@ export default function AdminLayout({
 
   const adminShell = (
     <div className="min-h-screen text-white">
-      {showUnverifiedBanner && (
-        <div className="bg-amber-50 border-b border-amber-200 px-4 py-2 text-center text-sm text-amber-800">
-          Verifica accesso in corso. Se Clerk non risponde, <button type="button" onClick={() => setForceEntry(true)} className="underline font-medium">entra comunque</button> o <a href="/sign-in" className="underline font-medium">accedi qui</a>.
-        </div>
-      )}
       <div className="bg-indigo-950/50 border-b border-indigo-500/20 backdrop-blur">
         <div className="px-6">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-8">
               <h1 className="text-xl font-bold text-white">🛡️ Admin Dashboard</h1>
-              <nav className="flex space-x-6">
-                <Link href="/admin/dashboard" className="text-slate-300 hover:text-white font-medium transition-colors">Dashboard</Link>
-                <Link href="/admin/news" className="text-slate-300 hover:text-white font-medium transition-colors">Articoli</Link>
-                <Link href="/admin/campaigns" className="text-slate-300 hover:text-white font-medium transition-colors">Campagne</Link>
-                <Link href="/admin/learning-badges" className="text-slate-300 hover:text-white font-medium transition-colors">Learning &amp; Badge</Link>
-                <Link href="/admin/projects" className="text-slate-300 hover:text-white font-medium transition-colors">Gestisci progetti</Link>
-                <Link href="/admin/hacks-scams" className="text-slate-300 hover:text-white font-medium transition-colors">Hacks &amp; Scams</Link>
-                <Link href="/admin/support" className="text-slate-300 hover:text-white font-medium transition-colors flex items-center gap-1">
-                  Supporto
-                  {supportCount !== null && supportCount > 0 && (
-                    <span className="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[11px] font-semibold">{supportCount}</span>
-                  )}
-                </Link>
-              </nav>
             </div>
-            <div className="flex items-center" />
+            <div className="flex items-center">
+              {supportCount !== null && supportCount > 0 ? (
+                <Link
+                  href="/admin/support"
+                  className="inline-flex items-center gap-2 rounded-md border border-red-400/40 bg-red-500/10 px-2.5 py-1.5 text-xs text-red-100 hover:bg-red-500/20"
+                >
+                  Supporto
+                  <span className="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[11px] font-semibold">
+                    {supportCount}
+                  </span>
+                </Link>
+              ) : null}
+            </div>
           </div>
         </div>
       </div>

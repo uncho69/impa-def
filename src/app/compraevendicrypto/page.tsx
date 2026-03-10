@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import { GuidaCompraVenditaModal } from "@/components/GuidaCompraVenditaModal";
+import { BookmarkButton } from "@/components/bookmarks/BookmarkButton";
 import coinbaseIcon from "@/assets/coinbasecex.png";
 import krakenIcon from "@/assets/krakencex.png";
 import binanceIcon from "@/assets/binancecex.png";
@@ -229,6 +230,13 @@ export default function ExchangePage() {
                 >
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>
                 </a>
+                <BookmarkButton
+                  url={exchange.href}
+                  title={`${exchange.title} - Compra e Vendi Crypto`}
+                  type="page"
+                  projectId={exchange.href.replace("/compraevendicrypto/", "")}
+                  className="ml-auto"
+                />
               </div>
             </div>
           ))}

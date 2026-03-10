@@ -4,7 +4,7 @@ import { db } from '@/lib/db';
 import { projects, projectCatalog, projectMetadata } from '@/lib/db/schema';
 import { eq, sql } from 'drizzle-orm';
 import { PLATFORM_PROJECTS } from '@/lib/platform-projects';
-import { parseProjectMetadataTags } from '@/lib/project-page-overrides';
+import { parseProjectMetadataTags, stringifyProjectMetadataTags, type ProjectTokenConfig } from '@/lib/project-page-overrides';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,6 +14,7 @@ const ADMIN_EMAILS = [
   'cofounder@imparodefi.com',
   'lordbaconf@gmail.com',
 ];
+const EXCLUDED_PROJECT_IDS = new Set(['imparodefi']);
 
 async function checkAdmin(): Promise<boolean> {
   try {
@@ -52,6 +53,7 @@ export type ProjectItem = {
     guideUrl?: string;
     usefulLinks?: { label: string; href: string }[];
   } | null;
+  tokenConfig?: ProjectTokenConfig | null;
   source: 'platform' | 'catalog';
 };
 
@@ -89,6 +91,7 @@ export async function GET() {
     const dbByName = new Map(dbList.map((p) => [p.id, p]));
 
     for (const p of PLATFORM_PROJECTS) {
+      if (EXCLUDED_PROJECT_IDS.has(p.id.toLowerCase())) continue;
       seen.add(p.id);
       const meta = metaById.get(p.id);
       const name = dbByName.get(p.id)?.name ?? p.name;
@@ -103,10 +106,12 @@ export async function GET() {
         category: meta?.category ?? null,
         tags: tags.length ? tags : undefined,
         contentOverrides: parsedMeta.contentOverrides,
+        tokenConfig: parsedMeta.tokenConfig ?? p.tokenConfig ?? null,
         source: 'platform',
       });
     }
     for (const c of catalogRows) {
+      if (EXCLUDED_PROJECT_IDS.has(c.id.toLowerCase())) continue;
       if (seen.has(c.id)) continue;
       seen.add(c.id);
       const meta = metaById.get(c.id);
@@ -121,10 +126,12 @@ export async function GET() {
         category: meta?.category ?? c.category ?? null,
         tags: tags.length ? tags : undefined,
         contentOverrides: parsedMeta.contentOverrides,
+        tokenConfig: parsedMeta.tokenConfig ?? null,
         source: 'catalog',
       });
     }
     for (const p of dbList) {
+      if (EXCLUDED_PROJECT_IDS.has(p.id.toLowerCase())) continue;
       if (!seen.has(p.id)) {
         seen.add(p.id);
         const meta = metaById.get(p.id);
@@ -139,6 +146,7 @@ export async function GET() {
           category: meta?.category ?? null,
           tags: tags.length ? tags : undefined,
           contentOverrides: parsedMeta.contentOverrides,
+          tokenConfig: parsedMeta.tokenConfig ?? null,
           source: 'platform',
         });
       }
@@ -148,7 +156,7 @@ export async function GET() {
     return NextResponse.json({ projects: result }, { status: 200 });
   } catch (err) {
     console.error('Error listing projects:', err);
-    const fallback = PLATFORM_PROJECTS.map((p) => ({
+    const fallback = PLATFORM_PROJECTS.filter((p) => !EXCLUDED_PROJECT_IDS.has(p.id.toLowerCase())).map((p) => ({
       id: p.id,
       name: p.name,
       websiteUrl: null,
@@ -156,6 +164,7 @@ export async function GET() {
       description: null,
       category: null,
       tags: undefined,
+      tokenConfig: p.tokenConfig ?? null,
       source: 'platform' as const,
     }));
     return NextResponse.json({ projects: fallback }, { status: 200 });
@@ -171,7 +180,16 @@ export async function POST(request: NextRequest) {
   if (!isAdmin) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-  let body: { id: string; name: string; websiteUrl?: string; twitterUrl?: string; description?: string; category?: string; tags?: string[] };
+  let body: {
+    id: string;
+    name: string;
+    websiteUrl?: string;
+    twitterUrl?: string;
+    description?: string;
+    category?: string;
+    tags?: string[];
+    tokenConfig?: ProjectTokenConfig | null;
+  };
   try {
     body = await request.json();
   } catch {
@@ -188,7 +206,10 @@ export async function POST(request: NextRequest) {
   const description = body.description ? String(body.description).trim() || null : null;
   const category = body.category ? String(body.category).trim() || null : null;
   const tagsRaw = Array.isArray(body.tags) ? body.tags.filter((x): x is string => typeof x === 'string') : [];
-  const tagsJson = tagsRaw.length > 0 ? JSON.stringify(tagsRaw) : null;
+  const tagsJson = stringifyProjectMetadataTags({
+    tags: tagsRaw,
+    tokenConfig: body.tokenConfig ?? null,
+  });
 
   try {
     const existing = await db.select().from(projectCatalog).where(eq(projectCatalog.id, id)).limit(1);

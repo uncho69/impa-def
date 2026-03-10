@@ -59,8 +59,7 @@ export default function AdminDashboard() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-white">Dashboard</h1>
-          <p className="text-slate-300 mt-2">
+          <p className="text-slate-300">
             Benvenuto nel pannello admin di ImparoDeFi. Scegli cosa gestire qui sotto.
           </p>
         </div>
@@ -167,6 +166,23 @@ export default function AdminDashboard() {
               className="inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-500 transition-colors"
             >
               Vai a Learning &amp; Badge
+            </Link>
+          </div>
+        </div>
+
+        <div className="bg-indigo-900/25 rounded-xl border border-indigo-500/20 p-6 flex flex-col justify-between backdrop-blur">
+          <div>
+            <h2 className="text-xl font-bold text-white mb-2">Token in Tendenza</h2>
+            <p className="text-slate-300 text-sm mb-4">
+              Aggiungi o rimuovi i token progetto mostrati in homepage. I prezzi sono aggiornati ogni minuto via CoinGecko.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href="/admin/trending-tokens"
+              className="inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-500 transition-colors"
+            >
+              Vai a Token in Tendenza
             </Link>
           </div>
         </div>

@@ -20,6 +20,7 @@ const PUBLIC_PATTERNS: Array<{ exact?: string; prefix?: string }> = [
   { prefix: '/api/cron/process-tweets' },
   { prefix: '/api/leaderboards' },
   { prefix: '/api/campaigns' },
+  { prefix: '/api/trending-tokens' },
   { prefix: '/api/admin' },
   { prefix: '/sign-in' },
   { prefix: '/sign-up' },

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import { IntroduzioneMemecoinModal } from "@/components/IntroduzioneMemecoinModal";
+import { BookmarkButton } from "@/components/bookmarks/BookmarkButton";
 
 import floppaIcon from "@/assets/floppa-icon.png";
 import dogwifhatIcon from "@/assets/dogwifhat-icon.png";
@@ -20,6 +21,7 @@ import pepeIcon from "@/assets/pepe-icon.png";
 import dogecoinIcon from "@/assets/dogecoin-icon.png";
 
 type MemecoinItem = {
+  id: string;
   title: string;
   image: StaticImageData;
   website: string;
@@ -42,6 +44,7 @@ type ChainFilterId = (typeof CHAIN_FILTERS)[number]["id"];
 
 const MEMECOINS: MemecoinItem[] = [
   {
+    id: "floppa",
     title: "Floppa",
     image: floppaIcon,
     website: "https://floppa.wtf/",
@@ -52,6 +55,7 @@ const MEMECOINS: MemecoinItem[] = [
     chain: "base",
   },
   {
+    id: "dogwifhat-wif",
     title: "Dogwifhat (WIF)",
     image: dogwifhatIcon,
     website: "https://dogwifcoin.org",
@@ -62,6 +66,7 @@ const MEMECOINS: MemecoinItem[] = [
     chain: "solana",
   },
   {
+    id: "shark-cat",
     title: "Shark Cat",
     image: sharkcatIcon,
     website: "https://sharkcatsolana.com",
@@ -72,6 +77,7 @@ const MEMECOINS: MemecoinItem[] = [
     chain: "solana",
   },
   {
+    id: "kenidy",
     title: "Kenidy",
     image: kenidyIcon,
     website: "https://kenidy.io",
@@ -82,6 +88,7 @@ const MEMECOINS: MemecoinItem[] = [
     chain: "solana",
   },
   {
+    id: "boden",
     title: "Boden",
     image: bodenIcon,
     website: "https://boden4pres.com",
@@ -92,6 +99,7 @@ const MEMECOINS: MemecoinItem[] = [
     chain: "solana",
   },
   {
+    id: "tremp",
     title: "Tremp",
     image: trempIcon,
     website: "https://tremp.xyz",
@@ -102,6 +110,7 @@ const MEMECOINS: MemecoinItem[] = [
     chain: "solana",
   },
   {
+    id: "higher",
     title: "Higher",
     image: higherIcon,
     website: "https://www.aimhigher.net/",
@@ -112,6 +121,7 @@ const MEMECOINS: MemecoinItem[] = [
     chain: "base",
   },
   {
+    id: "tn100x",
     title: "TN100X",
     image: tn100xIcon,
     website: "https://ham.fun/",
@@ -122,6 +132,7 @@ const MEMECOINS: MemecoinItem[] = [
     chain: "base",
   },
   {
+    id: "degen",
     title: "Degen",
     image: degenIcon,
     website: "https://degen.tips",
@@ -132,6 +143,7 @@ const MEMECOINS: MemecoinItem[] = [
     chain: "base",
   },
   {
+    id: "retardio",
     title: "Retardio",
     image: retardioIcon,
     website: "https://retardio.xyz/",
@@ -142,6 +154,7 @@ const MEMECOINS: MemecoinItem[] = [
     chain: "solana",
   },
   {
+    id: "apu",
     title: "Apu",
     image: apuIcon,
     website: "https://apu.com/",
@@ -152,6 +165,7 @@ const MEMECOINS: MemecoinItem[] = [
     chain: "ethereum",
   },
   {
+    id: "pepe-coin",
     title: "Pepe (PEPE)",
     image: pepeIcon,
     website: "https://www.pepe.vip/",
@@ -162,6 +176,7 @@ const MEMECOINS: MemecoinItem[] = [
     chain: "ethereum",
   },
   {
+    id: "dogecoin",
     title: "Dogecoin",
     image: dogecoinIcon,
     website: "https://dogecoin.com/",
@@ -307,36 +322,38 @@ export default function MemecoinsPage() {
               key={coin.title}
               className="rounded-2xl border border-slate-200 dark:border-indigo-500/20 bg-white dark:bg-indigo-900/25 p-5 hover:border-indigo-400 dark:hover:border-indigo-500 transition-colors"
             >
-              <div className="flex items-start justify-between gap-2 mb-2 min-w-0">
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-indigo-800/40 flex items-center justify-center overflow-hidden shrink-0">
-                    <Image src={coin.image} alt={coin.title} width={32} height={32} className="object-contain" />
+              <Link href={`/memecoins/${coin.id}`} className="block">
+                <div className="flex items-start justify-between gap-2 mb-2 min-w-0">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-indigo-800/40 flex items-center justify-center overflow-hidden shrink-0">
+                      <Image src={coin.image} alt={coin.title} width={32} height={32} className="object-contain" />
+                    </div>
+                    <span className="font-bold text-slate-900 dark:text-white truncate">{coin.title}</span>
                   </div>
-                  <span className="font-bold text-slate-900 dark:text-white truncate">{coin.title}</span>
+                  <span className="shrink-0 px-2 py-1 rounded-lg bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300 text-[11px] font-medium whitespace-nowrap">
+                    Memecoin
+                  </span>
                 </div>
-                <span className="shrink-0 px-2 py-1 rounded-lg bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300 text-[11px] font-medium whitespace-nowrap">
-                  Memecoin
-                </span>
-              </div>
-              <p className="text-slate-600 dark:text-slate-400 text-sm mb-3 line-clamp-3">{coin.description}</p>
-              <div className="text-xs font-bold text-slate-700 dark:text-slate-300 space-y-1">
-                <div>
-                  Prezzo:{" "}
-                  {loading || !coin.coingeckoId
-                    ? "—"
-                    : cgData?.[coin.coingeckoId]?.usd != null
-                      ? formatPrice(cgData[coin.coingeckoId]!.usd!)
-                      : "—"}
+                <p className="text-slate-600 dark:text-slate-400 text-sm mb-3 line-clamp-3">{coin.description}</p>
+                <div className="text-xs font-bold text-slate-700 dark:text-slate-300 space-y-1">
+                  <div>
+                    Prezzo:{" "}
+                    {loading || !coin.coingeckoId
+                      ? "—"
+                      : cgData?.[coin.coingeckoId]?.usd != null
+                        ? formatPrice(cgData[coin.coingeckoId]!.usd!)
+                        : "—"}
+                  </div>
+                  <div>
+                    Market Cap:{" "}
+                    {loading || !coin.coingeckoId
+                      ? "—"
+                      : cgData?.[coin.coingeckoId]?.usd_market_cap != null
+                        ? formatMc(cgData[coin.coingeckoId]!.usd_market_cap!)
+                        : "—"}
+                  </div>
                 </div>
-                <div>
-                  Market Cap:{" "}
-                  {loading || !coin.coingeckoId
-                    ? "—"
-                    : cgData?.[coin.coingeckoId]?.usd_market_cap != null
-                      ? formatMc(cgData[coin.coingeckoId]!.usd_market_cap!)
-                      : "—"}
-                </div>
-              </div>
+              </Link>
               <div className="flex items-center gap-2 pt-3 mt-3 border-t border-slate-200 dark:border-slate-600">
                 <a
                   href={coin.xProfile}
@@ -368,6 +385,13 @@ export default function MemecoinsPage() {
                 >
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M12 1v22" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14.5a3.5 3.5 0 0 1 0 7H6" /></svg>
                 </a>
+                <BookmarkButton
+                  url={`/memecoins/${coin.id}`}
+                  title={`${coin.title} - Memecoin`}
+                  type="page"
+                  projectId={coin.id}
+                  className="ml-auto"
+                />
               </div>
             </div>
           ))}

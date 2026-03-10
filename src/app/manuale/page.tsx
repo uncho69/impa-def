@@ -63,14 +63,14 @@ export default function Manuale() {
 
   return (
     <div
-      className={`min-h-screen overflow-x-hidden transition-colors ${
+      className={`h-screen overflow-hidden transition-colors ${
         isDark
           ? "bg-gradient-to-b from-indigo-950 via-slate-900/95 via-30% to-indigo-950 text-white"
           : "bg-gradient-to-b from-slate-100 via-indigo-50/50 to-slate-100 text-slate-900"
       }`}
     >
       <div className={`fixed inset-0 pointer-events-none bg-[size:48px_48px] ${isDark ? "bg-[linear-gradient(rgba(99,102,241,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.06)_1px,transparent_1px)]" : "bg-[linear-gradient(rgba(99,102,241,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.06)_1px,transparent_1px)]"}`} />
-      <div className="relative flex flex-col min-h-screen overflow-x-hidden">
+      <div className="relative flex flex-col h-full overflow-hidden">
         <div className={`flex items-center justify-between py-4 border-b ${isDark ? "border-indigo-500/20 bg-indigo-950/50" : "border-slate-200 bg-white/70"}`}>
           <Link href="/" className="hidden lg:flex items-center gap-2 px-4 w-56 flex-shrink-0">
             <Image src={isDark ? "/imparodefi-logo-dark.png" : imparodefiLogo} alt="ImparoDeFi" width={36} height={36} className="rounded-lg" />
@@ -155,7 +155,7 @@ export default function Manuale() {
             </>
           )}
 
-          <div className="flex flex-1 min-h-0">
+          <div className="flex flex-1 min-h-0 overflow-hidden">
             <CollapsibleSidebar
               items={SIDEBAR_ITEMS}
               isDark={isDark}
@@ -1280,13 +1280,13 @@ export default function Manuale() {
           </div>
 
             </div>
+            <footer className={`border-t py-4 mt-6 text-center text-sm ${isDark ? "border-indigo-500/20 text-white" : "border-slate-200 text-slate-600"}`}>
+              ImparoDeFi © {new Date().getFullYear()}. All rights reserved.
+            </footer>
           </div>
             </div>
           </div>
         </div>
-      <footer className={`border-t py-4 text-center text-sm ${isDark ? "border-indigo-500/20 text-white" : "border-slate-200 text-slate-600"}`}>
-        ImparoDeFi © {new Date().getFullYear()}. All rights reserved.
-      </footer>
     </div>
   );
 }

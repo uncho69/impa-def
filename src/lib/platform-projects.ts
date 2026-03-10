@@ -4,29 +4,39 @@
  * che i progetti esistano nel DB quando si crea una campagna.
  * id = slug (es. usato in /blockchain/:id), name = etichetta da mostrare.
  */
-export const PLATFORM_PROJECTS: { id: string; name: string }[] = [
+export const PLATFORM_PROJECTS: {
+  id: string;
+  name: string;
+  tokenConfig?: {
+    coingeckoId?: string;
+    symbol?: string;
+    contractAddress?: string;
+    xUrl?: string;
+  };
+}[] = [
   { id: 'abstract', name: 'Abstract' },
-  { id: 'arbitrum', name: 'Arbitrum' },
-  { id: 'avalanche', name: 'Avalanche' },
+  { id: 'arbitrum', name: 'Arbitrum', tokenConfig: { coingeckoId: 'arbitrum', symbol: 'ARB' } },
+  { id: 'avalanche', name: 'Avalanche', tokenConfig: { coingeckoId: 'avalanche-2', symbol: 'AVAX' } },
   { id: 'base', name: 'Base' },
-  { id: 'berachain', name: 'Berachain' },
-  { id: 'bitcoin', name: 'Bitcoin' },
-  { id: 'blast', name: 'Blast' },
-  { id: 'degen', name: 'Degen' },
-  { id: 'ethereum', name: 'Ethereum' },
+  { id: 'berachain', name: 'Berachain', tokenConfig: { coingeckoId: 'berachain-berachain', symbol: 'BERA' } },
+  { id: 'bitcoin', name: 'Bitcoin', tokenConfig: { coingeckoId: 'bitcoin', symbol: 'BTC' } },
+  { id: 'blast', name: 'Blast', tokenConfig: { coingeckoId: 'blast', symbol: 'BLAST' } },
+  { id: 'degen', name: 'Degen', tokenConfig: { coingeckoId: 'degen-base', symbol: 'DEGEN' } },
+  { id: 'ethereum', name: 'Ethereum', tokenConfig: { coingeckoId: 'ethereum', symbol: 'ETH' } },
   { id: 'hyperevm', name: 'HyperEVM' },
   { id: 'hyperlane', name: 'Hyperlane' },
-  { id: 'hyperliquid', name: 'Hyperliquid' },
-  { id: 'imparodefi', name: 'ImparoDefi' },
+  { id: 'hyperliquid', name: 'Hyperliquid', tokenConfig: { coingeckoId: 'hyperliquid', symbol: 'HYPE' } },
   { id: 'ink', name: 'Ink' },
   { id: 'layer3', name: 'Layer3' },
   { id: 'linea', name: 'Linea' },
-  { id: 'optimism', name: 'Optimism' },
-  { id: 'polygon', name: 'Polygon' },
+  { id: 'optimism', name: 'Optimism', tokenConfig: { coingeckoId: 'optimism', symbol: 'OP' } },
+  { id: 'polygon', name: 'Polygon', tokenConfig: { coingeckoId: 'polygon-ecosystem-token', symbol: 'POL' } },
   { id: 'polygon_zkEVM', name: 'Polygon zkEVM' },
+  { id: 'railgun', name: 'RAILGUN', tokenConfig: { coingeckoId: 'railgun', symbol: 'RAIL' } },
   { id: 'sanko', name: 'Sanko' },
-  { id: 'scroll', name: 'Scroll' },
-  { id: 'solana', name: 'Solana' },
-  { id: 'zksync', name: 'zkSync' },
-  { id: 'zora', name: 'Zora' },
+  { id: 'scroll', name: 'Scroll', tokenConfig: { coingeckoId: 'scroll', symbol: 'SCR' } },
+  { id: 'solana', name: 'Solana', tokenConfig: { coingeckoId: 'solana', symbol: 'SOL' } },
+  { id: 'zcash', name: 'Zcash', tokenConfig: { coingeckoId: 'zcash', symbol: 'ZEC' } },
+  { id: 'zksync', name: 'zkSync', tokenConfig: { coingeckoId: 'zksync', symbol: 'ZK' } },
+  { id: 'zora', name: 'Zora', tokenConfig: { coingeckoId: 'zora', symbol: 'ZORA' } },
 ];

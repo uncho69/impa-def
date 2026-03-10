@@ -52,12 +52,12 @@ export function CollapsibleSidebar({
 
   return (
     <aside
-      className={`hidden lg:flex flex-shrink-0 self-start backdrop-blur flex-col border-r transition-[width] duration-200 ease-in-out rounded-2xl mt-4 ml-4 ${
+      className={`hidden lg:flex flex-shrink-0 self-start sticky top-4 backdrop-blur flex-col border-r transition-[width] duration-200 ease-in-out rounded-2xl mt-4 ml-4 min-h-0 h-[calc(100vh-6.5rem)] ${
         collapsed ? "w-[4.5rem]" : "w-56"
       } ${isDark ? "bg-indigo-950/70 border-indigo-500/20 shadow-[4px_0_20px_rgba(0,0,0,0.25)]" : "bg-white/80 border-slate-200 shadow-[4px_0_16px_rgba(0,0,0,0.06)]"}`}
       aria-label="Navigazione laterale"
     >
-      <nav className="px-2 py-4 flex flex-col">
+      <nav className="px-2 py-4 flex flex-col flex-1 min-h-0 overflow-y-auto">
         {/* Toggle in cima */}
         <button
           type="button"

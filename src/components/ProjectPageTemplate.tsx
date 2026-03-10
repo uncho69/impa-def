@@ -144,8 +144,8 @@ function formatCompactUsd(n: number | null | undefined): string {
 function getProjectHref(projectId: string, macro: MacroCategoryId): string {
   if (macro === "defi") return `/defi/${projectId}`;
   if (macro === "portafogli") return `/wallet/${projectId}`;
-  if (macro === "nft") return "/nft";
-  if (macro === "memecoin") return "/memecoins";
+  if (macro === "nft") return `/nft/${projectId}`;
+  if (macro === "memecoin") return `/memecoins/${projectId}`;
   return "/esplora-app";
 }
 

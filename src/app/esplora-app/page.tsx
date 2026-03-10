@@ -12,6 +12,7 @@ import { getCoingeckoId } from "@/lib/project-coingecko-ids";
 import { UnifiedAuthControls } from "@/components/auth/UnifiedAuthControls";
 import { SearchBar } from "@/components/SearchBar";
 import { CollapsibleSidebar } from "@/components/CollapsibleSidebar";
+import { BookmarkButton } from "@/components/bookmarks/BookmarkButton";
 
 const SIDEBAR_ITEMS = [
   { label: "Dashboard", href: "/", icon: "📊" },
@@ -73,9 +74,9 @@ function getProjectPageHref(projectId: string): string {
   if (macro === "portafogli") return `/wallet/${projectId}`;
   if (macro === "nft") return `/nft/${projectId}`;
   if (macro === "blockchain") return `/blockchain/${projectId}`;
-  if (macro === "compra-vendi-crypto") return "/compraevendicrypto";
+  if (macro === "compra-vendi-crypto") return `/compraevendicrypto/${projectId}`;
   if (macro === "airdrops") return "/airdrops";
-  if (macro === "memecoin") return "/memecoins";
+  if (macro === "memecoin") return `/memecoins/${projectId}`;
   if (macro === "strumenti-utili") return "/strumentiutili";
   if (macro === "giochi-metaversi") return "/giochi";
   return `/blockchain/${projectId}`;
@@ -493,6 +494,12 @@ export default function EsploraAppPage() {
                               </svg>
                             </a>
                           )}
+                          <BookmarkButton
+                            url={href}
+                            title={`${p.name} - Mappa Ecosistema`}
+                            type="page"
+                            projectId={p.id}
+                          />
                         </div>
                       </div>
                     </Link>

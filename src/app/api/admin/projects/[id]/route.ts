@@ -5,7 +5,7 @@ import { projectCatalog, projectMetadata, projects } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { PLATFORM_PROJECTS } from '@/lib/platform-projects';
 import { NOTION_CATALOG_PROJECTS } from '@/lib/notion-catalog-projects';
-import { parseProjectMetadataTags, stringifyProjectMetadataTags, type ProjectContentOverrides } from '@/lib/project-page-overrides';
+import { parseProjectMetadataTags, stringifyProjectMetadataTags, type ProjectContentOverrides, type ProjectTokenConfig } from '@/lib/project-page-overrides';
 
 export const dynamic = 'force-dynamic';
 
@@ -66,6 +66,7 @@ export async function GET(
             category: notionProject?.category ?? null,
             tags: [],
             contentOverrides: null,
+          tokenConfig: platform?.tokenConfig ?? null,
             source: 'platform',
           },
         },
@@ -96,6 +97,7 @@ export async function GET(
           category: metaRow?.category ?? catalogRow?.category ?? notionProject?.category ?? null,
           tags: parsedMeta.tags,
           contentOverrides: parsedMeta.contentOverrides,
+          tokenConfig: parsedMeta.tokenConfig ?? platform?.tokenConfig ?? null,
           source: catalogRow ? 'catalog' : 'platform',
         },
       },
@@ -121,7 +123,16 @@ export async function PATCH(
   const id = (await params).id?.trim().toLowerCase();
   if (!id) return NextResponse.json({ error: 'id mancante' }, { status: 400 });
 
-  let body: { name?: string; websiteUrl?: string; twitterUrl?: string; description?: string; category?: string; tags?: string[]; contentOverrides?: ProjectContentOverrides | null };
+  let body: {
+    name?: string;
+    websiteUrl?: string;
+    twitterUrl?: string;
+    description?: string;
+    category?: string;
+    tags?: string[];
+    contentOverrides?: ProjectContentOverrides | null;
+    tokenConfig?: ProjectTokenConfig | null;
+  };
   try {
     body = await _request.json();
   } catch {
@@ -162,9 +173,12 @@ export async function PATCH(
       const nextTags = tagsArr !== undefined ? tagsArr : existingParsed.tags;
       const nextContentOverrides =
         body.contentOverrides !== undefined ? body.contentOverrides : existingParsed.contentOverrides;
+      const nextTokenConfig =
+        body.tokenConfig !== undefined ? body.tokenConfig : existingParsed.tokenConfig;
       const nextTagsJson = stringifyProjectMetadataTags({
         tags: nextTags,
         contentOverrides: nextContentOverrides,
+        tokenConfig: nextTokenConfig,
       });
 
       const metaSet: { websiteUrl?: string | null; twitterUrl?: string | null; description?: string | null; category?: string | null; tags?: string | null; updatedAt: Date } = { updatedAt: now };
@@ -188,14 +202,16 @@ export async function PATCH(
       }
     }
 
-    // Per i progetti catalogo, manteniamo eventuali override avanzati in project_metadata.
-    if (body.contentOverrides !== undefined) {
+    // Manteniamo eventuali override avanzati e token config in project_metadata.
+    if (body.contentOverrides !== undefined || body.tokenConfig !== undefined) {
       const existingMeta = await db.select().from(projectMetadata).where(eq(projectMetadata.projectId, id)).limit(1);
       const parsedExisting = parseProjectMetadataTags(existingMeta[0]?.tags ?? null);
       const tagsForMeta = tagsArr !== undefined ? tagsArr : parsedExisting.tags;
       const tagsJsonForMeta = stringifyProjectMetadataTags({
         tags: tagsForMeta,
-        contentOverrides: body.contentOverrides,
+        contentOverrides:
+          body.contentOverrides !== undefined ? body.contentOverrides : parsedExisting.contentOverrides,
+        tokenConfig: body.tokenConfig !== undefined ? body.tokenConfig : parsedExisting.tokenConfig,
       });
 
       if (existingMeta.length > 0) {

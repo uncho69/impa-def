@@ -3,6 +3,7 @@
 import Link from "next/link";
 // import { PageLayout } from "@/components/PageLayout"; // Non necessario, usiamo layout custom
 import { useState, useEffect } from "react";
+import { BookmarkButton } from "@/components/bookmarks/BookmarkButton";
 
 export default function NewsPage() {
   const [featuredArticles, setFeaturedArticles] = useState([]);
@@ -111,8 +112,18 @@ export default function NewsPage() {
                       <span className="text-xs text-slate-500 dark:text-slate-300 bg-slate-100 dark:bg-indigo-800/40 px-2 py-1 rounded-full">
                         Categoria
                       </span>
-                      <div className="text-blue-600 dark:text-indigo-300 text-xs font-medium group-hover:text-blue-700 dark:group-hover:text-indigo-200 flex items-center">
-                        Leggi <span className="ml-1">→</span>
+                      <div className="flex items-center gap-2">
+                        <div className="text-blue-600 dark:text-indigo-300 text-xs font-medium group-hover:text-blue-700 dark:group-hover:text-indigo-200 flex items-center">
+                          Leggi <span className="ml-1">→</span>
+                        </div>
+                        <span onClick={(e) => e.preventDefault()}>
+                          <BookmarkButton
+                            url={`/news/${category.id}`}
+                            title={`${category.title} - Categoria news`}
+                            type="page"
+                            projectId={`news-${category.id}`}
+                          />
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -170,12 +181,20 @@ export default function NewsPage() {
                         <span className="text-xs text-slate-500 dark:text-slate-400">
                           {new Date(article.publishedAt).toLocaleDateString('it-IT')}
                         </span>
-                        <Link 
-                          href={`/news/${article.category.toLowerCase().replace('_', '-')}`} 
-                          className={`${colors.badge} text-white px-3 py-1 rounded-full text-xs font-medium hover:opacity-80 transition-opacity`}
-                        >
-                          Leggi →
-                        </Link>
+                        <div className="flex items-center gap-2">
+                          <Link
+                            href={`/news/${article.category.toLowerCase().replace('_', '-')}`}
+                            className={`${colors.badge} text-white px-3 py-1 rounded-full text-xs font-medium hover:opacity-80 transition-opacity`}
+                          >
+                            Leggi →
+                          </Link>
+                          <BookmarkButton
+                            url={`/news/${article.category.toLowerCase().replace('_', '-')}`}
+                            title={article.title}
+                            type="page"
+                            projectId={`news-article-${article.id}`}
+                          />
+                        </div>
                       </div>
                     </div>
                   );

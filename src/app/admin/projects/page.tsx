@@ -55,8 +55,16 @@ interface Project {
   description?: string | null;
   category?: string | null;
   tags?: string[];
+  tokenConfig?: {
+    coingeckoId?: string;
+    symbol?: string;
+    contractAddress?: string;
+    xUrl?: string;
+  } | null;
   source?: "platform" | "catalog";
 }
+
+const EXCLUDED_PROJECT_IDS = new Set(["imparodefi"]);
 
 export default function AdminProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -69,10 +77,16 @@ export default function AdminProjectsPage() {
   /** Unisce sempre l'elenco Notion (133 progetti) a quello dall'API, così si vedono tutti. */
   function mergeWithNotionList(apiList: Project[]): Project[] {
     const byId = new Map<string, Project>();
-    for (const p of apiList) byId.set(p.id.toLowerCase(), p);
+    for (const p of apiList) {
+      const key = p.id.toLowerCase();
+      if (EXCLUDED_PROJECT_IDS.has(key)) continue;
+      byId.set(key, p);
+    }
     for (const p of NOTION_CATALOG_PROJECTS) {
-      if (byId.has(p.id.toLowerCase())) continue;
-      byId.set(p.id.toLowerCase(), {
+      const key = p.id.toLowerCase();
+      if (EXCLUDED_PROJECT_IDS.has(key)) continue;
+      if (byId.has(key)) continue;
+      byId.set(key, {
         id: p.id,
         name: p.name,
         websiteUrl: p.websiteUrl ?? null,
@@ -208,6 +222,7 @@ export default function AdminProjectsPage() {
                       ID: {p.id}
                       {p.websiteUrl && " · Sito"}
                       {p.twitterUrl && " · X"}
+                      {p.tokenConfig?.coingeckoId && " · Token"}
                       {p.source === "catalog" && " · Catalogo"}
                     </p>
                   </div>
@@ -268,6 +283,10 @@ function AddModal({ onClose, onSaved }: { onClose: () => void; onSaved: () => vo
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [tags, setTags] = useState<string[]>([]);
+  const [tokenCoingeckoId, setTokenCoingeckoId] = useState("");
+  const [tokenSymbol, setTokenSymbol] = useState("");
+  const [tokenContractAddress, setTokenContractAddress] = useState("");
+  const [tokenXUrl, setTokenXUrl] = useState("");
   const [saving, setSaving] = useState(false);
   const [tagSelect, setTagSelect] = useState("");
   const addTag = (tag: string) => {
@@ -297,6 +316,15 @@ function AddModal({ onClose, onSaved }: { onClose: () => void; onSaved: () => vo
           description: description.trim() || undefined,
           category: category.trim() || undefined,
           tags: tags.length ? tags : undefined,
+          tokenConfig:
+            tokenCoingeckoId.trim() || tokenSymbol.trim() || tokenContractAddress.trim() || tokenXUrl.trim()
+              ? {
+                  coingeckoId: tokenCoingeckoId.trim() || undefined,
+                  symbol: tokenSymbol.trim() || undefined,
+                  contractAddress: tokenContractAddress.trim() || undefined,
+                  xUrl: tokenXUrl.trim() || undefined,
+                }
+              : undefined,
         }),
       });
       if (res.ok) onSaved();
@@ -322,6 +350,14 @@ function AddModal({ onClose, onSaved }: { onClose: () => void; onSaved: () => vo
           <input value={websiteUrl} onChange={(e) => setWebsiteUrl(e.target.value)} placeholder="https://..." className="w-full px-3 py-2 border border-indigo-400/30 rounded-lg bg-white/10 text-white placeholder:text-slate-400" />
           <label className="block text-sm font-medium text-slate-200">Profilo X / Twitter</label>
           <input value={twitterUrl} onChange={(e) => setTwitterUrl(e.target.value)} placeholder="https://x.com/..." className="w-full px-3 py-2 border border-indigo-400/30 rounded-lg bg-white/10 text-white placeholder:text-slate-400" />
+          <label className="block text-sm font-medium text-slate-200">Token CoinGecko ID (opzionale)</label>
+          <input value={tokenCoingeckoId} onChange={(e) => setTokenCoingeckoId(e.target.value)} placeholder="es. ethereum" className="w-full px-3 py-2 border border-indigo-400/30 rounded-lg bg-white/10 text-white placeholder:text-slate-400" />
+          <label className="block text-sm font-medium text-slate-200">Token ticker (opzionale)</label>
+          <input value={tokenSymbol} onChange={(e) => setTokenSymbol(e.target.value)} placeholder="es. ETH" className="w-full px-3 py-2 border border-indigo-400/30 rounded-lg bg-white/10 text-white placeholder:text-slate-400" />
+          <label className="block text-sm font-medium text-slate-200">Token contract (opzionale)</label>
+          <input value={tokenContractAddress} onChange={(e) => setTokenContractAddress(e.target.value)} placeholder="0x... oppure mint Solana" className="w-full px-3 py-2 border border-indigo-400/30 rounded-lg bg-white/10 text-white placeholder:text-slate-400" />
+          <label className="block text-sm font-medium text-slate-200">Token social X (opzionale)</label>
+          <input value={tokenXUrl} onChange={(e) => setTokenXUrl(e.target.value)} placeholder="https://x.com/..." className="w-full px-3 py-2 border border-indigo-400/30 rounded-lg bg-white/10 text-white placeholder:text-slate-400" />
           <label className="block text-sm font-medium text-slate-200">Descrizione</label>
           <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={2} className="w-full px-3 py-2 border border-indigo-400/30 rounded-lg bg-white/10 text-white placeholder:text-slate-400" />
           <label className="block text-sm font-medium text-slate-200">Categoria</label>

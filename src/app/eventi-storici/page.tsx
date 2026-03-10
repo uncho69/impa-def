@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Accordion } from "@/components/Accordion";
+import { BookmarkButton } from "@/components/bookmarks/BookmarkButton";
 
 type Era = "foundations" | "expansion" | "mainstream" | "institutional";
 
@@ -416,6 +417,14 @@ export default function EventiStoriciPage() {
                       </ul>
                     </div>
                   )}
+                  <div className="pt-1">
+                    <BookmarkButton
+                      url={`/eventi-storici#event-${event.id}`}
+                      title={`${event.title} - Evento storico Web3`}
+                      type="page"
+                      projectId={`evento-${event.id}`}
+                    />
+                  </div>
                 </div>
               </Accordion>
             </div>

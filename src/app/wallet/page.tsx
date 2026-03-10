@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
+import { BookmarkButton } from "@/components/bookmarks/BookmarkButton";
 import metamaskIcon from "@/assets/metamask-icon.svg";
 import phantomIcon from "@/assets/phantom-icon.png";
 import rainbowIcon from "@/assets/rainbow-icon.png";
@@ -46,7 +47,7 @@ const WALLETS: WalletItem[] = [
     title: "Rainbow",
     href: "/wallet/rainbow",
     icon: rainbowIcon,
-    description: "Wallet mobile curato per Ethereum e Layer 2, ideale per onboarding rapido.",
+    description: "Wallet multichain e aggregatore DeFi con UX curata, in linea con la scheda presente in dashboard.",
     type: "software",
     website: "https://rainbow.me/",
     xProfile: "https://x.com/rainbowdotme",
@@ -209,6 +210,13 @@ export default function WalletPage() {
                 >
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>
                 </a>
+                <BookmarkButton
+                  url={wallet.href}
+                  title={`${wallet.title} - Pagina progetto`}
+                  type="page"
+                  projectId={wallet.href.replace("/wallet/", "")}
+                  className="ml-auto"
+                />
               </div>
             </div>
           ))}

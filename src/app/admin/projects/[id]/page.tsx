@@ -48,6 +48,12 @@ type ProjectDetail = {
       tags?: string[];
     }[];
   } | null;
+  tokenConfig?: {
+    coingeckoId?: string;
+    symbol?: string;
+    contractAddress?: string;
+    xUrl?: string;
+  } | null;
 };
 
 type EditableLink = { label: string; href: string };
@@ -132,6 +138,10 @@ export default function AdminProjectEditorPage() {
   const [category, setCategory] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [tagSelect, setTagSelect] = useState("");
+  const [tokenCoingeckoId, setTokenCoingeckoId] = useState("");
+  const [tokenSymbol, setTokenSymbol] = useState("");
+  const [tokenContractAddress, setTokenContractAddress] = useState("");
+  const [tokenXUrl, setTokenXUrl] = useState("");
 
   const [overviewText, setOverviewText] = useState("");
   const [appUrl, setAppUrl] = useState("");
@@ -276,6 +286,10 @@ export default function AdminProjectEditorPage() {
         setTwitterUrl(defaultTwitterUrl);
         setCategory(p.category || "");
         setTags(Array.isArray(p.tags) ? p.tags : []);
+        setTokenCoingeckoId(p.tokenConfig?.coingeckoId || "");
+        setTokenSymbol(p.tokenConfig?.symbol || "");
+        setTokenContractAddress(p.tokenConfig?.contractAddress || "");
+        setTokenXUrl(p.tokenConfig?.xUrl || "");
         setOverviewText(p.contentOverrides?.overviewText || defaultDescription || "");
         setAppUrl(defaultAppUrl);
         setGuideUrl(defaultGuideUrl);
@@ -366,6 +380,15 @@ export default function AdminProjectEditorPage() {
           description: description.trim() || undefined,
           category: category.trim() || undefined,
           tags,
+          tokenConfig:
+            tokenCoingeckoId.trim() || tokenSymbol.trim() || tokenContractAddress.trim() || tokenXUrl.trim()
+              ? {
+                  coingeckoId: tokenCoingeckoId.trim() || undefined,
+                  symbol: tokenSymbol.trim() || undefined,
+                  contractAddress: tokenContractAddress.trim() || undefined,
+                  xUrl: tokenXUrl.trim() || undefined,
+                }
+              : null,
           contentOverrides,
         }),
       });
@@ -468,6 +491,32 @@ export default function AdminProjectEditorPage() {
                       </option>
                     ))}
                   </select>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:max-w-xl">
+                  <input
+                    value={tokenCoingeckoId}
+                    onChange={(e) => setTokenCoingeckoId(e.target.value)}
+                    className="px-3 py-2 rounded-lg border border-white/15 bg-white/10 text-white placeholder:text-indigo-100/60 text-sm"
+                    placeholder="Token CoinGecko ID (es. ethereum)"
+                  />
+                  <input
+                    value={tokenSymbol}
+                    onChange={(e) => setTokenSymbol(e.target.value)}
+                    className="px-3 py-2 rounded-lg border border-white/15 bg-white/10 text-white placeholder:text-indigo-100/60 text-sm"
+                    placeholder="Token ticker (es. ETH)"
+                  />
+                  <input
+                    value={tokenContractAddress}
+                    onChange={(e) => setTokenContractAddress(e.target.value)}
+                    className="px-3 py-2 rounded-lg border border-white/15 bg-white/10 text-white placeholder:text-indigo-100/60 text-sm"
+                    placeholder="Token contract (0x... / mint)"
+                  />
+                  <input
+                    value={tokenXUrl}
+                    onChange={(e) => setTokenXUrl(e.target.value)}
+                    className="px-3 py-2 rounded-lg border border-white/15 bg-white/10 text-white placeholder:text-indigo-100/60 text-sm"
+                    placeholder="Token X URL"
+                  />
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {tags.map((tag) => (

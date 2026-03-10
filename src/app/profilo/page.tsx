@@ -76,6 +76,39 @@ function shortenAddress(value?: string | null): string {
   return `${value.slice(0, 8)}...${value.slice(-6)}`;
 }
 
+function getXHandleFromProfileUrl(url?: string | null): string | null {
+  if (!url) return null;
+  try {
+    const parsed = new URL(url);
+    const parts = parsed.pathname.split("/").filter(Boolean);
+    if (parts.length >= 1 && parts[0] !== "i") return `@${parts[0].replace(/^@+/, "")}`;
+  } catch {
+    return null;
+  }
+  return null;
+}
+
+function extractLinkedEmail(linkedAccounts: Array<Record<string, unknown>>): string | null {
+  for (const account of linkedAccounts) {
+    const candidates = [account.address, account.email, account.emailAddress];
+    for (const value of candidates) {
+      if (typeof value === "string" && value.includes("@")) {
+        return value.trim().toLowerCase();
+      }
+    }
+  }
+  return null;
+}
+
+function extractLinkedXHandle(linkedAccounts: Array<Record<string, unknown>>): string | null {
+  const twitter = linkedAccounts.find((account) => account.type === "twitter_oauth");
+  if (!twitter) return null;
+  const username = twitter.username;
+  if (typeof username !== "string") return null;
+  const normalized = username.trim().replace(/^@+/, "");
+  return normalized ? `@${normalized}` : null;
+}
+
 type SignableWallet = {
   type?: string;
 };
@@ -138,7 +171,7 @@ async function signSolanaOwnership(address: string): Promise<void> {
 
 export default function ProfiloPage() {
   const { isLoaded, isSignedIn, login } = useAppAuth();
-  const { ready: privyReady, signMessage, linkWallet } = usePrivy();
+  const { ready: privyReady, authenticated, user, signMessage, linkWallet, getAccessToken } = usePrivy();
   const { wallets } = useWallets();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -163,11 +196,43 @@ export default function ProfiloPage() {
     return `/profilo/${data.profile.userId}`;
   }, [data?.profile?.userId]);
 
+  async function syncSessionFromPrivy(): Promise<void> {
+    if (!privyReady || !authenticated) return;
+    const accessToken = await getAccessToken();
+    if (!accessToken) return;
+
+    const walletAddress = wallets?.[0]?.address ?? null;
+    const linkedAccounts = Array.isArray(user?.linkedAccounts) ? user.linkedAccounts : [];
+    const emailAccount = linkedAccounts.find((account) => account?.type === "email");
+    const email =
+      emailAccount && "address" in emailAccount && typeof emailAccount.address === "string"
+        ? emailAccount.address
+        : null;
+    const twitterAccount = linkedAccounts.find((account) => account?.type === "twitter_oauth") as
+      | { subject?: string | null; username?: string | null }
+      | undefined;
+    await fetch("/api/auth/privy/session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        accessToken,
+        walletAddress,
+        email,
+        twitterSubject: twitterAccount?.subject ?? null,
+        twitterUsername: twitterAccount?.username ?? null,
+      }),
+    }).catch(() => null);
+  }
+
   async function loadProfile() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/profile/me", { cache: "no-store" });
+      let res = await fetch("/api/profile/me", { cache: "no-store" });
+      if (res.status === 401) {
+        await syncSessionFromPrivy();
+        res = await fetch("/api/profile/me", { cache: "no-store" });
+      }
       const json = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(json?.error || "Errore nel caricamento profilo");
       const payload = json as ProfileResponse;
@@ -490,6 +555,9 @@ export default function ProfiloPage() {
   const { profile, contents } = data;
   const primaryProfileWallet = walletAddresses[0] || null;
   const resolvedWalletAddress = primaryProfileWallet;
+  const linkedAccounts = (Array.isArray(user?.linkedAccounts) ? user.linkedAccounts : []) as Array<Record<string, unknown>>;
+  const connectedEmail = extractLinkedEmail(linkedAccounts) || profile.email || null;
+  const connectedXHandle = extractLinkedXHandle(linkedAccounts) || getXHandleFromProfileUrl(profile.xProfileUrl);
 
   return (
     <div className="relative z-10 px-4 sm:px-6 py-6 sm:py-8">
@@ -610,7 +678,39 @@ export default function ProfiloPage() {
             {!privyReady ? (
               <p className="text-xs text-slate-400">Inizializzazione social connect...</p>
             ) : (
-              <PrivySocialConnector />
+              <>
+                <PrivySocialConnector />
+                <div className="mt-3 space-y-2 rounded-md border border-indigo-500/25 bg-indigo-950/35 p-3">
+                  <p className="text-xs uppercase tracking-wide text-slate-400">Account connessi</p>
+                  <div className="text-sm text-slate-200">
+                    {profile.xProfileUrl ? (
+                      <a
+                        href={profile.xProfileUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1.5 text-indigo-300 underline-offset-2 hover:underline"
+                      >
+                        <span aria-hidden>𝕏</span>
+                        <span>{connectedXHandle || "Account X"}</span>
+                      </a>
+                    ) : connectedXHandle ? (
+                      <span className="inline-flex items-center gap-1.5 text-indigo-300">
+                        <span aria-hidden>𝕏</span>
+                        <span>{connectedXHandle}</span>
+                      </span>
+                    ) : (
+                      <span className="text-slate-400">X non collegato</span>
+                    )}
+                  </div>
+                  <div className="text-sm text-slate-200">
+                    {connectedEmail ? (
+                      <span className="text-slate-300">{connectedEmail}</span>
+                    ) : (
+                      <span className="text-slate-400">Email non collegata</span>
+                    )}
+                  </div>
+                </div>
+              </>
             )}
           </div>
 

@@ -3,10 +3,12 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { UnifiedAuthControls } from "@/components/auth/UnifiedAuthControls";
 import { SearchBar } from "@/components/SearchBar";
 import { CollapsibleSidebar } from "@/components/CollapsibleSidebar";
+import { useAppAuth } from "@/lib/auth/useAppAuth";
+import { isAdminEmail } from "@/lib/admin-emails";
 
 import baseLogo from "@/assets/base-logo.svg";
 import hyperliquidLogo from "@/assets/hyperliquid-logo.png";
@@ -89,12 +91,6 @@ const NEWS_CARDS = [
   },
 ];
 
-const TRENDING_TOKENS = [
-  { symbol: "BTC", name: "Bitcoin", price: "$92,450", change: "+2.4%", positive: true },
-  { symbol: "SOL", name: "Solana", price: "$210.20", change: "+5.1%", positive: true },
-  { symbol: "ETH", name: "Ethereum", price: "$3,450", change: "-0.5%", positive: false },
-];
-
 const TOKEN_ICONS: Record<string, typeof bitcoinIcon> = {
   BTC: bitcoinIcon,
   SOL: solanaLogo,
@@ -103,16 +99,92 @@ const TOKEN_ICONS: Record<string, typeof bitcoinIcon> = {
 
 type Theme = "dark" | "light";
 type PublicHackAlert = { name: string; desc: string; link: string | null };
+type LiveTrendingToken = {
+  projectId: string;
+  coingeckoId: string;
+  symbol: string;
+  name: string;
+  image: string | null;
+  priceUsd: number;
+  change24h: number;
+};
+
+const FALLBACK_TRENDING_TOKENS: LiveTrendingToken[] = [
+  { projectId: "bitcoin", coingeckoId: "bitcoin", symbol: "BTC", name: "Bitcoin", image: null, priceUsd: 0, change24h: 0 },
+  { projectId: "solana", coingeckoId: "solana", symbol: "SOL", name: "Solana", image: null, priceUsd: 0, change24h: 0 },
+  { projectId: "ethereum", coingeckoId: "ethereum", symbol: "ETH", name: "Ethereum", image: null, priceUsd: 0, change24h: 0 },
+];
+
+function formatUsdPrice(value: number): string {
+  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 2 }).format(value || 0);
+}
+
+function formatChange(value: number): string {
+  const abs = Math.abs(value || 0).toFixed(2);
+  return `${value >= 0 ? "+" : "-"}${abs}%`;
+}
+
+function extractPrivyEmail(
+  linkedAccounts: Array<Record<string, unknown>> | undefined
+): string {
+  if (!Array.isArray(linkedAccounts)) return "";
+  for (const account of linkedAccounts) {
+    const candidates = [account?.address, account?.email, account?.emailAddress];
+    for (const value of candidates) {
+      if (typeof value === "string" && value.includes("@")) {
+        return value.toLowerCase();
+      }
+    }
+  }
+  return "";
+}
 
 export default function Home() {
   const pathname = usePathname();
-  const isAdmin = false;
+  const router = useRouter();
+  const { user, isLoaded, isSignedIn } = useAppAuth();
+  const linkedAccounts = (Array.isArray(user?.linkedAccounts) ? user.linkedAccounts : []) as Array<Record<string, unknown>>;
+  const userEmail = extractPrivyEmail(linkedAccounts);
+  const [isAdmin, setIsAdmin] = useState(Boolean(userEmail && isAdminEmail(userEmail)));
   const [theme, setTheme] = useState<Theme>("dark");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [compactHero, setCompactHero] = useState(false);
   const [hacksAlerts, setHacksAlerts] = useState<PublicHackAlert[]>(
     DEFAULT_HACKS_SCAMS_ALERTS.filter((item) => item.isActive).map(toPublicAlert),
   );
+  const [trendingTokens, setTrendingTokens] = useState<LiveTrendingToken[]>(FALLBACK_TRENDING_TOKENS);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+    if (!isSignedIn) {
+      setIsAdmin(false);
+      return;
+    }
+
+    if (userEmail && isAdminEmail(userEmail)) {
+      setIsAdmin(true);
+      return;
+    }
+
+    let cancelled = false;
+    const resolveAdminStatus = async () => {
+      try {
+        const res = await fetch("/api/auth/admin-status", { cache: "no-store" });
+        if (!res.ok) return;
+        const data = await res.json().catch(() => ({}));
+        if (!cancelled) {
+          setIsAdmin(Boolean(data?.isAdmin));
+        }
+      } catch {
+        // keep current admin state on network errors
+      }
+    };
+    resolveAdminStatus();
+    return () => {
+      cancelled = true;
+    };
+  }, [isLoaded, isSignedIn, userEmail]);
 
   useEffect(() => {
     const stored = localStorage.getItem("imparodefi-theme") as Theme | null;
@@ -145,15 +217,49 @@ export default function Home() {
     };
   }, []);
 
+  useEffect(() => {
+    let mounted = true;
+    const loadTrendingTokens = async () => {
+      try {
+        const res = await fetch("/api/trending-tokens", { cache: "no-store" });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!mounted) return;
+        const tokens = Array.isArray(data?.tokens) ? data.tokens : [];
+        if (tokens.length > 0) {
+          setTrendingTokens(tokens);
+        }
+      } catch {
+        // Keep fallback values on network error.
+      }
+    };
+
+    loadTrendingTokens();
+    const timer = window.setInterval(loadTrendingTokens, 60 * 1000);
+    return () => {
+      mounted = false;
+      window.clearInterval(timer);
+    };
+  }, []);
+
   const isDark = theme === "dark";
   const isItemActive = (href: string) => {
     if (href === "/") return pathname === "/";
     return pathname === href || pathname.startsWith(href + "/");
   };
 
+  const getTrendingTokenProjectHref = (projectId: string) => {
+    const normalized = String(projectId || "")
+      .trim()
+      .toLowerCase()
+      .replace(/-/g, "_");
+    if (!normalized) return null;
+    return `/blockchain/${normalized}`;
+  };
+
   return (
     <div
-      className={`min-h-screen overflow-x-hidden text-white transition-colors ${
+      className={`h-screen overflow-hidden text-white transition-colors ${
         isDark
           ? "bg-gradient-to-b from-indigo-950 via-slate-900/95 via-30% to-indigo-950"
           : "bg-gradient-to-b from-slate-100 via-indigo-50/50 to-slate-100 text-slate-900"
@@ -162,7 +268,7 @@ export default function Home() {
       {/* Geometric pattern overlay */}
       <div className={`fixed inset-0 pointer-events-none bg-[size:48px_48px] ${isDark ? "bg-[linear-gradient(rgba(99,102,241,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.06)_1px,transparent_1px)]" : "bg-[linear-gradient(rgba(99,102,241,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.06)_1px,transparent_1px)]"}`} />
 
-      <div className="relative flex flex-col min-h-screen overflow-x-hidden">
+      <div className="relative flex flex-col h-full overflow-hidden">
         {/* Top bar: logo + login/account */}
         <div className={`flex items-center justify-between py-4 border-b ${isDark ? "border-indigo-500/20 bg-indigo-950/50" : "border-slate-200 bg-white/70"}`}>
           <Link href="/" className="hidden lg:flex items-center gap-2 px-4 w-56 flex-shrink-0">
@@ -302,7 +408,7 @@ export default function Home() {
             </>
           )}
 
-          <div className="flex flex-1 min-h-0">
+          <div className="flex flex-1 min-h-0 overflow-hidden">
             <CollapsibleSidebar
               items={SIDEBAR_ITEMS}
               isDark={isDark}
@@ -310,15 +416,21 @@ export default function Home() {
             />
 
             {/* Center + Right */}
-            <div className="flex-1 flex flex-col min-w-0">
+          <div className="flex-1 flex flex-col min-w-0">
           {/* Top header - central */}
-          <div className="px-8 pt-8 pb-6 text-center">
-            <h1 className={`text-4xl lg:text-5xl font-bold mb-2 ${isDark ? "text-white" : "text-slate-900"}`}>
-              Domina la Finanza Decentralizzata
-            </h1>
-            <p className={`text-lg max-w-2xl mx-auto mb-6 ${isDark ? "text-white" : "text-slate-600"}`}>
-              Il tuo hub per imparare, scoprire e monitorare il mondo Web3.
-            </p>
+          <div className={`px-8 text-center transition-all duration-300 ${compactHero ? "pt-3 pb-3" : "pt-8 pb-6"}`}>
+            <div
+              className={`overflow-hidden transition-all duration-300 ${
+                compactHero ? "max-h-0 opacity-0 -translate-y-2 mb-0" : "max-h-48 opacity-100 translate-y-0 mb-6"
+              }`}
+            >
+              <h1 className={`text-4xl lg:text-5xl font-bold mb-2 ${isDark ? "text-white" : "text-slate-900"}`}>
+                Domina la Finanza Decentralizzata
+              </h1>
+              <p className={`text-lg max-w-2xl mx-auto ${isDark ? "text-white" : "text-slate-600"}`}>
+                Il tuo hub per imparare, scoprire e monitorare il mondo Web3.
+              </p>
+            </div>
             <div className="flex flex-wrap justify-center gap-4">
               <Link
                 href="/manuale"
@@ -335,7 +447,13 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="flex-1 px-6 pb-8 overflow-auto">
+          <div
+            className="flex-1 px-6 pb-8 overflow-auto"
+            onScroll={(event) => {
+              const nextCompact = event.currentTarget.scrollTop > 20;
+              setCompactHero((prev) => (prev === nextCompact ? prev : nextCompact));
+            }}
+          >
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_20rem] grid-rows-[auto_auto_auto] gap-6 items-stretch">
             {/* Riga 1: Trending (sinistra) | Airdrop Monitor (destra) - altezza contenuto, no stretch */}
               <section className={`min-w-0 rounded-2xl border backdrop-blur p-6 overflow-hidden lg:col-start-1 lg:row-start-1 lg:self-start ${isDark ? "border-indigo-500/25 bg-indigo-900/25" : "border-slate-200 bg-white/80"}`}>
@@ -424,13 +542,23 @@ export default function Home() {
                     </tr>
                   </thead>
                   <tbody>
-                    {TRENDING_TOKENS.map((row) => (
-                      <tr key={row.symbol} className={`border-b ${isDark ? "border-indigo-500/10" : "border-slate-100"}`}>
+                    {trendingTokens.map((row) => {
+                      const href = getTrendingTokenProjectHref(row.projectId);
+                      return (
+                      <tr
+                        key={row.symbol}
+                        className={`border-b ${
+                          isDark ? "border-indigo-500/10" : "border-slate-100"
+                        } ${href ? "cursor-pointer hover:bg-white/5" : ""}`}
+                        onClick={() => {
+                          if (href) router.push(href);
+                        }}
+                      >
                         <td className="py-2.5 px-2">
                           <div className="flex items-center gap-2">
                             <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center overflow-hidden shrink-0">
                               <Image
-                                src={TOKEN_ICONS[row.symbol]}
+                                src={TOKEN_ICONS[row.symbol] || bitcoinIcon}
                                 alt={row.name}
                                 width={18}
                                 height={18}
@@ -440,18 +568,18 @@ export default function Home() {
                             <span className={`font-medium ${isDark ? "text-white" : "text-slate-900"}`}>{row.symbol}</span>
                           </div>
                         </td>
-                        <td className={`py-2.5 px-2 ${isDark ? "text-slate-300" : "text-slate-600"}`}>{row.price}</td>
+                        <td className={`py-2.5 px-2 ${isDark ? "text-slate-300" : "text-slate-600"}`}>{formatUsdPrice(row.priceUsd)}</td>
                         <td className="py-2.5 px-2 text-right">
                           <span
                             className={`inline-block px-2 py-0.5 rounded-md text-xs font-medium ${
-                              row.positive ? "bg-emerald-500/20 text-emerald-400" : "bg-red-500/20 text-red-400"
+                              row.change24h >= 0 ? "bg-emerald-500/20 text-emerald-400" : "bg-red-500/20 text-red-400"
                             }`}
                           >
-                            {row.change}
+                            {formatChange(row.change24h)}
                           </span>
                         </td>
                       </tr>
-                    ))}
+                    )})}
                   </tbody>
                 </table>
               </div>
@@ -521,15 +649,13 @@ export default function Home() {
               </ul>
               </section>
             </div>
+            <footer className={`border-t py-4 mt-6 text-center text-sm ${isDark ? "border-indigo-500/20 text-white" : "border-slate-200 text-slate-600"}`}>
+              ImparoDeFi © {new Date().getFullYear()}. All rights reserved.
+            </footer>
           </div>
             </div>
           </div>
         </div>
-
-      {/* Footer minimale per la landing */}
-      <footer className={`border-t py-4 text-center text-sm ${isDark ? "border-indigo-500/20 text-white" : "border-slate-200 text-slate-600"}`}>
-        ImparoDeFi © {new Date().getFullYear()}. All rights reserved.
-      </footer>
     </div>
   );
 }

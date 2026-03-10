@@ -94,6 +94,20 @@ import radbroLogo from "@/assets/radbro-logo.jpg";
 import propellerLogo from "@/assets/propeller-logo.jpg";
 import relayLogo from "@/assets/relay-bridge-logo.jpg";
 import layer3Logo from "@/assets/layer3-logo.png";
+import railgunLogo from "@/assets/railgun-logo.png";
+import zcashLogo from "@/assets/zcash-logo.png";
+import bongBearsLogo from "@/assets/bong-bears-logo.png";
+import cowSwapLogo from "@/assets/cow-swap-logo.png";
+import cryptoPunksLogo from "@/assets/crypto-punks-logo.png";
+import definedLogo from "@/assets/defined-logo.png";
+import dexscreenerLogo from "@/assets/dexscreener-logo.png";
+import dripTradeLogo from "@/assets/drip-trade-logo.png";
+import extendedLogo from "@/assets/extended-logo.png";
+import farcasterNewLogo from "@/assets/farcaster-logo.png";
+import felixLogo from "@/assets/felix-logo.png";
+import gasZipLogo from "@/assets/gas-zip-logo.png";
+import hyperlendLogo from "@/assets/hyperlend-logo.png";
+import hypurrfiLogo from "@/assets/hypurrfi-logo.png";
 import placeholderLogo from "@/assets/placeholder.svg";
 
 export const PROJECT_LOGO: Record<string, StaticImageData> = {
@@ -127,6 +141,11 @@ export const PROJECT_LOGO: Record<string, StaticImageData> = {
   camelot: camelotLogo,
   stargate: stargateLogo,
   debridge: debridgeLogo,
+  "bong-bears-and-rebase": bongBearsLogo,
+  "cow-swap": cowSwapLogo,
+  cowswap: cowSwapLogo,
+  "crypto-punks": cryptoPunksLogo,
+  cryptopunks: cryptoPunksLogo,
   jumper: jumperLogo,
   orbiter: orbiterLogo,
   "yearn-finance": yearnLogo,
@@ -138,6 +157,8 @@ export const PROJECT_LOGO: Record<string, StaticImageData> = {
   hyperliquid: hyperliquidIcon,
   hyperevm: hyperliquidIcon,
   layer3: layer3Logo,
+  railgun: railgunLogo,
+  zcash: zcashLogo,
   sanko: placeholderLogo,
   polygon_zkevm: polygonLogo,
   aave: aaveLogo,
@@ -163,6 +184,17 @@ export const PROJECT_LOGO: Record<string, StaticImageData> = {
   traderjoe: traderJoeLogo,
   debank: debankLogo,
   nansen: nansenLogo,
+  defined: definedLogo,
+  dexscreener: dexscreenerLogo,
+  "drip-trade": dripTradeLogo,
+  driptrade: dripTradeLogo,
+  extended: extendedLogo,
+  farcaster: farcasterNewLogo,
+  felix: felixLogo,
+  "gas-zip": gasZipLogo,
+  gasdotzip: gasZipLogo,
+  hyperlend: hyperlendLogo,
+  hypurrfi: hypurrfiLogo,
   cielo: cieloLogo,
   kamino: kaminoLogo,
   moonwell: moonwellLogo,

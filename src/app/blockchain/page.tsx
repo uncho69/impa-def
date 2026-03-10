@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { BookmarkButton } from "@/components/bookmarks/BookmarkButton";
 import Placeholder from "@/assets/placeholder.svg";
 import btcIcon from "@/assets/bitcoin-icon.svg";
 import ethIcon from "@/assets/ethereum-icon.svg";
@@ -222,26 +223,27 @@ export default function BlockchainPage() {
             const priceDisplay = loading && b.coingeckoId ? "—" : price != null ? formatPrice(price) : "—";
             const mcapDisplay = loading && b.coingeckoId ? "—" : mcap != null ? formatMc(mcap) : "—";
             return (
-              <Link
+              <div
                 key={b.href + b.name}
-                href={b.href}
                 className="group block p-5 rounded-2xl border border-slate-200 dark:border-indigo-500/20 bg-white dark:bg-indigo-900/25 hover:border-indigo-400 dark:hover:border-indigo-500 transition-colors"
               >
-                <div className="flex items-start justify-between gap-2 mb-2 min-w-0">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-indigo-800/40 flex items-center justify-center overflow-hidden shrink-0">
-                      <Image src={b.icon} alt={b.name} width={32} height={32} className="object-contain" />
+                <Link href={b.href} className="block">
+                  <div className="flex items-start justify-between gap-2 mb-2 min-w-0">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-indigo-800/40 flex items-center justify-center overflow-hidden shrink-0">
+                        <Image src={b.icon} alt={b.name} width={32} height={32} className="object-contain" />
+                      </div>
+                      <span className="font-bold text-slate-900 dark:text-white truncate">{b.name}</span>
                     </div>
-                    <span className="font-bold text-slate-900 dark:text-white truncate">{b.name}</span>
                   </div>
-                </div>
-                <p className="text-slate-600 dark:text-slate-400 text-sm mb-4 line-clamp-2">{b.description}</p>
-                <div className="text-xs font-bold text-slate-700 dark:text-slate-300 space-y-1">
-                  <div>Token: {tickerDisplay}</div>
-                  <div>Prezzo: {priceDisplay}</div>
-                  <div>Market Cap: {mcapDisplay}</div>
-                  <div>TVL: —</div>
-                </div>
+                  <p className="text-slate-600 dark:text-slate-400 text-sm mb-4 line-clamp-2">{b.description}</p>
+                  <div className="text-xs font-bold text-slate-700 dark:text-slate-300 space-y-1">
+                    <div>Token: {tickerDisplay}</div>
+                    <div>Prezzo: {priceDisplay}</div>
+                    <div>Market Cap: {mcapDisplay}</div>
+                    <div>TVL: —</div>
+                  </div>
+                </Link>
                 <div className="flex items-center gap-2 mt-3 pt-3 border-t border-slate-200 dark:border-indigo-500/20" onClick={(e) => e.stopPropagation()}>
                   <a href={b.twitterUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="p-1.5 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-indigo-800/50 transition-colors" title="X (Twitter)" aria-label="X (Twitter)">
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
@@ -249,8 +251,15 @@ export default function BlockchainPage() {
                   <a href={b.websiteUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="p-1.5 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-indigo-800/50 transition-colors" title="Sito web" aria-label="Sito web">
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>
                   </a>
+                  <BookmarkButton
+                    url={b.href}
+                    title={`${b.name} - Pagina progetto`}
+                    type="page"
+                    projectId={b.href.includes("/defi/") ? b.href.replace("/defi/", "") : b.href.replace("/blockchain/", "")}
+                    className="ml-auto"
+                  />
                 </div>
-              </Link>
+              </div>
             );
           })}
         </div>
