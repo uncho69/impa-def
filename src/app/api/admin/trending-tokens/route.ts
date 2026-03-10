@@ -6,17 +6,54 @@ import { getUserIdFromRequest } from "@/lib/auth/middleware";
 import { canManageAdmin } from "@/lib/auth/admin";
 import { PLATFORM_PROJECTS } from "@/lib/platform-projects";
 import { parseProjectMetadataTags } from "@/lib/project-page-overrides";
+import {
+  hydrateNoDbTrendingTokensFromRemote,
+  listNoDbTrendingTokens,
+  replaceNoDbTrendingTokensFromRemote,
+  reorderNoDbTrendingTokens,
+  upsertNoDbTrendingToken,
+} from "@/lib/trending-tokens-fallback-store";
 
 export const dynamic = "force-dynamic";
 
 const FALLBACK_PROJECTS = ["bitcoin", "solana", "ethereum"];
 const EXCLUDED_PROJECT_IDS = new Set(["abstract", "base", "ink", "polymarket", "moonwell", "opensea"]);
+const TRENDING_REMOTE_ORIGIN =
+  process.env.TRENDING_TOKENS_SOURCE_ORIGIN?.trim() || "https://imparodefi.xyz";
 
 async function checkAdmin(request: NextRequest): Promise<boolean> {
   const userId = await getUserIdFromRequest(request);
   if (!userId) return false;
   if (!hasDatabase && process.env.NODE_ENV !== "production") return true;
   return canManageAdmin(userId);
+}
+
+function isFallbackOnly(tokens: Array<{ projectId: string }>): boolean {
+  if (tokens.length !== FALLBACK_PROJECTS.length) return false;
+  return tokens.every((item) => FALLBACK_PROJECTS.includes(item.projectId.toLowerCase()));
+}
+
+async function fetchRemoteTrendingConfig(): Promise<Array<{ projectId: string; coingeckoId: string }>> {
+  if (process.env.NODE_ENV === "production") return [];
+  try {
+    const res = await fetch(`${TRENDING_REMOTE_ORIGIN}/api/trending-tokens`, { cache: "no-store" });
+    if (!res.ok) return [];
+    const data = await res.json().catch(() => ({}));
+    const tokens = Array.isArray(data?.tokens) ? data.tokens : [];
+    return tokens
+      .map((item) => ({
+        projectId: String(item?.projectId ?? "").trim().toLowerCase(),
+        coingeckoId: String(item?.coingeckoId ?? "").trim().toLowerCase(),
+      }))
+      .filter(
+        (item) =>
+          item.projectId.length > 0 &&
+          item.coingeckoId.length > 0 &&
+          !EXCLUDED_PROJECT_IDS.has(item.projectId)
+      );
+  } catch {
+    return [];
+  }
 }
 
 async function fetchCoinGeckoMetaById(
@@ -102,16 +139,11 @@ export async function GET(request: NextRequest) {
   const isAdmin = await checkAdmin(request);
   if (!isAdmin) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   if (!hasDatabase || !pool) {
-    const fallbackTokens = FALLBACK_PROJECTS.map((projectId, idx) => ({
-      id: idx + 1,
-      projectId,
-      coingeckoId:
-        PLATFORM_PROJECTS.find((item) => item.id.toLowerCase() === projectId)?.tokenConfig?.coingeckoId ??
-        null,
-      sortOrder: idx + 1,
-      isActive: true,
-      updatedAt: null,
-    })).filter((item) => Boolean(item.coingeckoId) && !EXCLUDED_PROJECT_IDS.has(item.projectId.toLowerCase()));
+    const remote = await fetchRemoteTrendingConfig();
+    hydrateNoDbTrendingTokensFromRemote(remote);
+    const fallbackTokens = listNoDbTrendingTokens().filter(
+      (item) => !EXCLUDED_PROJECT_IDS.has(item.projectId.toLowerCase())
+    );
     const mappedIds = [
       ...PLATFORM_PROJECTS
         .map((item) => item.tokenConfig?.coingeckoId?.trim().toLowerCase() || "")
@@ -186,6 +218,52 @@ export async function GET(request: NextRequest) {
         }))
         .filter((item) => !EXCLUDED_PROJECT_IDS.has(item.projectId.toLowerCase()));
     }
+
+    if (isFallbackOnly(tokens)) {
+      const remote = await fetchRemoteTrendingConfig();
+      if (remote.length > 0) {
+        await pool.query("BEGIN");
+        try {
+          await pool.query(`DELETE FROM trending_tokens`);
+          for (let idx = 0; idx < remote.length; idx += 1) {
+            const item = remote[idx];
+            await pool.query(
+              `
+              INSERT INTO trending_tokens (project_id, coingecko_id, sort_order, is_active, created_at, updated_at)
+              VALUES ($1, $2, $3, 1, now(), now())
+              ON CONFLICT (project_id)
+              DO UPDATE SET
+                coingecko_id = EXCLUDED.coingecko_id,
+                sort_order = EXCLUDED.sort_order,
+                is_active = 1,
+                updated_at = now()
+              `,
+              [item.projectId, item.coingeckoId, idx + 1]
+            );
+          }
+          await pool.query("COMMIT");
+          const syncedRows = await pool.query(
+            `
+            SELECT id, project_id, coingecko_id, sort_order, is_active, updated_at
+            FROM trending_tokens
+            ORDER BY sort_order ASC, id ASC
+            `
+          );
+          tokens = syncedRows.rows
+            .map((row) => ({
+              id: Number(row.id),
+              projectId: String(row.project_id),
+              coingeckoId: String(row.coingecko_id),
+              sortOrder: Number(row.sort_order ?? 100),
+              isActive: Number(row.is_active ?? 0) === 1,
+              updatedAt: row.updated_at,
+            }))
+            .filter((item) => !EXCLUDED_PROJECT_IDS.has(item.projectId.toLowerCase()));
+        } catch {
+          await pool.query("ROLLBACK").catch(() => null);
+        }
+      }
+    }
     const mappedIds = [
       ...PLATFORM_PROJECTS
         .map((item) => item.tokenConfig?.coingeckoId?.trim().toLowerCase() || "")
@@ -204,13 +282,55 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const isAdmin = await checkAdmin(request);
   if (!isAdmin) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  if (!hasDatabase || !pool) return NextResponse.json({ error: "Database not configured" }, { status: 503 });
 
-  let body: { projectId?: string; sortOrder?: number };
+  let body: { projectId?: string; sortOrder?: number; action?: string };
   try {
     body = await request.json();
   } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  }
+
+  if (String(body.action ?? "").trim().toLowerCase() === "sync_live") {
+    const remote = await fetchRemoteTrendingConfig();
+    if (remote.length === 0) {
+      return NextResponse.json(
+        { error: "Nessun token disponibile dalla sorgente live." },
+        { status: 400 }
+      );
+    }
+
+    if (!hasDatabase || !pool) {
+      replaceNoDbTrendingTokensFromRemote(remote);
+      return NextResponse.json({ ok: true, noDatabase: true, synced: remote.length });
+    }
+
+    try {
+      await ensureTrendingTokensTable();
+      await pool.query("BEGIN");
+      await pool.query(`DELETE FROM trending_tokens`);
+      for (let idx = 0; idx < remote.length; idx += 1) {
+        const item = remote[idx];
+        await pool.query(
+          `
+          INSERT INTO trending_tokens (project_id, coingecko_id, sort_order, is_active, created_at, updated_at)
+          VALUES ($1, $2, $3, 1, now(), now())
+          ON CONFLICT (project_id)
+          DO UPDATE SET
+            coingecko_id = EXCLUDED.coingecko_id,
+            sort_order = EXCLUDED.sort_order,
+            is_active = 1,
+            updated_at = now()
+          `,
+          [item.projectId, item.coingeckoId, idx + 1]
+        );
+      }
+      await pool.query("COMMIT");
+      return NextResponse.json({ ok: true, synced: remote.length });
+    } catch (error) {
+      await pool.query("ROLLBACK").catch(() => null);
+      console.error("Error syncing trending tokens from live:", error);
+      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    }
   }
 
   const projectId = String(body.projectId ?? "").trim().toLowerCase();
@@ -227,6 +347,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Token not found on CoinGecko" }, { status: 400 });
   }
   const sortOrder = Number.isFinite(Number(body.sortOrder)) ? Number(body.sortOrder) : 100;
+
+  if (!hasDatabase || !pool) {
+    upsertNoDbTrendingToken(projectId, coingeckoId, sortOrder);
+    return NextResponse.json({ ok: true, noDatabase: true });
+  }
 
   try {
     await ensureTrendingTokensTable();
@@ -253,7 +378,6 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   const isAdmin = await checkAdmin(request);
   if (!isAdmin) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  if (!hasDatabase || !pool) return NextResponse.json({ error: "Database not configured" }, { status: 503 });
 
   let body: { orderedIds?: number[] };
   try {
@@ -267,6 +391,11 @@ export async function PUT(request: NextRequest) {
     : [];
   if (orderedIds.length === 0) {
     return NextResponse.json({ error: "orderedIds is required" }, { status: 400 });
+  }
+
+  if (!hasDatabase || !pool) {
+    reorderNoDbTrendingTokens(orderedIds);
+    return NextResponse.json({ ok: true, noDatabase: true });
   }
 
   try {

@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import { hasDatabase, pool } from "@/lib/db";
 import { ensureTrendingTokensTable } from "@/lib/db/ensure-trending-tokens-table";
 import { PROJECT_COINGECKO_IDS } from "@/lib/project-coingecko-ids";
+import {
+  hydrateNoDbTrendingTokensFromRemote,
+  listNoDbTrendingTokens,
+} from "@/lib/trending-tokens-fallback-store";
 
 export const dynamic = "force-dynamic";
 
@@ -12,13 +16,44 @@ type TrendingTokenItem = {
 
 const FALLBACK_PROJECTS = ["bitcoin", "solana", "ethereum"];
 const EXCLUDED_PROJECT_IDS = new Set(["abstract", "base", "ink", "polymarket", "moonwell", "opensea"]);
+const TRENDING_REMOTE_ORIGIN =
+  process.env.TRENDING_TOKENS_SOURCE_ORIGIN?.trim() || "https://imparodefi.xyz";
+
+function isFallbackOnly(tokens: TrendingTokenItem[]): boolean {
+  if (tokens.length !== FALLBACK_PROJECTS.length) return false;
+  return tokens.every((item) => FALLBACK_PROJECTS.includes(item.projectId.toLowerCase()));
+}
+
+async function fetchRemoteTrendingConfig(): Promise<TrendingTokenItem[]> {
+  if (process.env.NODE_ENV === "production") return [];
+  try {
+    const res = await fetch(`${TRENDING_REMOTE_ORIGIN}/api/trending-tokens`, { cache: "no-store" });
+    if (!res.ok) return [];
+    const data = await res.json().catch(() => ({}));
+    const tokens = Array.isArray(data?.tokens) ? data.tokens : [];
+    return tokens
+      .map((item) => ({
+        projectId: String(item?.projectId ?? "").trim().toLowerCase(),
+        coingeckoId: String(item?.coingeckoId ?? "").trim().toLowerCase(),
+      }))
+      .filter(
+        (item) =>
+          item.projectId.length > 0 &&
+          item.coingeckoId.length > 0 &&
+          !EXCLUDED_PROJECT_IDS.has(item.projectId)
+      );
+  } catch {
+    return [];
+  }
+}
 
 async function loadConfiguredTokens(): Promise<TrendingTokenItem[]> {
   if (!hasDatabase || !pool) {
-    return FALLBACK_PROJECTS.map((projectId) => ({
-      projectId,
-      coingeckoId: PROJECT_COINGECKO_IDS[projectId],
-    })).filter((item) => Boolean(item.coingeckoId));
+    const remote = await fetchRemoteTrendingConfig();
+    hydrateNoDbTrendingTokensFromRemote(remote);
+    return listNoDbTrendingTokens()
+      .map((item) => ({ projectId: item.projectId, coingeckoId: item.coingeckoId }))
+      .filter((item) => !EXCLUDED_PROJECT_IDS.has(item.projectId.toLowerCase()));
   }
 
   try {
@@ -36,7 +71,13 @@ async function loadConfiguredTokens(): Promise<TrendingTokenItem[]> {
         projectId: String(row.project_id),
         coingeckoId: String(row.coingecko_id),
       })).filter((item) => !EXCLUDED_PROJECT_IDS.has(item.projectId.toLowerCase()));
-      if (activeTokens.length > 0) return activeTokens;
+      if (activeTokens.length > 0) {
+        if (isFallbackOnly(activeTokens)) {
+          const remote = await fetchRemoteTrendingConfig();
+          if (remote.length > 0) return remote;
+        }
+        return activeTokens;
+      }
     }
   } catch {
     // Fallback below.
