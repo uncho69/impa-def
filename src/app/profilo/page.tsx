@@ -198,7 +198,12 @@ export default function ProfiloPage() {
 
   async function syncSessionFromPrivy(): Promise<void> {
     if (!privyReady || !authenticated) return;
-    const accessToken = await getAccessToken();
+    let accessToken: string | null = null;
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      accessToken = await getAccessToken().catch(() => null);
+      if (accessToken) break;
+      await new Promise((resolve) => setTimeout(resolve, 120));
+    }
     if (!accessToken) return;
 
     const walletAddress = wallets?.[0]?.address ?? null;
@@ -211,7 +216,7 @@ export default function ProfiloPage() {
     const twitterAccount = linkedAccounts.find((account) => account?.type === "twitter_oauth") as
       | { subject?: string | null; username?: string | null }
       | undefined;
-    await fetch("/api/auth/privy/session", {
+    const res = await fetch("/api/auth/privy/session", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -222,6 +227,20 @@ export default function ProfiloPage() {
         twitterUsername: twitterAccount?.username ?? null,
       }),
     }).catch(() => null);
+    if (!res?.ok) {
+      await new Promise((resolve) => setTimeout(resolve, 120));
+      await fetch("/api/auth/privy/session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          accessToken,
+          walletAddress,
+          email,
+          twitterSubject: twitterAccount?.subject ?? null,
+          twitterUsername: twitterAccount?.username ?? null,
+        }),
+      }).catch(() => null);
+    }
   }
 
   async function loadProfile() {

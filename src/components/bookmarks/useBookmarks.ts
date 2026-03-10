@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAppAuth } from "@/lib/auth/useAppAuth";
+import { usePrivy, useWallets } from "@privy-io/react-auth";
 
 export type BookmarkType = "page" | "section" | "content";
 
@@ -46,9 +47,43 @@ function writeLocalBookmarks(items: BookmarkItem[]) {
 
 export function useBookmarks() {
   const { isLoaded, isSignedIn } = useAppAuth();
+  const { ready: privyReady, authenticated, user, getAccessToken } = usePrivy();
+  const { wallets } = useWallets();
   const [bookmarks, setBookmarks] = useState<BookmarkItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [noDatabase, setNoDatabase] = useState(false);
+
+  const syncSessionFromPrivy = useCallback(async (): Promise<boolean> => {
+    if (!privyReady || !authenticated) return false;
+
+    const accessToken = await getAccessToken().catch(() => null);
+    if (!accessToken) return false;
+
+    const walletAddress = wallets?.[0]?.address ?? null;
+    const linkedAccounts = Array.isArray(user?.linkedAccounts) ? user.linkedAccounts : [];
+    const emailAccount = linkedAccounts.find((account) => account?.type === "email");
+    const email =
+      emailAccount && "address" in emailAccount && typeof emailAccount.address === "string"
+        ? emailAccount.address
+        : null;
+    const twitterAccount = linkedAccounts.find((account) => account?.type === "twitter_oauth") as
+      | { subject?: string | null; username?: string | null }
+      | undefined;
+
+    const res = await fetch("/api/auth/privy/session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        accessToken,
+        walletAddress,
+        email,
+        twitterSubject: twitterAccount?.subject ?? null,
+        twitterUsername: twitterAccount?.username ?? null,
+      }),
+    }).catch(() => null);
+
+    return Boolean(res?.ok);
+  }, [authenticated, getAccessToken, privyReady, user?.linkedAccounts, wallets]);
 
   const loadBookmarks = useCallback(async () => {
     if (!isLoaded) return;
@@ -71,7 +106,19 @@ export function useBookmarks() {
       if (!inFlightLoad) {
         inFlightLoad = (async () => {
           const res = await fetch("/api/profile/bookmarks", { cache: "no-store" });
-          if (res.status === 401) return { bookmarks: [], noDatabase: false };
+          if (res.status === 401) {
+            const synced = await syncSessionFromPrivy();
+            if (!synced) return { bookmarks: [], noDatabase: false };
+            const retry = await fetch("/api/profile/bookmarks", { cache: "no-store" });
+            if (retry.status === 401) return { bookmarks: [], noDatabase: false };
+            const retryData = await retry.json().catch(() => ({}));
+            if (!retry.ok) return { bookmarks: [], noDatabase: false };
+            if (retryData?.noDatabase) return { bookmarks: readLocalBookmarks(), noDatabase: true };
+            return {
+              bookmarks: Array.isArray(retryData?.bookmarks) ? retryData.bookmarks : [],
+              noDatabase: false,
+            };
+          }
           const data = await res.json().catch(() => ({}));
           if (!res.ok) return { bookmarks: [], noDatabase: false };
           if (data?.noDatabase) return { bookmarks: readLocalBookmarks(), noDatabase: true };
@@ -90,7 +137,7 @@ export function useBookmarks() {
       inFlightLoad = null;
       setLoading(false);
     }
-  }, [isLoaded, isSignedIn]);
+  }, [isLoaded, isSignedIn, syncSessionFromPrivy]);
 
   useEffect(() => {
     loadBookmarks();
@@ -120,11 +167,21 @@ export function useBookmarks() {
         return;
       }
 
-      const res = await fetch("/api/profile/bookmarks", {
+      let res = await fetch("/api/profile/bookmarks", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...item, url: normalized }),
       });
+      if (res.status === 401) {
+        const synced = await syncSessionFromPrivy();
+        if (synced) {
+          res = await fetch("/api/profile/bookmarks", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ...item, url: normalized }),
+          });
+        }
+      }
       const data = await res.json().catch(() => ({}));
       if (data?.noDatabase) {
         setNoDatabase(true);
@@ -145,7 +202,7 @@ export function useBookmarks() {
         return next;
       });
     },
-    [bookmarks, noDatabase],
+    [bookmarks, noDatabase, syncSessionFromPrivy],
   );
 
   const removeBookmark = useCallback(
@@ -159,11 +216,21 @@ export function useBookmarks() {
         writeLocalBookmarks(next);
         return;
       }
-      const res = await fetch("/api/profile/bookmarks", {
+      let res = await fetch("/api/profile/bookmarks", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: normalized }),
       });
+      if (res.status === 401) {
+        const synced = await syncSessionFromPrivy();
+        if (synced) {
+          res = await fetch("/api/profile/bookmarks", {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ url: normalized }),
+          });
+        }
+      }
       const data = await res.json().catch(() => ({}));
       if (data?.noDatabase) {
         setNoDatabase(true);
@@ -176,7 +243,7 @@ export function useBookmarks() {
         return next;
       });
     },
-    [bookmarks, noDatabase],
+    [bookmarks, noDatabase, syncSessionFromPrivy],
   );
 
   const toggleBookmark = useCallback(
