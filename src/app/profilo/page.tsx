@@ -251,6 +251,18 @@ export default function ProfiloPage() {
       if (res.status === 401) {
         await syncSessionFromPrivy();
         res = await fetch("/api/profile/me", { cache: "no-store" });
+        if (res.status === 401 && privyReady && authenticated) {
+          const token = await getAccessToken().catch(() => null);
+          if (token) {
+            res = await fetch("/api/profile/me", {
+              cache: "no-store",
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "x-privy-access-token": token,
+              },
+            });
+          }
+        }
       }
       const json = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(json?.error || "Errore nel caricamento profilo");
@@ -385,11 +397,33 @@ export default function ProfiloPage() {
         return;
       }
 
-      const res = await fetch("/api/profile/me", {
+      let res = await fetch("/api/profile/me", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
+      if (res.status === 401) {
+        await syncSessionFromPrivy();
+        res = await fetch("/api/profile/me", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        if (res.status === 401 && privyReady && authenticated) {
+          const token = await getAccessToken().catch(() => null);
+          if (token) {
+            res = await fetch("/api/profile/me", {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+                "x-privy-access-token": token,
+              },
+              body: JSON.stringify(payload),
+            });
+          }
+        }
+      }
       const json = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(json?.error || "Salvataggio fallito");
       if (json?.noDatabase) {

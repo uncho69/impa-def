@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { pool, hasDatabase } from "@/lib/db";
 import { ensureUserProfileSettingsTable } from "@/lib/db/ensure-user-profile-settings-table";
 import { getUserIdFromRequest } from "@/lib/auth/middleware";
+import { verifyPrivyAccessToken } from "@/lib/auth/privy";
 
 export const dynamic = "force-dynamic";
 
@@ -116,21 +117,32 @@ async function resolveXProfileUrl(userId: string, twitterId: string | null | und
 }
 
 async function resolveAuthenticatedUserId(request: NextRequest): Promise<string | null> {
-  const userId = await getUserIdFromRequest(request);
+  const fromSession = await getUserIdFromRequest(request);
+  const authHeader = request.headers.get("authorization") ?? request.headers.get("Authorization");
+  const bearerToken =
+    typeof authHeader === "string" && authHeader.startsWith("Bearer ")
+      ? authHeader.slice(7).trim()
+      : (request.headers.get("x-privy-access-token") ?? "").trim();
+  const fromBearer = bearerToken ? (await verifyPrivyAccessToken(bearerToken))?.userId ?? null : null;
+  const userId = fromSession || fromBearer;
   if (!userId) return null;
   if (!pool) return userId;
-  await pool.query(
-    `
-    INSERT INTO users (id, is_active, created_at, updated_at)
-    VALUES ($1, 1, now(), now())
-    ON CONFLICT (id)
-    DO UPDATE SET
-      is_active = 1,
-      deleted_at = NULL,
-      updated_at = now()
-    `,
-    [userId]
-  );
+  try {
+    await pool.query(
+      `
+      INSERT INTO users (id, is_active, created_at, updated_at)
+      VALUES ($1, 1, now(), now())
+      ON CONFLICT (id)
+      DO UPDATE SET
+        is_active = 1,
+        deleted_at = NULL,
+        updated_at = now()
+      `,
+      [userId]
+    );
+  } catch (error) {
+    console.warn("Profile auth ensure user warning:", error);
+  }
   return userId;
 }
 

@@ -53,6 +53,16 @@ export function useBookmarks() {
   const [loading, setLoading] = useState(true);
   const [noDatabase, setNoDatabase] = useState(false);
 
+  const getPrivyAuthHeaders = useCallback(async (): Promise<Record<string, string> | null> => {
+    if (!privyReady || !authenticated) return null;
+    const token = await getAccessToken().catch(() => null);
+    if (!token) return null;
+    return {
+      Authorization: `Bearer ${token}`,
+      "x-privy-access-token": token,
+    };
+  }, [authenticated, getAccessToken, privyReady]);
+
   const syncSessionFromPrivy = useCallback(async (): Promise<boolean> => {
     if (!privyReady || !authenticated) return false;
 
@@ -109,7 +119,11 @@ export function useBookmarks() {
           if (res.status === 401) {
             const synced = await syncSessionFromPrivy();
             if (!synced) return { bookmarks: [], noDatabase: false };
-            const retry = await fetch("/api/profile/bookmarks", { cache: "no-store" });
+            const authHeaders = await getPrivyAuthHeaders();
+            const retry = await fetch("/api/profile/bookmarks", {
+              cache: "no-store",
+              headers: authHeaders ?? undefined,
+            });
             if (retry.status === 401) return { bookmarks: [], noDatabase: false };
             const retryData = await retry.json().catch(() => ({}));
             if (!retry.ok) return { bookmarks: [], noDatabase: false };
@@ -137,7 +151,7 @@ export function useBookmarks() {
       inFlightLoad = null;
       setLoading(false);
     }
-  }, [isLoaded, isSignedIn, syncSessionFromPrivy]);
+  }, [getPrivyAuthHeaders, isLoaded, isSignedIn, syncSessionFromPrivy]);
 
   useEffect(() => {
     loadBookmarks();
@@ -175,9 +189,10 @@ export function useBookmarks() {
       if (res.status === 401) {
         const synced = await syncSessionFromPrivy();
         if (synced) {
+          const authHeaders = await getPrivyAuthHeaders();
           res = await fetch("/api/profile/bookmarks", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json", ...(authHeaders ?? {}) },
             body: JSON.stringify({ ...item, url: normalized }),
           });
         }
@@ -202,7 +217,7 @@ export function useBookmarks() {
         return next;
       });
     },
-    [bookmarks, noDatabase, syncSessionFromPrivy],
+    [bookmarks, getPrivyAuthHeaders, noDatabase, syncSessionFromPrivy],
   );
 
   const removeBookmark = useCallback(
@@ -224,9 +239,10 @@ export function useBookmarks() {
       if (res.status === 401) {
         const synced = await syncSessionFromPrivy();
         if (synced) {
+          const authHeaders = await getPrivyAuthHeaders();
           res = await fetch("/api/profile/bookmarks", {
             method: "DELETE",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json", ...(authHeaders ?? {}) },
             body: JSON.stringify({ url: normalized }),
           });
         }
@@ -243,7 +259,7 @@ export function useBookmarks() {
         return next;
       });
     },
-    [bookmarks, noDatabase, syncSessionFromPrivy],
+    [bookmarks, getPrivyAuthHeaders, noDatabase, syncSessionFromPrivy],
   );
 
   const toggleBookmark = useCallback(

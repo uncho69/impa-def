@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getUserIdFromRequest } from "@/lib/auth/middleware";
+import { verifyPrivyAccessToken } from "@/lib/auth/privy";
 import { hasDatabase, pool } from "@/lib/db";
 import { ensureUserBookmarksTable } from "@/lib/db/ensure-user-bookmarks-table";
 
@@ -27,7 +28,19 @@ function sanitizeBookmarkType(value: unknown): BookmarkType {
 }
 
 async function resolveAuthenticatedUserId(request: NextRequest): Promise<string | null> {
-  return getUserIdFromRequest(request);
+  const fromSession = await getUserIdFromRequest(request);
+  if (fromSession) return fromSession;
+
+  const authHeader = request.headers.get("authorization") ?? request.headers.get("Authorization");
+  const bearerToken =
+    typeof authHeader === "string" && authHeader.startsWith("Bearer ")
+      ? authHeader.slice(7).trim()
+      : (request.headers.get("x-privy-access-token") ?? "").trim();
+  if (!bearerToken) return null;
+
+  const verified = await verifyPrivyAccessToken(bearerToken);
+  if (!verified?.userId) return null;
+  return verified.userId;
 }
 
 export async function GET(request: NextRequest) {
