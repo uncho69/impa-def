@@ -118,8 +118,8 @@ export function useBookmarks() {
           const res = await fetch("/api/profile/bookmarks", { cache: "no-store" });
           if (res.status === 401) {
             const synced = await syncSessionFromPrivy();
-            if (!synced) return { bookmarks: [], noDatabase: false };
             const authHeaders = await getPrivyAuthHeaders();
+            if (!synced && !authHeaders) return { bookmarks: [], noDatabase: false };
             const retry = await fetch("/api/profile/bookmarks", {
               cache: "no-store",
               headers: authHeaders ?? undefined,
@@ -187,9 +187,9 @@ export function useBookmarks() {
         body: JSON.stringify({ ...item, url: normalized }),
       });
       if (res.status === 401) {
-        const synced = await syncSessionFromPrivy();
-        if (synced) {
-          const authHeaders = await getPrivyAuthHeaders();
+        await syncSessionFromPrivy();
+        const authHeaders = await getPrivyAuthHeaders();
+        if (authHeaders) {
           res = await fetch("/api/profile/bookmarks", {
             method: "POST",
             headers: { "Content-Type": "application/json", ...(authHeaders ?? {}) },
@@ -237,9 +237,9 @@ export function useBookmarks() {
         body: JSON.stringify({ url: normalized }),
       });
       if (res.status === 401) {
-        const synced = await syncSessionFromPrivy();
-        if (synced) {
-          const authHeaders = await getPrivyAuthHeaders();
+        await syncSessionFromPrivy();
+        const authHeaders = await getPrivyAuthHeaders();
+        if (authHeaders) {
           res = await fetch("/api/profile/bookmarks", {
             method: "DELETE",
             headers: { "Content-Type": "application/json", ...(authHeaders ?? {}) },

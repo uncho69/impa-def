@@ -40,7 +40,27 @@ async function resolveAuthenticatedUserId(request: NextRequest): Promise<string 
 
   const verified = await verifyPrivyAccessToken(bearerToken);
   if (!verified?.userId) return null;
-  return verified.userId;
+  const userId = verified.userId;
+  if (!pool) return userId;
+
+  try {
+    await pool.query(
+      `
+      INSERT INTO users (id, is_active, created_at, updated_at)
+      VALUES ($1, 1, now(), now())
+      ON CONFLICT (id)
+      DO UPDATE SET
+        is_active = 1,
+        deleted_at = NULL,
+        updated_at = now()
+      `,
+      [userId]
+    );
+  } catch (error) {
+    console.warn("Bookmarks auth ensure user warning:", error);
+  }
+
+  return userId;
 }
 
 export async function GET(request: NextRequest) {
