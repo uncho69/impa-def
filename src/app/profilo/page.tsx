@@ -154,6 +154,7 @@ export default function ProfiloPage() {
   const [pendingWalletAddresses, setPendingWalletAddresses] = useState<string[]>([]);
   const [verifyingAddress, setVerifyingAddress] = useState<string | null>(null);
   const pendingWalletKindsRef = useRef<Record<string, "evm" | "solana" | "privy">>({});
+  const dismissedPendingWalletsRef = useRef<Set<string>>(new Set());
 
   const [activeTab, setActiveTab] = useState<"settings" | "badges" | "contents">("settings");
 
@@ -227,11 +228,19 @@ export default function ProfiloPage() {
       .filter((address) => address.length > 0);
     if (connectedWalletAddresses.length === 0) return;
 
+    const connectedSet = new Set(connectedWalletAddresses);
+    for (const dismissed of Array.from(dismissedPendingWalletsRef.current)) {
+      if (!connectedSet.has(dismissed)) {
+        dismissedPendingWalletsRef.current.delete(dismissed);
+      }
+    }
+
     setPendingWalletAddresses((prev) => {
       const next = [...prev];
       for (const address of connectedWalletAddresses) {
         if (walletAddresses.includes(address)) continue;
         if (next.includes(address)) continue;
+        if (dismissedPendingWalletsRef.current.has(address)) continue;
         pendingWalletKindsRef.current[address] = "privy";
         next.push(address);
       }
@@ -361,6 +370,7 @@ export default function ProfiloPage() {
     setInfoMessage(null);
     try {
       const address = await connectEvmWalletAddress();
+      dismissedPendingWalletsRef.current.delete(address);
       if (walletAddresses.includes(address)) {
         setInfoMessage("Questo wallet EVM è già presente nella lista.");
         return;
@@ -390,6 +400,7 @@ export default function ProfiloPage() {
     setInfoMessage(null);
     try {
       const address = await connectSolanaWalletAddress();
+      dismissedPendingWalletsRef.current.delete(address);
       if (walletAddresses.includes(address)) {
         setInfoMessage("Questo wallet Solana è già presente nella lista.");
         return;
@@ -425,6 +436,7 @@ export default function ProfiloPage() {
       }
       setWalletAddresses((prev) => (prev.includes(address) ? prev : [...prev, address]));
       setPendingWalletAddresses((prev) => prev.filter((item) => item !== address));
+      dismissedPendingWalletsRef.current.delete(address);
       delete pendingWalletKindsRef.current[address];
       setInfoMessage("Wallet verificato e aggiunto. Ricorda di salvare le impostazioni.");
     } catch (err: unknown) {
@@ -435,6 +447,7 @@ export default function ProfiloPage() {
   }
 
   function handleRemovePendingWallet(address: string) {
+    dismissedPendingWalletsRef.current.add(address);
     setPendingWalletAddresses((prev) => prev.filter((item) => item !== address));
     delete pendingWalletKindsRef.current[address];
     setInfoMessage("Wallet rimosso dalla lista di conferma.");
