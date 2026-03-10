@@ -10,7 +10,7 @@ import { parseProjectMetadataTags } from "@/lib/project-page-overrides";
 export const dynamic = "force-dynamic";
 
 const FALLBACK_PROJECTS = ["bitcoin", "solana", "ethereum"];
-const EXCLUDED_PROJECT_IDS = new Set(["abstract", "base", "ink", "polymarket", "moonwell"]);
+const EXCLUDED_PROJECT_IDS = new Set(["abstract", "base", "ink", "polymarket", "moonwell", "opensea"]);
 
 async function checkAdmin(request: NextRequest): Promise<boolean> {
   const userId = await getUserIdFromRequest(request);
@@ -137,7 +137,7 @@ export async function GET(request: NextRequest) {
       ORDER BY sort_order ASC, id ASC
       `
     );
-    const tokens = rows.rows
+    let tokens = rows.rows
       .map((row) => ({
         id: Number(row.id),
         projectId: String(row.project_id),
@@ -147,6 +147,45 @@ export async function GET(request: NextRequest) {
         updatedAt: row.updated_at,
       }))
       .filter((item) => !EXCLUDED_PROJECT_IDS.has(item.projectId.toLowerCase()));
+
+    // Keep admin list aligned with homepage fallback defaults when table is empty.
+    if (tokens.length === 0) {
+      for (let idx = 0; idx < FALLBACK_PROJECTS.length; idx += 1) {
+        const projectId = FALLBACK_PROJECTS[idx];
+        const coingeckoId = PROJECT_COINGECKO_IDS[projectId];
+        if (!coingeckoId) continue;
+        await pool.query(
+          `
+          INSERT INTO trending_tokens (project_id, coingecko_id, sort_order, is_active, created_at, updated_at)
+          VALUES ($1, $2, $3, 1, now(), now())
+          ON CONFLICT (project_id)
+          DO UPDATE SET
+            coingecko_id = EXCLUDED.coingecko_id,
+            sort_order = EXCLUDED.sort_order,
+            is_active = 1,
+            updated_at = now()
+          `,
+          [projectId, coingeckoId, idx + 1]
+        );
+      }
+      const seededRows = await pool.query(
+        `
+        SELECT id, project_id, coingecko_id, sort_order, is_active, updated_at
+        FROM trending_tokens
+        ORDER BY sort_order ASC, id ASC
+        `
+      );
+      tokens = seededRows.rows
+        .map((row) => ({
+          id: Number(row.id),
+          projectId: String(row.project_id),
+          coingeckoId: String(row.coingecko_id),
+          sortOrder: Number(row.sort_order ?? 100),
+          isActive: Number(row.is_active ?? 0) === 1,
+          updatedAt: row.updated_at,
+        }))
+        .filter((item) => !EXCLUDED_PROJECT_IDS.has(item.projectId.toLowerCase()));
+    }
     const mappedIds = [
       ...PLATFORM_PROJECTS
         .map((item) => item.tokenConfig?.coingeckoId?.trim().toLowerCase() || "")

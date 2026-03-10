@@ -11,7 +11,7 @@ type TrendingTokenItem = {
 };
 
 const FALLBACK_PROJECTS = ["bitcoin", "solana", "ethereum"];
-const EXCLUDED_PROJECT_IDS = new Set(["abstract", "base", "ink", "polymarket", "moonwell"]);
+const EXCLUDED_PROJECT_IDS = new Set(["abstract", "base", "ink", "polymarket", "moonwell", "opensea"]);
 
 async function loadConfiguredTokens(): Promise<TrendingTokenItem[]> {
   if (!hasDatabase || !pool) {
@@ -32,10 +32,11 @@ async function loadConfiguredTokens(): Promise<TrendingTokenItem[]> {
       `
     );
     if (result.rows.length > 0) {
-      return result.rows.map((row) => ({
+      const activeTokens = result.rows.map((row) => ({
         projectId: String(row.project_id),
         coingeckoId: String(row.coingecko_id),
       })).filter((item) => !EXCLUDED_PROJECT_IDS.has(item.projectId.toLowerCase()));
+      if (activeTokens.length > 0) return activeTokens;
     }
   } catch {
     // Fallback below.

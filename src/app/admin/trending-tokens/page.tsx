@@ -23,7 +23,7 @@ type AdminTrendingToken = {
 };
 
 type CoinGeckoMeta = { name: string; symbol: string };
-const EXCLUDED_PROJECT_IDS = new Set(["abstract", "base", "ink", "polymarket", "moonwell"]);
+const EXCLUDED_PROJECT_IDS = new Set(["abstract", "base", "ink", "polymarket", "moonwell", "opensea"]);
 const FALLBACK_TICKERS_BY_PROJECT: Record<string, string> = {
   bitcoin: "BTC",
   solana: "SOL",
