@@ -155,6 +155,7 @@ export const PROJECT_LOGO: Record<string, StaticImageData> = {
   layerzero: layerzeroLogo,
   syncswap: syncswapLogo,
   hyperliquid: hyperliquidIcon,
+  hype: hyperliquidIcon,
   hyperevm: hyperliquidIcon,
   layer3: layer3Logo,
   railgun: railgunLogo,

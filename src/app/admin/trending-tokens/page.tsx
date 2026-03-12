@@ -65,6 +65,7 @@ export default function AdminTrendingTokensPage() {
   const [dragOverId, setDragOverId] = useState<number | null>(null);
   const [reordering, setReordering] = useState(false);
   const [syncingLive, setSyncingLive] = useState(false);
+  const [isLocalhost, setIsLocalhost] = useState(false);
   const [coinGeckoMetaById, setCoinGeckoMetaById] = useState<Record<string, CoinGeckoMeta>>({});
 
   const availableProjects = useMemo(() => {
@@ -151,6 +152,12 @@ export default function AdminTrendingTokensPage() {
       setProjectId(availableProjects[0].id);
     }
   }, [availableProjects, projectId]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const host = window.location.hostname.toLowerCase();
+    setIsLocalhost(host === "localhost" || host === "127.0.0.1" || host === "::1");
+  }, []);
 
   const handleAdd = async (event: FormEvent) => {
     event.preventDefault();
@@ -266,14 +273,16 @@ export default function AdminTrendingTokensPage() {
       <div className="bg-indigo-900/25 rounded-xl border border-indigo-500/20 p-6 backdrop-blur">
         <div className="mb-4 flex items-center justify-between gap-3">
           <h2 className="text-lg font-semibold text-white">Aggiungi token progetto</h2>
-          <button
-            type="button"
-            onClick={syncFromLive}
-            disabled={syncingLive || saving || loading || reordering}
-            className="px-3 py-1.5 rounded-lg text-xs font-medium border border-emerald-400/35 text-emerald-200 hover:bg-emerald-500/10 transition-colors disabled:opacity-60"
-          >
-            {syncingLive ? "Migrazione..." : "Migra da live"}
-          </button>
+          {isLocalhost ? (
+            <button
+              type="button"
+              onClick={syncFromLive}
+              disabled={syncingLive || saving || loading || reordering}
+              className="px-3 py-1.5 rounded-lg text-xs font-medium border border-emerald-400/35 text-emerald-200 hover:bg-emerald-500/10 transition-colors disabled:opacity-60"
+            >
+              {syncingLive ? "Migrazione..." : "Migra da live"}
+            </button>
+          ) : null}
         </div>
         <form onSubmit={handleAdd} className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_280px] gap-4 items-end">
           <label className="block">

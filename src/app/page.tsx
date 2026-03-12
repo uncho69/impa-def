@@ -21,6 +21,7 @@ import solanaLogo from "@/assets/solana-sol-logo.svg";
 import imparodefiLogo from "@/assets/imparodefi-logo-nobg.webp";
 import { LEARNING_PATH_CARDS } from "@/lib/learning-paths";
 import { DEFAULT_HACKS_SCAMS_ALERTS, toPublicAlert } from "@/lib/hacks-scams-alerts";
+import { getProjectLogo } from "@/lib/project-logos";
 
 const SIDEBAR_ITEMS = [
   { label: "Dashboard", href: "/", icon: "📊" },
@@ -544,6 +545,12 @@ export default function Home() {
                   <tbody>
                     {trendingTokens.map((row) => {
                       const href = getTrendingTokenProjectHref(row.projectId);
+                      const tokenLogo =
+                        getProjectLogo(row.projectId) ||
+                        getProjectLogo(row.coingeckoId) ||
+                        row.image ||
+                        TOKEN_ICONS[row.symbol] ||
+                        bitcoinIcon;
                       return (
                       <tr
                         key={row.symbol}
@@ -558,7 +565,7 @@ export default function Home() {
                           <div className="flex items-center gap-2">
                             <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center overflow-hidden shrink-0">
                               <Image
-                                src={TOKEN_ICONS[row.symbol] || bitcoinIcon}
+                                src={tokenLogo}
                                 alt={row.name}
                                 width={18}
                                 height={18}
