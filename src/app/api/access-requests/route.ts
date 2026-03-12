@@ -1,0 +1,378 @@
+import { NextRequest, NextResponse } from "next/server";
+import { getUserIdFromRequest } from "@/lib/auth/middleware";
+import { ensureBetaAccessRequestsTable } from "@/lib/db/ensure-beta-access-table";
+import { ensureAccessControlTables } from "@/lib/db/ensure-access-control-tables";
+import { hasDatabase, pool } from "@/lib/db";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+type CryptoLevel = "zero" | "beginner" | "intermediate" | "advanced";
+type SocialProvider = "x" | "instagram";
+
+type AccessRequestPayload = {
+  professions: string[];
+  cryptoLevel: CryptoLevel;
+  goals: string[];
+  concerns?: string;
+  weeklyTime?: string;
+  previousExperience?: string;
+  socialProvider: SocialProvider;
+  socialUrl: string;
+  socialHandle?: string;
+};
+
+type StoredAccessRequest = AccessRequestPayload & {
+  userId: string;
+  email: string | null;
+  status: "pending" | "approved" | "rejected";
+  reviewedAt: string | null;
+  reviewedBy: string | null;
+  adminReviewNotes: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+const MEMORY_STORE_KEY = "__idfBetaAccessRequests";
+
+function readMemoryStore(): Map<string, StoredAccessRequest> {
+  const g = globalThis as Record<string, unknown>;
+  if (!g[MEMORY_STORE_KEY]) {
+    g[MEMORY_STORE_KEY] = new Map<string, StoredAccessRequest>();
+  }
+  return g[MEMORY_STORE_KEY] as Map<string, StoredAccessRequest>;
+}
+
+function sanitizeArray(value: unknown, max = 8): string[] {
+  if (!Array.isArray(value)) return [];
+  const cleaned = value
+    .map((item) => (typeof item === "string" ? item.trim() : ""))
+    .filter((item) => item.length > 0)
+    .slice(0, max);
+  return Array.from(new Set(cleaned));
+}
+
+function sanitizeText(value: unknown, max = 500): string {
+  if (typeof value !== "string") return "";
+  return value.trim().slice(0, max);
+}
+
+function parseProvider(value: unknown): SocialProvider | null {
+  if (value === "x" || value === "instagram") return value;
+  return null;
+}
+
+function parseCryptoLevel(value: unknown): CryptoLevel | null {
+  if (value === "zero" || value === "beginner" || value === "intermediate" || value === "advanced") {
+    return value;
+  }
+  return null;
+}
+
+function isValidSocialUrl(provider: SocialProvider, rawUrl: string): boolean {
+  let url: URL;
+  try {
+    url = new URL(rawUrl);
+  } catch {
+    return false;
+  }
+  if (url.protocol !== "https:") return false;
+  const host = url.hostname.toLowerCase();
+  if (provider === "x") {
+    return host === "x.com" || host.endsWith(".x.com") || host === "twitter.com" || host.endsWith(".twitter.com");
+  }
+  return host === "instagram.com" || host.endsWith(".instagram.com");
+}
+
+async function getUserEmail(userId: string): Promise<string | null> {
+  if (!pool) return null;
+  const row = await pool.query<{ email: string | null }>(
+    `SELECT email FROM users WHERE id = $1 LIMIT 1`,
+    [userId],
+  );
+  return row.rows[0]?.email ?? null;
+}
+
+async function hasVerifiedX(userId: string): Promise<boolean> {
+  if (!pool) return false;
+  await ensureAccessControlTables();
+  const result = await pool.query(
+    `
+    SELECT 1
+    FROM social_accounts
+    WHERE user_id = $1
+      AND provider = 'x'
+      AND status = 'verified'
+    LIMIT 1
+    `,
+    [userId],
+  );
+  return result.rows.length > 0;
+}
+
+async function getSubmissionPosition(userId: string): Promise<number | null> {
+  if (!pool) return null;
+  const result = await pool.query<{ position: number }>(
+    `
+    SELECT position
+    FROM (
+      SELECT user_id, ROW_NUMBER() OVER (ORDER BY created_at ASC, id ASC) AS position
+      FROM beta_access_requests
+    ) ranked
+    WHERE user_id = $1
+    LIMIT 1
+    `,
+    [userId],
+  );
+  return result.rows[0]?.position ?? null;
+}
+
+export async function GET(request: NextRequest) {
+  const userId = await getUserIdFromRequest(request);
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (!hasDatabase || !pool) {
+    const store = readMemoryStore();
+    const existing = store.get(userId) ?? null;
+    if (!existing) {
+      return NextResponse.json({ request: null, submissionPosition: null, eligibleFirst30: false });
+    }
+    const position = Array.from(store.keys()).indexOf(userId) + 1;
+    return NextResponse.json({
+      request: existing,
+      submissionPosition: position,
+      eligibleFirst30: position > 0 && position <= 30,
+    });
+  }
+
+  await ensureBetaAccessRequestsTable();
+  const result = await pool.query(
+    `
+    SELECT
+      user_id,
+      email,
+      status,
+      social_provider,
+      social_url,
+      social_handle,
+      professions,
+      crypto_level,
+      goals,
+      concerns,
+      weekly_time,
+      previous_experience,
+      admin_review_notes,
+      reviewed_at,
+      reviewed_by,
+      created_at,
+      updated_at
+    FROM beta_access_requests
+    WHERE user_id = $1
+    LIMIT 1
+    `,
+    [userId],
+  );
+  const row = result.rows[0];
+  if (!row) {
+    return NextResponse.json({ request: null, submissionPosition: null, eligibleFirst30: false });
+  }
+
+  const submissionPosition = await getSubmissionPosition(userId);
+  return NextResponse.json({
+    request: {
+      userId: row.user_id,
+      email: row.email,
+      status: row.status,
+      socialProvider: row.social_provider,
+      socialUrl: row.social_url,
+      socialHandle: row.social_handle,
+      professions: Array.isArray(row.professions) ? row.professions : [],
+      cryptoLevel: row.crypto_level,
+      goals: Array.isArray(row.goals) ? row.goals : [],
+      concerns: row.concerns,
+      weeklyTime: row.weekly_time,
+      previousExperience: row.previous_experience,
+      adminReviewNotes: row.admin_review_notes,
+      reviewedAt: row.reviewed_at,
+      reviewedBy: row.reviewed_by,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at,
+    },
+    submissionPosition,
+    eligibleFirst30: typeof submissionPosition === "number" && submissionPosition <= 30,
+  });
+}
+
+export async function POST(request: NextRequest) {
+  const userId = await getUserIdFromRequest(request);
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized. Effettua login prima di inviare il form." }, { status: 401 });
+  }
+
+  const body = (await request.json().catch(() => ({}))) as Partial<AccessRequestPayload>;
+  const professions = sanitizeArray(body.professions, 12);
+  const goals = sanitizeArray(body.goals, 8);
+  const concerns = sanitizeText(body.concerns, 600);
+  const weeklyTime = sanitizeText(body.weeklyTime, 60);
+  const previousExperience = sanitizeText(body.previousExperience, 600);
+  const socialHandle = sanitizeText(body.socialHandle, 120);
+  const socialUrl = sanitizeText(body.socialUrl, 512);
+  const socialProvider = parseProvider(body.socialProvider);
+  const cryptoLevel = parseCryptoLevel(body.cryptoLevel);
+
+  if (professions.length === 0) {
+    return NextResponse.json({ error: "Seleziona almeno una professione." }, { status: 400 });
+  }
+  if (!cryptoLevel) {
+    return NextResponse.json({ error: "Seleziona il tuo livello di esperienza crypto." }, { status: 400 });
+  }
+  if (!socialProvider) {
+    return NextResponse.json({ error: "Seleziona un social (X o Instagram)." }, { status: 400 });
+  }
+  if (!socialUrl || !isValidSocialUrl(socialProvider, socialUrl)) {
+    return NextResponse.json({ error: "Inserisci un link social valido (https)." }, { status: 400 });
+  }
+
+  if (hasDatabase && pool && socialProvider === "x") {
+    const verifiedX = await hasVerifiedX(userId);
+    if (!verifiedX) {
+      return NextResponse.json(
+        { error: "Per usare X devi prima collegare il tuo account X nel profilo." },
+        { status: 400 },
+      );
+    }
+  }
+
+  if (!hasDatabase || !pool) {
+    const nowIso = new Date().toISOString();
+    const store = readMemoryStore();
+    const existing = store.get(userId);
+    const payload: StoredAccessRequest = {
+      userId,
+      email: existing?.email ?? null,
+      professions,
+      cryptoLevel,
+      goals,
+      concerns,
+      weeklyTime,
+      previousExperience,
+      socialProvider,
+      socialUrl,
+      socialHandle,
+      status: existing?.status === "approved" ? "approved" : "pending",
+      reviewedAt: existing?.status === "approved" ? existing.reviewedAt : null,
+      reviewedBy: existing?.status === "approved" ? existing.reviewedBy : null,
+      adminReviewNotes: existing?.status === "approved" ? existing.adminReviewNotes : null,
+      createdAt: existing?.createdAt ?? nowIso,
+      updatedAt: nowIso,
+    };
+    store.set(userId, payload);
+    const submissionPosition = Array.from(store.keys()).indexOf(userId) + 1;
+    return NextResponse.json({
+      ok: true,
+      request: payload,
+      submissionPosition,
+      eligibleFirst30: submissionPosition > 0 && submissionPosition <= 30,
+    });
+  }
+
+  await ensureBetaAccessRequestsTable();
+  const email = await getUserEmail(userId);
+
+  await pool.query(
+    `
+    INSERT INTO beta_access_requests (
+      user_id,
+      email,
+      status,
+      social_provider,
+      social_url,
+      social_handle,
+      professions,
+      crypto_level,
+      goals,
+      concerns,
+      weekly_time,
+      previous_experience,
+      x_profile_url,
+      instagram_profile_url,
+      updated_at
+    )
+    VALUES (
+      $1, $2, 'pending', $3, $4, $5, $6::jsonb, $7, $8::jsonb, $9, $10, $11,
+      CASE WHEN $3 = 'x' THEN $4 ELSE NULL END,
+      CASE WHEN $3 = 'instagram' THEN $4 ELSE NULL END,
+      now()
+    )
+    ON CONFLICT (user_id)
+    DO UPDATE SET
+      email = EXCLUDED.email,
+      status = CASE WHEN beta_access_requests.status = 'approved' THEN 'approved' ELSE 'pending' END,
+      social_provider = EXCLUDED.social_provider,
+      social_url = EXCLUDED.social_url,
+      social_handle = EXCLUDED.social_handle,
+      professions = EXCLUDED.professions,
+      crypto_level = EXCLUDED.crypto_level,
+      goals = EXCLUDED.goals,
+      concerns = EXCLUDED.concerns,
+      weekly_time = EXCLUDED.weekly_time,
+      previous_experience = EXCLUDED.previous_experience,
+      x_profile_url = EXCLUDED.x_profile_url,
+      instagram_profile_url = EXCLUDED.instagram_profile_url,
+      admin_review_notes = CASE WHEN beta_access_requests.status = 'approved' THEN beta_access_requests.admin_review_notes ELSE NULL END,
+      reviewed_at = CASE WHEN beta_access_requests.status = 'approved' THEN beta_access_requests.reviewed_at ELSE NULL END,
+      reviewed_by = CASE WHEN beta_access_requests.status = 'approved' THEN beta_access_requests.reviewed_by ELSE NULL END,
+      updated_at = now()
+    `,
+    [
+      userId,
+      email,
+      socialProvider,
+      socialUrl,
+      socialHandle || null,
+      JSON.stringify(professions),
+      cryptoLevel,
+      JSON.stringify(goals),
+      concerns || null,
+      weeklyTime || null,
+      previousExperience || null,
+    ],
+  );
+
+  const payload = await pool.query(
+    `
+    SELECT
+      user_id,
+      email,
+      status,
+      social_provider,
+      social_url,
+      social_handle,
+      professions,
+      crypto_level,
+      goals,
+      concerns,
+      weekly_time,
+      previous_experience,
+      admin_review_notes,
+      reviewed_at,
+      reviewed_by,
+      created_at,
+      updated_at
+    FROM beta_access_requests
+    WHERE user_id = $1
+    LIMIT 1
+    `,
+    [userId],
+  );
+
+  const submissionPosition = await getSubmissionPosition(userId);
+  return NextResponse.json({
+    ok: true,
+    request: payload.rows[0] ?? null,
+    submissionPosition,
+    eligibleFirst30: typeof submissionPosition === "number" && submissionPosition <= 30,
+  });
+}

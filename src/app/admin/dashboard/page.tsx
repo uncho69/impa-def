@@ -203,6 +203,30 @@ export default function AdminDashboard() {
             </Link>
           </div>
         </div>
+
+        <div className="bg-indigo-900/25 rounded-xl border border-indigo-500/20 p-6 flex flex-col justify-between backdrop-blur">
+          <div>
+            <h2 className="text-xl font-bold text-white mb-2">Accesso Beta</h2>
+            <p className="text-slate-300 text-sm mb-4">
+              Visualizza le richieste del form pubblico, leggi professione/livello crypto/social e approva o rifiuta gli utenti.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href="/admin/access-requests"
+              className="inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-500 transition-colors"
+            >
+              Vai a richieste accesso
+            </Link>
+            <Link
+              href="/beta-access"
+              target="_blank"
+              className="inline-flex items-center px-4 py-2 rounded-lg border border-indigo-400/35 text-indigo-100 text-sm font-medium hover:bg-indigo-500/15 transition-colors"
+            >
+              Apri form pubblico
+            </Link>
+          </div>
+        </div>
       </div>
 
       {/* Admin Logs */}
