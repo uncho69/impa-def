@@ -9,6 +9,7 @@ import { BLOCKCHAIN_SIDEBAR_ITEMS } from "@/lib/blockchain-sidebar";
 import { UnifiedAuthControls } from "@/components/auth/UnifiedAuthControls";
 import { SearchBar } from "@/components/SearchBar";
 import { CollapsibleSidebar } from "@/components/CollapsibleSidebar";
+import { SiteFooter } from "@/components/SiteFooter";
 
 type Theme = "dark" | "light";
 
@@ -156,8 +157,13 @@ export default function BlockchainLayout({ children }: { children: ReactNode }) 
             isItemActive={(href) => (href === "/blockchain" ? isBlockchainSection : pathname === href || pathname.startsWith(href + "/"))}
           />
 
-          <main className="flex-1 flex flex-col min-w-0 overflow-auto relative">
-            <div className="flex-1 px-6 py-8">{children}</div>
+          <main className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
+            <div className="flex-1 min-h-0 overflow-auto">
+              <div className="min-h-full flex flex-col">
+                <div className="px-6 py-8 flex-1">{children}</div>
+                <SiteFooter isDark={isDark} />
+              </div>
+            </div>
           </main>
         </div>
       </div>

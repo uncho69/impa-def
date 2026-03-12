@@ -1,7 +1,6 @@
 "use client";
 
 import { Accordion } from "@/components/Accordion";
-import { List } from "@/components/List";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -11,6 +10,7 @@ import { SearchBar } from "@/components/SearchBar";
 import { CollapsibleSidebar } from "@/components/CollapsibleSidebar";
 import imparodefiLogo from "@/assets/imparodefi-logo-nobg.webp";
 import { LEARNING_PATH_CARDS } from "@/lib/learning-paths";
+import { SiteFooter } from "@/components/SiteFooter";
 
 const SIDEBAR_ITEMS = [
   { label: "Dashboard", href: "/", icon: "📊" },
@@ -39,6 +39,74 @@ const QUICK_SECTIONS = [
   { href: "#analisi", label: "Analisi progetti" },
   { href: "#nft", label: "NFT e community" },
   { href: "#sicurezza", label: "Anti-truffe" },
+];
+
+const BEGINNER_SNAPSHOT = [
+  {
+    title: "Cosa sono le crypto?",
+    description: "Asset digitali su blockchain, noti anche come token, trasferibili senza banche in modo tracciabile e continuo.",
+  },
+  {
+    title: "Cos'e una blockchain?",
+    description: "Un registro pubblico e distribuito dove transazioni e dati restano verificabili nel tempo.",
+  },
+  {
+    title: "Cosa sono i portafogli non-custodial?",
+    description: "Wallet dove controlli direttamente chiavi e fondi: sei tu il custode.",
+  },
+  {
+    title: "Come compro e vendo crypto?",
+    description: "Via CEX o on-ramp, poi trasferisci al wallet personale con test iniziale.",
+  },
+  {
+    title: "Cosa sono le CEX?",
+    description: "Exchange centralizzati per convertire euro/dollari in crypto in modo semplice.",
+  },
+];
+
+const FIRST_STEPS = [
+  "Apri un wallet affidabile e salva la seed phrase offline.",
+  "Compra piccola cifra su canale affidabile e fai una transazione test.",
+  "Inizia da 1-2 protocolli grandi, evitando dispersione.",
+];
+
+const BENEFIT_GROUP_CARDS = [
+  {
+    icon: "👤",
+    slug: "consumatori",
+    title: "Consumatori",
+    description: "Più controllo su capitale, dati e accesso ai servizi finanziari globali.",
+  },
+  {
+    icon: "🛍️",
+    slug: "negozianti",
+    title: "Negozianti",
+    description: "Pagamenti più rapidi, fee ridotte e nuovi modelli di loyalty con token.",
+  },
+  {
+    icon: "🏛️",
+    slug: "governi",
+    title: "Governi",
+    description: "Maggiore trasparenza, tracciabilità e processi pubblici più efficienti.",
+  },
+  {
+    icon: "🏢",
+    slug: "imprese",
+    title: "Imprese",
+    description: "Supply chain tracciabile, automazione e nuovi modelli digitali.",
+  },
+  {
+    icon: "🧑‍💻",
+    slug: "sviluppatori",
+    title: "Sviluppatori",
+    description: "Infrastruttura open e componibile per creare prodotti più velocemente.",
+  },
+  {
+    icon: "🎨",
+    slug: "creatori",
+    title: "Creatori",
+    description: "Monetizzazione diretta e royalties programmabili su asset digitali.",
+  },
 ];
 
 type Theme = "dark" | "light";
@@ -162,261 +230,145 @@ export default function Manuale() {
               isItemActive={(href) => (href === "/manuale" ? pathname === "/manuale" || pathname.startsWith("/manuale/") : href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(href + "/"))}
             />
             <div className="flex-1 flex flex-col min-w-0">
-          <div className="flex-1 px-6 py-8 overflow-auto manual-modern">
-            <div className="max-w-4xl mx-auto">
+          <div className="flex-1 px-2 sm:px-3 lg:px-4 py-6 overflow-auto manual-modern">
+            <div className="w-full">
               <Link href="/" className={`inline-flex items-center gap-1.5 text-sm mb-6 ${isDark ? "text-slate-400 hover:text-white" : "text-slate-500 hover:text-slate-900"}`}>
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
                 Torna alla Dashboard
               </Link>
               <h1 className={`text-3xl font-bold mb-2 ${isDark ? "text-white" : "text-slate-900"}`}>Manuale A-Z</h1>
               <p className={`text-lg mb-8 ${isDark ? "text-slate-400" : "text-slate-600"}`}>Guida completa al mondo Web3, crypto e DeFi dalla A alla Z</p>
-              <section className={`manual-card rounded-2xl border p-6 mb-8 ${isDark ? "bg-indigo-900/25 border-indigo-500/25" : "bg-white border-slate-200 shadow-lg"}`}>
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <div>
-                    <p className={`text-xs uppercase tracking-wide ${isDark ? "text-indigo-300" : "text-indigo-600"}`}>Percorso consigliato</p>
-                    <p className={`mt-1 text-sm ${isDark ? "text-slate-300" : "text-slate-600"}`}>
-                      Parti dai fondamentali, passa alla pratica e chiudi con risk management e sicurezza.
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs">
-                    <span className="rounded-full border border-indigo-400/40 bg-indigo-500/15 px-3 py-1 text-indigo-200">Step 1: Capire</span>
-                    <span className="rounded-full border border-emerald-400/40 bg-emerald-500/15 px-3 py-1 text-emerald-200">Step 2: Usare</span>
-                    <span className="rounded-full border border-amber-400/40 bg-amber-500/15 px-3 py-1 text-amber-200">Step 3: Proteggere</span>
-                  </div>
-                </div>
-
-                <div className="mt-5 grid gap-3 sm:grid-cols-3">
-                  <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-                    <p className="text-xs uppercase tracking-wide text-slate-400">Tipo di rete</p>
-                    <p className="mt-1 text-2xl font-semibold text-white">Layer 1 + Layer 2</p>
-                    <p className="mt-2 text-sm text-slate-300">Le L1 garantiscono sicurezza, le L2 migliorano velocita e costi.</p>
-                  </div>
-                  <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-                    <p className="text-xs uppercase tracking-wide text-slate-400">Disponibilita</p>
-                    <p className="mt-1 text-2xl font-semibold text-white">24/7</p>
-                    <p className="mt-2 text-sm text-slate-300">Transazioni e applicazioni attive in modo continuo.</p>
-                  </div>
-                  <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-                    <p className="text-xs uppercase tracking-wide text-slate-400">Verificabilita</p>
-                    <p className="mt-1 text-2xl font-semibold text-white">On-chain</p>
-                    <p className="mt-2 text-sm text-slate-300">Dati e transazioni pubblici e controllabili da chiunque.</p>
-                  </div>
-                </div>
-
-                <div className="mt-5 flex flex-wrap gap-2">
-                  {QUICK_SECTIONS.map((section) => (
-                    <a
-                      key={section.href}
-                      href={section.href}
-                      className={`rounded-xl border px-3 py-2 text-sm transition-colors ${
+              <div className="grid gap-6 xl:grid-cols-[minmax(0,1.7fr)_minmax(320px,1fr)] items-start mb-6">
+                <section className={`manual-card rounded-2xl border p-5 ${isDark ? "bg-indigo-900/25 border-indigo-500/25" : "bg-white border-slate-200 shadow-lg"}`}>
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <p className={`text-xs uppercase tracking-wide ${isDark ? "text-indigo-300" : "text-indigo-700"}`}>Parti da qui</p>
+                      <p className={`mt-1 text-sm ${isDark ? "text-slate-300" : "text-slate-700"}`}>
+                        Queste sono le basi che un neofita deve capire al primo colpo.
+                      </p>
+                    </div>
+                    <Link
+                      href="#fondamenti"
+                      className={`rounded-lg px-3 py-2 text-xs font-medium transition-colors ${
                         isDark
-                          ? "border-indigo-500/30 bg-indigo-900/25 text-slate-200 hover:bg-indigo-800/40"
-                          : "border-slate-200 bg-slate-100 text-slate-700 hover:bg-slate-200"
+                          ? "border border-indigo-400/35 bg-indigo-500/15 text-indigo-200 hover:bg-indigo-500/25"
+                          : "border border-indigo-200 bg-white text-indigo-700 hover:bg-indigo-100"
                       }`}
                     >
-                      {section.label}
-                    </a>
-                  ))}
-                </div>
+                      Apri i fondamentali →
+                    </Link>
+                  </div>
+                  <div className="mt-4 grid gap-3 md:grid-cols-2">
+                    {BEGINNER_SNAPSHOT.map((item) => (
+                      <div
+                        key={item.title}
+                        className={`rounded-xl border p-4 ${isDark ? "border-indigo-500/25 bg-indigo-900/20" : "border-indigo-100 bg-white/90"}`}
+                      >
+                        <p className={`font-semibold ${isDark ? "text-white" : "text-slate-900"}`}>{item.title}</p>
+                        <p className={`mt-2 text-sm ${isDark ? "text-slate-300" : "text-slate-700"}`}>{item.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className={`mt-4 rounded-xl border p-4 ${isDark ? "border-emerald-500/25 bg-emerald-500/10" : "border-emerald-200 bg-emerald-50"}`}>
+                    <p className={`text-sm font-medium ${isDark ? "text-emerald-200" : "text-emerald-800"}`}>
+                      Cosa fare oggi (pratico):
+                    </p>
+                    <ul className={`mt-2 space-y-1.5 text-sm ${isDark ? "text-emerald-100/90" : "text-emerald-900"}`}>
+                      {FIRST_STEPS.map((step) => (
+                        <li key={step}>• {step}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </section>
 
-                <div className="mt-6">
-                  <p className="text-sm font-medium text-slate-200 mb-3">Percorsi guidati</p>
-                  <div className="grid gap-3 md:grid-cols-3">
+                <section className={`manual-card rounded-2xl border p-5 ${isDark ? "bg-indigo-900/25 border-indigo-500/25" : "bg-white border-slate-200 shadow-lg"}`}>
+                  <p className={`text-sm font-medium mb-3 ${isDark ? "text-slate-200" : "text-slate-700"}`}>
+                    Apprendimento con Ricompense in USDC
+                  </p>
+                  <div className="grid gap-3">
                     {LEARNING_PATH_CARDS.map((path) => (
                       <Link
                         key={path.level}
                         href={path.href}
-                        className="rounded-xl border border-indigo-500/30 bg-indigo-900/20 p-4 transition-colors hover:border-indigo-400/50 hover:bg-indigo-800/25"
+                        className="rounded-xl border border-indigo-500/30 bg-indigo-900/20 p-3 transition-colors hover:border-indigo-400/50 hover:bg-indigo-800/25"
                       >
-                        <p className="text-xs uppercase tracking-wide text-indigo-300">{path.sub}</p>
-                        <p className="mt-1 text-lg font-semibold text-white">{path.level}</p>
-                        <p className="mt-2 text-sm text-slate-300 line-clamp-3">{path.desc}</p>
-                        <p className="mt-3 text-sm font-medium text-indigo-300">Apri percorso →</p>
+                        <div className="flex items-center justify-between gap-2">
+                          <p className="text-base font-semibold text-white">{path.level}</p>
+                          <span className="rounded-full border border-emerald-400/35 bg-emerald-500/15 px-2 py-0.5 text-[11px] font-semibold text-emerald-200">
+                            {path.level === "Principiante"
+                              ? "3 USDC"
+                              : path.level === "Intermedio"
+                                ? "5 USDC"
+                                : "10 USDC"}
+                          </span>
+                        </div>
+                        <p className="mt-1.5 text-sm text-slate-300 line-clamp-3">{path.desc}</p>
                       </Link>
                     ))}
                   </div>
-                </div>
-              </section>
-        <div id="fondamenti" className={`manual-card scroll-mt-24 rounded-2xl border p-8 mb-8 ${isDark ? "bg-indigo-900/25 border-indigo-500/20" : "bg-white border-slate-200 shadow-lg"}`}>
-              <p className={`mb-6 ${isDark ? "text-slate-200" : "text-slate-900"}`}>
-                Cosa sono le criptovalute? Cos&apos;è il metaverso, il mondo Web3, la DeFi e l&apos;economia digitale?
-              </p>
-              <p className="text-slate-900 dark:text-slate-200 mb-6">
-                Per iniziare, dovete sapere che a noi interessa usare questo mondo digitale per gli enormi vantaggi e benefici che comporta, come ad esempio:
-              </p>
-              <div className="rounded-xl p-5 border dark:bg-indigo-900/25 dark:border-indigo-500/30 bg-slate-50 border-slate-200 mb-8">
-                <List>
-                  <li><b>Conservare il denaro</b> in maniera sicura ed incensurabile</li>
-                  <li><b>Inviare denaro istantaneamente</b> a costo quasi zero</li>
-                  <li><b>Ottenere rendimenti più alti</b> sui propri risparmi in totale autonomia e sicurezza</li>
-                </List>
-              </div>
-              
-              <div className="space-y-4 mb-8">
-                <Accordion
-                  buttonText="Benefici delle tecnologie Web3"
-                  showTooltip={true}
-                >
-                  <div className="p-5 space-y-4 text-slate-900 dark:text-slate-200">
-                    <p className="mb-4">
-                      Internet ha abilitato il trasferimento di dati istantaneamente attraverso il mondo, a costo quasi zero. Le blockchain fanno la stessa cosa ma per la finanza.
-                    </p>
-                    
-                    <p className="mb-4">
-                      I benefici dell'adozione delle tecnologie Web3 <strong>variano a seconda del proprio utilizzo</strong>, coinvolgendo consumatori, imprese, governi e altri soggetti. Alcuni esempi concreti:
-                    </p>
-                    
-                    <ul className="list-disc list-inside space-y-2 mb-4">
-                      <li>Gestire il proprio capitale in modo autonomo e senza censure</li>
-                      <li>Accedere a opportunità d'investimento rese possibili dalle tecnologie decentralizzate</li>
-                      <li>Entrare in comunità di appassionati in qualunque settore, beneficiando del supporto reciproco per progetti personali e accedendo a opportunità d'investimento esclusive</li>
-                    </ul>
-                    
-                    <p className="mb-4">
-                      Di seguito una panoramica dei vantaggi per ciascun gruppo.
-                    </p>
-                    
-                    <div className="space-y-3">
-                      <Accordion buttonText="Per i Consumatori">
-                        <div className="p-4 space-y-4 text-slate-900 dark:text-slate-200">
-                          <ul className="list-disc list-inside space-y-3">
-                            <li>
-                              <strong>Gestione del proprio capitale in maniera autonoma ed incensurabile</strong>
-                            </li>
-                            <li>
-                              <strong>Proprietà e controllo dei dati</strong>: Le tecnologie Web3 permettono agli utenti di mantenere il controllo dei propri dati personali attraverso reti decentralizzate, garantendo privacy e proprietà. A differenza del Web2, dove le aziende possiedono e monetizzano i dati degli utenti, nel Web3 gli utenti hanno il pieno controllo.
-                            </li>
-                            <li>
-                              <strong>Identità decentralizzata</strong>: Possibilità di creare identità decentralizzate (DID) completamente controllate dall'utente. Questo riduce la necessità di multiple registrazioni e migliora la sicurezza e la privacy su diverse piattaforme.
-                            </li>
-                            <li>
-                              <strong>Accesso alla DeFi</strong>: Gli utenti possono prestare, prendere in prestito, guadagnare interessi e scambiare asset all'interno della finanza decentralizzata (DeFi) senza dipendere da intermediari tradizionali come le banche.
-                            </li>
-                            <li>
-                              <strong>Trasparenza e fiducia</strong>: Le transazioni, spesso registrate su blockchain, sono trasparenti e immutabili, favorendo la fiducia nel sistema.
-                            </li>
-                            <li>
-                              <strong>Opportunità di guadagno (Play-to-Earn, Learn-to-Earn)</strong>: Possibilità di guadagnare ricompense attraverso videogiochi (Play-to-Earn), piattaforme educative (Learn-to-Earn) o contribuendo a community e protocolli (es. staking, governance).
-                            </li>
-                            <li>
-                              <strong>NFT e proprietà digitale</strong>: Possesso e scambio di Non-Fungible Token (NFT), che rappresentano asset digitali unici come arte, musica, immobili virtuali e altre forme di proprietà digitale.
-                            </li>
-                          </ul>
-                        </div>
-                      </Accordion>
-                      
-                      <Accordion buttonText="Per i Negozianti (es. retailer, piattaforme e-commerce)">
-                        <div className="p-4 space-y-4 text-slate-900 dark:text-slate-200">
-                          <ul className="list-disc list-inside space-y-3">
-                            <li>
-                              <strong>Pagamenti diretti in criptovalute:</strong> Eliminano gli intermediari (banche o PSP), riducono le commissioni e abilitano transazioni globali più rapide.
-                            </li>
-                            <li>
-                              <strong>Programmi fedeltà e ricompense:</strong> Token e blockchain rendono i programmi più trasparenti e flessibili; i clienti possono guadagnare e scambiare premi.
-                            </li>
-                            <li>
-                              <strong>Beni digitali e integrazione NFT:</strong> Vendita di beni digitali come NFT, con proprietà verificabile ed esperienze esclusive per i clienti.
-                            </li>
-                            <li>
-                              <strong>Marketplace decentralizzati:</strong> Mercati peer-to-peer che tagliano gli intermediari, aumentano i margini e rafforzano la relazione diretta col cliente.
-                            </li>
-                            <li>
-                              <strong>Incentivi basati su token:</strong> Token nativi per stimolare engagement (recensioni, referral, contributi alla community).
-                            </li>
-                            <li>
-                              <strong>Accesso globale e inclusione finanziaria:</strong> Mercati internazionali raggiungibili da chiunque abbia Internet, inclusi i non bancarizzati.
-                            </li>
-                          </ul>
-                        </div>
-                      </Accordion>
-                      
-                      <Accordion buttonText="Per i Governi">
-                        <div className="p-4 space-y-4 text-slate-900 dark:text-slate-200">
-                          <ul className="list-disc list-inside space-y-3">
-                            <li>
-                              <strong>Trasparenza nella governance:</strong> I registri pubblici possono diventare più trasparenti, affidabili e immutabili, riducendo la corruzione e aumentando la fiducia.
-                            </li>
-                            <li>
-                              <strong>Identità digitale:</strong> Sistemi di identità decentralizzati possono semplificare processi come votazioni, previdenza sociale, sanità e welfare, proteggendo al contempo privacy e sicurezza dei dati.
-                            </li>
-                            <li>
-                              <strong>Voto decentralizzato:</strong> Processi elettorali più sicuri e trasparenti, aumentando la fiducia dei cittadini e prevenendo frodi.
-                            </li>
-                            <li>
-                              <strong>Servizi pubblici più efficienti:</strong> Utilizzo di smart contract per automatizzare accordi, tasse, permessi e altri servizi pubblici, velocizzando l'amministrazione.
-                            </li>
-                            <li>
-                              <strong>Pagamenti transfrontalieri e distribuzione degli aiuti:</strong> Uso di criptovalute e blockchain per pagamenti e distribuzione di aiuti più veloci, economici, tracciabili e trasparenti.
-                            </li>
-                            <li>
-                              <strong>Regolazione delle economie tokenizzate:</strong> Sviluppo di framework normativi per valute digitali, economia tokenizzata e DeFi, bilanciando innovazione e compliance.
-                            </li>
-                          </ul>
-                        </div>
-                      </Accordion>
-                      
-                      <Accordion buttonText="Per Imprese e Grandi Aziende">
-                        <div className="p-4 space-y-4 text-slate-900 dark:text-slate-200">
-                          <ul className="list-disc list-inside space-y-3">
-                            <li>
-                              <strong>Trasparenza della supply chain:</strong> Tracciabilità in tempo reale dei beni, permettendo la verifica di origine e qualità dalle materie prime al prodotto finito.
-                            </li>
-                            <li>
-                              <strong>Archiviazione cloud decentralizzata:</strong> Soluzioni di storage decentralizzato come IPFS o Filecoin, offrendo maggiore sicurezza, privacy e potenziali risparmi sui costi rispetto ai servizi cloud tradizionali.
-                            </li>
-                            <li>
-                              <strong>Monetizzazione dei dati e tutela della privacy:</strong> Nuovi modelli dove gli utenti controllano i propri dati e possono condividerli in cambio di ricompense, migliorando fiducia e qualità dei dati.
-                            </li>
-                            <li>
-                              <strong>Fidelizzazione ed engagement:</strong> Utilizzo della tokenizzazione per le interazioni (es. punti, community del brand) per rafforzare le relazioni con i clienti e favorire senso di appartenenza.
-                            </li>
-                            <li>
-                              <strong>Contratti programmabili e automazione:</strong> Utilizzo di smart contract per automatizzare pagamenti e accordi legali, aumentando velocità, efficienza e riducendo errori.
-                            </li>
-                            <li>
-                              <strong>DAO (organizzazioni autonome decentralizzate):</strong> Sperimentazione di modelli di governance condivisa coinvolgendo azionisti, dipendenti o la community.
-                            </li>
-                          </ul>
-                        </div>
-                      </Accordion>
-                      
-                      <Accordion buttonText="Per Sviluppatori e Innovatori">
-                        <div className="p-4 space-y-4 text-slate-900 dark:text-slate-200">
-                          <ul className="list-disc list-inside space-y-3">
-                            <li>
-                              <strong>Collaborazione open source:</strong> Protocolli aperti favoriscono collaborazione globale, riuso dell'infrastruttura ed interoperabilità.
-                            </li>
-                            <li>
-                              <strong>Monetizzare lo sviluppo:</strong> Ricompense dirette tramite token, NFT o altri incentivi, senza dover passare da strutture aziendali tradizionali.
-                            </li>
-                            <li>
-                              <strong>Interoperabilità e componibilità:</strong> Integrazione semplice di protocolli (es. DeFi, standard NFT) per maggiore flessibilità e innovazione.
-                            </li>
-                            <li>
-                              <strong>Sistemi trustless:</strong> Applicazioni in cui non serve fidarsi di intermediari grazie a garanzie crittografiche e smart contract.
-                            </li>
-                          </ul>
-                        </div>
-                      </Accordion>
-                      
-                      <Accordion buttonText="Per Artisti e Creatori">
-                        <div className="p-4 space-y-4 text-slate-900 dark:text-slate-200">
-                          <ul className="list-disc list-inside space-y-3">
-                            <li>
-                              <strong>Monetizzazione diretta via NFT:</strong> Vendita di opere digitali direttamente al pubblico, eliminando intermediari e trattenendo una quota maggiore dei ricavi.
-                            </li>
-                            <li>
-                              <strong>Royalties su vendite secondarie:</strong> Royalties programmabili negli NFT per guadagnare anche nelle rivendite.
-                            </li>
-                            <li>
-                              <strong>Pubblico globale e piattaforme decentralizzate:</strong> Maggior controllo sull'opera e sulla distribuzione, con portata internazionale.
-                            </li>
-                          </ul>
-                        </div>
-                      </Accordion>
-                    </div>
+                  <div className="mt-5 flex flex-wrap gap-2">
+                    {QUICK_SECTIONS.map((section) => (
+                      <a
+                        key={section.href}
+                        href={section.href}
+                        className={`rounded-xl border px-3 py-2 text-sm transition-colors ${
+                          isDark
+                            ? "border-indigo-500/30 bg-indigo-900/25 text-slate-200 hover:bg-indigo-800/40"
+                            : "border-slate-200 bg-slate-100 text-slate-700 hover:bg-slate-200"
+                        }`}
+                      >
+                        {section.label}
+                      </a>
+                    ))}
                   </div>
-                </Accordion>
+                </section>
+              </div>
+
+        <div id="fondamenti" className={`manual-card scroll-mt-24 rounded-2xl border p-5 mb-6 ${isDark ? "bg-indigo-900/25 border-indigo-500/20" : "bg-white border-slate-200 shadow-lg"}`}>
+              <div className="space-y-4 mb-5">
+                <div className={`rounded-xl border p-4 ${isDark ? "border-indigo-500/30 bg-indigo-900/15" : "border-slate-200 bg-slate-50"}`}>
+                  <h3 className={`text-xl font-semibold ${isDark ? "text-white" : "text-slate-900"}`}>Benefici delle tecnologie Web3</h3>
+                  <p className={`mt-2 text-sm ${isDark ? "text-slate-300" : "text-slate-700"}`}>
+                    Internet trasferisce dati; la blockchain trasferisce valore. I benefici cambiano in base al ruolo di chi la usa.
+                  </p>
+                  <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                    {[
+                      "Gestire il proprio capitale in modo autonomo e senza censure",
+                      "Accedere a opportunità d'investimento decentralizzate",
+                      "Entrare in community con valore reale e networking",
+                      "Conservare denaro in modo sicuro e incensurabile",
+                      "Inviare denaro quasi istantaneo e low-cost",
+                      "Ottenere rendimenti in autonomia",
+                    ].map((item) => (
+                      <div
+                        key={item}
+                        className={`rounded-lg border px-3 py-2 text-sm ${
+                          isDark ? "border-indigo-500/25 bg-slate-950/30 text-slate-200" : "border-slate-200 bg-white text-slate-700"
+                        }`}
+                      >
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                  {BENEFIT_GROUP_CARDS.map((group) => (
+                    <Link
+                      key={group.title}
+                      href={`/manuale/${group.slug}`}
+                      className={`rounded-xl border p-4 min-h-[150px] ${
+                        isDark ? "border-indigo-500/25 bg-indigo-900/20" : "border-slate-200 bg-white"
+                      } hover:border-indigo-400/60 transition-colors`}
+                    >
+                      <div className="text-2xl">{group.icon}</div>
+                      <p className={`mt-2 font-semibold ${isDark ? "text-white" : "text-slate-900"}`}>{group.title}</p>
+                      <p className={`mt-1.5 text-sm ${isDark ? "text-slate-300" : "text-slate-700"}`}>{group.description}</p>
+                      <p className={`mt-3 text-xs font-medium ${isDark ? "text-indigo-300" : "text-indigo-700"}`}>Apri guida categoria →</p>
+                    </Link>
+                  ))}
+                </div>
+              </div>
                 
                 <Accordion
                   buttonText="Come navigare il mondo Web3?"
@@ -484,12 +436,7 @@ export default function Manuale() {
                     </p>
                   </div>
                 </Accordion>
-              </div>
               
-              <p className="text-slate-900 dark:text-slate-200 mb-6">
-                Ci sono diverse Blockchain, ognuna per un caso specifico. Ma non spaventatevi, perché a noi interessano al massimo una dozzina di queste, tra cui alcune Layer2 di Ethereum ed i loro ecosistemi di progetti.
-              </p>
-          
               <div className="mb-4">
                 <Accordion buttonText={"Cos'è una Blockchain?"}>
                   <div className="p-5 space-y-5 text-slate-900 dark:text-slate-200">
@@ -1280,9 +1227,7 @@ export default function Manuale() {
           </div>
 
             </div>
-            <footer className={`border-t py-4 mt-6 text-center text-sm ${isDark ? "border-indigo-500/20 text-white" : "border-slate-200 text-slate-600"}`}>
-              ImparoDeFi © {new Date().getFullYear()}. All rights reserved.
-            </footer>
+            <SiteFooter isDark={isDark} className="mt-6" />
           </div>
             </div>
           </div>

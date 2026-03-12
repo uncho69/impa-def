@@ -13,6 +13,7 @@ import placeholder from "@/assets/placeholder.svg";
 import { UnifiedAuthControls } from "@/components/auth/UnifiedAuthControls";
 import { SearchBar } from "@/components/SearchBar";
 import { CollapsibleSidebar } from "@/components/CollapsibleSidebar";
+import { SiteFooter } from "@/components/SiteFooter";
 
 type Theme = "dark" | "light";
 
@@ -152,9 +153,14 @@ export default function AirdropsLayout({ children }: { children: ReactNode }) {
             isDark={isDark}
             isItemActive={(href) => (href === "/airdrops" ? isAirdropsSection : pathname === href || pathname.startsWith(href + "/"))}
           />
-          <main className="flex-1 flex flex-col min-w-0 overflow-auto">
-            <div className="flex-1 px-6 py-8">
-              {airdropTemplateData ? <ProjectPageTemplate data={airdropTemplateData} /> : children}
+          <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
+            <div className="flex-1 min-h-0 overflow-auto">
+              <div className="min-h-full flex flex-col">
+                <div className="px-6 py-8 flex-1">
+                  {airdropTemplateData ? <ProjectPageTemplate data={airdropTemplateData} /> : children}
+                </div>
+                <SiteFooter isDark={isDark} />
+              </div>
             </div>
           </main>
         </div>

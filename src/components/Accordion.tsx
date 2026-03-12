@@ -44,7 +44,7 @@ export function Accordion({
                   <div className="text-center">
                     <div className="font-semibold text-yellow-300 mb-1">💡 Suggerimento</div>
                     <div className="leading-relaxed">
-                      Clicca sulle > per {open ? 'chiudere' : 'aprire'} le sezioni
+                      Clicca sulle {" > "} per {open ? "chiudere" : "aprire"} le sezioni
                     </div>
                   </div>
                 </div>

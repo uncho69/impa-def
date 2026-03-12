@@ -11,8 +11,13 @@ const ADMIN_EMAILS_SET = new Set(
 
 export async function canManageAdmin(userId: string): Promise<boolean> {
   if (!userId) return false;
-  if (await isModeratorOrAdmin(userId)) return true;
   if (!db) return false;
+
+  try {
+    if (await isModeratorOrAdmin(userId)) return true;
+  } catch {
+    // Continue with email-based checks below if role table lookup fails.
+  }
 
   const row = await db
     .select({ email: users.email })

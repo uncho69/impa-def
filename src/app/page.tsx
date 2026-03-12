@@ -22,6 +22,7 @@ import imparodefiLogo from "@/assets/imparodefi-logo-nobg.webp";
 import { LEARNING_PATH_CARDS } from "@/lib/learning-paths";
 import { DEFAULT_HACKS_SCAMS_ALERTS, toPublicAlert } from "@/lib/hacks-scams-alerts";
 import { getProjectLogo } from "@/lib/project-logos";
+import { SiteFooter } from "@/components/SiteFooter";
 
 const SIDEBAR_ITEMS = [
   { label: "Dashboard", href: "/", icon: "📊" },
@@ -656,9 +657,7 @@ export default function Home() {
               </ul>
               </section>
             </div>
-            <footer className={`border-t py-4 mt-6 text-center text-sm ${isDark ? "border-indigo-500/20 text-white" : "border-slate-200 text-slate-600"}`}>
-              ImparoDeFi © {new Date().getFullYear()}. All rights reserved.
-            </footer>
+            <SiteFooter isDark={isDark} className="mt-6" />
           </div>
             </div>
           </div>

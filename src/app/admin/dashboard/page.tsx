@@ -186,6 +186,23 @@ export default function AdminDashboard() {
             </Link>
           </div>
         </div>
+
+        <div className="bg-indigo-900/25 rounded-xl border border-indigo-500/20 p-6 flex flex-col justify-between backdrop-blur">
+          <div>
+            <h2 className="text-xl font-bold text-white mb-2">Footer &amp; Legal</h2>
+            <p className="text-slate-300 text-sm mb-4">
+              Modifica i link del footer e i contenuti delle pagine Privacy Policy e Terms of Service.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href="/admin/site-settings"
+              className="inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-500 transition-colors"
+            >
+              Vai a Footer &amp; Legal
+            </Link>
+          </div>
+        </div>
       </div>
 
       {/* Admin Logs */}

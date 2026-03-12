@@ -13,6 +13,7 @@ import { UnifiedAuthControls } from "@/components/auth/UnifiedAuthControls";
 import { SearchBar } from "@/components/SearchBar";
 import { CollapsibleSidebar } from "@/components/CollapsibleSidebar";
 import { BookmarkButton } from "@/components/bookmarks/BookmarkButton";
+import { SiteFooter } from "@/components/SiteFooter";
 
 const SIDEBAR_ITEMS = [
   { label: "Dashboard", href: "/", icon: "📊" },
@@ -329,19 +330,20 @@ export default function EsploraAppPage() {
           )}
 
           {/* Main content */}
-          <div className="flex-1 px-6 py-8 overflow-auto">
-            <Link
-              href="/"
-              className={`inline-block text-sm font-medium mb-6 ${isDark ? "text-slate-400 hover:text-white" : "text-slate-500 hover:text-slate-900"}`}
-            >
-              ← Torna alla Home
-            </Link>
-            <h1 className={`text-4xl font-bold mb-2 ${isDark ? "text-white" : "text-slate-900"}`}>
-              Mappa Ecosistema
-            </h1>
-            <p className={`text-lg mb-6 ${isDark ? "text-slate-400" : "text-slate-600"}`}>
-              Tutti i progetti dell&apos;ecosistema: Blockchains, DeFi, Portafogli, Airdrops, NFT, Memecoins e altro.
-            </p>
+          <div className="flex-1 overflow-auto">
+            <div className="px-6 py-8">
+              <Link
+                href="/"
+                className={`inline-block text-sm font-medium mb-6 ${isDark ? "text-slate-400 hover:text-white" : "text-slate-500 hover:text-slate-900"}`}
+              >
+                ← Torna alla Home
+              </Link>
+              <h1 className={`text-4xl font-bold mb-2 ${isDark ? "text-white" : "text-slate-900"}`}>
+                Mappa Ecosistema
+              </h1>
+              <p className={`text-lg mb-6 ${isDark ? "text-slate-400" : "text-slate-600"}`}>
+                Tutti i progetti dell&apos;ecosistema: Blockchains, DeFi, Portafogli, Airdrops, NFT, Memecoins e altro.
+              </p>
 
             {/* Search bar */}
             <div className="mb-4">
@@ -508,9 +510,11 @@ export default function EsploraAppPage() {
               </div>
             )}
 
-            <p className={`text-sm mt-8 text-center ${isDark ? "text-slate-500" : "text-slate-600"}`}>
-              {filteredProjects.length} di {projects.length} progetti
-            </p>
+              <p className={`text-sm mt-8 text-center ${isDark ? "text-slate-500" : "text-slate-600"}`}>
+                {filteredProjects.length} di {projects.length} progetti
+              </p>
+            </div>
+            <SiteFooter isDark={isDark} />
           </div>
         </div>
       </div>
