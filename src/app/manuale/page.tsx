@@ -34,7 +34,7 @@ const SIDEBAR_ITEMS = [
 
 const QUICK_SECTIONS = [
   { href: "#fondamenti", label: "Fondamenti Web3" },
-  { href: "#wallet", label: "Wallet e sicurezza" },
+  { href: "#guide-rapide", label: "Wallet e sicurezza" },
   { href: "#onramp", label: "Accesso al mercato" },
   { href: "#analisi", label: "Analisi progetti" },
   { href: "#nft", label: "NFT e community" },
@@ -61,6 +61,10 @@ const BEGINNER_SNAPSHOT = [
   {
     title: "Cosa sono le CEX?",
     description: "Exchange centralizzati per convertire euro/dollari in crypto in modo semplice.",
+  },
+  {
+    title: "Cos'e la DeFi?",
+    description: "Servizi finanziari su blockchain (swap, lending, staking) senza banca centrale, accessibili dal tuo wallet.",
   },
 ];
 
@@ -110,11 +114,13 @@ const BENEFIT_GROUP_CARDS = [
 ];
 
 type Theme = "dark" | "light";
+type ManualQuickGuideId = "navigate" | "blockchain" | "defi" | "wallet";
 
 export default function Manuale() {
   const pathname = usePathname();
   const [theme, setTheme] = useState<Theme>("dark");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeQuickGuide, setActiveQuickGuide] = useState<ManualQuickGuideId | null>(null);
 
   useEffect(() => {
     const stored = localStorage.getItem("imparodefi-theme") as Theme | null;
@@ -370,239 +376,68 @@ export default function Manuale() {
                 </div>
               </div>
                 
-                <Accordion
-                  buttonText="Come navigare il mondo Web3?"
-                >
-                  <div className="p-5 space-y-5 text-slate-900 dark:text-slate-200">
-                    <div className="grid gap-3 md:grid-cols-3">
-                      <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-                        <p className="text-xs uppercase tracking-wide text-slate-400">Focus</p>
-                        <p className="mt-1 font-semibold text-white">Ethereum + Layer 2</p>
-                        <p className="mt-2 text-sm text-slate-300">Poche reti, use-case chiari, esecuzione migliore.</p>
-                      </div>
-                      <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-                        <p className="text-xs uppercase tracking-wide text-slate-400">Prerequisito</p>
-                        <p className="mt-1 font-semibold text-white">Wallet non-custodial</p>
-                        <p className="mt-2 text-sm text-slate-300">Controlli chiavi e fondi. Nessun intermediario.</p>
-                      </div>
-                      <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-                        <p className="text-xs uppercase tracking-wide text-slate-400">Regola d&apos;oro</p>
-                        <p className="mt-1 font-semibold text-white">Sicurezza prima di tutto</p>
-                        <p className="mt-2 text-sm text-slate-300">Separare wallet cold e wallet attivo.</p>
-                      </div>
-                    </div>
-
-                    <div className="rounded-xl border border-indigo-500/25 bg-slate-950/20 p-4">
-                      <p className="text-sm text-slate-300">
-                        Ci sono molte blockchain (BTC, ETH, SOL...), ma per partire bene conviene usare un percorso semplice e ripetibile.
-                      </p>
-                    </div>
-
-                    <div className="space-y-3">
-                      {[
-                        {
-                          title: "1) Crea il wallet giusto",
-                          text: "Apri un wallet non-custodial e conserva seed phrase/chiavi offline.",
-                        },
-                        {
-                          title: "2) Separa tesoreria e operativita",
-                          text: "Usa un wallet \"cold\" per risparmio e uno \"attivo\" per app e test.",
-                        },
-                        {
-                          title: "3) Acquista asset da canale affidabile",
-                          text: "Compra su exchange/on-ramp affidabili e verifica sempre rete e indirizzo.",
-                        },
-                        {
-                          title: "4) Trasferisci al wallet personale",
-                          text: "Sposta i fondi al wallet non-custodial con una transazione test prima dell'importo pieno.",
-                        },
-                        {
-                          title: "5) Entra nelle app Web3",
-                          text: "Connetti il wallet e accedi a DeFi, NFT e strumenti on-chain in modo graduale.",
-                        },
-                      ].map((step) => (
-                        <div
-                          key={step.title}
-                          className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4 transition-colors hover:bg-indigo-800/25"
-                        >
-                          <p className="font-semibold text-white">{step.title}</p>
-                          <p className="mt-1 text-sm text-slate-300">{step.text}</p>
-                        </div>
-                      ))}
-                    </div>
-
-                    <p className="text-sm text-slate-300">
-                      In breve: evita di lasciare capitali su piattaforme custodial e tratta il wallet come la tua banca personale.
-                    </p>
-                  </div>
-                </Accordion>
-              
-              <div className="mb-4">
-                <Accordion buttonText={"Cos'è una Blockchain?"}>
-                  <div className="p-5 space-y-5 text-slate-900 dark:text-slate-200">
-                    <div className="grid gap-3 md:grid-cols-3">
-                      <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-                        <p className="text-xs uppercase tracking-wide text-slate-400">Struttura</p>
-                        <p className="mt-1 font-semibold text-white">Registro distribuito</p>
-                        <p className="mt-2 text-sm text-slate-300">I dati non vivono su un server unico ma su una rete di nodi.</p>
-                      </div>
-                      <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-                        <p className="text-xs uppercase tracking-wide text-slate-400">Integrita</p>
-                        <p className="mt-1 font-semibold text-white">Immutabilita crittografica</p>
-                        <p className="mt-2 text-sm text-slate-300">Blocchi concatenati che rendono difficile alterare la cronologia.</p>
-                      </div>
-                      <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-                        <p className="text-xs uppercase tracking-wide text-slate-400">Utilita</p>
-                        <p className="mt-1 font-semibold text-white">Valore + Applicazioni</p>
-                        <p className="mt-2 text-sm text-slate-300">Da trasferimento di denaro a smart contract e dApp.</p>
-                      </div>
-                    </div>
-
-                    <div className="space-y-3">
-                      {[
-                        "Le blockchain sono reti decentralizzate: non c'è un'autorità centrale che controlla i dati.",
-                        "La trasparenza on-chain permette audit pubblici e maggiore verificabilità delle transazioni.",
-                        "Bitcoin nasce come layer monetario; Ethereum amplia il modello con contratti programmabili.",
-                      ].map((point) => (
-                        <div key={point} className="rounded-xl border border-indigo-500/25 bg-slate-950/20 p-4">
-                          <p className="text-sm text-slate-300">{point}</p>
-                        </div>
-                      ))}
-                    </div>
-
-                    <p className="text-sm text-slate-300">
-                      In sintesi: una blockchain combina sicurezza, trasparenza e programmabilità per creare sistemi finanziari e applicativi senza intermediari tradizionali.
-                    </p>
-                  </div>
-                </Accordion>
-              </div>
-              
-              <div className="mt-4">
-                <Link href="/blockchain">
-                  <div className="inline-flex items-center gap-2 text-blue-600 font-bold text-lg hover:text-blue-700 transition-colors cursor-pointer">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                    Vai a Blockchain
-                  </div>
-                </Link>
-              </div>
             </div>
 
-          <div id="defi-dapp" className="manual-card scroll-mt-24 rounded-2xl border p-8 mb-8 dark:bg-indigo-900/25 dark:border-indigo-500/20 bg-white border-slate-200 shadow-lg">
-            <p className="text-slate-900 dark:text-slate-200 mb-6">
-              Ogni Blockchain ha il proprio ecosistema di applicazioni, ed è importante saper riconoscere quali sono le migliori per poter gestire al meglio le proprio risorse (tempo e denaro).
-            </p>
-
-          <Accordion
-            buttonText={"Cosa sono le applicazioni decentralizzate (DeFi)"}
-              className="mb-4"
+          <div
+            id="guide-rapide"
+            className={`manual-card scroll-mt-24 rounded-2xl border p-5 mb-6 ${
+              isDark ? "bg-indigo-900/25 border-indigo-500/20" : "bg-white border-slate-200 shadow-lg"
+            }`}
           >
-              <div className="p-5 space-y-5 text-slate-900 dark:text-slate-200">
-                <div className="grid gap-3 md:grid-cols-3">
-                  <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-                    <p className="text-xs uppercase tracking-wide text-slate-400">Motore</p>
-                    <p className="mt-1 font-semibold text-white">Smart contract</p>
-                    <p className="mt-2 text-sm text-slate-300">Logica eseguita on-chain, senza backoffice centrale.</p>
-                  </div>
-                  <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-                    <p className="text-xs uppercase tracking-wide text-slate-400">Vantaggio</p>
-                    <p className="mt-1 font-semibold text-white">Accesso permissionless</p>
-                    <p className="mt-2 text-sm text-slate-300">Chiunque con wallet può usare le app in pochi secondi.</p>
-                  </div>
-                  <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-                    <p className="text-xs uppercase tracking-wide text-slate-400">Esempi</p>
-                    <p className="mt-1 font-semibold text-white">DEX, lending, NFT</p>
-                    <p className="mt-2 text-sm text-slate-300">Uniswap, Aave, marketplace NFT e app gaming.</p>
-                  </div>
-                </div>
+            <div className={`rounded-xl border p-4 ${isDark ? "border-indigo-500/30 bg-indigo-900/15" : "border-slate-200 bg-slate-50"}`}>
+              <h3 className={`text-xl font-semibold ${isDark ? "text-white" : "text-slate-900"}`}>Guide rapide essenziali</h3>
+              <p className={`mt-2 text-sm ${isDark ? "text-slate-300" : "text-slate-700"}`}>
+                Apri una guida rapida per i concetti base prima di passare alle sezioni operative.
+              </p>
 
-                <div className="space-y-3">
-                  {[
-                    {
-                      title: "dApp vs App tradizionali",
-                      text: "Le app tradizionali dipendono da server e policy aziendali; le dApp da regole codificate e verificabili pubblicamente.",
-                    },
-                    {
-                      title: "Perché sono utili",
-                      text: "Riduzione di intermediari, maggior trasparenza e integrazione rapida tra protocolli (componibilità).",
-                    },
-                    {
-                      title: "Come iniziare",
-                      text: "Scegli 1-2 protocolli affidabili, usa importi piccoli e verifica sempre URL ufficiale prima di connettere il wallet.",
-                    },
-                  ].map((item) => (
-                    <div key={item.title} className="rounded-xl border border-indigo-500/25 bg-slate-950/20 p-4">
-                      <p className="font-semibold text-white">{item.title}</p>
-                      <p className="mt-1 text-sm text-slate-300">{item.text}</p>
-                    </div>
-                  ))}
-                </div>
+              <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                {[
+                  {
+                    id: "navigate" as const,
+                    title: "Come navigare il mondo Web3?",
+                    subtitle: "Percorso operativo in 5 step per iniziare in sicurezza.",
+                    icon: "🧭",
+                  },
+                  {
+                    id: "blockchain" as const,
+                    title: "Cos'è una Blockchain?",
+                    subtitle: "Registro distribuito, immutabilita e programmabilita.",
+                    icon: "⛓️",
+                  },
+                  {
+                    id: "defi" as const,
+                    title: "Cosa sono le applicazioni decentralizzate (DeFi)",
+                    subtitle: "Smart contract, accesso permissionless e casi pratici.",
+                    icon: "💹",
+                  },
+                  {
+                    id: "wallet" as const,
+                    title: "Cosa sono i wallet non-custodial",
+                    subtitle: "Custodia personale, rischio e best practice operative.",
+                    icon: "👛",
+                  },
+                ].map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => setActiveQuickGuide(item.id)}
+                    className={`aspect-square rounded-xl border p-3.5 text-left transition-colors ${
+                      isDark
+                        ? "border-indigo-500/25 bg-indigo-900/20 hover:border-indigo-400/60 hover:bg-indigo-800/30"
+                        : "border-slate-200 bg-white hover:border-indigo-300 hover:bg-indigo-50/40"
+                    }`}
+                  >
+                    <div className="text-xl">{item.icon}</div>
+                    <p className={`mt-2.5 text-base font-semibold leading-tight ${isDark ? "text-white" : "text-slate-900"}`}>{item.title}</p>
+                    <p className={`mt-1.5 text-sm leading-snug ${isDark ? "text-slate-300" : "text-slate-700"}`}>{item.subtitle}</p>
+                  </button>
+                ))}
               </div>
-          </Accordion>
-          
-            <div className="mt-4">
-              <Link href="/defi">
-                <div className="inline-flex items-center gap-2 text-blue-600 font-bold text-lg hover:text-blue-700 transition-colors cursor-pointer">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
-                  Vai a DeFi
-                </div>
-              </Link>
             </div>
           </div>
 
-          <div id="wallet" className="manual-card scroll-mt-24 rounded-2xl border p-8 mb-8 dark:bg-indigo-900/25 dark:border-indigo-500/20 bg-white border-slate-200 shadow-lg">
-            <p className="text-slate-900 dark:text-slate-200 mb-6">
-              Per accedere a queste applicazioni, bisogna avere un portafogli (wallet) non-custodial, che si trova sotto forma di app su dispositivi mobile oppure come estensione chrome per il computer.
-            </p>
-            
-            <Accordion
-              buttonText={"Cosa sono i wallet non-custodial"}
-              className="mb-4"
-            >
-              <div className="p-5 space-y-5 text-slate-900 dark:text-slate-200">
-                <div className="grid gap-3 md:grid-cols-3">
-                  <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-                    <p className="text-xs uppercase tracking-wide text-slate-400">Custodia</p>
-                    <p className="mt-1 font-semibold text-white">Sei tu la banca</p>
-                    <p className="mt-2 text-sm text-slate-300">Controlli direttamente chiavi private e accesso ai fondi.</p>
-                  </div>
-                  <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-                    <p className="text-xs uppercase tracking-wide text-slate-400">Rischio</p>
-                    <p className="mt-1 font-semibold text-white">Responsabilità totale</p>
-                    <p className="mt-2 text-sm text-slate-300">Se perdi seed phrase/chiavi, nessuno può recuperarle per te.</p>
-                  </div>
-                  <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-                    <p className="text-xs uppercase tracking-wide text-slate-400">Best practice</p>
-                    <p className="mt-1 font-semibold text-white">Cold + Active wallet</p>
-                    <p className="mt-2 text-sm text-slate-300">Separare risparmio lungo termine da operatività quotidiana.</p>
-                  </div>
-                </div>
-
-                <div className="rounded-xl border border-indigo-500/25 bg-slate-950/20 p-4">
-                  <p className="font-semibold text-white">Checklist minima di sicurezza</p>
-                  <ul className="mt-2 list-disc list-inside">
-                    <li>Seed phrase scritta offline e mai condivisa.</li>
-                    <li>Verifica dominio prima di firmare transazioni.</li>
-                    <li>Usa un wallet secondario per test e dApp nuove.</li>
-                  </ul>
-                </div>
-              </div>
-            </Accordion>
-            
-            <div className="mt-4">
-              <Link href="/wallet">
-                <div className="inline-flex items-center gap-2 text-blue-600 font-bold text-lg hover:text-blue-700 transition-colors cursor-pointer">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
-                  Vai a Wallet
-                </div>
-              </Link>
-            </div>
-          </div>
+          <div id="defi-dapp" className="scroll-mt-24" />
+          <div id="wallet" className="scroll-mt-24" />
 
           <div id="onramp" className="manual-card scroll-mt-24 rounded-2xl border p-8 mb-8 dark:bg-indigo-900/25 dark:border-indigo-500/20 bg-white border-slate-200 shadow-lg">
             <p className="text-slate-900 dark:text-slate-200 mb-6">
@@ -611,41 +446,34 @@ export default function Manuale() {
             <p className="text-slate-900 dark:text-slate-200 mb-6">
               Una volta acquistate le criptovalute con la propria carta o facendo un bonifico, si potranno inviare al proprio wallet non-custodial, dove saranno al sicuro da rischi esterni e sotto al vostro esclusivo controllo.
             </p>
-            
-            <Accordion
-              buttonText={"Come accedere al mondo Web3"}
-              className="mb-4"
-            >
-              <div className="p-5 space-y-5 text-slate-900 dark:text-slate-200">
-                <div className="grid gap-3 md:grid-cols-2">
-                  <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-                    <p className="font-semibold text-white">1) CEX (Centralized Exchange)</p>
-                    <p className="mt-2 text-sm text-slate-300">
-                      Ideale per convertire EUR/USD in crypto. Usa piattaforme grandi e invia i fondi al tuo wallet personale dopo l&apos;acquisto.
-                    </p>
-                  </div>
-                  <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-                    <p className="font-semibold text-white">2) On-Ramp</p>
-                    <p className="mt-2 text-sm text-slate-300">
-                      Acquisto diretto via carta nel wallet. Comodo e rapido, ma confronta fee e spread prima di confermare.
-                    </p>
-                  </div>
-                </div>
 
-                <div className="space-y-3">
-                  {[
-                    "Scegli rete corretta (ETH, Arbitrum, Base, ecc.) prima dell'invio.",
-                    "Fai una transazione test con importo piccolo.",
-                    "Conferma sempre indirizzo e memo/tag se richiesti.",
-                    "Evita trading impulsivo: l'obiettivo iniziale è apprendimento operativo.",
-                  ].map((rule) => (
-                    <div key={rule} className="rounded-xl border border-indigo-500/25 bg-slate-950/20 p-4">
-                      <p className="text-sm text-slate-300">{rule}</p>
-                    </div>
-                  ))}
-                </div>
+            <div className="grid gap-3 md:grid-cols-2 mb-4">
+              <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                <p className="font-semibold text-white">1) CEX (Centralized Exchange)</p>
+                <p className="mt-2 text-sm text-slate-300">
+                  Ideale per convertire EUR/USD in crypto. Usa piattaforme grandi e invia i fondi al tuo wallet personale dopo l&apos;acquisto.
+                </p>
               </div>
-            </Accordion>
+              <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                <p className="font-semibold text-white">2) On-Ramp</p>
+                <p className="mt-2 text-sm text-slate-300">
+                  Acquisto diretto via carta nel wallet. Comodo e rapido, ma confronta fee e spread prima di confermare.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid gap-3 md:grid-cols-2">
+              {[
+                "Scegli rete corretta (ETH, Arbitrum, Base, ecc.) prima dell'invio.",
+                "Fai una transazione test con importo piccolo.",
+                "Conferma sempre indirizzo e memo/tag se richiesti.",
+                "Evita trading impulsivo: l'obiettivo iniziale è apprendimento operativo.",
+              ].map((rule) => (
+                <div key={rule} className="rounded-xl border border-indigo-500/25 bg-slate-950/20 p-4">
+                  <p className="text-sm text-slate-300">{rule}</p>
+                </div>
+              ))}
+            </div>
             
             <div className="mt-4">
               <Link href="/compraevendicrypto">
@@ -659,38 +487,32 @@ export default function Manuale() {
             </div>
           </div>
 
-          <div id="strategie" className="manual-card scroll-mt-24 rounded-2xl border p-8 mb-8 dark:bg-indigo-900/25 dark:border-indigo-500/20 bg-white border-slate-200 shadow-lg">
-            <p className="text-slate-900 dark:text-slate-200 mb-6">
-              Adesso che siamo riusciti ad accedere al mondo Web3, e abbiamo visto quali sono le applicazioni migliori che fanno al caso nostro, possiamo iniziare ad intraprendere le seguenti strade:
-            </p>
-            
-            <div className="grid gap-3 md:grid-cols-3">
-              <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-                <p className="font-semibold text-white">Track & Learn</p>
-                <p className="mt-2 text-sm text-slate-300">
-                  Segui governance, changelog e community ufficiali per capire come evolve un protocollo.
-                </p>
-              </div>
-              <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-                <p className="font-semibold text-white">Deploy capitale graduale</p>
-                <p className="mt-2 text-sm text-slate-300">
-                  Parti con ETH su wallet personale e testa piccole operazioni prima di scalare.
-                </p>
-              </div>
-              <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-                <p className="font-semibold text-white">Costruisci network</p>
-                <p className="mt-2 text-sm text-slate-300">
-                  Entra in community ad alta qualità (anche NFT) dove ricevi feedback e opportunità reali.
-                </p>
-              </div>
-            </div>
-          </div>
-
           <div id="analisi" className="manual-card scroll-mt-24 rounded-2xl border p-8 mb-8 dark:bg-indigo-900/25 dark:border-indigo-500/20 bg-white border-slate-200 shadow-lg">
             <p className="text-slate-900 dark:text-slate-200 mb-6">
               Esistono molti strumenti diversi che possiamo utilizzare per analizzare i progetti. Dai più semplici Navigatori di Blockchain ("blockchain explorers"), alle piattaforme di analisi e visualizzazione dei dati; saper utilizzare questi strumenti può offrire una marcia in più nella valutazione dei propri acquisti nel mondo Web3.
             </p>
-            
+
+            <div className="grid gap-3 md:grid-cols-3">
+              <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                <p className="font-semibold text-white">Blockchain Explorers</p>
+                <p className="mt-2 text-sm text-slate-300">
+                  Leggi transazioni, wallet e smart contract direttamente on-chain.
+                </p>
+              </div>
+              <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                <p className="font-semibold text-white">Analytics Dashboard</p>
+                <p className="mt-2 text-sm text-slate-300">
+                  Confronta TVL, volumi, fee e attività utenti tra protocolli.
+                </p>
+              </div>
+              <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                <p className="font-semibold text-white">Portfolio Tracking</p>
+                <p className="mt-2 text-sm text-slate-300">
+                  Monitora esposizione, performance e rischio del portafoglio.
+                </p>
+              </div>
+            </div>
+
             <div className="mt-4">
               <Link href="/strumentiutili">
                 <div className="inline-flex items-center gap-2 text-blue-600 font-bold text-lg hover:text-blue-700 transition-colors cursor-pointer">
@@ -1225,6 +1047,135 @@ export default function Manuale() {
         </div>
             </Accordion>
           </div>
+
+          {activeQuickGuide ? (
+            <div className="fixed inset-0 z-[70]">
+              <button
+                type="button"
+                className="absolute inset-0 bg-black/55"
+                onClick={() => setActiveQuickGuide(null)}
+                aria-label="Chiudi popup"
+              />
+              <div className="absolute inset-0 flex items-center justify-center p-4">
+                <div
+                  className={`w-full max-w-3xl max-h-[88vh] overflow-auto rounded-2xl border p-5 ${
+                    isDark ? "border-indigo-500/25 bg-indigo-950 text-white" : "border-slate-200 bg-white text-slate-900"
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <h3 className="text-2xl font-semibold">
+                      {activeQuickGuide === "navigate"
+                        ? "Come navigare il mondo Web3?"
+                        : activeQuickGuide === "blockchain"
+                          ? "Cos'è una Blockchain?"
+                          : activeQuickGuide === "defi"
+                            ? "Cosa sono le applicazioni decentralizzate (DeFi)"
+                            : "Cosa sono i wallet non-custodial"}
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => setActiveQuickGuide(null)}
+                      className={`rounded-lg border px-2.5 py-1 text-sm ${
+                        isDark ? "border-white/20 hover:bg-white/10" : "border-slate-300 hover:bg-slate-100"
+                      }`}
+                    >
+                      Chiudi
+                    </button>
+                  </div>
+
+                  <div className="mt-4 space-y-3 text-sm">
+                    {activeQuickGuide === "navigate"
+                      ? [
+                          "1) Crea un wallet non-custodial e conserva seed phrase/chiavi offline.",
+                          "2) Separa wallet cold (tesoreria) da wallet attivo (operativita).",
+                          "3) Acquista su canale affidabile e fai una transazione test.",
+                          "4) Verifica sempre rete, indirizzo e dominio prima di firmare.",
+                          "5) Entra gradualmente nelle app Web3 con importi piccoli.",
+                        ].map((line) => (
+                          <div
+                            key={line}
+                            className={`rounded-xl border p-3 ${
+                              isDark ? "border-indigo-500/25 bg-indigo-900/25" : "border-slate-200 bg-slate-50"
+                            }`}
+                          >
+                            {line}
+                          </div>
+                        ))
+                      : null}
+
+                    {activeQuickGuide === "blockchain"
+                      ? [
+                          "Registro distribuito: i dati sono su una rete di nodi, non su un server unico.",
+                          "Integrita crittografica: blocchi concatenati rendono la cronologia difficile da alterare.",
+                          "Programmabilita: smart contract abilitano dApp e servizi finanziari senza intermediari.",
+                        ].map((line) => (
+                          <div
+                            key={line}
+                            className={`rounded-xl border p-3 ${
+                              isDark ? "border-indigo-500/25 bg-indigo-900/25" : "border-slate-200 bg-slate-50"
+                            }`}
+                          >
+                            {line}
+                          </div>
+                        ))
+                      : null}
+
+                    {activeQuickGuide === "defi"
+                      ? [
+                          "Le dApp DeFi usano smart contract: la logica e on-chain e verificabile pubblicamente.",
+                          "Chiunque con wallet puo accedere senza aprire conti tradizionali.",
+                          "Casi principali: swap (DEX), lending/borrowing, staking e NFT marketplace.",
+                        ].map((line) => (
+                          <div
+                            key={line}
+                            className={`rounded-xl border p-3 ${
+                              isDark ? "border-indigo-500/25 bg-indigo-900/25" : "border-slate-200 bg-slate-50"
+                            }`}
+                          >
+                            {line}
+                          </div>
+                        ))
+                      : null}
+
+                    {activeQuickGuide === "wallet"
+                      ? [
+                          "Non-custodial = controlli tu le chiavi private (sei tu il custode).",
+                          "Se perdi seed phrase/chiavi, nessuno puo recuperarle al posto tuo.",
+                          "Best practice: wallet cold per risparmio e wallet attivo per test/app.",
+                        ].map((line) => (
+                          <div
+                            key={line}
+                            className={`rounded-xl border p-3 ${
+                              isDark ? "border-indigo-500/25 bg-indigo-900/25" : "border-slate-200 bg-slate-50"
+                            }`}
+                          >
+                            {line}
+                          </div>
+                        ))
+                      : null}
+
+                    <div className="pt-1">
+                      {activeQuickGuide === "blockchain" ? (
+                        <Link href="/blockchain" className={`font-medium ${isDark ? "text-indigo-300" : "text-indigo-700"} hover:underline`}>
+                          Vai a Blockchain →
+                        </Link>
+                      ) : null}
+                      {activeQuickGuide === "defi" ? (
+                        <Link href="/defi" className={`font-medium ${isDark ? "text-indigo-300" : "text-indigo-700"} hover:underline`}>
+                          Vai a DeFi →
+                        </Link>
+                      ) : null}
+                      {activeQuickGuide === "wallet" ? (
+                        <Link href="/wallet" className={`font-medium ${isDark ? "text-indigo-300" : "text-indigo-700"} hover:underline`}>
+                          Vai a Wallet →
+                        </Link>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : null}
 
             </div>
             <SiteFooter isDark={isDark} className="mt-6" />
