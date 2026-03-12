@@ -9,6 +9,8 @@ import { SearchBar } from "@/components/SearchBar";
 import { CollapsibleSidebar } from "@/components/CollapsibleSidebar";
 import { useAppAuth } from "@/lib/auth/useAppAuth";
 import { isAdminEmail } from "@/lib/admin-emails";
+import LanguageToggle from "@/components/LanguageToggle";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 import baseLogo from "@/assets/base-logo.svg";
 import hyperliquidLogo from "@/assets/hyperliquid-logo.png";
@@ -25,39 +27,39 @@ import { getProjectLogo } from "@/lib/project-logos";
 import { SiteFooter } from "@/components/SiteFooter";
 
 const SIDEBAR_ITEMS = [
-  { label: "Dashboard", href: "/", icon: "📊" },
-  { label: "Manuale", href: "/manuale", icon: "📚" },
-  { label: "DeFi", href: "/defi", icon: "💹" },
-  { label: "Airdrops", href: "/airdrops", icon: "🎁" },
-  { label: "Blockchains", href: "/blockchain", icon: "⛓️" },
-  { label: "Compra/Vendi Crypto", href: "/compraevendicrypto", icon: "💳" },
-  { label: "Portafogli", href: "/wallet", icon: "👛" },
-  { label: "Strumenti Utili", href: "/strumentiutili", icon: "🔧" },
-  { label: "Memecoins", href: "/memecoins", icon: "🪙" },
-  { label: "NFTs", href: "/nft", icon: "🖼️" },
-  { label: "Giochi", href: "/giochi", icon: "🎮" },
-  { label: "Mercati di Predizione", href: "/giochi/polymarket", icon: "📈" },
-  { label: "Eventi Storici", href: "/eventi-storici", icon: "📅" },
-  { label: "Mappa Ecosistema", href: "/esplora-app", icon: "🌐" },
-  { label: "Notizie", href: "/news", icon: "📰" },
-  { label: "Segnalibri", href: "/segnalibri", icon: "🔖" },
-  { label: "Leaderboard", href: "/leaderboards/global", icon: "🏆" },
+  { labelIt: "Dashboard", labelEn: "Dashboard", href: "/", icon: "📊" },
+  { labelIt: "Manuale", labelEn: "Manual", href: "/manuale", icon: "📚" },
+  { labelIt: "DeFi", labelEn: "DeFi", href: "/defi", icon: "💹" },
+  { labelIt: "Airdrops", labelEn: "Airdrops", href: "/airdrops", icon: "🎁" },
+  { labelIt: "Blockchains", labelEn: "Blockchains", href: "/blockchain", icon: "⛓️" },
+  { labelIt: "Compra/Vendi Crypto", labelEn: "Buy/Sell Crypto", href: "/compraevendicrypto", icon: "💳" },
+  { labelIt: "Portafogli", labelEn: "Wallets", href: "/wallet", icon: "👛" },
+  { labelIt: "Strumenti Utili", labelEn: "Useful Tools", href: "/strumentiutili", icon: "🔧" },
+  { labelIt: "Memecoins", labelEn: "Memecoins", href: "/memecoins", icon: "🪙" },
+  { labelIt: "NFTs", labelEn: "NFTs", href: "/nft", icon: "🖼️" },
+  { labelIt: "Giochi", labelEn: "Games", href: "/giochi", icon: "🎮" },
+  { labelIt: "Mercati di Predizione", labelEn: "Prediction Markets", href: "/giochi/polymarket", icon: "📈" },
+  { labelIt: "Eventi Storici", labelEn: "Historical Events", href: "/eventi-storici", icon: "📅" },
+  { labelIt: "Mappa Ecosistema", labelEn: "Ecosystem Map", href: "/esplora-app", icon: "🌐" },
+  { labelIt: "Notizie", labelEn: "News", href: "/news", icon: "📰" },
+  { labelIt: "Segnalibri", labelEn: "Bookmarks", href: "/segnalibri", icon: "🔖" },
+  { labelIt: "Leaderboard", labelEn: "Leaderboard", href: "/leaderboards/global", icon: "🏆" },
 ];
 
 const TRENDING = [
-  { name: "Hyperliquid", desc: "Perpetuals on-chain, HIP-3 – Trading azionario on-chain.", href: "/defi/hyperliquid", tag: "Airdrop", logo: hyperliquidLogo },
-  { name: "Rainbow", desc: "Wallet multichain e aggregatore DeFi.", href: "/airdrops/rainbow", tag: "Airdrop", logo: ethereumLogo },
-  { name: "Base", desc: "L2 di Coinbase. Scopri come usare al meglio la Base app.", href: "/airdrops/base", tag: "Airdrop", logo: baseLogo },
-  { name: "Scroll", desc: "Layer 2 zkEVM per Ethereum. Scalabilità e bassi costi.", href: "/airdrops/scroll", tag: "Airdrop", logo: scrollLogo },
-  { name: "Jumper", desc: "Bridging e swapping multi-chain con LI.FI.", href: "/airdrops/jumper", tag: "Airdrop", logo: jumperLogo },
+  { name: "Hyperliquid", descIt: "Perpetuals on-chain, HIP-3 – Trading azionario on-chain.", descEn: "On-chain perpetuals, HIP-3, and stock-like trading on-chain.", href: "/defi/hyperliquid", tag: "Airdrop", logo: hyperliquidLogo },
+  { name: "Rainbow", descIt: "Wallet multichain e aggregatore DeFi.", descEn: "Multichain wallet with integrated DeFi aggregation.", href: "/airdrops/rainbow", tag: "Airdrop", logo: ethereumLogo },
+  { name: "Base", descIt: "L2 di Coinbase. Scopri come usare al meglio la Base app.", descEn: "Coinbase L2. Learn how to use Base app effectively.", href: "/airdrops/base", tag: "Airdrop", logo: baseLogo },
+  { name: "Scroll", descIt: "Layer 2 zkEVM per Ethereum. Scalabilità e bassi costi.", descEn: "Ethereum zkEVM Layer 2 focused on scalability and low fees.", href: "/airdrops/scroll", tag: "Airdrop", logo: scrollLogo },
+  { name: "Jumper", descIt: "Bridging e swapping multi-chain con LI.FI.", descEn: "Multi-chain bridging and swapping powered by LI.FI.", href: "/airdrops/jumper", tag: "Airdrop", logo: jumperLogo },
 ];
 
 const AIRDROP_MONITOR = [
-  { name: "Hyperliquid", desc: "Punti, token, azioni HIPS, commodities e farm. Clicca qui e inizia a tradare.", href: "/defi/hyperliquid", logo: hyperliquidLogo },
-  { name: "Base", desc: "L2 di Coinbase. Scopri come usare al meglio la Base app su mobile.", href: "/airdrops/base", logo: baseLogo },
-  { name: "Scroll", desc: "Layer 2 zkEVM. Monitora i volumi per potenziale airdrop.", href: "/airdrops/scroll", logo: scrollLogo },
-  { name: "Jumper", desc: "Bridging multi-chain. Accumula attività per eligibility.", href: "/airdrops/jumper", logo: jumperLogo },
-  { name: "deBridge", desc: "Protocollo di derivati on-chain. Monitora i volumi per airdrop.", href: "/airdrops/debridge", logo: debridgeLogo },
+  { name: "Hyperliquid", descIt: "Punti, token, azioni HIPS, commodities e farm. Clicca qui e inizia a tradare.", descEn: "Points, token paths, HIPS assets and farms. Click and start trading.", href: "/defi/hyperliquid", logo: hyperliquidLogo },
+  { name: "Base", descIt: "L2 di Coinbase. Scopri come usare al meglio la Base app su mobile.", descEn: "Coinbase L2. Learn to use the Base app effectively on mobile.", href: "/airdrops/base", logo: baseLogo },
+  { name: "Scroll", descIt: "Layer 2 zkEVM. Monitora i volumi per potenziale airdrop.", descEn: "zkEVM Layer 2. Track volume activity for potential airdrops.", href: "/airdrops/scroll", logo: scrollLogo },
+  { name: "Jumper", descIt: "Bridging multi-chain. Accumula attività per eligibility.", descEn: "Multi-chain bridging. Build on-chain activity for eligibility.", href: "/airdrops/jumper", logo: jumperLogo },
+  { name: "deBridge", descIt: "Protocollo di derivati on-chain. Monitora i volumi per airdrop.", descEn: "On-chain derivatives protocol. Monitor activity for airdrop potential.", href: "/airdrops/debridge", logo: debridgeLogo },
 ];
 
 const NEWS_CARDS = [
@@ -117,6 +119,30 @@ const FALLBACK_TRENDING_TOKENS: LiveTrendingToken[] = [
   { projectId: "ethereum", coingeckoId: "ethereum", symbol: "ETH", name: "Ethereum", image: null, priceUsd: 0, change24h: 0 },
 ];
 
+const LEARNING_CARD_EN: Record<string, { level: string; sub: string; desc: string }> = {
+  "/percorsi-apprendimento/principiante": {
+    level: "Beginner",
+    sub: "Learning",
+    desc: "Learn practical basics: wallets, security, first purchases and first apps with controlled risk.",
+  },
+  "/percorsi-apprendimento/intermedio": {
+    level: "Intermediate",
+    sub: "Learning",
+    desc: "Move from basic user to operational user: swap, LP, lending and protocol comparison.",
+  },
+  "/percorsi-apprendimento/avanzato": {
+    level: "Advanced",
+    sub: "Learning",
+    desc: "Power-user approach: research workflows, on-chain monitoring and performance optimization.",
+  },
+};
+
+const LEARNING_REWARDS_BY_HREF: Record<string, string> = {
+  "/percorsi-apprendimento/principiante": "3 USDC",
+  "/percorsi-apprendimento/intermedio": "5 USDC",
+  "/percorsi-apprendimento/avanzato": "10 USDC",
+};
+
 function formatUsdPrice(value: number): string {
   return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 2 }).format(value || 0);
 }
@@ -144,6 +170,8 @@ function extractPrivyEmail(
 export default function Home() {
   const pathname = usePathname();
   const router = useRouter();
+  const { language } = useLanguage();
+  const isEnglish = language === "en";
   const { user, isLoaded, isSignedIn } = useAppAuth();
   const linkedAccounts = (Array.isArray(user?.linkedAccounts) ? user.linkedAccounts : []) as Array<Record<string, unknown>>;
   const userEmail = extractPrivyEmail(linkedAccounts);
@@ -245,6 +273,34 @@ export default function Home() {
   }, []);
 
   const isDark = theme === "dark";
+  const sidebarItems = SIDEBAR_ITEMS.map((item) => ({
+    label: isEnglish ? item.labelEn : item.labelIt,
+    href: item.href,
+    icon: item.icon,
+  }));
+  const learningPathCards = LEARNING_PATH_CARDS.map((card) => {
+    if (!isEnglish) return card;
+    const translated = LEARNING_CARD_EN[card.href];
+    if (!translated) return card;
+    return { ...card, ...translated };
+  });
+  const learningPathQuickTags = isEnglish
+    ? [
+        { label: "Web3 Fundamentals", href: "/manuale#fondamenti" },
+        { label: "Wallets and security", href: "/manuale#guide-rapide" },
+        { label: "Market access", href: "/manuale#onramp" },
+        { label: "Project analysis", href: "/manuale#analisi" },
+        { label: "NFT and community", href: "/manuale#nft" },
+        { label: "Anti-scam", href: "/manuale#sicurezza" },
+      ]
+    : [
+        { label: "Fondamenti Web3", href: "/manuale#fondamenti" },
+        { label: "Wallet e sicurezza", href: "/manuale#guide-rapide" },
+        { label: "Accesso al mercato", href: "/manuale#onramp" },
+        { label: "Analisi progetti", href: "/manuale#analisi" },
+        { label: "NFT e community", href: "/manuale#nft" },
+        { label: "Anti-truffe", href: "/manuale#sicurezza" },
+      ];
   const isItemActive = (href: string) => {
     if (href === "/") return pathname === "/";
     return pathname === href || pathname.startsWith(href + "/");
@@ -339,6 +395,9 @@ export default function Home() {
                 Admin Panel
               </Link>
             )}
+            <div className="hidden md:flex">
+              <LanguageToggle />
+            </div>
             <button
               type="button"
               onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
@@ -394,7 +453,7 @@ export default function Home() {
                   </button>
                 </div>
                 <nav className="p-3 overflow-y-auto flex-1 space-y-0.5">
-                  {SIDEBAR_ITEMS.map((item) => (
+                  {sidebarItems.map((item) => (
                     <Link
                       key={item.href + item.label}
                       href={item.href}
@@ -412,7 +471,7 @@ export default function Home() {
 
           <div className="flex flex-1 min-h-0 overflow-hidden">
             <CollapsibleSidebar
-              items={SIDEBAR_ITEMS}
+              items={sidebarItems}
               isDark={isDark}
               isItemActive={(href) => (href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(href + "/"))}
             />
@@ -427,10 +486,12 @@ export default function Home() {
               }`}
             >
               <h1 className={`text-4xl lg:text-5xl font-bold mb-2 ${isDark ? "text-white" : "text-slate-900"}`}>
-                Domina la Finanza Decentralizzata
+                {isEnglish ? "Master Decentralized Finance" : "Domina la Finanza Decentralizzata"}
               </h1>
               <p className={`text-lg max-w-2xl mx-auto ${isDark ? "text-white" : "text-slate-600"}`}>
-                Il tuo hub per imparare, scoprire e monitorare il mondo Web3.
+                {isEnglish
+                  ? "Your hub to learn, discover and monitor the Web3 world."
+                  : "Il tuo hub per imparare, scoprire e monitorare il mondo Web3."}
               </p>
             </div>
             <div className="flex flex-wrap justify-center gap-4">
@@ -438,13 +499,13 @@ export default function Home() {
                 href="/manuale"
                 className="inline-flex items-center px-6 py-3 rounded-xl font-medium bg-gradient-to-r from-indigo-500 to-purple-600 text-white border border-indigo-400/50 hover:opacity-90 transition-opacity"
               >
-                Inizia da qui
+                {isEnglish ? "Start here" : "Inizia da qui"}
               </Link>
               <Link
                 href="/esplora-app"
                 className="inline-flex items-center px-6 py-3 rounded-xl font-medium bg-indigo-500/20 text-white border border-indigo-400/30 hover:bg-indigo-500/30 hover:border-indigo-400/50 transition-colors"
               >
-                Mappa Ecosistema
+                {isEnglish ? "Ecosystem Map" : "Mappa Ecosistema"}
               </Link>
             </div>
           </div>
@@ -456,12 +517,12 @@ export default function Home() {
               setCompactHero((prev) => (prev === nextCompact ? prev : nextCompact));
             }}
           >
-            <div className="grid grid-cols-1 lg:grid-cols-[1fr_20rem] grid-rows-[auto_auto_auto] gap-6 items-stretch">
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_20rem] grid-rows-[auto_auto_auto] gap-6 items-start">
             {/* Riga 1: Trending (sinistra) | Airdrop Monitor (destra) - altezza contenuto, no stretch */}
               <section className={`min-w-0 rounded-2xl border backdrop-blur p-6 overflow-hidden lg:col-start-1 lg:row-start-1 lg:self-start ${isDark ? "border-indigo-500/25 bg-indigo-900/25" : "border-slate-200 bg-white/80"}`}>
                 <div className="min-h-[3.5rem] flex items-center mb-4">
                   <h2 className={`text-xl font-bold ${isDark ? "text-white" : "text-slate-900"}`}>
-                    Trending ora su ImparoDeFi
+                    {isEnglish ? "Trending now on ImparoDeFi" : "Trending ora su ImparoDeFi"}
                   </h2>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 justify-items-center items-stretch">
@@ -477,7 +538,7 @@ export default function Home() {
                         </div>
                         <span className={`font-semibold text-sm break-words line-clamp-2 w-full ${isDark ? "text-white" : "text-slate-900"}`}>{t.name}</span>
                       </div>
-                      <p className={`text-[11px] leading-snug mb-2 flex-1 break-words line-clamp-3 ${isDark ? "text-slate-400" : "text-slate-600"}`}>{t.desc}</p>
+                      <p className={`text-[11px] leading-snug mb-2 flex-1 break-words line-clamp-3 ${isDark ? "text-slate-400" : "text-slate-600"}`}>{isEnglish ? t.descEn : t.descIt}</p>
                       <span className="inline-block px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-400 text-[11px] w-fit mt-auto">
                         {t.tag}
                       </span>
@@ -485,9 +546,9 @@ export default function Home() {
                   ))}
                 </div>
               </section>
-              <section className={`min-w-0 rounded-2xl border backdrop-blur p-4 flex flex-col max-h-[20rem] min-h-0 lg:col-start-2 lg:row-start-1 lg:self-start overflow-hidden ${isDark ? "border-indigo-500/25 bg-indigo-900/25" : "border-slate-200 bg-white/80"}`}>
-                <div className="min-h-[3.5rem] flex items-center mb-3">
-                  <h2 className={`text-lg font-bold ${isDark ? "text-white" : "text-slate-900"}`}>Airdrop Monitor</h2>
+              <section className={`min-w-0 rounded-2xl border backdrop-blur p-[14px] flex flex-col max-h-[19.75rem] min-h-0 lg:col-start-2 lg:row-start-1 lg:self-start overflow-hidden ${isDark ? "border-indigo-500/25 bg-indigo-900/25" : "border-slate-200 bg-white/80"}`}>
+                <div className="min-h-[3.25rem] flex items-center mb-3">
+                  <h2 className={`text-lg font-bold ${isDark ? "text-white" : "text-slate-900"}`}>{isEnglish ? "Airdrop Monitor" : "Airdrop Monitor"}</h2>
                 </div>
               <div className="space-y-3 overflow-y-auto flex-1 min-h-0 pr-1">
                 {AIRDROP_MONITOR.map((a) => (
@@ -501,10 +562,7 @@ export default function Home() {
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className={`font-semibold group-hover:text-indigo-600 ${isDark ? "text-white" : "text-slate-900"}`}>{a.name}</div>
-                      <p className={`text-xs mt-0.5 line-clamp-2 ${isDark ? "text-slate-400" : "text-slate-600"}`}>{a.desc}</p>
-                      <span className="text-indigo-400 text-xs mt-1 inline-block">
-                        Clicca qui e inizia a tradare →
-                      </span>
+                      <p className={`text-xs mt-0.5 line-clamp-2 ${isDark ? "text-slate-400" : "text-slate-600"}`}>{isEnglish ? a.descEn : a.descIt}</p>
                     </div>
                   </Link>
                 ))}
@@ -512,35 +570,54 @@ export default function Home() {
               </section>
 
             {/* Riga 2: Percorsi (sinistra) | Token (destra) */}
-              <section className={`min-w-0 rounded-2xl border backdrop-blur p-6 lg:col-start-1 lg:row-start-2 ${isDark ? "border-indigo-500/25 bg-indigo-900/25" : "border-slate-200 bg-white/80"}`}>
+              <section className={`min-w-0 rounded-2xl border backdrop-blur p-6 lg:col-start-1 lg:row-start-2 lg:self-start ${isDark ? "border-indigo-500/25 bg-indigo-900/25" : "border-slate-200 bg-white/80"}`}>
                 <div className="min-h-[3.5rem] flex items-center mb-4">
-                  <h2 className={`text-xl font-bold ${isDark ? "text-white" : "text-slate-900"}`}>Percorsi di Apprendimento</h2>
+                  <h2 className={`text-xl font-bold ${isDark ? "text-white" : "text-slate-900"}`}>{isEnglish ? "Learning Paths" : "Percorsi di Apprendimento"}</h2>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 justify-items-center items-stretch">
-                  {LEARNING_PATH_CARDS.map((p) => (
+                  {learningPathCards.map((p) => (
                     <Link
                       key={p.level}
                       href={p.href}
                       className={`block p-4 w-full max-w-[280px] rounded-xl border hover:border-indigo-400/50 transition-colors ${isDark ? "bg-indigo-900/20 border-indigo-500/15" : "bg-slate-100 border-slate-200"}`}
                     >
-                      <div className={`font-semibold ${isDark ? "text-white" : "text-slate-900"}`}>{p.level}</div>
-                      <div className={`text-sm mb-1 ${isDark ? "text-indigo-300" : "text-indigo-600"}`}>{p.sub}</div>
+                      <div className="flex items-center justify-between gap-2">
+                        <div className={`font-semibold ${isDark ? "text-white" : "text-slate-900"}`}>{p.level}</div>
+                        <span className="inline-flex items-center rounded-full border border-emerald-400/35 bg-emerald-500/15 px-2 py-0.5 text-[11px] font-semibold text-emerald-300">
+                          {LEARNING_REWARDS_BY_HREF[p.href] ?? "USDC"}
+                        </span>
+                      </div>
                       <p className={`text-sm line-clamp-2 ${isDark ? "text-slate-400" : "text-slate-600"}`}>{p.desc}</p>
                     </Link>
                   ))}
                 </div>
-              </section>
-              <section className={`min-w-0 rounded-2xl border backdrop-blur p-4 lg:col-start-2 lg:row-start-2 ${isDark ? "border-indigo-500/25 bg-indigo-900/25" : "border-slate-200 bg-white/80"}`}>
-                <div className="min-h-[3.5rem] flex items-center mb-3">
-                  <h2 className={`text-lg font-bold ${isDark ? "text-white" : "text-slate-900"}`}>Token in Tendenza</h2>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {learningPathQuickTags.map((tag) => (
+                    <Link
+                      key={tag.href + tag.label}
+                      href={tag.href}
+                      className={`rounded-xl border px-3 py-1.5 text-xs md:text-sm ${
+                        isDark
+                          ? "border-indigo-500/30 bg-indigo-900/25 text-slate-200 hover:bg-indigo-800/35"
+                          : "border-slate-200 bg-slate-100 text-slate-700 hover:bg-slate-200"
+                      }`}
+                    >
+                      {tag.label}
+                    </Link>
+                  ))}
                 </div>
-              <div className="overflow-x-auto">
+              </section>
+              <section className={`min-w-0 rounded-2xl border backdrop-blur p-[14px] lg:col-start-2 lg:row-start-2 lg:self-start ${isDark ? "border-indigo-500/25 bg-indigo-900/25" : "border-slate-200 bg-white/80"}`}>
+                <div className="min-h-[3.25rem] flex items-center mb-3">
+                  <h2 className={`text-lg font-bold ${isDark ? "text-white" : "text-slate-900"}`}>{isEnglish ? "Trending Tokens" : "Token in Tendenza"}</h2>
+                </div>
+              <div className="overflow-x-auto overflow-y-auto pr-1 max-h-[13.8rem]">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className={`border-b ${isDark ? "border-indigo-500/20 text-slate-400" : "border-slate-200 text-slate-600"}`}>
-                      <th className="text-left py-2 px-2 font-medium">Token</th>
-                      <th className="text-left py-2 px-2 font-medium">Prezzo</th>
-                      <th className="text-right py-2 px-2 font-medium">Cambio%</th>
+                      <th className="text-left py-2 px-2 font-medium">{isEnglish ? "Token" : "Token"}</th>
+                      <th className="text-left py-2 px-2 font-medium">{isEnglish ? "Price" : "Prezzo"}</th>
+                      <th className="text-right py-2 px-2 font-medium">{isEnglish ? "Change%" : "Cambio%"}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -596,9 +673,9 @@ export default function Home() {
             {/* Riga 3: Notizie (sinistra) | Hacks (destra) */}
               <section className={`min-w-0 rounded-2xl border backdrop-blur p-6 lg:col-start-1 lg:row-start-3 ${isDark ? "border-indigo-500/25 bg-indigo-900/25" : "border-slate-200 bg-white/80"}`}>
                 <div className="min-h-[3.5rem] flex items-center justify-between mb-4">
-                  <h2 className={`text-xl font-bold ${isDark ? "text-white" : "text-slate-900"}`}>Notizie</h2>
+                  <h2 className={`text-xl font-bold ${isDark ? "text-white" : "text-slate-900"}`}>{isEnglish ? "News" : "Notizie"}</h2>
                   <Link href="/news" className="text-sm text-indigo-400 hover:text-indigo-300 font-medium">
-                    Vedi tutte →
+                    {isEnglish ? "View all →" : "Vedi tutte →"}
                   </Link>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

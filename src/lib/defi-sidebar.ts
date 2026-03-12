@@ -1,19 +1,32 @@
-export const DEFI_SIDEBAR_ITEMS = [
-  { label: "Dashboard", href: "/", icon: "📊" },
-  { label: "Manuale", href: "/manuale", icon: "📚" },
-  { label: "DeFi", href: "/defi", icon: "💹" },
-  { label: "Airdrops", href: "/airdrops", icon: "🎁" },
-  { label: "Blockchains", href: "/blockchain", icon: "⛓️" },
-  { label: "Compra/Vendi Crypto", href: "/compraevendicrypto", icon: "💳" },
-  { label: "Portafogli", href: "/wallet", icon: "👛" },
-  { label: "Strumenti Utili", href: "/strumentiutili", icon: "🔧" },
-  { label: "Memecoins", href: "/memecoins", icon: "🪙" },
-  { label: "NFTs", href: "/nft", icon: "🖼️" },
-  { label: "Giochi", href: "/giochi", icon: "🎮" },
-  { label: "Mercati di Predizione", href: "/giochi/polymarket", icon: "📈" },
-  { label: "Eventi Storici", href: "/eventi-storici", icon: "📅" },
-  { label: "Mappa Ecosistema", href: "/esplora-app", icon: "🌐" },
-  { label: "Notizie", href: "/news", icon: "📰" },
-  { label: "Segnalibri", href: "/segnalibri", icon: "🔖" },
-  { label: "Leaderboard", href: "/leaderboards/global", icon: "🏆" },
-];
+type SidebarLanguage = "it" | "en";
+
+const DEFI_SIDEBAR_ITEMS_I18N = [
+  { labelIt: "Dashboard", labelEn: "Dashboard", href: "/", icon: "📊" },
+  { labelIt: "Manuale", labelEn: "Manual", href: "/manuale", icon: "📚" },
+  { labelIt: "DeFi", labelEn: "DeFi", href: "/defi", icon: "💹" },
+  { labelIt: "Airdrops", labelEn: "Airdrops", href: "/airdrops", icon: "🎁" },
+  { labelIt: "Blockchains", labelEn: "Blockchains", href: "/blockchain", icon: "⛓️" },
+  { labelIt: "Compra/Vendi Crypto", labelEn: "Buy/Sell Crypto", href: "/compraevendicrypto", icon: "💳" },
+  { labelIt: "Portafogli", labelEn: "Wallets", href: "/wallet", icon: "👛" },
+  { labelIt: "Strumenti Utili", labelEn: "Useful Tools", href: "/strumentiutili", icon: "🔧" },
+  { labelIt: "Memecoins", labelEn: "Memecoins", href: "/memecoins", icon: "🪙" },
+  { labelIt: "NFTs", labelEn: "NFTs", href: "/nft", icon: "🖼️" },
+  { labelIt: "Giochi", labelEn: "Games", href: "/giochi", icon: "🎮" },
+  { labelIt: "Mercati di Predizione", labelEn: "Prediction Markets", href: "/giochi/polymarket", icon: "📈" },
+  { labelIt: "Eventi Storici", labelEn: "Historical Events", href: "/eventi-storici", icon: "📅" },
+  { labelIt: "Mappa Ecosistema", labelEn: "Ecosystem Map", href: "/esplora-app", icon: "🌐" },
+  { labelIt: "Notizie", labelEn: "News", href: "/news", icon: "📰" },
+  { labelIt: "Segnalibri", labelEn: "Bookmarks", href: "/segnalibri", icon: "🔖" },
+  { labelIt: "Leaderboard", labelEn: "Leaderboard", href: "/leaderboards/global", icon: "🏆" },
+] as const;
+
+export function getDefiSidebarItems(language: SidebarLanguage) {
+  return DEFI_SIDEBAR_ITEMS_I18N.map((item) => ({
+    label: language === "en" ? item.labelEn : item.labelIt,
+    href: item.href,
+    icon: item.icon,
+  }));
+}
+
+// Backward-compatible default export for places not wired yet.
+export const DEFI_SIDEBAR_ITEMS = getDefiSidebarItems("it");

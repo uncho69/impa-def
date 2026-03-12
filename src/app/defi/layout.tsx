@@ -5,16 +5,19 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import imparodefiLogo from "@/assets/imparodefi-logo-nobg.webp";
-import { DEFI_SIDEBAR_ITEMS } from "@/lib/defi-sidebar";
+import { getDefiSidebarItems } from "@/lib/defi-sidebar";
 import { UnifiedAuthControls } from "@/components/auth/UnifiedAuthControls";
 import { SearchBar } from "@/components/SearchBar";
 import { CollapsibleSidebar } from "@/components/CollapsibleSidebar";
 import { SiteFooter } from "@/components/SiteFooter";
+import { useLanguage } from "@/contexts/LanguageContext";
+import LanguageToggle from "@/components/LanguageToggle";
 
 type Theme = "dark" | "light";
 
 export default function DefiLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const { language } = useLanguage();
   const [theme, setTheme] = useState<Theme>("dark");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -30,6 +33,7 @@ export default function DefiLayout({ children }: { children: ReactNode }) {
   }, [theme]);
 
   const isDark = theme === "dark";
+  const sidebarItems = getDefiSidebarItems(language);
   const isDefiSection = pathname === "/defi" || pathname.startsWith("/defi/");
   const isProfilePath = pathname === "/profilo" || pathname.startsWith("/profilo/");
 
@@ -81,6 +85,9 @@ export default function DefiLayout({ children }: { children: ReactNode }) {
               </svg>
             </button>
             <div className="flex items-center gap-2 md:gap-3">
+              <div className="hidden md:flex">
+                <LanguageToggle />
+              </div>
               <button
                 type="button"
                 onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
@@ -151,7 +158,7 @@ export default function DefiLayout({ children }: { children: ReactNode }) {
                 </button>
               </div>
               <nav className="p-3 overflow-y-auto flex-1 space-y-0.5">
-                {DEFI_SIDEBAR_ITEMS.map((item) => {
+                {sidebarItems.map((item) => {
                   const isActive = item.href === "/defi" ? isDefiSection : pathname === item.href || pathname.startsWith(item.href + "/");
                   return (
                     <Link
@@ -178,7 +185,7 @@ export default function DefiLayout({ children }: { children: ReactNode }) {
 
         <div className="flex flex-1 min-h-0 relative">
           <CollapsibleSidebar
-            items={DEFI_SIDEBAR_ITEMS}
+            items={sidebarItems}
             isDark={isDark}
             isItemActive={(href) => (href === "/defi" ? isDefiSection : pathname === href || pathname.startsWith(href + "/"))}
           />

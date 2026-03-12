@@ -4,21 +4,32 @@ import Link from "next/link";
 // import { PageLayout } from "@/components/PageLayout"; // Non necessario, usiamo layout custom
 import { useState, useEffect } from "react";
 import { BookmarkButton } from "@/components/bookmarks/BookmarkButton";
+import { useLanguage } from "@/contexts/LanguageContext";
+
+type FeaturedArticle = {
+  id: number | string;
+  category: string;
+  title: string;
+  summary: string;
+  publishedAt: string;
+};
 
 export default function NewsPage() {
-  const [featuredArticles, setFeaturedArticles] = useState([]);
+  const { language } = useLanguage();
+  const isEnglish = language === "en";
+  const [featuredArticles, setFeaturedArticles] = useState<FeaturedArticle[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Carica articoli in evidenza dal database
     fetch('/api/news?featured=true&limit=6')
       .then(res => res.json())
-      .then(articles => {
-        setFeaturedArticles(articles);
+      .then((articles: unknown) => {
+        setFeaturedArticles(Array.isArray(articles) ? (articles as FeaturedArticle[]) : []);
         setLoading(false);
       })
       .catch(err => {
-        console.error('Errore caricamento articoli:', err);
+        console.error("Error loading articles:", err);
         setLoading(false);
       });
   }, []);
@@ -27,49 +38,49 @@ export default function NewsPage() {
     {
       id: "general",
       title: "General",
-      description: "Notizie generali dal mondo crypto e Web3",
+      description: isEnglish ? "General news from the crypto and Web3 world" : "Notizie generali dal mondo crypto e Web3",
       color: "from-blue-500 to-indigo-600"
     },
     {
       id: "defi",
       title: "DeFi",
-      description: "Finanza decentralizzata e protocolli innovativi",
+      description: isEnglish ? "Decentralized finance and innovative protocols" : "Finanza decentralizzata e protocolli innovativi",
       color: "from-green-500 to-emerald-600"
     },
     {
       id: "airdrops",
       title: "Hot Airdrops",
-      description: "I migliori airdrop e opportunità gratuite",
+      description: isEnglish ? "Top airdrops and free opportunities" : "I migliori airdrop e opportunità gratuite",
       color: "from-purple-500 to-violet-600"
     },
     {
       id: "crypto-ai",
       title: "Crypto AI",
-      description: "Intelligenza artificiale e blockchain unite",
+      description: isEnglish ? "Artificial intelligence and blockchain together" : "Intelligenza artificiale e blockchain unite",
       color: "from-cyan-500 to-blue-600"
     },
     {
       id: "stablecoins",
       title: "Stablecoins",
-      description: "USDC, USDT, PYUSD e il futuro dei pagamenti",
+      description: isEnglish ? "USDC, USDT, PYUSD and the future of payments" : "USDC, USDT, PYUSD e il futuro dei pagamenti",
       color: "from-emerald-500 to-green-600"
     },
     {
       id: "regolamentazioni",
       title: "Regolamentazioni",
-      description: "Normative, MiCA Europa e compliance crypto",
+      description: isEnglish ? "Regulations, MiCA Europe and crypto compliance" : "Normative, MiCA Europa e compliance crypto",
       color: "from-red-500 to-pink-600"
     },
     {
       id: "gaming",
       title: "Gaming",
-      description: "Giochi & Mercati di Predizione, P2E e l'evoluzione del gaming blockchain",
+      description: isEnglish ? "Games, prediction markets, P2E and blockchain gaming evolution" : "Giochi & Mercati di Predizione, P2E e l'evoluzione del gaming blockchain",
       color: "from-violet-500 to-purple-600"
     },
     {
       id: "memecoins",
       title: "Memecoins",
-      description: "DOGE, SHIB, PEPE e le ultime meme sensation",
+      description: isEnglish ? "DOGE, SHIB, PEPE and the latest meme trends" : "DOGE, SHIB, PEPE e le ultime meme sensation",
       color: "from-yellow-500 to-orange-500"
     }
   ];
@@ -83,7 +94,7 @@ export default function NewsPage() {
               News Crypto & Web3
             </h1>
             <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-              Le ultime notizie dal mondo crypto, sempre aggiornate
+              {isEnglish ? "Latest crypto news, always updated" : "Le ultime notizie dal mondo crypto, sempre aggiornate"}
             </p>
           </div>
         </div>
@@ -110,16 +121,16 @@ export default function NewsPage() {
                     </p>
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-slate-500 dark:text-slate-300 bg-slate-100 dark:bg-indigo-800/40 px-2 py-1 rounded-full">
-                        Categoria
+                        {isEnglish ? "Category" : "Categoria"}
                       </span>
                       <div className="flex items-center gap-2">
                         <div className="text-blue-600 dark:text-indigo-300 text-xs font-medium group-hover:text-blue-700 dark:group-hover:text-indigo-200 flex items-center">
-                          Leggi <span className="ml-1">→</span>
+                          {isEnglish ? "Read" : "Leggi"} <span className="ml-1">→</span>
                         </div>
                         <span onClick={(e) => e.preventDefault()}>
                           <BookmarkButton
                             url={`/news/${category.id}`}
-                            title={`${category.title} - Categoria news`}
+                            title={`${category.title} - ${isEnglish ? "News category" : "Categoria news"}`}
                             type="page"
                             projectId={`news-${category.id}`}
                           />
@@ -135,7 +146,7 @@ export default function NewsPage() {
           {/* Sezione articoli in evidenza */}
           <div className="mb-10">
             <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6 text-center">
-              News in evidenza
+              {isEnglish ? "Featured news" : "News in evidenza"}
             </h2>
             {loading ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -151,7 +162,7 @@ export default function NewsPage() {
               </div>
             ) : featuredArticles.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {featuredArticles.map((article: any) => {
+                {featuredArticles.map((article) => {
                   const categoryColors = {
                     'GENERAL': { bg: 'from-blue-50 to-blue-100', badge: 'bg-blue-500', text: 'text-blue-600' },
                     'DEFI': { bg: 'from-green-50 to-green-100', badge: 'bg-green-500', text: 'text-green-600' },
@@ -179,14 +190,14 @@ export default function NewsPage() {
                       </p>
                       <div className="flex items-center justify-between">
                         <span className="text-xs text-slate-500 dark:text-slate-400">
-                          {new Date(article.publishedAt).toLocaleDateString('it-IT')}
+                          {new Date(article.publishedAt).toLocaleDateString(isEnglish ? "en-GB" : "it-IT")}
                         </span>
                         <div className="flex items-center gap-2">
                           <Link
                             href={`/news/${article.category.toLowerCase().replace('_', '-')}`}
                             className={`${colors.badge} text-white px-3 py-1 rounded-full text-xs font-medium hover:opacity-80 transition-opacity`}
                           >
-                            Leggi →
+                            {isEnglish ? "Read →" : "Leggi →"}
                           </Link>
                           <BookmarkButton
                             url={`/news/${article.category.toLowerCase().replace('_', '-')}`}
@@ -202,8 +213,14 @@ export default function NewsPage() {
               </div>
             ) : (
               <div className="text-center py-12">
-                <p className="text-slate-600 dark:text-slate-400 text-lg mb-4">Nessun articolo in evidenza al momento</p>
-                <p className="text-slate-500 dark:text-slate-500 text-sm">Gli articoli pubblicati e contrassegnati come "in evidenza" appariranno qui</p>
+                <p className="text-slate-600 dark:text-slate-400 text-lg mb-4">
+                  {isEnglish ? "No featured articles at the moment" : "Nessun articolo in evidenza al momento"}
+                </p>
+                <p className="text-slate-500 dark:text-slate-500 text-sm">
+                  {isEnglish
+                    ? 'Published articles marked as "featured" will appear here'
+                    : 'Gli articoli pubblicati e contrassegnati come "in evidenza" appariranno qui'}
+                </p>
               </div>
             )}
           </div>

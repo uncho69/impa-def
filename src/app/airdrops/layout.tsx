@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import imparodefiLogo from "@/assets/imparodefi-logo-nobg.webp";
-import { DEFI_SIDEBAR_ITEMS } from "@/lib/defi-sidebar";
+import { getDefiSidebarItems } from "@/lib/defi-sidebar";
 import { ProjectPageTemplate } from "@/components/ProjectPageTemplate";
 import { getAirdropTemplateData } from "@/lib/airdrop-template-data";
 import { getProjectLogo } from "@/lib/project-logos";
@@ -14,11 +14,14 @@ import { UnifiedAuthControls } from "@/components/auth/UnifiedAuthControls";
 import { SearchBar } from "@/components/SearchBar";
 import { CollapsibleSidebar } from "@/components/CollapsibleSidebar";
 import { SiteFooter } from "@/components/SiteFooter";
+import { useLanguage } from "@/contexts/LanguageContext";
+import LanguageToggle from "@/components/LanguageToggle";
 
 type Theme = "dark" | "light";
 
 export default function AirdropsLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const { language } = useLanguage();
   const [theme, setTheme] = useState<Theme>("dark");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -34,6 +37,7 @@ export default function AirdropsLayout({ children }: { children: ReactNode }) {
   }, [theme]);
 
   const isDark = theme === "dark";
+  const sidebarItems = getDefiSidebarItems(language);
   const isAirdropsSection = pathname === "/airdrops" || pathname.startsWith("/airdrops/");
   const isProfilePath = pathname === "/profilo" || pathname.startsWith("/profilo/");
   const airdropDetailSlug = useMemo(() => {
@@ -94,6 +98,9 @@ export default function AirdropsLayout({ children }: { children: ReactNode }) {
               </svg>
             </button>
             <div className="flex items-center gap-2 md:gap-3">
+              <div className="hidden md:flex">
+                <LanguageToggle />
+              </div>
               <button type="button" onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))} className={`p-2 rounded-lg border transition-colors ${isDark ? "border-white/20 bg-white/5 hover:bg-white/10" : "border-slate-300 bg-slate-100 hover:bg-slate-200"}`} title={isDark ? "Passa a tema chiaro" : "Passa a tema scuro"} aria-label={isDark ? "Passa a tema chiaro" : "Passa a tema scuro"}>
                 {isDark ? (
                   <svg className="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden><path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" /></svg>
@@ -133,7 +140,7 @@ export default function AirdropsLayout({ children }: { children: ReactNode }) {
                 </button>
               </div>
               <nav className="p-3 overflow-y-auto flex-1 space-y-0.5">
-                {DEFI_SIDEBAR_ITEMS.map((item) => {
+                {sidebarItems.map((item) => {
                   const isActive = item.href === "/airdrops" ? isAirdropsSection : pathname === item.href || pathname.startsWith(item.href + "/");
                   return (
                     <Link key={item.href + item.label} href={item.href} onClick={() => setMobileMenuOpen(false)} className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${isActive ? "bg-indigo-600/90 text-white" : isDark ? "text-slate-300 hover:bg-white/10 hover:text-white" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"}`}>
@@ -149,7 +156,7 @@ export default function AirdropsLayout({ children }: { children: ReactNode }) {
 
         <div className="flex flex-1 min-h-0 relative">
           <CollapsibleSidebar
-            items={DEFI_SIDEBAR_ITEMS}
+            items={sidebarItems}
             isDark={isDark}
             isItemActive={(href) => (href === "/airdrops" ? isAirdropsSection : pathname === href || pathname.startsWith(href + "/"))}
           />

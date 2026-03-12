@@ -11,6 +11,7 @@ import { SearchBar } from "./SearchBar";
 import { AuthModal } from "@/components/auth/AuthModal";
 import { usePathname } from "next/navigation";
 import { useAppAuth } from "@/lib/auth/useAppAuth";
+import LanguageToggle from "./LanguageToggle";
 
 export function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -131,7 +132,10 @@ export function Navbar() {
               </div>
             </div>
             
-            <UnifiedAuthControls />
+            <div className="flex items-center gap-3">
+              <LanguageToggle />
+              <UnifiedAuthControls />
+            </div>
           </div>
           
           <div className="lg:hidden">

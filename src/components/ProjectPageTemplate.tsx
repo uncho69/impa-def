@@ -10,6 +10,8 @@ import { getProjectMacroCategory, type MacroCategoryId } from "@/lib/admin-proje
 import { getProjectLogo } from "@/lib/project-logos";
 import { getCoingeckoId } from "@/lib/project-coingecko-ids";
 import { BookmarkButton } from "@/components/bookmarks/BookmarkButton";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { deepTranslateItalianToEnglish } from "@/lib/i18n/translate-it-to-en";
 
 type TabId = "overview" | "come-usarlo" | "contenuti" | "dati-rischi" | "link-utili" | "notizie";
 
@@ -360,10 +362,102 @@ function buildFeatureModalContent(
   };
 }
 
-export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
+export function ProjectPageTemplate({ data: rawData }: { data: ProjectPageData }) {
+  const { language } = useLanguage();
+  const isEnglish = language === "en";
+  const data = useMemo(
+    () => (isEnglish ? deepTranslateItalianToEnglish(rawData) : rawData),
+    [isEnglish, rawData],
+  );
   const pathname = usePathname();
   const [activeTab, setActiveTab] = useState<TabId>("overview");
   const [selectedContentIndex, setSelectedContentIndex] = useState<number | null>(null);
+  const contentFilters = useMemo(
+    () =>
+      CONTENT_FILTERS.map((filter) => ({
+        ...filter,
+        label:
+          !isEnglish
+            ? filter.label
+            : filter.id === "all"
+              ? "All"
+              : filter.id === "article"
+                ? "Articles"
+                : filter.id === "analisi"
+                  ? "Analysis"
+                  : filter.label,
+      })),
+    [isEnglish],
+  );
+
+  const blockchainExplorerCards = useMemo(
+    () =>
+      BLOCKCHAIN_EXPLORER_CARDS.map((card) => ({
+        ...card,
+        label:
+          !isEnglish
+            ? card.label
+            : card.id === "portafogli"
+              ? "Wallets"
+              : card.id === "defi"
+                ? "Apps"
+                : card.label,
+        subtitle:
+          !isEnglish
+            ? card.subtitle
+            : card.id === "portafogli"
+              ? "Wallet and custody"
+              : card.id === "defi"
+                ? "dApps and protocols"
+                : card.id === "nft"
+                  ? "Marketplaces and collections"
+                  : "Meme tokens",
+      })),
+    [isEnglish],
+  );
+
+  const defiSubcategoryLabels = useMemo(
+    () =>
+      DEFI_SUBCATEGORY_LABELS.map((cat) => ({
+        ...cat,
+        label:
+          !isEnglish
+            ? cat.label
+            : cat.id === "all"
+              ? "All"
+              : cat.id === "yield"
+                ? "Yield"
+                : cat.id === "lending"
+                  ? "Lending"
+                  : cat.id === "options"
+                    ? "Options"
+                    : cat.id === "derivatives"
+                      ? "Derivatives"
+                      : cat.id === "stablecoins"
+                        ? "Stablecoins"
+                        : cat.label,
+      })),
+    [isEnglish],
+  );
+
+  const nftSubcategoryLabels = useMemo(
+    () =>
+      NFT_SUBCATEGORY_LABELS.map((cat) => ({
+        ...cat,
+        label:
+          !isEnglish
+            ? cat.label
+            : cat.id === "collezione"
+              ? "Collection"
+              : cat.id === "launchpad"
+                ? "Launchpad"
+                : cat.id === "marketplace"
+                  ? "Marketplace"
+                  : "Lending",
+      })),
+    [isEnglish],
+  );
+
   const [contentFilter, setContentFilter] = useState<string>("all");
   const [priceData, setPriceData] = useState<{
     price: number;
@@ -553,7 +647,7 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
     }
     const fromMetadata: { label: string; href: string }[] = [];
     if (metadataOverrides?.websiteUrl) {
-      fromMetadata.push({ label: "Sito ufficiale", href: metadataOverrides.websiteUrl });
+      fromMetadata.push({ label: isEnglish ? "Official website" : "Sito ufficiale", href: metadataOverrides.websiteUrl });
     }
     if (metadataOverrides?.twitterUrl) {
       fromMetadata.push({ label: "Twitter / X", href: metadataOverrides.twitterUrl });
@@ -567,7 +661,7 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
       return [...fromMetadata, ...extra];
     }
     return data.usefulLinks;
-  }, [contentOverrides?.usefulLinks, metadataOverrides?.websiteUrl, metadataOverrides?.twitterUrl, data.usefulLinks]);
+  }, [contentOverrides?.usefulLinks, metadataOverrides?.websiteUrl, metadataOverrides?.twitterUrl, data.usefulLinks, isEnglish]);
   const filteredExplorerProjects = useMemo(() => {
     let byCategory = explorerProjects.filter((p) => getProjectMacroCategory(p.id) === explorerCategory);
     if (explorerCategory === "defi" && explorerDefiSubCategory !== "all") {
@@ -654,12 +748,12 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
                   <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">{data.name}</h1>
                   <BookmarkButton
                     url={pathname}
-                    title={`${data.name} - Pagina progetto`}
+                        title={`${data.name} - ${isEnglish ? "Project page" : "Pagina progetto"}`}
                     type="page"
                     projectId={data.slug}
                     showLabel
-                    inactiveLabel="Salva"
-                    activeLabel="Salva"
+                        inactiveLabel={isEnglish ? "Save" : "Salva"}
+                        activeLabel={isEnglish ? "Saved" : "Salva"}
                   />
                 </div>
                 <div className="flex flex-wrap gap-2 mt-2">
@@ -758,7 +852,7 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 border border-indigo-400/50 hover:opacity-90 text-white font-medium text-sm transition-opacity"
             >
-              Apri {data.name}
+              {isEnglish ? `Open ${data.name}` : `Apri ${data.name}`}
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
               </svg>
@@ -771,7 +865,7 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
-                Guida Rapida
+                {isEnglish ? "Quick Guide" : "Guida Rapida"}
               </a>
             )}
           </div>
@@ -781,7 +875,7 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
         <div className="p-6 md:p-8 border-b border-slate-200 dark:border-indigo-500/20">
           {isBlockchainProject ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {BLOCKCHAIN_EXPLORER_CARDS.map((card) => (
+              {blockchainExplorerCards.map((card) => (
                 <button
                   key={card.id}
                   type="button"
@@ -799,7 +893,7 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
                   <h3 className="font-semibold text-sm text-slate-900 dark:text-white">{card.label}</h3>
                   <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">{card.subtitle}</p>
                   <span className="inline-flex items-center gap-1 mt-3 text-xs font-medium text-blue-600 dark:text-blue-400">
-                    Esplora progetti
+                    {isEnglish ? "Explore projects" : "Esplora progetti"}
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
@@ -828,7 +922,7 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
                   </h3>
                   <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 flex-1">{card.description}</p>
                   <span className="self-end mt-2 text-blue-600 dark:text-blue-400 text-xs font-medium inline-flex items-center gap-1">
-                    Apri dettagli
+                    {isEnglish ? "Open details" : "Apri dettagli"}
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
@@ -844,11 +938,11 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
           <nav className="flex flex-wrap gap-1 -mb-px">
             {[
               { id: "overview" as const, label: "Overview" },
-              { id: "come-usarlo" as const, label: "Come usarlo" },
-              { id: "contenuti" as const, label: "Contenuti" },
-              { id: "dati-rischi" as const, label: "Dati & Rischi" },
-              { id: "link-utili" as const, label: "Link Utili" },
-              { id: "notizie" as const, label: "Notizie Rilevanti" },
+              { id: "come-usarlo" as const, label: isEnglish ? "How to use it" : "Come usarlo" },
+              { id: "contenuti" as const, label: isEnglish ? "Content" : "Contenuti" },
+              { id: "dati-rischi" as const, label: isEnglish ? "Data & Risk" : "Dati & Rischi" },
+              { id: "link-utili" as const, label: isEnglish ? "Useful Links" : "Link Utili" },
+              { id: "notizie" as const, label: isEnglish ? "Relevant News" : "Notizie Rilevanti" },
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -888,7 +982,7 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
 
           {activeTab === "come-usarlo" && (
             <div>
-              <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Come usarlo</h2>
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4">{isEnglish ? "How to use it" : "Come usarlo"}</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {resolvedHowToSteps.map((step, i) => (
                   <div key={i} className="rounded-xl border border-slate-200 dark:border-white/5 p-4 bg-white dark:bg-slate-700/50">
@@ -897,7 +991,7 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
                     <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">{step.description}</p>
                     {step.href && (
                       <a href={step.href} className="mt-3 inline-block text-sm font-medium text-blue-600 dark:text-blue-400">
-                        Approfondisci →
+                        {isEnglish ? "Learn more →" : "Approfondisci →"}
                       </a>
                     )}
                   </div>
@@ -908,9 +1002,9 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
 
           {activeTab === "contenuti" && (
             <div>
-              <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Contenuti</h2>
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4">{isEnglish ? "Content" : "Contenuti"}</h2>
               <div className="flex flex-wrap gap-2 mb-6">
-                {CONTENT_FILTERS.map((f) => (
+                {contentFilters.map((f) => (
                   <button
                     key={f.id}
                     onClick={() => setContentFilter(f.id)}
@@ -945,7 +1039,7 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
                         {item.skillLevel && <span>{item.skillLevel}</span>}
                         {item.source && <span>By {item.source}</span>}
                         {item.tags?.includes("Verificato") && (
-                          <span className="text-green-600 dark:text-green-400">Verificato</span>
+                          <span className="text-green-600 dark:text-green-400">{isEnglish ? "Verified" : "Verificato"}</span>
                         )}
                       </div>
                       <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -954,17 +1048,17 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
                           onClick={() => setSelectedContentIndex(i)}
                           className="inline-block px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium"
                         >
-                          {item.type === "video" ? "Guarda" : "Leggi"}
+                          {item.type === "video" ? (isEnglish ? "Watch" : "Guarda") : isEnglish ? "Read" : "Leggi"}
                         </button>
                         <BookmarkButton
                           url={`${pathname}#contenuti-${i}`}
-                          title={`${data.name} - Contenuto: ${item.title}`}
+                          title={`${data.name} - ${isEnglish ? "Content" : "Contenuto"}: ${item.title}`}
                           type="content"
                           projectId={data.slug}
                           sectionId={`contenuti-${i}`}
                           showLabel
-                          inactiveLabel="Salva Contenuto"
-                          activeLabel="Contenuto Salvato"
+                          inactiveLabel={isEnglish ? "Save content" : "Salva Contenuto"}
+                          activeLabel={isEnglish ? "Saved content" : "Contenuto Salvato"}
                         />
                       </div>
                     </div>
@@ -976,7 +1070,7 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
 
           {activeTab === "dati-rischi" && (
             <div>
-              <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Rischi & Dati</h2>
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4">{isEnglish ? "Risk & Data" : "Rischi & Dati"}</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {resolvedRiskCards.map((risk, i) => (
                   <div key={i} className="rounded-xl border border-amber-200 dark:border-amber-800 p-4 bg-amber-50/50 dark:bg-amber-900/10">
@@ -991,7 +1085,7 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
 
           {activeTab === "link-utili" && (
             <div>
-              <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Link Utili</h2>
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4">{isEnglish ? "Useful Links" : "Link Utili"}</h2>
               <div className="flex flex-wrap gap-3">
                 {resolvedUsefulLinks.map((link, i) => (
                   <a
@@ -1013,8 +1107,10 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
 
           {activeTab === "notizie" && (
             <div>
-              <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Notizie Rilevanti</h2>
-              <p className="text-slate-600 dark:text-slate-400 text-sm">Le notizie relative a questo progetto verranno mostrate qui.</p>
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4">{isEnglish ? "Relevant News" : "Notizie Rilevanti"}</h2>
+              <p className="text-slate-600 dark:text-slate-400 text-sm">
+                {isEnglish ? "News related to this project will be shown here." : "Le notizie relative a questo progetto verranno mostrate qui."}
+              </p>
             </div>
           )}
         </div>
@@ -1026,7 +1122,7 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
               <div>
                 <h3 className="text-base md:text-lg font-semibold">{resolvedContentItems[selectedContentIndex].title}</h3>
                 <p className="text-xs text-slate-300">
-                  {resolvedContentItems[selectedContentIndex].type === "video" ? "Video" : "Contenuto"} • {data.name}
+                  {resolvedContentItems[selectedContentIndex].type === "video" ? "Video" : isEnglish ? "Content" : "Contenuto"} • {data.name}
                 </p>
               </div>
               <button
@@ -1034,7 +1130,7 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
                 onClick={() => setSelectedContentIndex(null)}
                 className="px-3 py-1.5 rounded-lg border border-white/20 text-sm hover:bg-white/10"
               >
-                Chiudi
+                {isEnglish ? "Close" : "Chiudi"}
               </button>
             </div>
             <div className="p-5 overflow-auto">
@@ -1050,7 +1146,7 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
               ) : (
                 <div className="rounded-xl border border-indigo-500/20 bg-indigo-900/20 p-4">
                   <p className="text-sm text-slate-200">
-                    Questo contenuto non ha embed interno. Aprilo nel link originale.
+                    {isEnglish ? "This content has no internal embed. Open it from the original link." : "Questo contenuto non ha embed interno. Aprilo nel link originale."}
                   </p>
                   <a
                     href={resolvedContentItems[selectedContentIndex].href ?? "#"}
@@ -1058,7 +1154,7 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
                     rel="noopener noreferrer"
                     className="mt-3 inline-flex items-center px-3 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-sm font-medium"
                   >
-                    Apri contenuto
+                    {isEnglish ? "Open content" : "Apri contenuto"}
                   </a>
                 </div>
               )}
@@ -1080,13 +1176,13 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
                 onClick={() => setSelectedFeatureIndex(null)}
                 className="px-3 py-1.5 rounded-lg border border-white/20 text-sm hover:bg-white/10 shrink-0"
               >
-                Chiudi
+                {isEnglish ? "Close" : "Chiudi"}
               </button>
             </div>
             <div className="p-5 overflow-auto space-y-5">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <section className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-                  <h4 className="font-semibold text-indigo-100">Checklist pre-esecuzione</h4>
+                  <h4 className="font-semibold text-indigo-100">{isEnglish ? "Pre-execution checklist" : "Checklist pre-esecuzione"}</h4>
                   <ul className="mt-2 space-y-1.5 text-sm text-slate-200">
                     {selectedFeatureContent.checklist.map((item) => (
                       <li key={item} className="flex items-start gap-2">
@@ -1097,7 +1193,7 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
                   </ul>
                 </section>
                 <section className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-                  <h4 className="font-semibold text-indigo-100">Errori comuni da evitare</h4>
+                  <h4 className="font-semibold text-indigo-100">{isEnglish ? "Common mistakes to avoid" : "Errori comuni da evitare"}</h4>
                   <ul className="mt-2 space-y-1.5 text-sm text-slate-200">
                     {selectedFeatureContent.mistakes.map((item) => (
                       <li key={item} className="flex items-start gap-2">
@@ -1109,7 +1205,7 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
                 </section>
               </div>
               <section className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-                <h4 className="font-semibold text-indigo-100">Procedura consigliata</h4>
+                <h4 className="font-semibold text-indigo-100">{isEnglish ? "Recommended procedure" : "Procedura consigliata"}</h4>
                 <ol className="mt-2 space-y-2 text-sm text-slate-200">
                   {selectedFeatureContent.steps.map((step, index) => (
                     <li key={step} className="flex items-start gap-3">
@@ -1122,7 +1218,7 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
                 </ol>
               </section>
               <section className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-                <h4 className="font-semibold text-indigo-100">KPI di controllo</h4>
+                <h4 className="font-semibold text-indigo-100">{isEnglish ? "Control KPIs" : "KPI di controllo"}</h4>
                 <div className="mt-2 flex flex-wrap gap-2">
                   {selectedFeatureContent.kpis.map((kpi) => (
                     <span key={kpi} className="rounded-lg border border-indigo-400/30 bg-indigo-800/40 px-2.5 py-1 text-xs text-indigo-100">
@@ -1156,22 +1252,22 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
             <div className="px-5 py-4 border-b border-indigo-500/20 flex items-center justify-between gap-4">
               <div>
                 <h3 className="text-lg font-semibold">
-                  {BLOCKCHAIN_EXPLORER_CARDS.find((c) => c.id === explorerCategory)?.label}
+                  {blockchainExplorerCards.find((c) => c.id === explorerCategory)?.label}
                 </h3>
-                <p className="text-xs text-slate-300">Seleziona un progetto dalla categoria</p>
+                <p className="text-xs text-slate-300">{isEnglish ? "Select a project from this category" : "Seleziona un progetto dalla categoria"}</p>
               </div>
               <button
                 type="button"
                 onClick={() => setExplorerOpen(false)}
                 className="px-3 py-1.5 rounded-lg border border-white/20 text-sm hover:bg-white/10"
               >
-                Chiudi
+                {isEnglish ? "Close" : "Chiudi"}
               </button>
             </div>
 
             <div className="px-5 py-4 border-b border-indigo-500/20">
               <div className="flex flex-wrap gap-2 mb-3">
-                {BLOCKCHAIN_EXPLORER_CARDS.map((card) => (
+                {blockchainExplorerCards.map((card) => (
                   <button
                     key={card.id}
                     type="button"
@@ -1194,7 +1290,7 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
               </div>
               {explorerCategory === "defi" && (
                 <div className="flex flex-wrap gap-2 mb-3">
-                  {DEFI_SUBCATEGORY_LABELS.map((cat) => (
+                  {defiSubcategoryLabels.map((cat) => (
                     <button
                       key={cat.id}
                       type="button"
@@ -1216,13 +1312,13 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
                   type="search"
                   value={explorerSearch}
                   onChange={(e) => setExplorerSearch(e.target.value)}
-                  placeholder="Cerca progetto..."
+                  placeholder={isEnglish ? "Search project..." : "Cerca progetto..."}
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-indigo-400/30 bg-white/10 text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-400"
                 />
               </div>
               {explorerCategory === "nft" && (
                 <div className="flex flex-wrap gap-2 mt-3">
-                  {NFT_SUBCATEGORY_LABELS.map((cat) => (
+                  {nftSubcategoryLabels.map((cat) => (
                     <button
                       key={cat.id}
                       type="button"
@@ -1240,7 +1336,7 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
               )}
               {explorerCategory === "defi" && (
                 <div className="flex flex-wrap items-center gap-2 mt-3">
-                  <span className="text-xs text-slate-300">Ordina:</span>
+                  <span className="text-xs text-slate-300">{isEnglish ? "Sort:" : "Ordina:"}</span>
                   <button
                     type="button"
                     onClick={() => setExplorerSortKey("mcap_desc")}
@@ -1274,7 +1370,7 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
                     onClick={() => setExplorerSortKey("none")}
                     className={`px-2.5 py-1 rounded-md text-xs ${explorerSortKey === "none" ? "bg-indigo-500 text-white" : "bg-white/10 text-slate-300 hover:bg-white/20"}`}
                   >
-                    Nessuno
+                    {isEnglish ? "None" : "Nessuno"}
                   </button>
                 </div>
               )}
@@ -1282,9 +1378,9 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
 
             <div className="p-5 overflow-auto">
               {explorerLoading ? (
-                <p className="text-slate-300">Caricamento progetti...</p>
+                <p className="text-slate-300">{isEnglish ? "Loading projects..." : "Caricamento progetti..."}</p>
               ) : filteredExplorerProjects.length === 0 ? (
-                <p className="text-slate-300">Nessun progetto trovato in questa categoria.</p>
+                <p className="text-slate-300">{isEnglish ? "No projects found in this category." : "Nessun progetto trovato in questa categoria."}</p>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
                   {filteredExplorerProjects.map((project) => {
@@ -1312,11 +1408,11 @@ export function ProjectPageTemplate({ data }: { data: ProjectPageData }) {
                           </div>
                         </div>
                         <p className="text-xs text-slate-300 line-clamp-2">
-                          {project.description?.trim() || "Apri la pagina progetto per dettagli, link utili e contenuti."}
+                          {project.description?.trim() || (isEnglish ? "Open the project page for details, useful links, and content." : "Apri la pagina progetto per dettagli, link utili e contenuti.")}
                         </p>
                         <div className="mt-3 pt-3 border-t border-indigo-400/20 space-y-1 text-xs text-slate-300">
                           <div>
-                            Prezzo: {formatPrice((() => {
+                            {isEnglish ? "Price" : "Prezzo"}: {formatPrice((() => {
                               const cgId = getCoingeckoId(project.id);
                               return cgId ? explorerCgData[cgId]?.usd : null;
                             })())}

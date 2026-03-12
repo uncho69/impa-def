@@ -11,25 +11,27 @@ import { CollapsibleSidebar } from "@/components/CollapsibleSidebar";
 import imparodefiLogo from "@/assets/imparodefi-logo-nobg.webp";
 import { LEARNING_PATH_CARDS } from "@/lib/learning-paths";
 import { SiteFooter } from "@/components/SiteFooter";
+import { useLanguage } from "@/contexts/LanguageContext";
+import LanguageToggle from "@/components/LanguageToggle";
 
 const SIDEBAR_ITEMS = [
-  { label: "Dashboard", href: "/", icon: "📊" },
-  { label: "Manuale", href: "/manuale", icon: "📚" },
-  { label: "DeFi", href: "/defi", icon: "💹" },
-  { label: "Airdrops", href: "/airdrops", icon: "🎁" },
-  { label: "Blockchains", href: "/blockchain", icon: "⛓️" },
-  { label: "Compra/Vendi Crypto", href: "/compraevendicrypto", icon: "💳" },
-  { label: "Portafogli", href: "/wallet", icon: "👛" },
-  { label: "Strumenti Utili", href: "/strumentiutili", icon: "🔧" },
-  { label: "Memecoins", href: "/memecoins", icon: "🪙" },
-  { label: "NFTs", href: "/nft", icon: "🖼️" },
-  { label: "Giochi", href: "/giochi", icon: "🎮" },
-  { label: "Mercati di Predizione", href: "/giochi/polymarket", icon: "📈" },
-  { label: "Eventi Storici", href: "/eventi-storici", icon: "📅" },
-  { label: "Mappa Ecosistema", href: "/esplora-app", icon: "🌐" },
-  { label: "Notizie", href: "/news", icon: "📰" },
-  { label: "Segnalibri", href: "/segnalibri", icon: "🔖" },
-  { label: "Leaderboard", href: "/leaderboards/global", icon: "🏆" },
+  { labelIt: "Dashboard", labelEn: "Dashboard", href: "/", icon: "📊" },
+  { labelIt: "Manuale", labelEn: "Manual", href: "/manuale", icon: "📚" },
+  { labelIt: "DeFi", labelEn: "DeFi", href: "/defi", icon: "💹" },
+  { labelIt: "Airdrops", labelEn: "Airdrops", href: "/airdrops", icon: "🎁" },
+  { labelIt: "Blockchains", labelEn: "Blockchains", href: "/blockchain", icon: "⛓️" },
+  { labelIt: "Compra/Vendi Crypto", labelEn: "Buy/Sell Crypto", href: "/compraevendicrypto", icon: "💳" },
+  { labelIt: "Portafogli", labelEn: "Wallets", href: "/wallet", icon: "👛" },
+  { labelIt: "Strumenti Utili", labelEn: "Useful Tools", href: "/strumentiutili", icon: "🔧" },
+  { labelIt: "Memecoins", labelEn: "Memecoins", href: "/memecoins", icon: "🪙" },
+  { labelIt: "NFTs", labelEn: "NFTs", href: "/nft", icon: "🖼️" },
+  { labelIt: "Giochi", labelEn: "Games", href: "/giochi", icon: "🎮" },
+  { labelIt: "Mercati di Predizione", labelEn: "Prediction Markets", href: "/giochi/polymarket", icon: "📈" },
+  { labelIt: "Eventi Storici", labelEn: "Historical Events", href: "/eventi-storici", icon: "📅" },
+  { labelIt: "Mappa Ecosistema", labelEn: "Ecosystem Map", href: "/esplora-app", icon: "🌐" },
+  { labelIt: "Notizie", labelEn: "News", href: "/news", icon: "📰" },
+  { labelIt: "Segnalibri", labelEn: "Bookmarks", href: "/segnalibri", icon: "🔖" },
+  { labelIt: "Leaderboard", labelEn: "Leaderboard", href: "/leaderboards/global", icon: "🏆" },
 ];
 
 const QUICK_SECTIONS = [
@@ -117,6 +119,8 @@ type Theme = "dark" | "light";
 type ManualQuickGuideId = "navigate" | "blockchain" | "defi" | "wallet";
 
 export default function Manuale() {
+  const { language } = useLanguage();
+  const isEnglish = language === "en";
   const pathname = usePathname();
   const [theme, setTheme] = useState<Theme>("dark");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -134,6 +138,132 @@ export default function Manuale() {
   }, [theme]);
 
   const isDark = theme === "dark";
+  const sidebarItems = SIDEBAR_ITEMS.map((item) => ({
+    label: isEnglish ? item.labelEn : item.labelIt,
+    href: item.href,
+    icon: item.icon,
+  }));
+  const quickSections = isEnglish
+    ? [
+        { href: "#fondamenti", label: "Web3 Fundamentals" },
+        { href: "#guide-rapide", label: "Wallets and security" },
+        { href: "#onramp", label: "Market access" },
+        { href: "#analisi", label: "Project analysis" },
+        { href: "#nft", label: "NFT and community" },
+        { href: "#sicurezza", label: "Anti-scam" },
+      ]
+    : QUICK_SECTIONS;
+  const beginnerSnapshot = isEnglish
+    ? [
+        {
+          title: "What is crypto?",
+          description:
+            "Digital assets on blockchain, also known as tokens, transferable without banks in a transparent and continuous way.",
+        },
+        {
+          title: "What is a blockchain?",
+          description: "A public, distributed ledger where transactions and data remain verifiable over time.",
+        },
+        {
+          title: "What are non-custodial wallets?",
+          description: "Wallets where you directly control keys and funds: you are the custodian.",
+        },
+        {
+          title: "How do I buy and sell crypto?",
+          description: "Use CEX or on-ramp, then transfer to your personal wallet with a test transaction first.",
+        },
+        {
+          title: "What are CEXs?",
+          description: "Centralized exchanges to convert fiat into crypto in a simple way.",
+        },
+        {
+          title: "What is DeFi?",
+          description: "On-chain financial services (swap, lending, staking) without centralized banks, accessible from your wallet.",
+        },
+      ]
+    : BEGINNER_SNAPSHOT;
+  const firstSteps = isEnglish
+    ? [
+        "Open a trusted wallet and store your seed phrase offline.",
+        "Buy a small amount on a trusted channel and execute a test transaction.",
+        "Start from 1-2 major protocols and avoid spreading too thin.",
+      ]
+    : FIRST_STEPS;
+  const manualLearningCards = LEARNING_PATH_CARDS.map((path) => {
+    if (!isEnglish) return path;
+    const byHref: Record<string, { level: string; desc: string }> = {
+      "/percorsi-apprendimento/principiante": {
+        level: "Beginner",
+        desc: "Learn practical basics: wallet setup, security, first purchases, and first apps with controlled risk.",
+      },
+      "/percorsi-apprendimento/intermedio": {
+        level: "Intermediate",
+        desc: "Move from basic user to operational user: swaps, LP, lending, and comparative protocol analysis.",
+      },
+      "/percorsi-apprendimento/avanzato": {
+        level: "Advanced",
+        desc: "Power-user approach: research workflow, on-chain monitoring, and performance optimization.",
+      },
+    };
+    const translated = byHref[path.href];
+    return translated ? { ...path, ...translated } : path;
+  });
+  const quickGuideCards = isEnglish
+    ? [
+        { id: "navigate" as const, title: "How to navigate Web3?", subtitle: "A 5-step operational path to start safely.", icon: "🧭" },
+        { id: "blockchain" as const, title: "What is a Blockchain?", subtitle: "Distributed ledger, immutability, and programmability.", icon: "⛓️" },
+        { id: "defi" as const, title: "What are decentralized applications (DeFi)?", subtitle: "Smart contracts, permissionless access, and practical use cases.", icon: "💹" },
+        { id: "wallet" as const, title: "What are non-custodial wallets?", subtitle: "Self-custody, risks, and operational best practices.", icon: "👛" },
+      ]
+    : [
+        { id: "navigate" as const, title: "Come navigare il mondo Web3?", subtitle: "Percorso operativo in 5 step per iniziare in sicurezza.", icon: "🧭" },
+        { id: "blockchain" as const, title: "Cos'è una Blockchain?", subtitle: "Registro distribuito, immutabilita e programmabilita.", icon: "⛓️" },
+        { id: "defi" as const, title: "Cosa sono le applicazioni decentralizzate (DeFi)", subtitle: "Smart contract, accesso permissionless e casi pratici.", icon: "💹" },
+        { id: "wallet" as const, title: "Cosa sono i wallet non-custodial", subtitle: "Custodia personale, rischio e best practice operative.", icon: "👛" },
+      ];
+  const benefitHighlights = isEnglish
+    ? [
+        "Manage your capital autonomously and without censorship.",
+        "Access decentralized investment opportunities.",
+        "Join communities with real value and networking.",
+        "Store money securely and in a censorship-resistant way.",
+        "Send money almost instantly at low cost.",
+        "Earn yield autonomously.",
+      ]
+    : [
+        "Gestire il proprio capitale in modo autonomo e senza censure",
+        "Accedere a opportunità d'investimento decentralizzate",
+        "Entrare in community con valore reale e networking",
+        "Conservare denaro in modo sicuro e incensurabile",
+        "Inviare denaro quasi istantaneo e low-cost",
+        "Ottenere rendimenti in autonomia",
+      ];
+  const benefitGroupCards = BENEFIT_GROUP_CARDS.map((group) => {
+    if (!isEnglish) return group;
+    const enBySlug: Record<string, { title: string; description: string }> = {
+      consumatori: { title: "Consumers", description: "More control over capital, data, and access to global financial services." },
+      negozianti: { title: "Merchants", description: "Faster payments, lower fees, and new token-based loyalty models." },
+      governi: { title: "Governments", description: "Higher transparency, traceability, and more efficient public processes." },
+      imprese: { title: "Businesses", description: "Traceable supply chain, automation, and new digital business models." },
+      sviluppatori: { title: "Developers", description: "Open, composable infrastructure to build products faster." },
+      creatori: { title: "Creators", description: "Direct monetization and programmable royalties on digital assets." },
+    };
+    const translated = enBySlug[group.slug];
+    return translated ? { ...group, ...translated } : group;
+  });
+  const onrampRules = isEnglish
+    ? [
+        "Choose the correct network (ETH, Arbitrum, Base, etc.) before sending.",
+        "Run a small test transaction first.",
+        "Always confirm address and memo/tag when required.",
+        "Avoid impulsive trading: the initial goal is operational learning.",
+      ]
+    : [
+        "Scegli rete corretta (ETH, Arbitrum, Base, ecc.) prima dell'invio.",
+        "Fai una transazione test con importo piccolo.",
+        "Conferma sempre indirizzo e memo/tag se richiesti.",
+        "Evita trading impulsivo: l'obiettivo iniziale è apprendimento operativo.",
+      ];
 
   return (
     <div
@@ -164,7 +294,7 @@ export default function Manuale() {
               type="button"
               onClick={() => setMobileMenuOpen((v) => !v)}
               className={`lg:hidden p-2 rounded-lg border transition-colors ${isDark ? "border-white/20 bg-white/5 hover:bg-white/10 text-white" : "border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-700"}`}
-              aria-label="Apri menu"
+              aria-label={isEnglish ? "Open menu" : "Apri menu"}
               aria-expanded={mobileMenuOpen}
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
@@ -175,6 +305,9 @@ export default function Manuale() {
                 )}
               </svg>
             </button>
+            <div className="hidden md:flex">
+              <LanguageToggle />
+            </div>
             <button type="button" onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))} className={`p-2 rounded-lg border transition-colors ${isDark ? "border-white/20 bg-white/5 hover:bg-white/10" : "border-slate-300 bg-slate-100 hover:bg-slate-200"}`} title={isDark ? "Passa a tema chiaro" : "Passa a tema scuro"} aria-label={isDark ? "Passa a tema chiaro" : "Passa a tema scuro"}>
               {isDark ? <svg className="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden><path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" /></svg> : <svg className="w-5 h-5 text-slate-600" fill="currentColor" viewBox="0 0 20 20" aria-hidden><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" /></svg>}
             </button>
@@ -196,18 +329,18 @@ export default function Manuale() {
               <button
                 type="button"
                 className="fixed inset-0 z-40 bg-black/40 lg:hidden"
-                aria-label="Chiudi menu"
+                aria-label={isEnglish ? "Close menu" : "Chiudi menu"}
                 onClick={() => setMobileMenuOpen(false)}
               />
               <aside className={`fixed top-0 right-0 z-50 h-full w-64 max-w-[85vw] shadow-xl lg:hidden flex flex-col ${isDark ? "bg-indigo-950 border-l border-indigo-500/20" : "bg-white border-l border-slate-200"}`}>
                 <div className={`flex items-center justify-between p-4 border-b ${isDark ? "border-indigo-500/20" : "border-slate-200"}`}>
-                  <span className={`font-semibold ${isDark ? "text-white" : "text-slate-900"}`}>Menu</span>
-                  <button type="button" onClick={() => setMobileMenuOpen(false)} className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-white/10" aria-label="Chiudi">
+                  <span className={`font-semibold ${isDark ? "text-white" : "text-slate-900"}`}>{isEnglish ? "Menu" : "Menu"}</span>
+                  <button type="button" onClick={() => setMobileMenuOpen(false)} className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-white/10" aria-label={isEnglish ? "Close" : "Chiudi"}>
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                   </button>
                 </div>
                 <nav className="p-3 overflow-y-auto flex-1 space-y-0.5">
-                  {SIDEBAR_ITEMS.map((item) => (
+                  {sidebarItems.map((item) => (
                     <Link
                       key={item.href + item.label}
                       href={item.href}
@@ -231,7 +364,7 @@ export default function Manuale() {
 
           <div className="flex flex-1 min-h-0 overflow-hidden">
             <CollapsibleSidebar
-              items={SIDEBAR_ITEMS}
+              items={sidebarItems}
               isDark={isDark}
               isItemActive={(href) => (href === "/manuale" ? pathname === "/manuale" || pathname.startsWith("/manuale/") : href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(href + "/"))}
             />
@@ -240,17 +373,19 @@ export default function Manuale() {
             <div className="w-full">
               <Link href="/" className={`inline-flex items-center gap-1.5 text-sm mb-6 ${isDark ? "text-slate-400 hover:text-white" : "text-slate-500 hover:text-slate-900"}`}>
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-                Torna alla Dashboard
+                {isEnglish ? "Back to Dashboard" : "Torna alla Dashboard"}
               </Link>
-              <h1 className={`text-3xl font-bold mb-2 ${isDark ? "text-white" : "text-slate-900"}`}>Manuale A-Z</h1>
-              <p className={`text-lg mb-8 ${isDark ? "text-slate-400" : "text-slate-600"}`}>Guida completa al mondo Web3, crypto e DeFi dalla A alla Z</p>
+              <h1 className={`text-3xl font-bold mb-2 ${isDark ? "text-white" : "text-slate-900"}`}>{isEnglish ? "Manual A-Z" : "Manuale A-Z"}</h1>
+              <p className={`text-lg mb-8 ${isDark ? "text-slate-400" : "text-slate-600"}`}>
+                {isEnglish ? "Complete guide to Web3, crypto, and DeFi from A to Z." : "Guida completa al mondo Web3, crypto e DeFi dalla A alla Z"}
+              </p>
               <div className="grid gap-6 xl:grid-cols-[minmax(0,1.7fr)_minmax(320px,1fr)] items-start mb-6">
                 <section className={`manual-card rounded-2xl border p-5 ${isDark ? "bg-indigo-900/25 border-indigo-500/25" : "bg-white border-slate-200 shadow-lg"}`}>
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
-                      <p className={`text-xs uppercase tracking-wide ${isDark ? "text-indigo-300" : "text-indigo-700"}`}>Parti da qui</p>
+                      <p className={`text-xs uppercase tracking-wide ${isDark ? "text-indigo-300" : "text-indigo-700"}`}>{isEnglish ? "Start here" : "Parti da qui"}</p>
                       <p className={`mt-1 text-sm ${isDark ? "text-slate-300" : "text-slate-700"}`}>
-                        Queste sono le basi che un neofita deve capire al primo colpo.
+                        {isEnglish ? "These are the fundamentals every beginner should understand first." : "Queste sono le basi che un neofita deve capire al primo colpo."}
                       </p>
                     </div>
                     <Link
@@ -261,11 +396,11 @@ export default function Manuale() {
                           : "border border-indigo-200 bg-white text-indigo-700 hover:bg-indigo-100"
                       }`}
                     >
-                      Apri i fondamentali →
+                      {isEnglish ? "Open fundamentals →" : "Apri i fondamentali →"}
                     </Link>
                   </div>
                   <div className="mt-4 grid gap-3 md:grid-cols-2">
-                    {BEGINNER_SNAPSHOT.map((item) => (
+                    {beginnerSnapshot.map((item) => (
                       <div
                         key={item.title}
                         className={`rounded-xl border p-4 ${isDark ? "border-indigo-500/25 bg-indigo-900/20" : "border-indigo-100 bg-white/90"}`}
@@ -277,10 +412,10 @@ export default function Manuale() {
                   </div>
                   <div className={`mt-4 rounded-xl border p-4 ${isDark ? "border-emerald-500/25 bg-emerald-500/10" : "border-emerald-200 bg-emerald-50"}`}>
                     <p className={`text-sm font-medium ${isDark ? "text-emerald-200" : "text-emerald-800"}`}>
-                      Cosa fare oggi (pratico):
+                      {isEnglish ? "What to do today (practical):" : "Cosa fare oggi (pratico):"}
                     </p>
                     <ul className={`mt-2 space-y-1.5 text-sm ${isDark ? "text-emerald-100/90" : "text-emerald-900"}`}>
-                      {FIRST_STEPS.map((step) => (
+                      {firstSteps.map((step) => (
                         <li key={step}>• {step}</li>
                       ))}
                     </ul>
@@ -289,10 +424,10 @@ export default function Manuale() {
 
                 <section className={`manual-card rounded-2xl border p-5 ${isDark ? "bg-indigo-900/25 border-indigo-500/25" : "bg-white border-slate-200 shadow-lg"}`}>
                   <p className={`text-sm font-medium mb-3 ${isDark ? "text-slate-200" : "text-slate-700"}`}>
-                    Apprendimento con Ricompense in USDC
+                    {isEnglish ? "Learning with USDC rewards" : "Apprendimento con Ricompense in USDC"}
                   </p>
                   <div className="grid gap-3">
-                    {LEARNING_PATH_CARDS.map((path) => (
+                    {manualLearningCards.map((path) => (
                       <Link
                         key={path.level}
                         href={path.href}
@@ -301,9 +436,9 @@ export default function Manuale() {
                         <div className="flex items-center justify-between gap-2">
                           <p className="text-base font-semibold text-white">{path.level}</p>
                           <span className="rounded-full border border-emerald-400/35 bg-emerald-500/15 px-2 py-0.5 text-[11px] font-semibold text-emerald-200">
-                            {path.level === "Principiante"
+                            {path.href.endsWith("/principiante")
                               ? "3 USDC"
-                              : path.level === "Intermedio"
+                              : path.href.endsWith("/intermedio")
                                 ? "5 USDC"
                                 : "10 USDC"}
                           </span>
@@ -313,7 +448,7 @@ export default function Manuale() {
                     ))}
                   </div>
                   <div className="mt-5 flex flex-wrap gap-2">
-                    {QUICK_SECTIONS.map((section) => (
+                    {quickSections.map((section) => (
                       <a
                         key={section.href}
                         href={section.href}
@@ -333,19 +468,16 @@ export default function Manuale() {
         <div id="fondamenti" className={`manual-card scroll-mt-24 rounded-2xl border p-5 mb-6 ${isDark ? "bg-indigo-900/25 border-indigo-500/20" : "bg-white border-slate-200 shadow-lg"}`}>
               <div className="space-y-4 mb-5">
                 <div className={`rounded-xl border p-4 ${isDark ? "border-indigo-500/30 bg-indigo-900/15" : "border-slate-200 bg-slate-50"}`}>
-                  <h3 className={`text-xl font-semibold ${isDark ? "text-white" : "text-slate-900"}`}>Benefici delle tecnologie Web3</h3>
+                  <h3 className={`text-xl font-semibold ${isDark ? "text-white" : "text-slate-900"}`}>
+                    {isEnglish ? "Benefits of Web3 technologies" : "Benefici delle tecnologie Web3"}
+                  </h3>
                   <p className={`mt-2 text-sm ${isDark ? "text-slate-300" : "text-slate-700"}`}>
-                    Internet trasferisce dati; la blockchain trasferisce valore. I benefici cambiano in base al ruolo di chi la usa.
+                    {isEnglish
+                      ? "The internet transfers data; blockchain transfers value. Benefits differ by user profile."
+                      : "Internet trasferisce dati; la blockchain trasferisce valore. I benefici cambiano in base al ruolo di chi la usa."}
                   </p>
                   <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                    {[
-                      "Gestire il proprio capitale in modo autonomo e senza censure",
-                      "Accedere a opportunità d'investimento decentralizzate",
-                      "Entrare in community con valore reale e networking",
-                      "Conservare denaro in modo sicuro e incensurabile",
-                      "Inviare denaro quasi istantaneo e low-cost",
-                      "Ottenere rendimenti in autonomia",
-                    ].map((item) => (
+                    {benefitHighlights.map((item) => (
                       <div
                         key={item}
                         className={`rounded-lg border px-3 py-2 text-sm ${
@@ -359,7 +491,7 @@ export default function Manuale() {
                 </div>
 
                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                  {BENEFIT_GROUP_CARDS.map((group) => (
+                  {benefitGroupCards.map((group) => (
                     <Link
                       key={group.title}
                       href={`/manuale/${group.slug}`}
@@ -370,7 +502,9 @@ export default function Manuale() {
                       <div className="text-2xl">{group.icon}</div>
                       <p className={`mt-2 font-semibold ${isDark ? "text-white" : "text-slate-900"}`}>{group.title}</p>
                       <p className={`mt-1.5 text-sm ${isDark ? "text-slate-300" : "text-slate-700"}`}>{group.description}</p>
-                      <p className={`mt-3 text-xs font-medium ${isDark ? "text-indigo-300" : "text-indigo-700"}`}>Apri guida categoria →</p>
+                      <p className={`mt-3 text-xs font-medium ${isDark ? "text-indigo-300" : "text-indigo-700"}`}>
+                        {isEnglish ? "Open category guide →" : "Apri guida categoria →"}
+                      </p>
                     </Link>
                   ))}
                 </div>
@@ -385,38 +519,13 @@ export default function Manuale() {
             }`}
           >
             <div className={`rounded-xl border p-4 ${isDark ? "border-indigo-500/30 bg-indigo-900/15" : "border-slate-200 bg-slate-50"}`}>
-              <h3 className={`text-xl font-semibold ${isDark ? "text-white" : "text-slate-900"}`}>Guide rapide essenziali</h3>
+              <h3 className={`text-xl font-semibold ${isDark ? "text-white" : "text-slate-900"}`}>{isEnglish ? "Essential quick guides" : "Guide rapide essenziali"}</h3>
               <p className={`mt-2 text-sm ${isDark ? "text-slate-300" : "text-slate-700"}`}>
-                Apri una guida rapida per i concetti base prima di passare alle sezioni operative.
+                {isEnglish ? "Open a quick guide for core concepts before moving to operational sections." : "Apri una guida rapida per i concetti base prima di passare alle sezioni operative."}
               </p>
 
               <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                {[
-                  {
-                    id: "navigate" as const,
-                    title: "Come navigare il mondo Web3?",
-                    subtitle: "Percorso operativo in 5 step per iniziare in sicurezza.",
-                    icon: "🧭",
-                  },
-                  {
-                    id: "blockchain" as const,
-                    title: "Cos'è una Blockchain?",
-                    subtitle: "Registro distribuito, immutabilita e programmabilita.",
-                    icon: "⛓️",
-                  },
-                  {
-                    id: "defi" as const,
-                    title: "Cosa sono le applicazioni decentralizzate (DeFi)",
-                    subtitle: "Smart contract, accesso permissionless e casi pratici.",
-                    icon: "💹",
-                  },
-                  {
-                    id: "wallet" as const,
-                    title: "Cosa sono i wallet non-custodial",
-                    subtitle: "Custodia personale, rischio e best practice operative.",
-                    icon: "👛",
-                  },
-                ].map((item) => (
+                {quickGuideCards.map((item) => (
                   <button
                     key={item.id}
                     type="button"
@@ -441,34 +550,37 @@ export default function Manuale() {
 
           <div id="onramp" className="manual-card scroll-mt-24 rounded-2xl border p-8 mb-8 dark:bg-indigo-900/25 dark:border-indigo-500/20 bg-white border-slate-200 shadow-lg">
             <p className="text-slate-900 dark:text-slate-200 mb-6">
-              Per ottenere le criptovalute da mandare al proprio wallet non-custodial, sarà necessario ottenerle tramite un exchange centralizzata (come Coinbase o Binance), altrimenti utilizzando un on-ramp (come Transak o Moonpay).
+              {isEnglish
+                ? "To get crypto into your non-custodial wallet, you typically buy it through a centralized exchange (like Coinbase or Binance), or directly with an on-ramp (like Transak or MoonPay)."
+                : "Per ottenere le criptovalute da mandare al proprio wallet non-custodial, sarà necessario ottenerle tramite un exchange centralizzata (come Coinbase o Binance), altrimenti utilizzando un on-ramp (come Transak o Moonpay)."}
             </p>
             <p className="text-slate-900 dark:text-slate-200 mb-6">
-              Una volta acquistate le criptovalute con la propria carta o facendo un bonifico, si potranno inviare al proprio wallet non-custodial, dove saranno al sicuro da rischi esterni e sotto al vostro esclusivo controllo.
+              {isEnglish
+                ? "After purchasing with card or bank transfer, send assets to your personal non-custodial wallet where you maintain direct control."
+                : "Una volta acquistate le criptovalute con la propria carta o facendo un bonifico, si potranno inviare al proprio wallet non-custodial, dove saranno al sicuro da rischi esterni e sotto al vostro esclusivo controllo."}
             </p>
 
             <div className="grid gap-3 md:grid-cols-2 mb-4">
               <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
                 <p className="font-semibold text-white">1) CEX (Centralized Exchange)</p>
                 <p className="mt-2 text-sm text-slate-300">
-                  Ideale per convertire EUR/USD in crypto. Usa piattaforme grandi e invia i fondi al tuo wallet personale dopo l&apos;acquisto.
+                  {isEnglish
+                    ? "Ideal to convert EUR/USD into crypto. Use major platforms and then send funds to your personal wallet."
+                    : "Ideale per convertire EUR/USD in crypto. Usa piattaforme grandi e invia i fondi al tuo wallet personale dopo l&apos;acquisto."}
                 </p>
               </div>
               <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
                 <p className="font-semibold text-white">2) On-Ramp</p>
                 <p className="mt-2 text-sm text-slate-300">
-                  Acquisto diretto via carta nel wallet. Comodo e rapido, ma confronta fee e spread prima di confermare.
+                  {isEnglish
+                    ? "Direct card purchase into the wallet. Fast and convenient, but compare fees and spread first."
+                    : "Acquisto diretto via carta nel wallet. Comodo e rapido, ma confronta fee e spread prima di confermare."}
                 </p>
               </div>
             </div>
 
             <div className="grid gap-3 md:grid-cols-2">
-              {[
-                "Scegli rete corretta (ETH, Arbitrum, Base, ecc.) prima dell'invio.",
-                "Fai una transazione test con importo piccolo.",
-                "Conferma sempre indirizzo e memo/tag se richiesti.",
-                "Evita trading impulsivo: l'obiettivo iniziale è apprendimento operativo.",
-              ].map((rule) => (
+              {onrampRules.map((rule) => (
                 <div key={rule} className="rounded-xl border border-indigo-500/25 bg-slate-950/20 p-4">
                   <p className="text-sm text-slate-300">{rule}</p>
                 </div>
@@ -481,7 +593,7 @@ export default function Manuale() {
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                   </svg>
-                  Vai a Compra e vendi crypto
+                  {isEnglish ? "Go to Buy and Sell Crypto" : "Vai a Compra e vendi crypto"}
                 </div>
               </Link>
             </div>
@@ -489,26 +601,28 @@ export default function Manuale() {
 
           <div id="analisi" className="manual-card scroll-mt-24 rounded-2xl border p-8 mb-8 dark:bg-indigo-900/25 dark:border-indigo-500/20 bg-white border-slate-200 shadow-lg">
             <p className="text-slate-900 dark:text-slate-200 mb-6">
-              Esistono molti strumenti diversi che possiamo utilizzare per analizzare i progetti. Dai più semplici Navigatori di Blockchain ("blockchain explorers"), alle piattaforme di analisi e visualizzazione dei dati; saper utilizzare questi strumenti può offrire una marcia in più nella valutazione dei propri acquisti nel mondo Web3.
+              {isEnglish
+                ? "There are many tools you can use to analyze projects. From simple blockchain explorers to analytics and data-visualization platforms, mastering these tools gives you a real edge when evaluating Web3 opportunities."
+                : "Esistono molti strumenti diversi che possiamo utilizzare per analizzare i progetti. Dai più semplici Navigatori di Blockchain (\"blockchain explorers\"), alle piattaforme di analisi e visualizzazione dei dati; saper utilizzare questi strumenti può offrire una marcia in più nella valutazione dei propri acquisti nel mondo Web3."}
             </p>
 
             <div className="grid gap-3 md:grid-cols-3">
               <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
                 <p className="font-semibold text-white">Blockchain Explorers</p>
                 <p className="mt-2 text-sm text-slate-300">
-                  Leggi transazioni, wallet e smart contract direttamente on-chain.
+                  {isEnglish ? "Read transactions, wallets, and smart contracts directly on-chain." : "Leggi transazioni, wallet e smart contract direttamente on-chain."}
                 </p>
               </div>
               <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
                 <p className="font-semibold text-white">Analytics Dashboard</p>
                 <p className="mt-2 text-sm text-slate-300">
-                  Confronta TVL, volumi, fee e attività utenti tra protocolli.
+                  {isEnglish ? "Compare TVL, volume, fees, and user activity across protocols." : "Confronta TVL, volumi, fee e attività utenti tra protocolli."}
                 </p>
               </div>
               <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
                 <p className="font-semibold text-white">Portfolio Tracking</p>
                 <p className="mt-2 text-sm text-slate-300">
-                  Monitora esposizione, performance e rischio del portafoglio.
+                  {isEnglish ? "Monitor exposure, performance, and portfolio risk." : "Monitora esposizione, performance e rischio del portafoglio."}
                 </p>
               </div>
             </div>
@@ -519,32 +633,40 @@ export default function Manuale() {
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                   </svg>
-                  Vai a Strumenti Utili
+                  {isEnglish ? "Go to Useful Tools" : "Vai a Strumenti Utili"}
                 </div>
               </Link>
             </div>
           </div>
 
           <div id="nft" className="manual-card scroll-mt-24 rounded-2xl border p-8 mb-8 dark:bg-indigo-900/25 dark:border-indigo-500/20 bg-white border-slate-200 shadow-lg">
-            <h3 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-6">Valutazione dei progetti</h3>
+            <h3 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-6">{isEnglish ? "Project evaluation" : "Valutazione dei progetti"}</h3>
             <p className="text-slate-900 dark:text-slate-300 mb-5">
-              Per valutare un progetto in modo professionale, combina metriche fondamentali (market cap, supply, TVL) con analisi del rischio e contesto di mercato.
+              {isEnglish
+                ? "To evaluate a project professionally, combine core metrics (market cap, supply, TVL) with risk analysis and market context."
+                : "Per valutare un progetto in modo professionale, combina metriche fondamentali (market cap, supply, TVL) con analisi del rischio e contesto di mercato."}
             </p>
             <div className="grid gap-3 md:grid-cols-3 mb-6">
               <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-                <p className="text-xs uppercase tracking-wide text-slate-400">Fondamentali</p>
+                <p className="text-xs uppercase tracking-wide text-slate-400">{isEnglish ? "Fundamentals" : "Fondamentali"}</p>
                 <p className="mt-1 font-semibold text-white">Market Cap + Supply</p>
-                <p className="mt-2 text-sm text-slate-300">Capire diluizione e spazio potenziale di crescita.</p>
+                <p className="mt-2 text-sm text-slate-300">
+                  {isEnglish ? "Understand dilution and potential room for growth." : "Capire diluizione e spazio potenziale di crescita."}
+                </p>
               </div>
               <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-                <p className="text-xs uppercase tracking-wide text-slate-400">Efficienza protocollo</p>
+                <p className="text-xs uppercase tracking-wide text-slate-400">{isEnglish ? "Protocol efficiency" : "Efficienza protocollo"}</p>
                 <p className="mt-1 font-semibold text-white">TVL / Market Cap</p>
-                <p className="mt-2 text-sm text-slate-300">Confronta valore d&apos;uso e valutazione attuale.</p>
+                <p className="mt-2 text-sm text-slate-300">
+                  {isEnglish ? "Compare usage value versus current valuation." : "Confronta valore d&apos;uso e valutazione attuale."}
+                </p>
               </div>
               <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
                 <p className="text-xs uppercase tracking-wide text-slate-400">Timing</p>
                 <p className="mt-1 font-semibold text-white">Price Action + Risk</p>
-                <p className="mt-2 text-sm text-slate-300">Ingresso graduale, invalidazione e gestione size.</p>
+                <p className="mt-2 text-sm text-slate-300">
+                  {isEnglish ? "Scale in gradually, define invalidation, and manage position size." : "Ingresso graduale, invalidazione e gestione size."}
+                </p>
               </div>
             </div>
             
@@ -552,8 +674,12 @@ export default function Manuale() {
               <Accordion
                 buttonText={
                   <div>
-                    <div className="text-lg md:text-xl">Analizzare un Cryptoasset dalla Market Cap</div>
-                    <p className="mt-1 text-sm font-normal text-slate-400">Base framework: prezzo, supply, FDV e comparables.</p>
+                    <div className="text-lg md:text-xl">
+                      {isEnglish ? "Analyzing a cryptoasset through Market Cap" : "Analizzare un Cryptoasset dalla Market Cap"}
+                    </div>
+                    <p className="mt-1 text-sm font-normal text-slate-400">
+                      {isEnglish ? "Base framework: price, supply, FDV, and comparables." : "Base framework: prezzo, supply, FDV e comparables."}
+                    </p>
                   </div>
                 }
                 className="mb-4"
@@ -581,7 +707,7 @@ export default function Manuale() {
                     />
                   </div>
                   <Accordion
-                    buttonText="Come funziona"
+                    buttonText={isEnglish ? "How it works" : "Come funziona"}
                     className="mb-3"
                   >
                     <div className="p-4 space-y-4 text-slate-900 dark:text-slate-200">
@@ -589,7 +715,7 @@ export default function Manuale() {
                         La schermata sopra (accessibile da <a href="https://www.coingecko.com/it/monete/bitcoin" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">https://www.coingecko.com/it/monete/bitcoin</a>) mostra nei rettangoli evidenziati in blu le seguenti:
                       </p>
                       
-                             <Accordion buttonText="1. Capitalizzazione di Mercato (Market Cap)">
+                             <Accordion buttonText={isEnglish ? "1. Market Capitalization (Market Cap)" : "1. Capitalizzazione di Mercato (Market Cap)"}>
                                <div className="p-4 space-y-4 text-slate-900 dark:text-slate-200">
                                  <p>
                                    La capitalizzazione di mercato di un criptoasset si calcola usando la seguente formula:
@@ -620,25 +746,25 @@ export default function Manuale() {
                                </div>
                              </Accordion>
                       
-                      <Accordion buttonText="2. Valutazione 100% diluita (Fully diluted valuation, o FDV)">
+                      <Accordion buttonText={isEnglish ? "2. Fully Diluted Valuation (FDV)" : "2. Valutazione 100% diluita (Fully diluted valuation, o FDV)"}>
                         <p className="p-4 text-slate-900 dark:text-slate-200">
                           La FDV rappresenta la capitalizzazione di mercato se tutti i token fossero già in circolazione. È importante per capire il potenziale di inflazione futura e il vero valore del progetto.
                         </p>
                       </Accordion>
                       
-                      <Accordion buttonText="3. Offerta in Circolazione (Circulating Supply)">
+                      <Accordion buttonText={isEnglish ? "3. Circulating Supply" : "3. Offerta in Circolazione (Circulating Supply)"}>
                         <p className="p-4 text-slate-900 dark:text-slate-200">
                           La quantità di valute che circolano sul mercato e sono scambiabili dal pubblico. È paragonabile a guardare le azioni prontamente disponibili sul mercato (non detenute e bloccate dagli addetti ai lavori, dalle autorità governative).
                         </p>
                       </Accordion>
                       
-                      <Accordion buttonText="4. Offerta totale">
+                      <Accordion buttonText={isEnglish ? "4. Total Supply" : "4. Offerta totale"}>
                         <p className="p-4 text-slate-900 dark:text-slate-200">
                           Le quantità di valute che sono già state create, meno le valute che sono state bruciate (rimosse dalla circolazione). È paragonabile alle azioni in circolazione nel mercato azionario.
                         </p>
                       </Accordion>
                       
-                      <Accordion buttonText="5. Offerta Massima (Max Supply)">
+                      <Accordion buttonText={isEnglish ? "5. Max Supply" : "5. Offerta Massima (Max Supply)"}>
                         <div className="p-4 space-y-4 text-slate-900 dark:text-slate-200">
                           <p>
                             Il numero massimo di valute codificate per esistere nel periodo di vita della criptovaluta. È paragonabile al numero massimo di azioni emettibili nel mercato azionario.
@@ -760,8 +886,12 @@ export default function Manuale() {
               <Accordion
                 buttonText={
                   <div>
-                    <div className="text-lg md:text-xl">Calcolare il Rischio usando la Media del Prezzo</div>
-                    <p className="mt-1 text-sm font-normal text-slate-400">Posizionamento rispetto alle medie e volatilità.</p>
+                    <div className="text-lg md:text-xl">
+                      {isEnglish ? "Calculating risk using price averages" : "Calcolare il Rischio usando la Media del Prezzo"}
+                    </div>
+                    <p className="mt-1 text-sm font-normal text-slate-400">
+                      {isEnglish ? "Positioning against averages and volatility." : "Posizionamento rispetto alle medie e volatilità."}
+                    </p>
                   </div>
                 }
                 className="mb-4"
@@ -961,7 +1091,7 @@ export default function Manuale() {
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                   </svg>
-                  Vai a NFT
+                  {isEnglish ? "Go to NFT" : "Vai a NFT"}
                 </div>
               </Link>
             </div>
@@ -1054,7 +1184,7 @@ export default function Manuale() {
                 type="button"
                 className="absolute inset-0 bg-black/55"
                 onClick={() => setActiveQuickGuide(null)}
-                aria-label="Chiudi popup"
+                aria-label={isEnglish ? "Close popup" : "Chiudi popup"}
               />
               <div className="absolute inset-0 flex items-center justify-center p-4">
                 <div
@@ -1065,12 +1195,20 @@ export default function Manuale() {
                   <div className="flex items-start justify-between gap-4">
                     <h3 className="text-2xl font-semibold">
                       {activeQuickGuide === "navigate"
-                        ? "Come navigare il mondo Web3?"
+                        ? isEnglish
+                          ? "How to navigate Web3?"
+                          : "Come navigare il mondo Web3?"
                         : activeQuickGuide === "blockchain"
-                          ? "Cos'è una Blockchain?"
+                          ? isEnglish
+                            ? "What is a Blockchain?"
+                            : "Cos'è una Blockchain?"
                           : activeQuickGuide === "defi"
-                            ? "Cosa sono le applicazioni decentralizzate (DeFi)"
-                            : "Cosa sono i wallet non-custodial"}
+                            ? isEnglish
+                              ? "What are decentralized applications (DeFi)?"
+                              : "Cosa sono le applicazioni decentralizzate (DeFi)"
+                            : isEnglish
+                              ? "What are non-custodial wallets?"
+                              : "Cosa sono i wallet non-custodial"}
                     </h3>
                     <button
                       type="button"
@@ -1079,19 +1217,27 @@ export default function Manuale() {
                         isDark ? "border-white/20 hover:bg-white/10" : "border-slate-300 hover:bg-slate-100"
                       }`}
                     >
-                      Chiudi
+                      {isEnglish ? "Close" : "Chiudi"}
                     </button>
                   </div>
 
                   <div className="mt-4 space-y-3 text-sm">
                     {activeQuickGuide === "navigate"
-                      ? [
-                          "1) Crea un wallet non-custodial e conserva seed phrase/chiavi offline.",
-                          "2) Separa wallet cold (tesoreria) da wallet attivo (operativita).",
-                          "3) Acquista su canale affidabile e fai una transazione test.",
-                          "4) Verifica sempre rete, indirizzo e dominio prima di firmare.",
-                          "5) Entra gradualmente nelle app Web3 con importi piccoli.",
-                        ].map((line) => (
+                      ? (isEnglish
+                          ? [
+                              "1) Create a non-custodial wallet and keep seed phrase/private keys offline.",
+                              "2) Separate cold wallet (treasury) from active wallet (operations).",
+                              "3) Buy through a trusted channel and execute a test transaction first.",
+                              "4) Always verify network, address, and domain before signing.",
+                              "5) Enter Web3 apps gradually with small amounts.",
+                            ]
+                          : [
+                              "1) Crea un wallet non-custodial e conserva seed phrase/chiavi offline.",
+                              "2) Separa wallet cold (tesoreria) da wallet attivo (operativita).",
+                              "3) Acquista su canale affidabile e fai una transazione test.",
+                              "4) Verifica sempre rete, indirizzo e dominio prima di firmare.",
+                              "5) Entra gradualmente nelle app Web3 con importi piccoli.",
+                            ]).map((line) => (
                           <div
                             key={line}
                             className={`rounded-xl border p-3 ${
@@ -1104,11 +1250,17 @@ export default function Manuale() {
                       : null}
 
                     {activeQuickGuide === "blockchain"
-                      ? [
-                          "Registro distribuito: i dati sono su una rete di nodi, non su un server unico.",
-                          "Integrita crittografica: blocchi concatenati rendono la cronologia difficile da alterare.",
-                          "Programmabilita: smart contract abilitano dApp e servizi finanziari senza intermediari.",
-                        ].map((line) => (
+                      ? (isEnglish
+                          ? [
+                              "Distributed ledger: data lives across a network of nodes, not one server.",
+                              "Cryptographic integrity: chained blocks make history hard to alter.",
+                              "Programmability: smart contracts enable dApps and financial services without intermediaries.",
+                            ]
+                          : [
+                              "Registro distribuito: i dati sono su una rete di nodi, non su un server unico.",
+                              "Integrita crittografica: blocchi concatenati rendono la cronologia difficile da alterare.",
+                              "Programmabilita: smart contract abilitano dApp e servizi finanziari senza intermediari.",
+                            ]).map((line) => (
                           <div
                             key={line}
                             className={`rounded-xl border p-3 ${
@@ -1121,11 +1273,17 @@ export default function Manuale() {
                       : null}
 
                     {activeQuickGuide === "defi"
-                      ? [
-                          "Le dApp DeFi usano smart contract: la logica e on-chain e verificabile pubblicamente.",
-                          "Chiunque con wallet puo accedere senza aprire conti tradizionali.",
-                          "Casi principali: swap (DEX), lending/borrowing, staking e NFT marketplace.",
-                        ].map((line) => (
+                      ? (isEnglish
+                          ? [
+                              "DeFi dApps use smart contracts: logic is on-chain and publicly verifiable.",
+                              "Anyone with a wallet can access them without opening traditional accounts.",
+                              "Main use cases: swaps (DEX), lending/borrowing, staking, and NFT marketplaces.",
+                            ]
+                          : [
+                              "Le dApp DeFi usano smart contract: la logica e on-chain e verificabile pubblicamente.",
+                              "Chiunque con wallet puo accedere senza aprire conti tradizionali.",
+                              "Casi principali: swap (DEX), lending/borrowing, staking e NFT marketplace.",
+                            ]).map((line) => (
                           <div
                             key={line}
                             className={`rounded-xl border p-3 ${
@@ -1138,11 +1296,17 @@ export default function Manuale() {
                       : null}
 
                     {activeQuickGuide === "wallet"
-                      ? [
-                          "Non-custodial = controlli tu le chiavi private (sei tu il custode).",
-                          "Se perdi seed phrase/chiavi, nessuno puo recuperarle al posto tuo.",
-                          "Best practice: wallet cold per risparmio e wallet attivo per test/app.",
-                        ].map((line) => (
+                      ? (isEnglish
+                          ? [
+                              "Non-custodial means you control private keys directly (you are the custodian).",
+                              "If you lose seed phrase/keys, no one can recover them for you.",
+                              "Best practice: cold wallet for savings and active wallet for tests/apps.",
+                            ]
+                          : [
+                              "Non-custodial = controlli tu le chiavi private (sei tu il custode).",
+                              "Se perdi seed phrase/chiavi, nessuno puo recuperarle al posto tuo.",
+                              "Best practice: wallet cold per risparmio e wallet attivo per test/app.",
+                            ]).map((line) => (
                           <div
                             key={line}
                             className={`rounded-xl border p-3 ${
@@ -1157,17 +1321,17 @@ export default function Manuale() {
                     <div className="pt-1">
                       {activeQuickGuide === "blockchain" ? (
                         <Link href="/blockchain" className={`font-medium ${isDark ? "text-indigo-300" : "text-indigo-700"} hover:underline`}>
-                          Vai a Blockchain →
+                          {isEnglish ? "Go to Blockchains →" : "Vai a Blockchain →"}
                         </Link>
                       ) : null}
                       {activeQuickGuide === "defi" ? (
                         <Link href="/defi" className={`font-medium ${isDark ? "text-indigo-300" : "text-indigo-700"} hover:underline`}>
-                          Vai a DeFi →
+                          {isEnglish ? "Go to DeFi →" : "Vai a DeFi →"}
                         </Link>
                       ) : null}
                       {activeQuickGuide === "wallet" ? (
                         <Link href="/wallet" className={`font-medium ${isDark ? "text-indigo-300" : "text-indigo-700"} hover:underline`}>
-                          Vai a Wallet →
+                          {isEnglish ? "Go to Wallets →" : "Vai a Wallet →"}
                         </Link>
                       ) : null}
                     </div>

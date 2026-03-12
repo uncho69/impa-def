@@ -23,6 +23,7 @@ import yearnIcon from "@/assets/yearnfinance-logo.png";
 import lidoIcon from "@/assets/lidofinance-logo.png";
 import layerzeroIcon from "@/assets/layerzero-logo.png";
 import orbiterIcon from "@/assets/orbiterfinance-icon.png";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const CATEGORIES = [
   { id: "dex", label: "DEX" },
@@ -70,7 +71,42 @@ const MEDIA_EXAMPLES = [
 
 const VALID_CATEGORIES = new Set(CATEGORIES.map((c) => c.id));
 
+const PROTOCOL_DESCRIPTION_EN: Record<string, string> = {
+  "DEX leader su Ethereum e L2 per swap e liquidity.": "Leading DEX on Ethereum and L2 for swaps and liquidity.",
+  "Prestiti e borrowing decentralizzati su più reti.": "Decentralized lending and borrowing across multiple networks.",
+  "Perpetuals on-chain e trading con potenziale airdrop.": "On-chain perpetuals trading with potential airdrop upside.",
+  "Bridge e trasferimenti cross-chain con LayerZero.": "Bridge and cross-chain transfers powered by LayerZero.",
+  "Swap e bridge multi-chain in un’unica interfaccia.": "Multi-chain swaps and bridging in one interface.",
+  "Bridge e messaggeria cross-chain per asset e dati.": "Cross-chain bridge and messaging for assets and data.",
+  "DEX specializzato in stablecoin e curve di liquidità.": "DEX specialized in stablecoins and liquidity curves.",
+  "Lending e borrowing con algoritmi sui tassi.": "Lending and borrowing with algorithmic rates.",
+  "Aggregatore DEX su Solana per swap e route ottimali.": "DEX aggregator on Solana for optimal swap routes.",
+  "DEX e AMM su Solana con pool concentrati.": "DEX and AMM on Solana with concentrated liquidity pools.",
+  "AMM con pool configurabili e pesi dinamici.": "AMM with customizable pools and dynamic weights.",
+  "DEX nativo su zkSync, Linea e Scroll.": "Native DEX on zkSync, Linea, and Scroll.",
+  "Aggregatore di yield e strategie automatizzate.": "Yield aggregator with automated strategies.",
+  "Liquid staking per ETH e SOL con token staked.": "Liquid staking for ETH and SOL via staked tokens.",
+  "Protocollo di interoperabilità cross-chain.": "Cross-chain interoperability protocol.",
+  "DEX su Arbitrum con incentivi e pool dinamici.": "Arbitrum DEX with incentives and dynamic pools.",
+  "Bridge veloce tra Ethereum, L2 e rollup.": "Fast bridge across Ethereum, L2s, and rollups.",
+};
+
+const RECOMMENDED_PATHS_EN: Record<string, { title: string; desc: string }> = {
+  Principianti: { title: "Beginners", desc: "Start simple." },
+  "Yield Farming": { title: "Yield Farming", desc: "Earn yield." },
+  Avanzato: { title: "Advanced", desc: "Advanced strategies." },
+};
+
+const MEDIA_TITLES_EN: Record<string, string> = {
+  "Tutorial swap su Uniswap": "Uniswap swap tutorial",
+  "Hyperliquid HIP-3 spiegato": "Hyperliquid HIP-3 explained",
+  "DeFi per principianti": "DeFi for beginners",
+  "Curve Finance – liquidity pool": "Curve Finance - liquidity pool",
+};
+
 function DefiPageContent({ onOpenBasiDefi }: { onOpenBasiDefi: () => void }) {
+  const { language } = useLanguage();
+  const isEnglish = language === "en";
   const searchParams = useSearchParams();
   const categoryFromUrl = searchParams.get("category");
   const activeCategory: CategoryId = (categoryFromUrl && VALID_CATEGORIES.has(categoryFromUrl)) ? categoryFromUrl as CategoryId : "dex";
@@ -101,7 +137,7 @@ function DefiPageContent({ onOpenBasiDefi }: { onOpenBasiDefi: () => void }) {
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
                 <div>
                   <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">DeFi</h1>
-                  <p className="text-slate-600 dark:text-slate-400 text-lg">Esplora protocolli, Inizia ora.</p>
+                  <p className="text-slate-600 dark:text-slate-400 text-lg">{isEnglish ? "Explore protocols, start now." : "Esplora protocolli, Inizia ora."}</p>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
                   <button
@@ -110,13 +146,13 @@ function DefiPageContent({ onOpenBasiDefi }: { onOpenBasiDefi: () => void }) {
                     className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-colors shrink-0 cursor-pointer ${isDark ? "border-white/20 bg-white/5 hover:bg-white/10 text-white" : "border-slate-200 bg-white hover:bg-slate-50 text-slate-800"}`}
                   >
                     <span>💡</span>
-                    <span>Basi DeFi</span>
+                    <span>{isEnglish ? "DeFi Basics" : "Basi DeFi"}</span>
                   </button>
                   <Link
                     href="/news/defi"
                     className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-amber-400 hover:bg-amber-500 text-slate-900 transition-colors"
                   >
-                    <span>📰</span> Notizie DeFi
+                    <span>📰</span> {isEnglish ? "DeFi News" : "Notizie DeFi"}
                   </Link>
                 </div>
               </div>
@@ -143,7 +179,7 @@ function DefiPageContent({ onOpenBasiDefi }: { onOpenBasiDefi: () => void }) {
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
                 <input
                   type="search"
-                  placeholder="Cerca protocolli DeFi"
+                  placeholder={isEnglish ? "Search DeFi protocols" : "Cerca protocolli DeFi"}
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 dark:border-indigo-500/30 bg-white dark:bg-indigo-900/40 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
@@ -172,10 +208,12 @@ function DefiPageContent({ onOpenBasiDefi }: { onOpenBasiDefi: () => void }) {
                           </span>
                         )}
                       </div>
-                      <p className="text-slate-600 dark:text-slate-400 text-sm mb-3 line-clamp-2">{p.description}</p>
+                      <p className="text-slate-600 dark:text-slate-400 text-sm mb-3 line-clamp-2">
+                        {isEnglish ? (PROTOCOL_DESCRIPTION_EN[p.description] ?? p.description) : p.description}
+                      </p>
                       <div className="text-xs font-bold text-slate-700 dark:text-slate-300 space-y-1">
                         <div>Token: {p.token}</div>
-                        <div>Prezzo: {p.price}</div>
+                        <div>{isEnglish ? "Price" : "Prezzo"}: {p.price}</div>
                         <div>Market Cap: {p.marketCap}</div>
                       </div>
                     </Link>
@@ -183,7 +221,7 @@ function DefiPageContent({ onOpenBasiDefi }: { onOpenBasiDefi: () => void }) {
                       <a href={p.twitterUrl} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-indigo-800/50 transition-colors" title="X (Twitter)" aria-label="X (Twitter)">
                         <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
                       </a>
-                      <a href={p.websiteUrl} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-indigo-800/50 transition-colors" title="Sito web" aria-label="Sito web">
+                      <a href={p.websiteUrl} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-indigo-800/50 transition-colors" title={isEnglish ? "Website" : "Sito web"} aria-label={isEnglish ? "Website" : "Sito web"}>
                         <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>
                       </a>
                       {p.contractAddress ? (
@@ -193,7 +231,7 @@ function DefiPageContent({ onOpenBasiDefi }: { onOpenBasiDefi: () => void }) {
                       ) : null}
                       <BookmarkButton
                         url={p.href}
-                        title={`${p.name} - Pagina progetto`}
+                        title={`${p.name} - ${isEnglish ? "Project page" : "Pagina progetto"}`}
                         type="page"
                         projectId={p.href.replace("/defi/", "")}
                         className="ml-auto"
@@ -203,13 +241,15 @@ function DefiPageContent({ onOpenBasiDefi }: { onOpenBasiDefi: () => void }) {
                 ))}
               </div>
               {filteredProtocols.length === 0 && (
-                <p className="text-center py-12 text-slate-500 dark:text-slate-400">Nessun protocollo trovato per questa categoria o ricerca.</p>
+                <p className="text-center py-12 text-slate-500 dark:text-slate-400">
+                  {isEnglish ? "No protocol found for this category or search." : "Nessun protocollo trovato per questa categoria o ricerca."}
+                </p>
               )}
               </main>
 
               {/* Percorsi Consigliati */}
               <section className="mt-12">
-                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Percorsi Consigliati</h2>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">{isEnglish ? "Recommended Paths" : "Percorsi Consigliati"}</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {RECOMMENDED_PATHS.map((path) => (
                 <Link
@@ -219,8 +259,10 @@ function DefiPageContent({ onOpenBasiDefi }: { onOpenBasiDefi: () => void }) {
                 >
                   <span className="text-2xl">{path.icon}</span>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-slate-900 dark:text-white">{path.title}</h3>
-                    <p className="text-sm text-slate-600 dark:text-slate-400">{path.desc}</p>
+                    <h3 className="font-bold text-slate-900 dark:text-white">{isEnglish ? (RECOMMENDED_PATHS_EN[path.title]?.title ?? path.title) : path.title}</h3>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">
+                      {isEnglish ? (RECOMMENDED_PATHS_EN[path.title]?.desc ?? path.desc) : path.desc}
+                    </p>
                   </div>
                   <span className="text-slate-400">→</span>
                 </Link>
@@ -230,8 +272,10 @@ function DefiPageContent({ onOpenBasiDefi }: { onOpenBasiDefi: () => void }) {
 
               {/* Video / Post X */}
               <section className="mt-12">
-                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Video e post X</h2>
-                <p className="text-slate-600 dark:text-slate-400 mb-6">Tutorial, spiegazioni e aggiornamenti dalla community.</p>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">{isEnglish ? "Videos and X posts" : "Video e post X"}</h2>
+                <p className="text-slate-600 dark:text-slate-400 mb-6">
+                  {isEnglish ? "Tutorials, explainers, and updates from the community." : "Tutorial, spiegazioni e aggiornamenti dalla community."}
+                </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {MEDIA_EXAMPLES.map((item, i) => (
                 <div
@@ -264,14 +308,14 @@ function DefiPageContent({ onOpenBasiDefi }: { onOpenBasiDefi: () => void }) {
                     </div>
                   )}
                   <div className="p-4">
-                    <h3 className="font-semibold text-slate-900 dark:text-white">{item.title}</h3>
+                    <h3 className="font-semibold text-slate-900 dark:text-white">{isEnglish ? (MEDIA_TITLES_EN[item.title] ?? item.title) : item.title}</h3>
                     <a
                       href={item.href}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-sm text-indigo-600 dark:text-indigo-400 hover:underline mt-1 inline-block"
                     >
-                      Apri {item.type === "video" ? "video" : "post"} →
+                      {isEnglish ? `Open ${item.type === "video" ? "video" : "post"} →` : `Apri ${item.type === "video" ? "video" : "post"} →`}
                     </a>
                   </div>
                 </div>
@@ -287,7 +331,7 @@ export default function DefiPage() {
   const [basiDefiOpen, setBasiDefiOpen] = useState(false);
   return (
     <>
-      <Suspense fallback={<div className="px-6 py-8 text-slate-500 dark:text-slate-400">Caricamento...</div>}>
+      <Suspense fallback={<div className="px-6 py-8 text-slate-500 dark:text-slate-400">Loading...</div>}>
         <DefiPageContent onOpenBasiDefi={() => setBasiDefiOpen(true)} />
       </Suspense>
       <BasiDeFiModal isOpen={basiDefiOpen} onClose={() => setBasiDefiOpen(false)} />

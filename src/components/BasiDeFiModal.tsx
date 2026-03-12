@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { Accordion } from "@/components/Accordion";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface BasiDeFiModalProps {
   isOpen: boolean;
@@ -82,8 +83,87 @@ const QUICK_FACTS = [
 ] as const;
 
 export function BasiDeFiModal({ isOpen, onClose }: BasiDeFiModalProps) {
+  const { language } = useLanguage();
+  const isEnglish = language === "en";
   const [activeAppId, setActiveAppId] = useState<(typeof APPLICATIONS)[number]["id"]>("dex");
-  const activeApp = useMemo(() => APPLICATIONS.find((a) => a.id === activeAppId) ?? APPLICATIONS[0], [activeAppId]);
+  const localizedApps = useMemo(
+    () =>
+      APPLICATIONS.map((app) => {
+        if (!isEnglish) return app;
+        const enById: Record<
+          string,
+          { title: string; summary: string; offers: string; risks: string; examples: string }
+        > = {
+          dex: {
+            title: "Decentralized Exchanges (DEX)",
+            summary: "Spot token swaps directly from wallet, without custodial intermediaries.",
+            offers: "Spot swaps, AMM, liquidity pools, and composability with other protocols.",
+            risks: "Slippage, impermanent loss, front-running, and smart contract bugs.",
+            examples: "Uniswap, Curve, Balancer, Raydium",
+          },
+          perp: {
+            title: "Decentralized Derivatives Exchanges (PERP DEX)",
+            summary: "On-chain perpetual contracts with long/short and leverage.",
+            offers: "Portfolio hedging, risk management, and market-neutral strategies.",
+            risks: "Fast liquidations, variable funding rates, and high volatility.",
+            examples: "Hyperliquid, dYdX, GMX",
+          },
+          lending: {
+            title: "Lending",
+            summary: "On-chain money markets to deposit assets or borrow against collateral.",
+            offers: "Permissionless borrow/lend, dynamic rates, and collateral usage.",
+            risks: "Collateral liquidations, variable rates, and oracle risk.",
+            examples: "Aave, Compound, Morpho",
+          },
+          yield: {
+            title: "Yield",
+            summary: "Strategies to optimize APY/APR through vaults and staking.",
+            offers: "Auto-compounding, automated allocation, and diversification.",
+            risks: "Smart contract risk, depeg events, unstable rewards, and strategy risk.",
+            examples: "Yearn, Convex, Lido",
+          },
+          bridge: {
+            title: "Bridge",
+            summary: "Transfer assets and messages across different chains.",
+            offers: "Interoperability across Ethereum, L2s, and other blockchains.",
+            risks: "Bridge exploits, slow finality, and variable fees.",
+            examples: "Stargate, deBridge, Orbiter",
+          },
+          stablecoin: {
+            title: "Stablecoins",
+            summary: "Stable-value tokens used as the base layer of DeFi activity.",
+            offers: "Trading, collateral, on-chain payments, and liquidity parking.",
+            risks: "Depeg risk, counterparty risk, and regulatory risk.",
+            examples: "USDC, DAI, USDT, FRAX",
+          },
+          options: {
+            title: "Options",
+            summary: "Advanced tools for risk hedging and directional strategies.",
+            offers: "On-chain put/call options, portfolio hedging, yield structures.",
+            risks: "High complexity, lower liquidity, and inefficient pricing.",
+            examples: "Lyra, Dopex, Ribbon",
+          },
+        };
+        const translated = enById[app.id];
+        return translated ? { ...app, ...translated } : app;
+      }),
+    [isEnglish],
+  );
+  const quickFacts = useMemo(
+    () =>
+      QUICK_FACTS.map((fact) => {
+        if (!isEnglish) return fact;
+        const enByTitle: Record<string, { title: string; text: string }> = {
+          "Accesso aperto": { title: "Open access", text: "Anyone can use DeFi with a wallet." },
+          Trasparenza: { title: "Transparency", text: "Contracts and transactions are publicly verifiable." },
+          Custodia: { title: "Custody", text: "Direct asset control without a custodial bank." },
+        };
+        const translated = enByTitle[fact.title];
+        return translated ? { ...fact, ...translated } : fact;
+      }),
+    [isEnglish],
+  );
+  const activeApp = useMemo(() => localizedApps.find((a) => a.id === activeAppId) ?? localizedApps[0], [activeAppId, localizedApps]);
 
   useEffect(() => {
     if (typeof document === "undefined") return;
@@ -113,22 +193,24 @@ export function BasiDeFiModal({ isOpen, onClose }: BasiDeFiModalProps) {
       >
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-200 dark:border-indigo-500/20 bg-white dark:bg-indigo-950 px-6 py-4">
           <h2 className="text-xl font-bold text-slate-900 dark:text-white">
-            Basi DeFi
+            {isEnglish ? "DeFi Basics" : "Basi DeFi"}
           </h2>
           <button
             onClick={onClose}
             className="p-2 rounded-lg text-slate-500 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
-            aria-label="Chiudi"
+            aria-label={isEnglish ? "Close" : "Chiudi"}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
           </button>
         </div>
         <div className="p-6 space-y-6">
           <p className="text-slate-700 dark:text-slate-200 leading-relaxed">
-            La finanza decentralizzata, o <strong>DeFi</strong>, è un sistema finanziario che funziona su blockchain, principalmente grazie agli smart contract e quindi su Ethereum e le sue Layer2. A differenza del sistema finanziario tradizionale, DeFi è aperto a tutti e non richiede intermediari come banche o broker. I prodotti DeFi permettono agli utenti di prestare o prendere in prestito fondi, guadagnare interessi, fare trading di asset digitali e assicurarsi contro i rischi, il tutto in modo trasparente e senza un ente centrale.
+            {isEnglish
+              ? "Decentralized finance, or DeFi, is a financial system that runs on blockchain through smart contracts, mainly on Ethereum and its Layer 2s. Unlike traditional finance, DeFi is open to everyone and does not require intermediaries such as banks or brokers. DeFi products let users lend or borrow funds, earn yield, trade digital assets, and hedge risks in a transparent and non-custodial way."
+              : "La finanza decentralizzata, o <strong>DeFi</strong>, è un sistema finanziario che funziona su blockchain, principalmente grazie agli smart contract e quindi su Ethereum e le sue Layer2. A differenza del sistema finanziario tradizionale, DeFi è aperto a tutti e non richiede intermediari come banche o broker. I prodotti DeFi permettono agli utenti di prestare o prendere in prestito fondi, guadagnare interessi, fare trading di asset digitali e assicurarsi contro i rischi, il tutto in modo trasparente e senza un ente centrale."}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {QUICK_FACTS.map((fact) => (
+            {quickFacts.map((fact) => (
               <div key={fact.title} className={`rounded-xl border border-slate-200 dark:border-indigo-500/20 p-3 bg-gradient-to-br ${fact.color} bg-slate-50/60 dark:bg-indigo-950/40`}>
                 <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-300">{fact.title}</p>
                 <p className="text-base font-bold text-slate-900 dark:text-white mt-0.5">{fact.value}</p>
@@ -138,43 +220,47 @@ export function BasiDeFiModal({ isOpen, onClose }: BasiDeFiModalProps) {
           </div>
 
           <Accordion
-            buttonText={<span className="text-[1.05rem] font-semibold text-slate-900 dark:text-white">Caratteristiche principali della DeFi</span>}
+            buttonText={<span className="text-[1.05rem] font-semibold text-slate-900 dark:text-white">{isEnglish ? "Core DeFi characteristics" : "Caratteristiche principali della DeFi"}</span>}
             defaultOpen
             className="rounded-xl border border-slate-200 dark:border-indigo-500/20 bg-indigo-50/30 dark:bg-indigo-900/20 p-4"
           >
             <div className="text-slate-700 dark:text-slate-200 space-y-2 pl-9 pt-1 text-[0.96rem] leading-relaxed">
-              <p>Decentralizzazione, trasparenza on-chain, accessibilita e interoperabilita tra protocolli.</p>
+              <p>
+                {isEnglish
+                  ? "Decentralization, on-chain transparency, accessibility, and interoperability across protocols."
+                  : "Decentralizzazione, trasparenza on-chain, accessibilita e interoperabilita tra protocolli."}
+              </p>
             </div>
           </Accordion>
           <Accordion
-            buttonText={<span className="text-[1.05rem] font-semibold text-slate-900 dark:text-white">Principali componenti della DeFi</span>}
+            buttonText={<span className="text-[1.05rem] font-semibold text-slate-900 dark:text-white">{isEnglish ? "Main DeFi components" : "Principali componenti della DeFi"}</span>}
             className="rounded-xl border border-slate-200 dark:border-indigo-500/20 bg-sky-50/30 dark:bg-sky-900/10 p-4"
           >
             <ul className="space-y-1.5 pl-14 pt-1 list-disc text-[0.96rem] leading-relaxed">
-              <li className="text-slate-700 dark:text-slate-200"><b>DEX:</b> scambio token peer-to-peer.</li>
-              <li className="text-slate-700 dark:text-slate-200"><b>Lending:</b> prestiti e borrow permissionless.</li>
-              <li className="text-slate-700 dark:text-slate-200"><b>Stablecoin:</b> base liquida a volatilita ridotta.</li>
-              <li className="text-slate-700 dark:text-slate-200"><b>Yield:</b> strategie di rendimento.</li>
+              <li className="text-slate-700 dark:text-slate-200"><b>DEX:</b> {isEnglish ? "peer-to-peer token swaps." : "scambio token peer-to-peer."}</li>
+              <li className="text-slate-700 dark:text-slate-200"><b>Lending:</b> {isEnglish ? "permissionless lending and borrowing." : "prestiti e borrow permissionless."}</li>
+              <li className="text-slate-700 dark:text-slate-200"><b>Stablecoin:</b> {isEnglish ? "liquid base with lower volatility." : "base liquida a volatilita ridotta."}</li>
+              <li className="text-slate-700 dark:text-slate-200"><b>Yield:</b> {isEnglish ? "yield optimization strategies." : "strategie di rendimento."}</li>
             </ul>
           </Accordion>
           <Accordion
-            buttonText={<span className="text-[1.05rem] font-semibold text-slate-900 dark:text-white">Vantaggi e rischi</span>}
+            buttonText={<span className="text-[1.05rem] font-semibold text-slate-900 dark:text-white">{isEnglish ? "Benefits and risks" : "Vantaggi e rischi"}</span>}
             className="rounded-xl border border-slate-200 dark:border-indigo-500/20 bg-rose-50/20 dark:bg-rose-900/10 p-4"
           >
             <div className="grid grid-cols-1 gap-2 pl-9 pt-1">
               <div className="rounded-lg border-l-4 border-emerald-400 bg-emerald-500/10 px-3 py-2.5 text-sm text-slate-700 dark:text-slate-200">
-                Vantaggi: inclusione, trasparenza, autocustodia e innovazione rapida.
+                {isEnglish ? "Benefits: inclusion, transparency, self-custody, and fast innovation." : "Vantaggi: inclusione, trasparenza, autocustodia e innovazione rapida."}
               </div>
               <div className="rounded-lg border-l-4 border-rose-400 bg-rose-500/10 px-3 py-2.5 text-sm text-slate-700 dark:text-slate-200">
-                Rischi: bug smart contract, volatilita, impermanent loss e phishing.
+                {isEnglish ? "Risks: smart contract bugs, volatility, impermanent loss, and phishing." : "Rischi: bug smart contract, volatilita, impermanent loss e phishing."}
               </div>
             </div>
           </Accordion>
 
           <section className="rounded-xl border border-slate-200 dark:border-indigo-500/20 bg-violet-50/30 dark:bg-violet-900/10 p-4">
-            <h3 className="text-base font-bold text-slate-900 dark:text-white mb-3">Applicazioni DeFi interattive</h3>
+            <h3 className="text-base font-bold text-slate-900 dark:text-white mb-3">{isEnglish ? "Interactive DeFi applications" : "Applicazioni DeFi interattive"}</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
-              {APPLICATIONS.map((app) => {
+              {localizedApps.map((app) => {
                 const active = app.id === activeAppId;
                 return (
                   <button
@@ -195,9 +281,9 @@ export function BasiDeFiModal({ isOpen, onClose }: BasiDeFiModalProps) {
             <div className="rounded-lg border border-slate-200 dark:border-indigo-500/30 bg-slate-50 dark:bg-indigo-950/50 p-3 space-y-2">
               <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2"><span>{activeApp.icon}</span><span>{activeApp.title}</span></h4>
               <p className="text-sm text-slate-700 dark:text-slate-200">{activeApp.summary}</p>
-              <p className="text-xs text-emerald-700 dark:text-emerald-300"><b>Cosa offre:</b> {activeApp.offers}</p>
-              <p className="text-xs text-rose-700 dark:text-rose-300"><b>Rischi:</b> {activeApp.risks}</p>
-              <p className="text-xs text-slate-600 dark:text-slate-300"><b>Esempi:</b> {activeApp.examples}</p>
+              <p className="text-xs text-emerald-700 dark:text-emerald-300"><b>{isEnglish ? "What it offers" : "Cosa offre"}:</b> {activeApp.offers}</p>
+              <p className="text-xs text-rose-700 dark:text-rose-300"><b>{isEnglish ? "Risks" : "Rischi"}:</b> {activeApp.risks}</p>
+              <p className="text-xs text-slate-600 dark:text-slate-300"><b>{isEnglish ? "Examples" : "Esempi"}:</b> {activeApp.examples}</p>
             </div>
           </section>
         </div>

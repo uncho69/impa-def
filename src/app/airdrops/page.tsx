@@ -1,12 +1,13 @@
 "use client";
 
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { GuidaAirdropsModal } from "@/components/GuidaAirdropsModal";
 import { getProjectLogo } from "@/lib/project-logos";
 import { BookmarkButton } from "@/components/bookmarks/BookmarkButton";
 import Placeholder from "@/assets/placeholder.svg";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 // Import delle immagini per i progetti di airdrop
 import baseLogo from "@/assets/base-logo.svg";
@@ -30,17 +31,20 @@ import layer3Logo from "@/assets/layer3-logo.png";
 
 
 export default function Airdrops() {
+  const { language } = useLanguage();
+  const isEnglish = language === "en";
   const [search, setSearch] = useState("");
   const [guidaOpen, setGuidaOpen] = useState(false);
 
   // Array con tutti i 34 progetti di potenziali airdrop
   const allProjects: Array<{
     title: string;
-    image: any;
+    image: string | StaticImageData;
     website: string;
     xProfile: string;
     tokenNFT: string;
     description: string;
+    descriptionEn?: string;
     href?: string;
   }> = [
     {
@@ -50,6 +54,7 @@ export default function Airdrops() {
       xProfile: "https://x.com/base",
       tokenNFT: "https://www.coingecko.com/en/coins/base",
       description: "Layer 2 di Ethereum sviluppata da Coinbase, progettata per offrire una piattaforma sicura, scalabile e conveniente per le applicazioni decentralizzate.",
+      descriptionEn: "Ethereum Layer 2 by Coinbase, built to provide a secure, scalable, and low-cost platform for decentralized applications.",
       href: "/airdrops/base"
     },
     {
@@ -59,6 +64,7 @@ export default function Airdrops() {
       xProfile: "https://x.com/HyperliquidX",
       tokenNFT: "https://www.coingecko.com/en/coins/purr-2",
       description: "Exchange decentralizzato focalizzato sui perpetual futures, operante sulla blockchain Hyperliquid L1 con trading veloce e trasparente.",
+      descriptionEn: "Decentralized exchange focused on perpetual futures on Hyperliquid L1, with fast and transparent trading.",
       href: "/defi/hyperliquid"
     },
     {
@@ -68,6 +74,7 @@ export default function Airdrops() {
       xProfile: "https://x.com/JumperExchange",
       tokenNFT: "#",
       description: "Piattaforma di bridging e swapping multi-chain, alimentata da LI.FI, che permette trasferimenti di token fluidi tra diverse blockchain.",
+      descriptionEn: "Multi-chain bridging and swapping platform powered by LI.FI for smooth token transfers across chains.",
       href: "/airdrops/jumper"
     },
     {
@@ -77,6 +84,7 @@ export default function Airdrops() {
       xProfile: "https://x.com/Scroll_ZKP",
       tokenNFT: "#",
       description: "Soluzione Layer 2 per Ethereum che utilizza la tecnologia zkEVM per migliorare la scalabilità e ridurre i costi di transazione.",
+      descriptionEn: "Ethereum Layer 2 using zkEVM technology to improve scalability and reduce transaction costs.",
       href: "/airdrops/scroll"
     },
     {
@@ -86,6 +94,7 @@ export default function Airdrops() {
       xProfile: "https://x.com/Orbiter_Finance",
       tokenNFT: "#",
       description: "Protocollo di bridging decentralizzato che facilita le transazioni cross-chain all'interno dell'ecosistema Ethereum.",
+      descriptionEn: "Decentralized bridging protocol enabling cross-chain transactions within the Ethereum ecosystem.",
       href: "/airdrops/orbiter"
     },
     {
@@ -95,6 +104,7 @@ export default function Airdrops() {
       xProfile: "https://x.com/deBridgeFinance",
       tokenNFT: "#",
       description: "Protocollo di interoperabilità cross-chain che permette trasferimenti di messaggi arbitrari e valore tra diverse blockchain.",
+      descriptionEn: "Cross-chain interoperability protocol for arbitrary message passing and value transfer across blockchains.",
       href: "/airdrops/debridge"
     },
     {
@@ -370,10 +380,13 @@ export default function Airdrops() {
 
       return {
         ...project,
+        description: isEnglish
+          ? project.descriptionEn || `${project.title} is tracked for potential airdrop opportunities and ecosystem activity.`
+          : project.description,
         image: logo,
       };
     });
-  }, [allProjects]);
+  }, [allProjects, isEnglish]);
 
   const filteredProjects = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -390,7 +403,7 @@ export default function Airdrops() {
         <div>
           <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">Airdrops</h1>
           <p className="text-slate-600 dark:text-slate-400 text-lg">
-            Token gratuiti distribuiti ai primi utenti dei progetti Web3.
+            {isEnglish ? "Free tokens distributed to early users of Web3 projects." : "Token gratuiti distribuiti ai primi utenti dei progetti Web3."}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -400,14 +413,14 @@ export default function Airdrops() {
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-colors shrink-0 border-white/20 bg-white/5 hover:bg-white/10 text-white"
           >
             <span>📘</span>
-            <span>Guida Airdrops</span>
+            <span>{isEnglish ? "Airdrops Guide" : "Guida Airdrops"}</span>
           </button>
           <Link
             href="/news/airdrops"
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-amber-400 hover:bg-amber-500 text-slate-900 transition-colors"
           >
             <span>📰</span>
-            <span>Notizie Airdrops</span>
+            <span>{isEnglish ? "Airdrops News" : "Notizie Airdrops"}</span>
           </Link>
         </div>
       </div>
@@ -416,7 +429,7 @@ export default function Airdrops() {
         <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
         <input
           type="search"
-          placeholder="Cerca progetti Airdrop"
+          placeholder={isEnglish ? "Search airdrop projects" : "Cerca progetti Airdrop"}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 dark:border-indigo-500/30 bg-white dark:bg-indigo-900/40 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
@@ -448,7 +461,7 @@ export default function Airdrops() {
                 <a href={project.xProfile} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-indigo-800/50 transition-colors" title="X (Twitter)" aria-label="X (Twitter)">
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
                 </a>
-                <a href={project.website} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-indigo-800/50 transition-colors" title="Sito web" aria-label="Sito web">
+                <a href={project.website} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-indigo-800/50 transition-colors" title={isEnglish ? "Website" : "Sito web"} aria-label={isEnglish ? "Website" : "Sito web"}>
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>
                 </a>
                 {project.tokenNFT !== "#" ? (
@@ -458,7 +471,7 @@ export default function Airdrops() {
                 ) : null}
                 <BookmarkButton
                   url={project.href || "/airdrops"}
-                  title={`${project.title} - Progetto airdrop`}
+                  title={`${project.title} - ${isEnglish ? "Airdrop project" : "Progetto airdrop"}`}
                   type="page"
                   projectId={(project.href || "").replace("/airdrops/", "").replace("/defi/", "") || project.title.toLowerCase().replace(/\s+/g, "-")}
                   className="ml-auto"
@@ -469,7 +482,7 @@ export default function Airdrops() {
         </div>
         {filteredProjects.length === 0 && (
           <p className="text-center py-12 text-slate-500 dark:text-slate-400">
-            Nessun progetto trovato per questa ricerca.
+            {isEnglish ? "No projects found for this search." : "Nessun progetto trovato per questa ricerca."}
           </p>
         )}
       </main>

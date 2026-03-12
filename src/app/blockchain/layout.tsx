@@ -5,16 +5,19 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import imparodefiLogo from "@/assets/imparodefi-logo-nobg.webp";
-import { BLOCKCHAIN_SIDEBAR_ITEMS } from "@/lib/blockchain-sidebar";
+import { getBlockchainSidebarItems } from "@/lib/blockchain-sidebar";
 import { UnifiedAuthControls } from "@/components/auth/UnifiedAuthControls";
 import { SearchBar } from "@/components/SearchBar";
 import { CollapsibleSidebar } from "@/components/CollapsibleSidebar";
 import { SiteFooter } from "@/components/SiteFooter";
+import LanguageToggle from "@/components/LanguageToggle";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type Theme = "dark" | "light";
 
 export default function BlockchainLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const { language } = useLanguage();
   const [theme, setTheme] = useState<Theme>("dark");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -30,6 +33,7 @@ export default function BlockchainLayout({ children }: { children: ReactNode }) 
   }, [theme]);
 
   const isDark = theme === "dark";
+  const sidebarItems = getBlockchainSidebarItems(language);
   const isBlockchainSection = pathname === "/blockchain" || pathname.startsWith("/blockchain/");
   const isProfilePath = pathname === "/profilo" || pathname.startsWith("/profilo/");
 
@@ -73,6 +77,9 @@ export default function BlockchainLayout({ children }: { children: ReactNode }) 
               </svg>
             </button>
             <div className="flex items-center gap-2 md:gap-3">
+              <div className="hidden md:flex">
+                <LanguageToggle />
+              </div>
               <button
                 type="button"
                 onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
@@ -129,7 +136,7 @@ export default function BlockchainLayout({ children }: { children: ReactNode }) 
                 </button>
               </div>
               <nav className="p-3 overflow-y-auto flex-1 space-y-0.5">
-                {BLOCKCHAIN_SIDEBAR_ITEMS.map((item) => {
+                {sidebarItems.map((item) => {
                   const isActive = item.href === "/blockchain" ? isBlockchainSection : pathname === item.href || pathname.startsWith(item.href + "/");
                   return (
                     <Link
@@ -152,7 +159,7 @@ export default function BlockchainLayout({ children }: { children: ReactNode }) 
 
         <div className="flex flex-1 min-h-0 relative">
           <CollapsibleSidebar
-            items={BLOCKCHAIN_SIDEBAR_ITEMS}
+            items={sidebarItems}
             isDark={isDark}
             isItemActive={(href) => (href === "/blockchain" ? isBlockchainSection : pathname === href || pathname.startsWith(href + "/"))}
           />

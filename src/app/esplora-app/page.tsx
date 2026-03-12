@@ -14,26 +14,9 @@ import { SearchBar } from "@/components/SearchBar";
 import { CollapsibleSidebar } from "@/components/CollapsibleSidebar";
 import { BookmarkButton } from "@/components/bookmarks/BookmarkButton";
 import { SiteFooter } from "@/components/SiteFooter";
-
-const SIDEBAR_ITEMS = [
-  { label: "Dashboard", href: "/", icon: "📊" },
-  { label: "Manuale", href: "/manuale", icon: "📚" },
-  { label: "DeFi", href: "/defi", icon: "💹" },
-  { label: "Airdrops", href: "/airdrops", icon: "🎁" },
-  { label: "Blockchains", href: "/blockchain", icon: "⛓️" },
-  { label: "Compra/Vendi Crypto", href: "/compraevendicrypto", icon: "💳" },
-  { label: "Portafogli", href: "/wallet", icon: "👛" },
-  { label: "Strumenti Utili", href: "/strumentiutili", icon: "🔧" },
-  { label: "Memecoins", href: "/memecoins", icon: "🪙" },
-  { label: "NFTs", href: "/nft", icon: "🖼️" },
-  { label: "Giochi", href: "/giochi", icon: "🎮" },
-  { label: "Mercati di Predizione", href: "/giochi/polymarket", icon: "📈" },
-  { label: "Eventi Storici", href: "/eventi-storici", icon: "📅" },
-  { label: "Mappa Ecosistema", href: "/esplora-app", icon: "🌐" },
-  { label: "Notizie", href: "/news", icon: "📰" },
-  { label: "Segnalibri", href: "/segnalibri", icon: "🔖" },
-  { label: "Leaderboard", href: "/leaderboards/global", icon: "🏆" },
-];
+import LanguageToggle from "@/components/LanguageToggle";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { getDefiSidebarItems } from "@/lib/defi-sidebar";
 
 /** Filtri categoria per la pagina Mappa Ecosistema */
 const ECOSYSTEM_FILTERS: { id: MacroCategoryId; label: string }[] = [
@@ -86,6 +69,7 @@ function getProjectPageHref(projectId: string): string {
 type Theme = "dark" | "light";
 
 export default function EsploraAppPage() {
+  const { language } = useLanguage();
   const pathname = usePathname();
   const [theme, setTheme] = useState<Theme>("dark");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -181,6 +165,7 @@ export default function EsploraAppPage() {
   }, [projects, search, activeCategory, sortByMarketCap, priceData]);
 
   const isDark = theme === "dark";
+  const sidebarItems = getDefiSidebarItems(language);
   const isProfilePath = pathname === "/profilo" || pathname.startsWith("/profilo/");
   const isItemActive = (href: string) => {
     if (href === "/") return pathname === "/";
@@ -201,7 +186,7 @@ export default function EsploraAppPage() {
       />
       <div className="relative flex min-h-screen overflow-x-hidden">
         <CollapsibleSidebar
-          items={SIDEBAR_ITEMS}
+          items={sidebarItems}
           isDark={isDark}
           isItemActive={isItemActive}
         />
@@ -253,6 +238,9 @@ export default function EsploraAppPage() {
                   )}
                 </svg>
               </button>
+              <div className="hidden md:flex">
+                <LanguageToggle />
+              </div>
               <button
                 type="button"
                 onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
@@ -307,7 +295,7 @@ export default function EsploraAppPage() {
                   </button>
                 </div>
                 <nav className="p-3 overflow-y-auto flex-1 space-y-0.5">
-                  {SIDEBAR_ITEMS.map((item) => (
+                  {sidebarItems.map((item) => (
                     <Link
                       key={item.href + item.label}
                       href={item.href}
