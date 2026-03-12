@@ -4,6 +4,9 @@ import { getUserIdFromRequest } from "@/lib/auth/middleware";
 import { getSiteSettings, saveSiteSettings } from "@/lib/site-settings";
 import { hasDatabase } from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 async function ensureAdmin(request: NextRequest): Promise<string | null> {
   const userId = await getUserIdFromRequest(request);
   if (!userId) return null;
@@ -26,7 +29,16 @@ export async function GET(request: NextRequest) {
 
   try {
     const settings = await getSiteSettings();
-    return NextResponse.json({ settings });
+    return NextResponse.json(
+      { settings },
+      {
+        headers: {
+          "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
+          Pragma: "no-cache",
+          Expires: "0",
+        },
+      },
+    );
   } catch (error) {
     console.error("Error loading admin site settings:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
@@ -42,7 +54,16 @@ export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
     const settings = await saveSiteSettings(body?.settings ?? body);
-    return NextResponse.json({ ok: true, settings });
+    return NextResponse.json(
+      { ok: true, settings },
+      {
+        headers: {
+          "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
+          Pragma: "no-cache",
+          Expires: "0",
+        },
+      },
+    );
   } catch (error) {
     console.error("Error saving admin site settings:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
