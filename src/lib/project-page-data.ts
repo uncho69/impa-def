@@ -36,7 +36,7 @@ export type ProjectPageData = {
 type DefiSeed = {
   slug: string;
   name: string;
-  category: "DEX" | "Lending" | "Yield" | "Bridge";
+  category: "DEX" | "Lending" | "Yield" | "Bridge" | "Stablecoins";
   tokenSymbol: string;
   description: string;
   appUrl: string;
@@ -497,6 +497,19 @@ export const PROJECT_PAGE_DATA: Record<string, Omit<ProjectPageData, "slug" | "l
     coinId: null,
     docsUrl: "https://docs.orbiter.finance",
   }),
+  llamaswap: buildDefiData({
+    slug: "llamaswap",
+    name: "LlamaSwap",
+    category: "DEX",
+    tokenSymbol: "—",
+    description: "Aggregatore swap di DeFiLlama per trovare route efficienti tra DEX e reti diverse.",
+    appUrl: "https://swap.defillama.com/?chain=ethereum&from=0x0000000000000000000000000000000000000000&tab=swap",
+    websiteUrl: "https://defillama.com",
+    twitterUrl: "https://x.com/DefiLlama",
+    coinId: null,
+    docsUrl: "https://docs.llama.fi",
+    guideUrl: "/manuale#analisi",
+  }),
   traderjoe: buildDefiData({
     slug: "traderjoe",
     name: "Trader Joe",
@@ -509,6 +522,194 @@ export const PROJECT_PAGE_DATA: Record<string, Omit<ProjectPageData, "slug" | "l
     coinId: "joe",
     docsUrl: "https://docs.traderjoexyz.com",
   }),
+  usdc: {
+    name: "USDC",
+    tags: [{ label: "Stablecoins" }, { label: "Dollar-Pegged" }, { label: "Payments" }, { label: "Treasury" }],
+    appUrl: "https://www.circle.com/usdc",
+    guideUrl: "/manuale#stablecoin",
+    tokenSymbol: "USDC",
+    coinId: "usd-coin",
+    description:
+      "USDC e una stablecoin collateralizzata in fiat emessa da Circle, progettata per pagamenti, trasferimenti e operativita DeFi con elevata liquidita.",
+    overviewTags: [{ label: "Stablecoin" }, { label: "Fiat-backed" }, { label: "Multi-chain" }, { label: "Low volatility" }],
+    featureCards: [
+      {
+        icon: "lightning",
+        title: "Use case principale",
+        description: "Ponte operativo tra fiat e DeFi per pagamenti, settlement e gestione della liquidita.",
+      },
+      {
+        icon: "droplet",
+        title: "Liquidita e integrazione",
+        description: "Integrata in exchange, wallet e protocolli lending/DEX su piu reti.",
+      },
+      {
+        icon: "cap",
+        title: "Come iniziare",
+        description: "Prima di trasferire, verifica chain, network fee e contract address corretto.",
+        href: "/manuale#stablecoin",
+      },
+      {
+        icon: "warning",
+        title: "Rischi specifici",
+        description: "Rischio controparte emittente, rischio regolatorio e mismatch di rete in trasferimento.",
+      },
+      {
+        icon: "gift",
+        title: "Strategia base",
+        description: "Usala come riserva di stabilita per ridurre volatilita del portafoglio operativo.",
+      },
+    ],
+    howToSteps: [
+      {
+        icon: "1",
+        title: "Scegli il network",
+        description: "Decidi la rete (Ethereum, Base, Arbitrum, Solana, ecc.) in base a costi e compatibilita.",
+      },
+      {
+        icon: "2",
+        title: "Acquista o converti",
+        description: "Ottieni USDC da CEX, on-ramp o swap su DEX affidabili.",
+      },
+      {
+        icon: "3",
+        title: "Trasferisci in sicurezza",
+        description: "Esegui un test con importo ridotto e conferma indirizzo + rete prima della size piena.",
+      },
+      {
+        icon: "4",
+        title: "Usa e monitora",
+        description: "Impiega USDC per pagamenti, collateral o parcheggio liquidita monitorando sempre il peg.",
+      },
+    ],
+    riskCards: [
+      { title: "Issuer / Counterparty Risk", description: "La fiducia nel peg dipende anche dall'emittente e dalle riserve." },
+      { title: "Regulatory Risk", description: "Normative e restrizioni possono impattare accesso e utilizzo." },
+      { title: "Network Risk", description: "Inviare sulla rete sbagliata puo causare perdita dei fondi." },
+      { title: "Operational Risk", description: "Approval e firme non verificate possono esporre il wallet a drain." },
+    ],
+    usefulLinks: [
+      { label: "Sito ufficiale", href: "https://www.circle.com/usdc" },
+      { label: "Twitter / X", href: "https://x.com/circle" },
+      { label: "Token USDC", href: "https://www.coingecko.com/en/coins/usd-coin" },
+      { label: "Docs", href: "https://developers.circle.com/stablecoins/docs/usdc-on-main-networks" },
+    ],
+    contentItems: [
+      {
+        type: "article",
+        title: "USDC su reti principali: guida operativa",
+        source: "Circle",
+        href: "https://developers.circle.com/stablecoins/docs/usdc-on-main-networks",
+      },
+      {
+        type: "article",
+        title: "USDC - pagina CoinGecko",
+        source: "CoinGecko",
+        href: "https://www.coingecko.com/en/coins/usd-coin",
+      },
+      {
+        type: "video",
+        title: "Stablecoin basics: USDC in pratica",
+        source: "YouTube",
+        skillLevel: "Beginner",
+        embedId: "K4TOrB7at0Y",
+      },
+    ],
+  },
+  usdt: {
+    name: "USDT",
+    tags: [{ label: "Stablecoins" }, { label: "Dollar-Pegged" }, { label: "Liquidity" }, { label: "Cross-chain" }],
+    appUrl: "https://tether.to/",
+    guideUrl: "/manuale#stablecoin",
+    tokenSymbol: "USDT",
+    coinId: "tether",
+    description:
+      "USDT e una stablecoin ancorata al dollaro emessa da Tether, tra le piu usate per trading, trasferimenti rapidi e liquidita globale in ambito crypto.",
+    overviewTags: [{ label: "Stablecoin" }, { label: "High liquidity" }, { label: "Trading rails" }, { label: "Global use" }],
+    featureCards: [
+      {
+        icon: "lightning",
+        title: "Ruolo nel mercato",
+        description: "Asset di riferimento per molte coppie di trading su CEX e DEX.",
+      },
+      {
+        icon: "droplet",
+        title: "Liquidita profonda",
+        description: "Ampia presenza su exchange centralizzati e catene multiple per settlement veloce.",
+      },
+      {
+        icon: "cap",
+        title: "Operativita consigliata",
+        description: "Controlla sempre chain e format dell'indirizzo prima di inviare.",
+        href: "/manuale#stablecoin",
+      },
+      {
+        icon: "warning",
+        title: "Rischi specifici",
+        description: "Rischio emittente, rischio regolatorio e rischio di errore network/token.",
+      },
+      {
+        icon: "gift",
+        title: "Uso strategico",
+        description: "Utile come collateral e parcheggio tattico durante fasi di alta volatilita.",
+      },
+    ],
+    howToSteps: [
+      {
+        icon: "1",
+        title: "Identifica il token giusto",
+        description: "USDT esiste su molte reti: verifica chain, ticker e contract esatto.",
+      },
+      {
+        icon: "2",
+        title: "Acquista o swappa",
+        description: "Acquista su CEX affidabile o converti da altri asset tramite DEX con buona liquidita.",
+      },
+      {
+        icon: "3",
+        title: "Trasferisci con test",
+        description: "Invia prima una test transaction e conferma ricezione prima del trasferimento principale.",
+      },
+      {
+        icon: "4",
+        title: "Gestisci rischio operativo",
+        description: "Controlla allowance attive, phishing e siti clone prima di ogni firma.",
+      },
+    ],
+    riskCards: [
+      { title: "Issuer / Reserve Risk", description: "Monitorare trasparenza riserve e aggiornamenti ufficiali." },
+      { title: "Regulatory Risk", description: "Nuove regole possono influenzare disponibilita e utilizzo." },
+      { title: "Chain Fragmentation", description: "USDT su reti diverse non e sempre intercambiabile senza bridge/swap." },
+      { title: "Operational Mistakes", description: "Errori di address o rete possono essere irreversibili." },
+    ],
+    usefulLinks: [
+      { label: "Sito ufficiale", href: "https://tether.to/" },
+      { label: "Twitter / X", href: "https://x.com/Tether_to" },
+      { label: "Token USDT", href: "https://www.coingecko.com/en/coins/tether" },
+      { label: "Transparency", href: "https://tether.to/en/transparency/" },
+    ],
+    contentItems: [
+      {
+        type: "article",
+        title: "USDT transparency dashboard",
+        source: "Tether",
+        href: "https://tether.to/en/transparency/",
+      },
+      {
+        type: "article",
+        title: "USDT - pagina CoinGecko",
+        source: "CoinGecko",
+        href: "https://www.coingecko.com/en/coins/tether",
+      },
+      {
+        type: "video",
+        title: "USDT e gestione liquidita in DeFi",
+        source: "YouTube",
+        skillLevel: "Beginner",
+        embedId: "1jzFNzUgZ6Q",
+      },
+    ],
+  },
   ethereum: buildBlockchainData({
     slug: "ethereum",
     name: "Ethereum",

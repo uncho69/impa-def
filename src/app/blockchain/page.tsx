@@ -27,6 +27,7 @@ import abstractLogo from "@/assets/abstract-logo.jpg";
 import inkLogo from "@/assets/ink-logo.jpg";
 import type { StaticImageData } from "next/image";
 import { IntroduzioneBlockchainModal } from "@/components/IntroduzioneBlockchainModal";
+import AutoTranslateText from "@/components/AutoTranslateText";
 
 const QUICK_ACTIONS = [
   { title: "Introduzione alle Blockchain", icon: "📚", isModal: true },
@@ -127,7 +128,8 @@ export default function BlockchainPage() {
     n >= 1e9 ? `$${(n / 1e9).toFixed(1)}B` : n >= 1e6 ? `$${(n / 1e6).toFixed(1)}M` : n > 0 ? `$${n.toLocaleString()}` : "—";
 
   return (
-    <>
+    <AutoTranslateText>
+      <>
       {/* Header: stesso stile della pagina DeFi */}
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
         <div>
@@ -267,6 +269,7 @@ export default function BlockchainPage() {
           <p className="text-center py-12 text-slate-500 dark:text-slate-400">Nessuna blockchain trovata.</p>
         )}
       </main>
-    </>
+      </>
+    </AutoTranslateText>
   );
 }

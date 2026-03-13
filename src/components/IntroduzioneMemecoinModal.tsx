@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import { Accordion } from "@/components/Accordion";
 import { List } from "@/components/List";
+import AutoTranslateText from "@/components/AutoTranslateText";
 
 interface IntroduzioneMemecoinModalProps {
   isOpen: boolean;
@@ -48,7 +49,8 @@ export function IntroduzioneMemecoinModal({ isOpen, onClose }: IntroduzioneMemec
   if (typeof document === "undefined" || !document.body) return null;
 
   const modalContent = (
-    <div
+    <AutoTranslateText>
+      <div
       className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
@@ -164,6 +166,7 @@ export function IntroduzioneMemecoinModal({ isOpen, onClose }: IntroduzioneMemec
         </div>
       </div>
     </div>
+    </AutoTranslateText>
   );
 
   return createPortal(modalContent, document.body);

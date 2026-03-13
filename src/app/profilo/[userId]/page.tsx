@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type PublicProfileResponse = {
   profile: {
@@ -70,6 +71,8 @@ function getXHandle(profile: { xProfileUrl?: string | null; xUsername?: string |
 }
 
 export default function PublicProfilePage() {
+  const { language } = useLanguage();
+  const isEnglish = language === "en";
   const params = useParams<{ userId: string }>();
   const userId = params?.userId;
   const [loading, setLoading] = useState(true);
@@ -84,23 +87,23 @@ export default function PublicProfilePage() {
       try {
         const res = await fetch(`/api/profile/${userId}`, { cache: "no-store" });
         const json = await res.json().catch(() => ({}));
-        if (!res.ok) throw new Error(json?.error || "Errore caricamento profilo");
+        if (!res.ok) throw new Error(json?.error || (isEnglish ? "Profile loading error" : "Errore caricamento profilo"));
         setData(json as PublicProfileResponse);
       } catch (err: unknown) {
-        setError(getErrorMessage(err, "Errore imprevisto"));
+        setError(getErrorMessage(err, isEnglish ? "Unexpected error" : "Errore imprevisto"));
       } finally {
         setLoading(false);
       }
     };
     run();
-  }, [userId]);
+  }, [userId, isEnglish]);
 
   if (loading) {
     return (
       <div className={PAGE_BG_CLASS}>
         <div className={GRID_OVERLAY_CLASS} />
         <div className="relative z-10 px-6 py-10">
-          <div className="max-w-5xl mx-auto text-slate-300 animate-pulse">Caricamento profilo pubblico...</div>
+          <div className="max-w-5xl mx-auto text-slate-300 animate-pulse">{isEnglish ? "Loading public profile..." : "Caricamento profilo pubblico..."}</div>
         </div>
       </div>
     );
@@ -112,9 +115,9 @@ export default function PublicProfilePage() {
         <div className={GRID_OVERLAY_CLASS} />
         <div className="relative z-10 px-6 py-10">
           <div className="max-w-3xl mx-auto rounded-2xl border border-rose-500/30 bg-rose-950/20 backdrop-blur p-6">
-            <p className="text-rose-200">{error || "Profilo non disponibile"}</p>
+            <p className="text-rose-200">{error || (isEnglish ? "Profile not available" : "Profilo non disponibile")}</p>
             <Link href="/profilo" className="mt-4 inline-block text-sm text-indigo-300 underline-offset-2 hover:underline">
-              Vai al mio profilo
+              {isEnglish ? "Go to my profile" : "Vai al mio profilo"}
             </Link>
           </div>
         </div>
@@ -129,19 +132,19 @@ export default function PublicProfilePage() {
         <div className="max-w-6xl mx-auto space-y-6">
         <section className={PANEL_CLASS}>
           <h1 className="text-3xl font-semibold tracking-tight">{data.profile.username}</h1>
-          <p className="mt-1 text-slate-300">Rank globale #{data.profile.ranking.globalRank}</p>
+          <p className="mt-1 text-slate-300">{isEnglish ? "Global rank" : "Rank globale"} #{data.profile.ranking.globalRank}</p>
 
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-              <p className="text-xs uppercase tracking-wide text-slate-400">Punti totali</p>
-              <p className="mt-1 text-2xl font-semibold">{data.profile.ranking.totalPoints.toLocaleString("it-IT")}</p>
+              <p className="text-xs uppercase tracking-wide text-slate-400">{isEnglish ? "Total points" : "Punti totali"}</p>
+              <p className="mt-1 text-2xl font-semibold">{data.profile.ranking.totalPoints.toLocaleString(isEnglish ? "en-US" : "it-IT")}</p>
             </div>
             <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-              <p className="text-xs uppercase tracking-wide text-slate-400">Tweet campagne</p>
-              <p className="mt-1 text-2xl font-semibold">{data.profile.ranking.totalTweets.toLocaleString("it-IT")}</p>
+              <p className="text-xs uppercase tracking-wide text-slate-400">{isEnglish ? "Campaign tweets" : "Tweet campagne"}</p>
+              <p className="mt-1 text-2xl font-semibold">{data.profile.ranking.totalTweets.toLocaleString(isEnglish ? "en-US" : "it-IT")}</p>
             </div>
             <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-              <p className="text-xs uppercase tracking-wide text-slate-400">Address pubblici</p>
+              <p className="text-xs uppercase tracking-wide text-slate-400">{isEnglish ? "Public addresses" : "Address pubblici"}</p>
               {Array.isArray(data.profile.walletAddresses) && data.profile.walletAddresses.length > 0 ? (
                 <div className="mt-2 flex flex-wrap gap-2">
                   {data.profile.walletAddresses.map((address) => (
@@ -169,10 +172,10 @@ export default function PublicProfilePage() {
                   className="inline-flex items-center gap-1.5 text-sm text-indigo-300 underline-offset-2 hover:underline"
                 >
                   <span aria-hidden>𝕏</span>
-                  <span>{getXHandle(data.profile) || "Account X"}</span>
+                      <span>{getXHandle(data.profile) || (isEnglish ? "X account" : "Account X")}</span>
                 </a>
               ) : (
-                <span className="text-sm text-slate-400">Profilo X non collegato</span>
+                <span className="text-sm text-slate-400">{isEnglish ? "X profile not connected" : "Profilo X non collegato"}</span>
               )}
               {data.profile.instagramUrl ? (
                 <a
@@ -209,18 +212,18 @@ export default function PublicProfilePage() {
         </section>
 
         <section className={PANEL_CLASS}>
-          <h2 className="text-xl font-semibold">Contenuti campagne</h2>
+          <h2 className="text-xl font-semibold">{isEnglish ? "Campaign content" : "Contenuti campagne"}</h2>
           <div className="mt-5 space-y-3">
             {data.contents.length === 0 ? (
               <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4 text-slate-300">
-                Nessun contenuto pubblico disponibile.
+                {isEnglish ? "No public content available." : "Nessun contenuto pubblico disponibile."}
               </div>
             ) : (
               data.contents.map((item) => (
                 <article key={item.id} className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="text-sm text-slate-300">
-                      {item.projectId ? `Progetto: ${item.projectId}` : "Progetto non disponibile"}
+                      {item.projectId ? `${isEnglish ? "Project" : "Progetto"}: ${item.projectId}` : isEnglish ? "Project unavailable" : "Progetto non disponibile"}
                       {typeof item.campaignIndex === "number" ? ` • Campaign ${item.campaignIndex}` : ""}
                       {typeof item.epochIndex === "number" ? ` • Epoch ${item.epochIndex}` : ""}
                     </div>
@@ -231,13 +234,13 @@ export default function PublicProfilePage() {
                         rel="noreferrer"
                         className="text-sm text-indigo-300 underline-offset-2 hover:underline"
                       >
-                        Apri su X
+                        {isEnglish ? "Open on X" : "Apri su X"}
                       </a>
                     ) : null}
                   </div>
                   {item.text ? <p className="mt-2 text-sm text-slate-100 whitespace-pre-wrap">{item.text}</p> : null}
                   <div className="mt-3 flex flex-wrap gap-3 text-xs text-slate-400">
-                    <span>Like: {item.likes}</span>
+                    <span>{isEnglish ? "Likes" : "Like"}: {item.likes}</span>
                     <span>Reply: {item.replies}</span>
                     <span>Retweet: {item.retweets}</span>
                     <span>Quote: {item.quotes}</span>

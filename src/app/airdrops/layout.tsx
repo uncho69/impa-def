@@ -16,6 +16,7 @@ import { CollapsibleSidebar } from "@/components/CollapsibleSidebar";
 import { SiteFooter } from "@/components/SiteFooter";
 import { useLanguage } from "@/contexts/LanguageContext";
 import LanguageToggle from "@/components/LanguageToggle";
+import AutoTranslateText from "@/components/AutoTranslateText";
 
 type Theme = "dark" | "light";
 
@@ -164,7 +165,9 @@ export default function AirdropsLayout({ children }: { children: ReactNode }) {
             <div className="flex-1 min-h-0 overflow-auto">
               <div className="min-h-full flex flex-col">
                 <div className="px-6 py-8 flex-1">
-                  {airdropTemplateData ? <ProjectPageTemplate data={airdropTemplateData} /> : children}
+                  <AutoTranslateText>
+                    {airdropTemplateData ? <ProjectPageTemplate data={airdropTemplateData} /> : children}
+                  </AutoTranslateText>
                 </div>
                 <SiteFooter isDark={isDark} />
               </div>

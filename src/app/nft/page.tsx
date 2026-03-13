@@ -14,12 +14,14 @@ import miladyIcon from "@/assets/milady-icon.png";
 import pudgypenguinsIcon from "@/assets/pudgypenguins-icon.png";
 import remilioIcon from "@/assets/remilio-icon.png";
 import tubbycatsIcon from "@/assets/tubbycats-icon.png";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type NftItem = {
   id: string;
   title: string;
   icon: StaticImageData;
   description: string;
+  descriptionEn: string;
   type: "marketplace" | "collection";
   website: string;
   xProfile: string;
@@ -39,6 +41,7 @@ const NFT_ITEMS: NftItem[] = [
     title: "OpenSea",
     icon: openseaIcon,
     description: "Marketplace NFT leader per acquisto, vendita e scoperta collezioni.",
+    descriptionEn: "Leading NFT marketplace for buying, selling, and discovering collections.",
     type: "marketplace",
     website: "https://opensea.io/",
     xProfile: "https://x.com/opensea",
@@ -48,6 +51,7 @@ const NFT_ITEMS: NftItem[] = [
     title: "Blur",
     icon: blurIcon,
     description: "Marketplace focalizzato su trader NFT avanzati e liquidita rapida.",
+    descriptionEn: "Marketplace focused on advanced NFT traders and fast liquidity.",
     type: "marketplace",
     website: "https://blur.io/",
     xProfile: "https://x.com/blur_io",
@@ -57,6 +61,7 @@ const NFT_ITEMS: NftItem[] = [
     title: "Magic Eden",
     icon: magicedenIcon,
     description: "Marketplace multichain molto usato per NFT su Solana e altre chain.",
+    descriptionEn: "Widely used multi-chain marketplace for NFTs on Solana and other chains.",
     type: "marketplace",
     website: "https://magiceden.io/",
     xProfile: "https://x.com/MagicEden",
@@ -66,6 +71,7 @@ const NFT_ITEMS: NftItem[] = [
     title: "CryptoPunks",
     icon: cpunksIcon,
     description: "Collezione storica NFT, considerata tra le piu iconiche su Ethereum.",
+    descriptionEn: "Historic NFT collection, considered one of the most iconic on Ethereum.",
     type: "collection",
     website: "https://www.larvalabs.com/cryptopunks",
     xProfile: "https://x.com/cryptopunksnfts",
@@ -75,6 +81,7 @@ const NFT_ITEMS: NftItem[] = [
     title: "Milady",
     icon: miladyIcon,
     description: "Collezione NFT community-driven con estetica riconoscibile e narrativa forte.",
+    descriptionEn: "Community-driven NFT collection with recognizable aesthetics and strong narrative.",
     type: "collection",
     website: "https://miladymaker.net/",
     xProfile: "https://x.com/miladymaker",
@@ -84,6 +91,7 @@ const NFT_ITEMS: NftItem[] = [
     title: "Pudgy Penguins",
     icon: pudgypenguinsIcon,
     description: "Brand NFT mainstream con forte presenza social e sviluppo IP.",
+    descriptionEn: "Mainstream NFT brand with strong social presence and IP development.",
     type: "collection",
     website: "https://www.pudgypenguins.com/",
     xProfile: "https://x.com/pudgypenguins",
@@ -93,6 +101,7 @@ const NFT_ITEMS: NftItem[] = [
     title: "Redacted Remilio Babies",
     icon: remilioIcon,
     description: "Collezione NFT nota per community attiva e cultura internet.",
+    descriptionEn: "NFT collection known for an active community and internet-native culture.",
     type: "collection",
     website: "https://remilio.org/",
     xProfile: "https://x.com/remiliobabies",
@@ -102,6 +111,7 @@ const NFT_ITEMS: NftItem[] = [
     title: "Tubby Cats",
     icon: tubbycatsIcon,
     description: "Collezione NFT a tema cartoon, orientata a community e identita on-chain.",
+    descriptionEn: "Cartoon-themed NFT collection focused on community and on-chain identity.",
     type: "collection",
     website: "https://tubbycats.xyz/",
     xProfile: "https://x.com/tubbycatsxyz",
@@ -109,13 +119,30 @@ const NFT_ITEMS: NftItem[] = [
 ];
 
 export default function NftPage() {
+  const { language } = useLanguage();
+  const isEnglish = language === "en";
   const [search, setSearch] = useState("");
   const [activeFilter, setActiveFilter] = useState<FilterId>("all");
   const [introOpen, setIntroOpen] = useState(false);
+  const filters = isEnglish
+    ? [
+        { id: "all", label: "All" },
+        { id: "marketplace", label: "Marketplace" },
+        { id: "collection", label: "Collections" },
+      ]
+    : FILTERS;
+  const nftItems = useMemo(
+    () =>
+      NFT_ITEMS.map((item) => ({
+        ...item,
+        description: isEnglish ? item.descriptionEn : item.description,
+      })),
+    [isEnglish]
+  );
 
   const filteredItems = useMemo(() => {
     const q = search.trim().toLowerCase();
-    return NFT_ITEMS.filter((item) => {
+    return nftItems.filter((item) => {
       const matchesFilter = activeFilter === "all" ? true : item.type === activeFilter;
       const matchesSearch =
         q.length === 0 ||
@@ -123,7 +150,7 @@ export default function NftPage() {
         item.description.toLowerCase().includes(q);
       return matchesFilter && matchesSearch;
     });
-  }, [search, activeFilter]);
+  }, [search, activeFilter, nftItems]);
 
   return (
     <div className="relative z-10">
@@ -131,7 +158,7 @@ export default function NftPage() {
         <div>
           <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">NFTs</h1>
           <p className="text-slate-600 dark:text-slate-400 text-lg">
-            Scopri il mondo dei token non fungibili e le loro applicazioni
+            {isEnglish ? "Explore non-fungible tokens and their applications" : "Scopri il mondo dei token non fungibili e le loro applicazioni"}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -141,20 +168,20 @@ export default function NftPage() {
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-colors shrink-0 border-white/20 bg-white/5 hover:bg-white/10 text-white"
           >
             <span>🖼️</span>
-            <span>Intro ai NFTs</span>
+            <span>{isEnglish ? "NFT Introduction" : "Intro ai NFTs"}</span>
           </button>
           <Link
             href="/news"
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-amber-400 hover:bg-amber-500 text-slate-900 transition-colors"
           >
             <span>📰</span>
-            <span>Notizie</span>
+            <span>{isEnglish ? "News" : "Notizie"}</span>
           </Link>
         </div>
       </div>
 
       <div className="flex flex-wrap gap-2 mb-6">
-        {FILTERS.map((filter) => (
+        {filters.map((filter) => (
           <button
             key={filter.id}
             type="button"
@@ -174,7 +201,7 @@ export default function NftPage() {
         <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
         <input
           type="search"
-          placeholder="Cerca marketplace o collezioni NFT"
+          placeholder={isEnglish ? "Search NFT marketplaces or collections" : "Cerca marketplace o collezioni NFT"}
           value={search}
           onChange={(event) => setSearch(event.target.value)}
           className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 dark:border-indigo-500/30 bg-white dark:bg-indigo-900/40 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
@@ -224,14 +251,14 @@ export default function NftPage() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-1.5 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-indigo-800/50 transition-colors"
-                  title="Sito web"
-                  aria-label="Sito web"
+                  title={isEnglish ? "Website" : "Sito web"}
+                  aria-label={isEnglish ? "Website" : "Sito web"}
                 >
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>
                 </a>
                 <BookmarkButton
                   url={`/nft/${item.id}`}
-                  title={`${item.title} - Progetto NFT`}
+                  title={`${item.title} - ${isEnglish ? "NFT project" : "Progetto NFT"}`}
                   type="page"
                   projectId={item.id}
                   className="ml-auto"
@@ -242,7 +269,7 @@ export default function NftPage() {
         </div>
         {filteredItems.length === 0 && (
           <p className="text-center py-12 text-slate-500 dark:text-slate-400">
-            Nessun risultato trovato per i filtri selezionati.
+            {isEnglish ? "No results found for selected filters." : "Nessun risultato trovato per i filtri selezionati."}
           </p>
         )}
       </main>

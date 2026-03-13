@@ -23,6 +23,9 @@ import yearnIcon from "@/assets/yearnfinance-logo.png";
 import lidoIcon from "@/assets/lidofinance-logo.png";
 import layerzeroIcon from "@/assets/layerzero-logo.png";
 import orbiterIcon from "@/assets/orbiterfinance-icon.png";
+import usdcIcon from "@/assets/usdc-logo.svg";
+import usdtIcon from "@/assets/usdt-logo.svg";
+import defillamaIcon from "@/assets/defillama-logo.png";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const CATEGORIES = [
@@ -54,6 +57,9 @@ const PROTOCOLS = [
   { name: "LayerZero", description: "Protocollo di interoperabilità cross-chain.", icon: layerzeroIcon, href: "/defi/layerzero", category: "bridge" as CategoryId, token: "ZRO", price: "$1.12", marketCap: "$—", airdropPotential: false, twitterUrl: "https://x.com/LayerZero_Labs", websiteUrl: "https://layerzero.network", contractAddress: "0x5A98FcBEA516Cf06857215779Fd812CA3beF1B32" },
   { name: "Camelot", description: "DEX su Arbitrum con incentivi e pool dinamici.", icon: camelotIcon, href: "/defi/camelot", category: "dex" as CategoryId, token: "GRAIL", price: "$0.28", marketCap: "$—", airdropPotential: false, twitterUrl: "https://x.com/CamelotDEX", websiteUrl: "https://camelot.exchange", contractAddress: "0x3d9907F9a368ad0a51Be0f7D4EcC2e09567f8D9e" },
   { name: "Orbiter Finance", description: "Bridge veloce tra Ethereum, L2 e rollup.", icon: orbiterIcon, href: "/defi/orbiter", category: "bridge" as CategoryId, token: "—", price: "—", marketCap: "—", airdropPotential: false, twitterUrl: "https://x.com/Orbiter_Finance", websiteUrl: "https://orbiter.finance", contractAddress: "" },
+  { name: "LlamaSwap", description: "Aggregatore swap di DeFiLlama per trovare route efficienti tra DEX e reti diverse.", icon: defillamaIcon, href: "/defi/llamaswap", category: "dex" as CategoryId, token: "—", price: "—", marketCap: "—", airdropPotential: false, twitterUrl: "https://x.com/DefiLlama", websiteUrl: "https://swap.defillama.com/?chain=ethereum&from=0x0000000000000000000000000000000000000000&tab=swap", contractAddress: "" },
+  { name: "USDC", description: "Stablecoin fiat-collateralizzata per pagamenti, tesoreria e operatività DeFi.", icon: usdcIcon, href: "/defi/usdc", category: "stablecoins" as CategoryId, token: "USDC", price: "$1.00", marketCap: "$62B", airdropPotential: false, twitterUrl: "https://x.com/circle", websiteUrl: "https://www.circle.com/usdc", contractAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48" },
+  { name: "USDT", description: "Stablecoin ancorata al dollaro, usata per trading e liquidità globale.", icon: usdtIcon, href: "/defi/usdt", category: "stablecoins" as CategoryId, token: "USDT", price: "$1.00", marketCap: "$140B", airdropPotential: false, twitterUrl: "https://x.com/Tether_to", websiteUrl: "https://tether.to", contractAddress: "0xdAC17F958D2ee523a2206206994597C13D831ec7" },
 ];
 
 const RECOMMENDED_PATHS = [
@@ -89,6 +95,9 @@ const PROTOCOL_DESCRIPTION_EN: Record<string, string> = {
   "Protocollo di interoperabilità cross-chain.": "Cross-chain interoperability protocol.",
   "DEX su Arbitrum con incentivi e pool dinamici.": "Arbitrum DEX with incentives and dynamic pools.",
   "Bridge veloce tra Ethereum, L2 e rollup.": "Fast bridge across Ethereum, L2s, and rollups.",
+  "Aggregatore swap di DeFiLlama per trovare route efficienti tra DEX e reti diverse.": "DeFiLlama swap aggregator to find efficient routes across DEXs and networks.",
+  "Stablecoin fiat-collateralizzata per pagamenti, tesoreria e operatività DeFi.": "Fiat-collateralized stablecoin for payments, treasury, and DeFi operations.",
+  "Stablecoin ancorata al dollaro, usata per trading e liquidità globale.": "Dollar-pegged stablecoin used for trading and global liquidity.",
 };
 
 const RECOMMENDED_PATHS_EN: Record<string, { title: string; desc: string }> = {

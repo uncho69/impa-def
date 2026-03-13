@@ -8,8 +8,7 @@ import { AIBotAuthModal } from "@/components/AIBotAuthModal";
 import { PrivyClientProvider } from "@/components/PrivyClientProvider";
 import { PrivyAuthBridge } from "@/components/auth/PrivyAuthBridge";
 import { AnalyticsConsentManager } from "@/components/analytics/AnalyticsConsentManager";
-
-export const dynamic = "force-dynamic";
+import { LanguageAutoTranslate } from "@/components/LanguageAutoTranslate";
 
 export const metadata: Metadata = {
   title: "ImparoDeFi",
@@ -32,14 +31,17 @@ export default function RootLayout({
 
   const content = (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${fontClassNames} text-neutral-900 antialiased font-montserrat bg-background flex flex-col items-center min-h-screen`}>
+      <body className={`${fontClassNames} text-neutral-900 antialiased font-montserrat bg-background flex flex-col min-h-screen`}>
         {themeScript}
         <PrivyClientProvider>
           {isPrivyConfigured ? <PrivyAuthBridge /> : null}
           <LanguageProvider>
+            <LanguageAutoTranslate />
             <AIBotAuthModal />
             <AnalyticsConsentManager />
-            <LayoutWithConditionalNav>{children}</LayoutWithConditionalNav>
+            <div id="app-content-root" className="w-full">
+              <LayoutWithConditionalNav>{children}</LayoutWithConditionalNav>
+            </div>
           </LanguageProvider>
         </PrivyClientProvider>
       </body>

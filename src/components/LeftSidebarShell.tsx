@@ -12,6 +12,7 @@ import { CollapsibleSidebar } from "@/components/CollapsibleSidebar";
 import { SiteFooter } from "@/components/SiteFooter";
 import LanguageToggle from "@/components/LanguageToggle";
 import { useLanguage } from "@/contexts/LanguageContext";
+import AutoTranslateText from "@/components/AutoTranslateText";
 
 type Theme = "dark" | "light";
 
@@ -154,7 +155,9 @@ export function LeftSidebarShell({ children }: { children: ReactNode }) {
           >
             <div className="flex-1 min-h-0 overflow-y-auto overflow-x-auto overscroll-none">
               <div className="min-h-full flex flex-col">
-                <div className="px-6 py-8 flex-1">{children}</div>
+                <div className="px-6 py-8 flex-1">
+                  <AutoTranslateText>{children}</AutoTranslateText>
+                </div>
                 <SiteFooter isDark={isDark} />
               </div>
             </div>

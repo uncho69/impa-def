@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface ActivityItem {
   type: "campaign" | "news";
@@ -34,6 +35,8 @@ function formatDateTime(iso: string): string {
 }
 
 export default function AdminDashboard() {
+  const { language } = useLanguage();
+  const isEnglish = language === "en";
   const [activity, setActivity] = useState<ActivityItem[]>([]);
   const [activityError, setActivityError] = useState<string | null>(null);
 
@@ -42,17 +45,17 @@ export default function AdminDashboard() {
       try {
         const res = await fetch("/api/admin/activity");
         if (!res.ok) {
-          setActivityError("Impossibile caricare i log admin.");
+          setActivityError(isEnglish ? "Unable to load admin logs." : "Impossibile caricare i log admin.");
           return;
         }
         const data = await res.json();
         setActivity(data.activities ?? []);
       } catch {
-        setActivityError("Errore di rete durante il caricamento dei log admin.");
+        setActivityError(isEnglish ? "Network error while loading admin logs." : "Errore di rete durante il caricamento dei log admin.");
       }
     };
     fetchActivity();
-  }, []);
+  }, [isEnglish]);
 
   return (
     <div className="space-y-8">
@@ -60,7 +63,9 @@ export default function AdminDashboard() {
       <div className="flex justify-between items-center">
         <div>
           <p className="text-slate-300">
-            Benvenuto nel pannello admin di ImparoDeFi. Scegli cosa gestire qui sotto.
+            {isEnglish
+              ? "Welcome to the ImparoDeFi admin panel. Choose what to manage below."
+              : "Benvenuto nel pannello admin di ImparoDeFi. Scegli cosa gestire qui sotto."}
           </p>
         </div>
       </div>
@@ -69,10 +74,11 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-indigo-900/25 rounded-xl border border-indigo-500/20 p-6 flex flex-col justify-between backdrop-blur">
           <div>
-            <h2 className="text-xl font-bold text-white mb-2">Articoli</h2>
+            <h2 className="text-xl font-bold text-white mb-2">{isEnglish ? "Articles" : "Articoli"}</h2>
             <p className="text-slate-300 text-sm mb-4">
-              Gestisci news e bozze. Dalla pagina Articoli puoi anche accedere alla sezione
-              &quot;Cosa c&apos;è di nuovo&quot; del sito.
+              {isEnglish
+                ? "Manage news and drafts. From Articles you can also update the site's \"What's new\" section."
+                : "Gestisci news e bozze. Dalla pagina Articoli puoi anche accedere alla sezione \"Cosa c'è di nuovo\" del sito."}
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -80,16 +86,18 @@ export default function AdminDashboard() {
               href="/admin/news"
               className="inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-500 transition-colors"
             >
-              Vai ad Articoli
+              {isEnglish ? "Go to Articles" : "Vai ad Articoli"}
             </Link>
           </div>
         </div>
 
         <div className="bg-indigo-900/25 rounded-xl border border-indigo-500/20 p-6 flex flex-col justify-between backdrop-blur">
           <div>
-            <h2 className="text-xl font-bold text-white mb-2">Campagne</h2>
+            <h2 className="text-xl font-bold text-white mb-2">{isEnglish ? "Campaigns" : "Campagne"}</h2>
             <p className="text-slate-300 text-sm mb-4">
-              Crea e gestisci campagne, epoch, richieste di partecipazione e refresh delle leaderboard.
+              {isEnglish
+                ? "Create and manage campaigns, epochs, participation requests, and leaderboard refreshes."
+                : "Crea e gestisci campagne, epoch, richieste di partecipazione e refresh delle leaderboard."}
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -97,16 +105,18 @@ export default function AdminDashboard() {
               href="/admin/campaigns"
               className="inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-500 transition-colors"
             >
-              Vai a Campagne
+              {isEnglish ? "Go to Campaigns" : "Vai a Campagne"}
             </Link>
           </div>
         </div>
 
         <div className="bg-indigo-900/25 rounded-xl border border-indigo-500/20 p-6 flex flex-col justify-between backdrop-blur">
           <div>
-            <h2 className="text-xl font-bold text-white mb-2">Gestisci progetti</h2>
+            <h2 className="text-xl font-bold text-white mb-2">{isEnglish ? "Manage projects" : "Gestisci progetti"}</h2>
             <p className="text-slate-300 text-sm mb-4">
-              Lista di tutti i progetti (Bitcoin, Ethereum, Solana, Hyperliquid, Base, ecc.) con search e filtri per categoria.
+              {isEnglish
+                ? "List all projects (Bitcoin, Ethereum, Solana, Hyperliquid, Base, etc.) with search and category filters."
+                : "Lista di tutti i progetti (Bitcoin, Ethereum, Solana, Hyperliquid, Base, ecc.) con search e filtri per categoria."}
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -114,16 +124,16 @@ export default function AdminDashboard() {
               href="/admin/projects"
               className="inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-500 transition-colors"
             >
-              Vai a Gestisci progetti
+              {isEnglish ? "Go to Manage projects" : "Vai a Gestisci progetti"}
             </Link>
           </div>
         </div>
 
         <div className="bg-indigo-900/25 rounded-xl border border-indigo-500/20 p-6 flex flex-col justify-between backdrop-blur">
           <div>
-            <h2 className="text-xl font-bold text-white mb-2">Supporto</h2>
+            <h2 className="text-xl font-bold text-white mb-2">{isEnglish ? "Support" : "Supporto"}</h2>
             <p className="text-slate-300 text-sm mb-4">
-              Gestisci le richieste di supporto degli utenti e rispondi alle chat aperte.
+              {isEnglish ? "Manage user support requests and reply to open chats." : "Gestisci le richieste di supporto degli utenti e rispondi alle chat aperte."}
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -131,7 +141,7 @@ export default function AdminDashboard() {
               href="/admin/support"
               className="inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-500 transition-colors"
             >
-              Vai al Supporto
+              {isEnglish ? "Go to Support" : "Vai al Supporto"}
             </Link>
           </div>
         </div>
@@ -140,7 +150,9 @@ export default function AdminDashboard() {
           <div>
             <h2 className="text-xl font-bold text-white mb-2">Hacks &amp; Scams Alerts</h2>
             <p className="text-slate-300 text-sm mb-4">
-              Gestisci gli avvisi di sicurezza mostrati nella homepage, con stato attivo, priorità e link di approfondimento.
+              {isEnglish
+                ? "Manage security alerts shown on the homepage with active state, priority, and deep links."
+                : "Gestisci gli avvisi di sicurezza mostrati nella homepage, con stato attivo, priorità e link di approfondimento."}
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -148,7 +160,7 @@ export default function AdminDashboard() {
               href="/admin/hacks-scams"
               className="inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-500 transition-colors"
             >
-              Vai a Hacks &amp; Scams
+              {isEnglish ? "Go to Hacks & Scams" : "Vai a Hacks & Scams"}
             </Link>
           </div>
         </div>
@@ -157,7 +169,9 @@ export default function AdminDashboard() {
           <div>
             <h2 className="text-xl font-bold text-white mb-2">Learning &amp; Badge</h2>
             <p className="text-slate-300 text-sm mb-4">
-              Configura missioni di livello, campagne speciali temporanee e reward claimabili dagli utenti.
+              {isEnglish
+                ? "Configure level missions, temporary special campaigns, and user-claimable rewards."
+                : "Configura missioni di livello, campagne speciali temporanee e reward claimabili dagli utenti."}
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -165,16 +179,18 @@ export default function AdminDashboard() {
               href="/admin/learning-badges"
               className="inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-500 transition-colors"
             >
-              Vai a Learning &amp; Badge
+              {isEnglish ? "Go to Learning & Badge" : "Vai a Learning & Badge"}
             </Link>
           </div>
         </div>
 
         <div className="bg-indigo-900/25 rounded-xl border border-indigo-500/20 p-6 flex flex-col justify-between backdrop-blur">
           <div>
-            <h2 className="text-xl font-bold text-white mb-2">Token in Tendenza</h2>
+            <h2 className="text-xl font-bold text-white mb-2">{isEnglish ? "Trending Tokens" : "Token in Tendenza"}</h2>
             <p className="text-slate-300 text-sm mb-4">
-              Aggiungi o rimuovi i token progetto mostrati in homepage. I prezzi sono aggiornati ogni minuto via CoinGecko.
+              {isEnglish
+                ? "Add or remove project tokens shown on the homepage. Prices are updated every minute via CoinGecko."
+                : "Aggiungi o rimuovi i token progetto mostrati in homepage. I prezzi sono aggiornati ogni minuto via CoinGecko."}
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -182,7 +198,7 @@ export default function AdminDashboard() {
               href="/admin/trending-tokens"
               className="inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-500 transition-colors"
             >
-              Vai a Token in Tendenza
+              {isEnglish ? "Go to Trending Tokens" : "Vai a Token in Tendenza"}
             </Link>
           </div>
         </div>
@@ -191,7 +207,9 @@ export default function AdminDashboard() {
           <div>
             <h2 className="text-xl font-bold text-white mb-2">Footer &amp; Legal</h2>
             <p className="text-slate-300 text-sm mb-4">
-              Modifica i link del footer e i contenuti delle pagine Privacy Policy e Terms of Service.
+              {isEnglish
+                ? "Edit footer links and the content of Privacy Policy and Terms of Service pages."
+                : "Modifica i link del footer e i contenuti delle pagine Privacy Policy e Terms of Service."}
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -199,16 +217,18 @@ export default function AdminDashboard() {
               href="/admin/site-settings"
               className="inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-500 transition-colors"
             >
-              Vai a Footer &amp; Legal
+              {isEnglish ? "Go to Footer & Legal" : "Vai a Footer & Legal"}
             </Link>
           </div>
         </div>
 
         <div className="bg-indigo-900/25 rounded-xl border border-indigo-500/20 p-6 flex flex-col justify-between backdrop-blur">
           <div>
-            <h2 className="text-xl font-bold text-white mb-2">Accesso Beta</h2>
+            <h2 className="text-xl font-bold text-white mb-2">{isEnglish ? "Beta Access" : "Accesso Beta"}</h2>
             <p className="text-slate-300 text-sm mb-4">
-              Visualizza le richieste del form pubblico, leggi professione/livello crypto/social e approva o rifiuta gli utenti.
+              {isEnglish
+                ? "Review public form requests, check profession/crypto level/social data, and approve or reject users."
+                : "Visualizza le richieste del form pubblico, leggi professione/livello crypto/social e approva o rifiuta gli utenti."}
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -216,14 +236,14 @@ export default function AdminDashboard() {
               href="/admin/access-requests"
               className="inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-500 transition-colors"
             >
-              Vai a richieste accesso
+              {isEnglish ? "Go to access requests" : "Vai a richieste accesso"}
             </Link>
             <Link
               href="/beta-access"
               target="_blank"
               className="inline-flex items-center px-4 py-2 rounded-lg border border-indigo-400/35 text-indigo-100 text-sm font-medium hover:bg-indigo-500/15 transition-colors"
             >
-              Apri form pubblico
+              {isEnglish ? "Open public form" : "Apri form pubblico"}
             </Link>
           </div>
         </div>
@@ -233,15 +253,13 @@ export default function AdminDashboard() {
       <div className="bg-indigo-900/25 rounded-xl border border-indigo-500/20 p-6 backdrop-blur">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold text-white">Admin Logs</h2>
-          <span className="text-xs uppercase tracking-wide text-slate-400">
-            Attività amministrative
-          </span>
+          <span className="text-xs uppercase tracking-wide text-slate-400">{isEnglish ? "Administrative activity" : "Attività amministrative"}</span>
         </div>
         {activityError && (
           <p className="text-sm text-red-300 mb-2">{activityError}</p>
         )}
         {activity.length === 0 && !activityError ? (
-          <p className="text-sm text-slate-400">Nessuna attività recente.</p>
+          <p className="text-sm text-slate-400">{isEnglish ? "No recent activity." : "Nessuna attività recente."}</p>
         ) : (
           <div className="max-h-80 overflow-y-auto">
             <ul className="divide-y divide-indigo-500/20">
@@ -255,7 +273,7 @@ export default function AdminDashboard() {
                       {item.description}
                     </p>
                     <p className="text-xs text-slate-400 mt-1">
-                      {item.type === "campaign" ? "Campagna" : "Articolo"} ·{" "}
+                      {item.type === "campaign" ? (isEnglish ? "Campaign" : "Campagna") : isEnglish ? "Article" : "Articolo"} ·{" "}
                       {formatDateTime(item.timestamp)}
                     </p>
                   </div>

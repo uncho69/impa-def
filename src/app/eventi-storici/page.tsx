@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Accordion } from "@/components/Accordion";
 import { BookmarkButton } from "@/components/bookmarks/BookmarkButton";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type Era = "foundations" | "expansion" | "mainstream" | "institutional";
 
@@ -209,14 +210,129 @@ const HISTORICAL_EVENTS: HistoricalEvent[] = [
   },
 ];
 
+const EVENT_EN_COPY: Record<
+  number,
+  { title: string; description: string; impact: string; tags: string[]; links?: EventLink[] }
+> = {
+  1: {
+    title: "Bitcoin launch",
+    description: "Bitcoin, created under the pseudonym Satoshi Nakamoto, introduces the first decentralized blockchain-based cryptocurrency.",
+    impact: "The entire crypto sector is born, laying the technical and cultural foundations of Web3.",
+    tags: ["Bitcoin", "Blockchain", "Origins"],
+    links: [{ label: "Historic Bitcoin forum post", href: "https://news.bitcoin.com/13-years-ago-today-satoshi-nakamoto-published-the-first-forum-post-introducing-bitcoin/" }],
+  },
+  2: {
+    title: "Ethereum creation",
+    description: "Ethereum introduces smart contracts and a programmable platform for decentralized applications.",
+    impact: "It radically expands blockchain use cases and enables DeFi, NFTs, and new protocol categories.",
+    tags: ["Ethereum", "Smart contracts", "dApps"],
+    links: [
+      { label: "Ethereum Launches (official blog)", href: "https://blog.ethereum.org/2015/07/30/ethereum-launches" },
+      { label: "Cointelegraph - launch date", href: "https://cointelegraph.com/news/ethereum-announces-official-launch-date" },
+    ],
+  },
+  3: {
+    title: "ICO boom",
+    description: "ICOs become the primary fundraising mechanism for early blockchain projects.",
+    impact: "Explosive ecosystem growth, but also many failures and scams, pushing the industry toward stronger regulation.",
+    tags: ["ICO", "Fundraising", "Regulation"],
+  },
+  4: {
+    title: "DeFi Summer",
+    description: "Protocols like Uniswap, Compound, and Aave make on-chain finance accessible at scale.",
+    impact: "DeFi becomes a core Web3 vertical with permissionless lending, trading, and yield generation.",
+    tags: ["DeFi", "Uniswap", "Aave"],
+  },
+  5: {
+    title: "NFT boom",
+    description: "NFTs enter the mainstream with record sales and broad cultural adoption.",
+    impact: "New digital ownership models emerge for creators, brands, and communities.",
+    tags: ["NFT", "Creator economy", "Mainstream"],
+  },
+  6: {
+    title: "El Salvador adopts Bitcoin",
+    description: "El Salvador becomes the first country to adopt Bitcoin as legal tender.",
+    impact: "A symbolic milestone for state-level cryptocurrency adoption.",
+    tags: ["Adoption", "Bitcoin", "Nation-states"],
+  },
+  7: {
+    title: "Ethereum The Merge",
+    description: "Ethereum transitions from Proof-of-Work to Proof-of-Stake with The Merge.",
+    impact: "Major reduction in energy usage and a stronger base for future scalability.",
+    tags: ["Ethereum", "PoS", "Scalability"],
+  },
+  8: {
+    title: "Layer 2 ecosystem growth",
+    description: "Arbitrum, Optimism, and zk-rollups accelerate Ethereum adoption and usability.",
+    impact: "Lower fees and higher throughput unlock consumer-scale use cases.",
+    tags: ["Layer 2", "Arbitrum", "Optimism"],
+  },
+  9: {
+    title: "FTX collapse",
+    description: "FTX files for bankruptcy after severe liquidity and governance failures.",
+    impact: "A major trust shock that drives demand for transparency, proof-of-reserves, and compliance.",
+    tags: ["FTX", "Risk", "Compliance"],
+  },
+  10: {
+    title: "Decentralized social growth (Lens)",
+    description: "Platforms like Lens introduce social models based on content ownership.",
+    impact: "Challenges Web2 centralized models with portable identity and portable social graph.",
+    tags: ["SocialFi", "Lens", "Identity"],
+  },
+  11: {
+    title: "Cross-chain interoperability",
+    description: "Solutions like LayerZero improve communication and asset transfers between chains.",
+    impact: "Stronger integration across ecosystems and rising multi-chain user experience.",
+    tags: ["Interoperability", "LayerZero", "Cross-chain"],
+  },
+  12: {
+    title: "Spot Bitcoin ETF approval",
+    description: "The SEC approves the first spot Bitcoin ETFs in the United States.",
+    impact: "Structural institutional capital inflow and stronger market legitimacy.",
+    tags: ["ETF", "Bitcoin", "Institutions"],
+  },
+  13: {
+    title: "Celebrities and narrative tokens",
+    description: "Celebrities and public figures promote or launch tokens and collections.",
+    impact: "Retail visibility increases, but so do hype, manipulation, and scam risks.",
+    tags: ["Memes", "Retail", "Risk"],
+  },
+};
+
 export default function EventiStoriciPage() {
+  const { language } = useLanguage();
+  const isEnglish = language === "en";
   const [search, setSearch] = useState("");
   const [activeEra, setActiveEra] = useState<EraFilterId>("all");
   const [activeEventId, setActiveEventId] = useState<number | null>(null);
+  const eraFilters = isEnglish
+    ? [
+        { id: "all", label: "All" },
+        { id: "foundations", label: "2009-2016" },
+        { id: "expansion", label: "2017-2020" },
+        { id: "mainstream", label: "2021-2022" },
+        { id: "institutional", label: "2023-2024" },
+      ]
+    : ERA_FILTERS;
+  const historicalEvents = useMemo(() => {
+    if (!isEnglish) return HISTORICAL_EVENTS;
+    return HISTORICAL_EVENTS.map((event) => {
+      const en = EVENT_EN_COPY[event.id];
+      if (!en) return event;
+      return {
+        ...event,
+        title: en.title,
+        description: en.description,
+        impact: en.impact,
+        tags: en.tags,
+        links: en.links ?? event.links,
+      };
+    });
+  }, [isEnglish]);
 
   const filteredEvents = useMemo(() => {
     const q = search.trim().toLowerCase();
-    return HISTORICAL_EVENTS.filter((event) => {
+    return historicalEvents.filter((event) => {
       const matchesEra = activeEra === "all" ? true : event.era === activeEra;
       const matchesSearch =
         q.length === 0 ||
@@ -226,7 +342,7 @@ export default function EventiStoriciPage() {
         event.tags.join(" ").toLowerCase().includes(q);
       return matchesEra && matchesSearch;
     }).sort((a, b) => b.yearStart - a.yearStart || b.id - a.id);
-  }, [search, activeEra]);
+  }, [search, activeEra, historicalEvents]);
 
   const timelineEvents = useMemo(
     () => [...filteredEvents].sort((a, b) => a.yearStart - b.yearStart || a.id - b.id),
@@ -248,9 +364,9 @@ export default function EventiStoriciPage() {
     <div className="relative z-10">
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">Eventi Storici</h1>
+          <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">{isEnglish ? "Historical events" : "Eventi Storici"}</h1>
           <p className="text-slate-600 dark:text-slate-400 text-lg">
-            I momenti chiave che hanno definito l evoluzione del Web3
+            {isEnglish ? "Key moments that shaped Web3 evolution" : "I momenti chiave che hanno definito l evoluzione del Web3"}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -259,23 +375,23 @@ export default function EventiStoriciPage() {
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-colors border-white/20 bg-white/5 hover:bg-white/10 text-white"
           >
             <span>📘</span>
-            <span>Manuale</span>
+            <span>{isEnglish ? "Manual" : "Manuale"}</span>
           </Link>
           <Link
             href="/news"
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-amber-400 hover:bg-amber-500 text-slate-900 transition-colors"
           >
             <span>📰</span>
-            <span>Notizie</span>
+            <span>{isEnglish ? "News" : "Notizie"}</span>
           </Link>
         </div>
       </div>
 
       <div className="rounded-2xl border border-slate-200 dark:border-indigo-500/20 bg-white/90 dark:bg-indigo-900/25 p-4 sm:p-5 mb-6">
         <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-          <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-300">Timeline Web3</p>
+          <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-300">{isEnglish ? "Web3 timeline" : "Timeline Web3"}</p>
           <p className="text-xs text-slate-500 dark:text-slate-300">
-            {timelineEvents.length} eventi • 2009-2024
+            {timelineEvents.length} {isEnglish ? "events" : "eventi"} • 2009-2024
           </p>
         </div>
         <div className="overflow-x-auto pb-1">
@@ -323,7 +439,7 @@ export default function EventiStoriciPage() {
       </div>
 
       <div className="flex flex-wrap gap-2 mb-5">
-        {ERA_FILTERS.map((filter) => (
+        {eraFilters.map((filter) => (
           <button
             key={filter.id}
             type="button"
@@ -343,7 +459,7 @@ export default function EventiStoriciPage() {
         <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
         <input
           type="search"
-          placeholder="Cerca evento, impatto o tag"
+          placeholder={isEnglish ? "Search event, impact, or tag" : "Cerca evento, impatto o tag"}
           value={search}
           onChange={(event) => setSearch(event.target.value)}
           className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 dark:border-indigo-500/30 bg-white dark:bg-indigo-900/40 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
@@ -378,12 +494,12 @@ export default function EventiStoriciPage() {
               >
                 <div className="pl-9 space-y-4">
                   <div className="rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-900/30 p-3">
-                    <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400 mb-1">Descrizione</p>
+                    <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400 mb-1">{isEnglish ? "Description" : "Descrizione"}</p>
                     <p className="text-slate-700 dark:text-slate-200">{event.description}</p>
                   </div>
 
                   <div className="rounded-lg border border-emerald-200 dark:border-emerald-700/40 bg-emerald-50/80 dark:bg-emerald-900/20 p-3">
-                    <p className="text-xs uppercase tracking-wide text-emerald-700 dark:text-emerald-300 mb-1">Impatto</p>
+                    <p className="text-xs uppercase tracking-wide text-emerald-700 dark:text-emerald-300 mb-1">{isEnglish ? "Impact" : "Impatto"}</p>
                     <p className="text-emerald-900 dark:text-emerald-100">{event.impact}</p>
                   </div>
 
@@ -400,7 +516,7 @@ export default function EventiStoriciPage() {
 
                   {event.links && event.links.length > 0 && (
                     <div className="rounded-lg border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900/30 p-3">
-                      <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400 mb-2">Fonti utili</p>
+                      <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400 mb-2">{isEnglish ? "Useful sources" : "Fonti utili"}</p>
                       <ul className="space-y-2">
                         {event.links.map((item) => (
                           <li key={item.href}>
@@ -420,7 +536,7 @@ export default function EventiStoriciPage() {
                   <div className="pt-1">
                     <BookmarkButton
                       url={`/eventi-storici#event-${event.id}`}
-                      title={`${event.title} - Evento storico Web3`}
+                      title={`${event.title} - ${isEnglish ? "Web3 historical event" : "Evento storico Web3"}`}
                       type="page"
                       projectId={`evento-${event.id}`}
                     />
@@ -434,7 +550,7 @@ export default function EventiStoriciPage() {
 
       {filteredEvents.length === 0 && (
         <p className="text-center py-12 text-slate-500 dark:text-slate-400">
-          Nessun evento trovato per i filtri selezionati.
+          {isEnglish ? "No events found for selected filters." : "Nessun evento trovato per i filtri selezionati."}
         </p>
       )}
     </div>

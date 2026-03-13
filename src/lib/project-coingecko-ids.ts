@@ -65,6 +65,8 @@ export const PROJECT_COINGECKO_IDS: Record<string, string> = {
   moonwell: "moonwell",
   kamino: "kamino-finance",
   abstract: "abstract",
+  usdc: "usd-coin",
+  usdt: "tether",
 };
 
 export function getCoingeckoId(projectId: string): string | null {

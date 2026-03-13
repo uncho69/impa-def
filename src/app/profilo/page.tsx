@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { PrivySocialConnector } from "@/components/profile/PrivySocialConnector";
 import { LearningBadgesPanel } from "@/components/profile/LearningBadgesPanel";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { trackEvent } from "@/lib/analytics";
 import { useAppAuth } from "@/lib/auth/useAppAuth";
 import { usePrivy, useWallets } from "@privy-io/react-auth";
@@ -170,6 +171,8 @@ async function signSolanaOwnership(address: string): Promise<void> {
 }
 
 export default function ProfiloPage() {
+  const { language } = useLanguage();
+  const isEnglish = language === "en";
   const { isLoaded, isSignedIn, login } = useAppAuth();
   const { ready: privyReady, authenticated, user, signMessage, linkWallet, getAccessToken } = usePrivy();
   const { wallets } = useWallets();
@@ -572,7 +575,7 @@ export default function ProfiloPage() {
   }
 
   if (!isLoaded || loading) {
-    return <div className="max-w-5xl mx-auto animate-pulse text-slate-300 px-6 py-10">Caricamento profilo...</div>;
+    return <div className="max-w-5xl mx-auto animate-pulse text-slate-300 px-6 py-10">{isEnglish ? "Loading profile..." : "Caricamento profilo..."}</div>;
   }
 
   if (!isSignedIn) {
@@ -580,14 +583,14 @@ export default function ProfiloPage() {
       <div className="px-6 py-10">
         <div className={`max-w-3xl mx-auto ${PANEL_CLASS}`}>
           <h1 className="text-2xl font-semibold">Profilo</h1>
-          <p className="mt-2 text-slate-300">Per accedere al tuo profilo devi effettuare il login.</p>
+          <p className="mt-2 text-slate-300">{isEnglish ? "You need to sign in to access your profile." : "Per accedere al tuo profilo devi effettuare il login."}</p>
           <div className="mt-5">
             <button
               type="button"
               onClick={() => login()}
               className="rounded-lg bg-indigo-500 px-4 py-2 text-sm font-medium hover:bg-indigo-400"
             >
-              Accedi
+              {isEnglish ? "Sign in" : "Accedi"}
             </button>
           </div>
         </div>
@@ -599,7 +602,7 @@ export default function ProfiloPage() {
     return (
       <div className="px-6 py-10">
         <div className="max-w-3xl mx-auto rounded-2xl border border-rose-500/30 bg-rose-950/20 backdrop-blur p-6">
-          <p className="text-rose-200">{error || "Impossibile caricare il profilo."}</p>
+          <p className="text-rose-200">{error || (isEnglish ? "Unable to load profile." : "Impossibile caricare il profilo.")}</p>
         </div>
       </div>
     );
@@ -619,7 +622,7 @@ export default function ProfiloPage() {
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">{profile.username}</h1>
-              <p className="mt-1 text-slate-300">Rank globale #{profile.ranking.globalRank}</p>
+              <p className="mt-1 text-slate-300">{isEnglish ? "Global rank" : "Rank globale"} #{profile.ranking.globalRank}</p>
             </div>
             {publicProfileHref ? (
               <div className="flex flex-wrap items-center gap-2">
@@ -627,7 +630,7 @@ export default function ProfiloPage() {
                   href={publicProfileHref}
                   className="rounded-lg border border-indigo-400/40 px-4 py-2 text-sm text-indigo-200 hover:bg-indigo-500/20"
                 >
-                  Visualizza profilo pubblico
+                  {isEnglish ? "View public profile" : "Visualizza profilo pubblico"}
                 </Link>
               </div>
             ) : null}
@@ -635,17 +638,17 @@ export default function ProfiloPage() {
 
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-              <p className="text-xs uppercase tracking-wide text-slate-400">Punti totali</p>
-              <p className="mt-1 text-2xl font-semibold">{profile.ranking.totalPoints.toLocaleString("it-IT")}</p>
+              <p className="text-xs uppercase tracking-wide text-slate-400">{isEnglish ? "Total points" : "Punti totali"}</p>
+              <p className="mt-1 text-2xl font-semibold">{profile.ranking.totalPoints.toLocaleString(isEnglish ? "en-US" : "it-IT")}</p>
             </div>
             <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-              <p className="text-xs uppercase tracking-wide text-slate-400">Tweet campagne</p>
-              <p className="mt-1 text-2xl font-semibold">{profile.ranking.totalTweets.toLocaleString("it-IT")}</p>
+              <p className="text-xs uppercase tracking-wide text-slate-400">{isEnglish ? "Campaign tweets" : "Tweet campagne"}</p>
+              <p className="mt-1 text-2xl font-semibold">{profile.ranking.totalTweets.toLocaleString(isEnglish ? "en-US" : "it-IT")}</p>
             </div>
             <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-              <p className="text-xs uppercase tracking-wide text-slate-400">Address connessi</p>
+              <p className="text-xs uppercase tracking-wide text-slate-400">{isEnglish ? "Connected addresses" : "Address connessi"}</p>
               <p className="mt-1 text-lg font-medium">{shortenAddress(resolvedWalletAddress)}</p>
-              <p className="mt-1 text-xs text-slate-400">{walletAddresses.length} salvati</p>
+              <p className="mt-1 text-xs text-slate-400">{walletAddresses.length} {isEnglish ? "saved" : "salvati"}</p>
             </div>
           </div>
         </section>
@@ -661,7 +664,7 @@ export default function ProfiloPage() {
                   : "border-indigo-500/30 bg-indigo-900/25 text-slate-300 hover:bg-indigo-800/30"
               }`}
             >
-              Impostazioni
+              {isEnglish ? "Settings" : "Impostazioni"}
             </button>
             <button
               type="button"
@@ -683,38 +686,40 @@ export default function ProfiloPage() {
                   : "border-indigo-500/30 bg-indigo-900/25 text-slate-300 hover:bg-indigo-800/30"
               }`}
             >
-              Contenuti campagne
+              {isEnglish ? "Campaign content" : "Contenuti campagne"}
             </button>
           </div>
           <p className="mt-2 text-xs text-slate-400">
-            Vista compatta: scegli la sezione da gestire senza scroll infinito.
+            {isEnglish ? "Compact view: choose the section to manage without endless scrolling." : "Vista compatta: scegli la sezione da gestire senza scroll infinito."}
           </p>
         </section>
 
         {activeTab === "settings" && (
         <section className={PANEL_CLASS}>
-          <h2 className="text-xl font-semibold">Impostazioni profilo pubblico</h2>
+          <h2 className="text-xl font-semibold">{isEnglish ? "Public profile settings" : "Impostazioni profilo pubblico"}</h2>
           <p className="mt-1 text-sm text-slate-300">
-            Il profilo X e i contenuti campagne sono pubblici di default. Qui puoi personalizzare username e visibilita address.
+            {isEnglish
+              ? "Your X profile and campaign content are public by default. Here you can customize username and address visibility."
+              : "Il profilo X e i contenuti campagne sono pubblici di default. Qui puoi personalizzare username e visibilita address."}
           </p>
 
           <div className="mt-5 grid gap-5 md:grid-cols-2">
             <label className="space-y-2">
-              <span className="text-sm text-slate-300">Username (opzionale)</span>
+              <span className="text-sm text-slate-300">{isEnglish ? "Username (optional)" : "Username (opzionale)"}</span>
               <input
                 value={usernameInput}
                 onChange={(e) => setUsernameInput(e.target.value)}
-                placeholder={profile.defaultUsername || "username_personale"}
+                placeholder={profile.defaultUsername || (isEnglish ? "custom_username" : "username_personale")}
                 className="w-full rounded-lg border border-indigo-500/30 bg-indigo-900/25 px-3 py-2 text-white outline-none focus:border-indigo-400"
               />
-              <span className="block text-xs text-slate-400">3-30 caratteri, solo lettere, numeri e underscore.</span>
+              <span className="block text-xs text-slate-400">{isEnglish ? "3-30 characters, letters, numbers, and underscore only." : "3-30 caratteri, solo lettere, numeri e underscore."}</span>
             </label>
 
             <div className="rounded-lg border border-indigo-500/30 bg-indigo-900/25 px-4 py-3">
               <label className="flex items-center justify-between gap-4">
                 <div>
-                  <p className="text-sm font-medium text-white">Rendi pubblico l&apos;address connesso</p>
-                  <p className="text-xs text-slate-400">Se disattivato, sul profilo pubblico non si vedra il wallet.</p>
+                  <p className="text-sm font-medium text-white">{isEnglish ? "Make connected address public" : "Rendi pubblico l'address connesso"}</p>
+                  <p className="text-xs text-slate-400">{isEnglish ? "If disabled, the wallet won't be visible on the public profile." : "Se disattivato, sul profilo pubblico non si vedra il wallet."}</p>
                 </div>
                 <input
                   type="checkbox"
@@ -727,9 +732,9 @@ export default function ProfiloPage() {
           </div>
 
           <div className="mt-5 rounded-lg border border-indigo-500/30 bg-indigo-900/25 px-4 py-3">
-            <p className="text-sm text-slate-300 mb-2">Social connect</p>
+            <p className="text-sm text-slate-300 mb-2">{isEnglish ? "Social connect" : "Social connect"}</p>
             {!privyReady ? (
-              <p className="text-xs text-slate-400">Inizializzazione social connect...</p>
+              <p className="text-xs text-slate-400">{isEnglish ? "Initializing social connect..." : "Inizializzazione social connect..."}</p>
             ) : (
               <>
                 <PrivySocialConnector />
@@ -752,14 +757,14 @@ export default function ProfiloPage() {
                         <span>{connectedXHandle}</span>
                       </span>
                     ) : (
-                      <span className="text-slate-400">X non collegato</span>
+                      <span className="text-slate-400">{isEnglish ? "X not connected" : "X non collegato"}</span>
                     )}
                   </div>
                   <div className="text-sm text-slate-200">
                     {connectedEmail ? (
                       <span className="text-slate-300">{connectedEmail}</span>
                     ) : (
-                      <span className="text-slate-400">Email non collegata</span>
+                      <span className="text-slate-400">{isEnglish ? "Email not connected" : "Email non collegata"}</span>
                     )}
                   </div>
                 </div>
@@ -768,9 +773,9 @@ export default function ProfiloPage() {
           </div>
 
           <div className="mt-5 rounded-lg border border-indigo-500/30 bg-indigo-900/25 px-4 py-3">
-            <p className="text-sm font-medium text-white">Portafogli Connessi</p>
+            <p className="text-sm font-medium text-white">{isEnglish ? "Connected wallets" : "Portafogli Connessi"}</p>
             <p className="mt-1 text-xs text-slate-400">
-              Connetti wallet e scegli quali address pubblicare nel profilo.
+              {isEnglish ? "Connect wallets and choose which addresses to display publicly." : "Connetti wallet e scegli quali address pubblicare nel profilo."}
             </p>
 
             {PRIVY_ENABLED ? (
@@ -781,20 +786,20 @@ export default function ProfiloPage() {
                     onClick={handleConnectEvmWallet}
                     className="rounded-lg border border-emerald-400/40 px-3 py-2 text-sm text-emerald-200 hover:bg-emerald-500/20"
                   >
-                    Connetti wallet EVM
+                    {isEnglish ? "Connect EVM wallet" : "Connetti wallet EVM"}
                   </button>
                   <button
                     type="button"
                     onClick={handleConnectSolanaWallet}
                     className="rounded-lg border border-cyan-400/40 px-3 py-2 text-sm text-cyan-200 hover:bg-cyan-500/20"
                   >
-                    Connetti wallet Solana
+                    {isEnglish ? "Connect Solana wallet" : "Connetti wallet Solana"}
                   </button>
                 </div>
 
                 {pendingWalletAddresses.length > 0 ? (
                   <div className="space-y-2 rounded-md border border-amber-400/30 bg-amber-950/20 p-3">
-                    <p className="text-xs text-amber-200">Wallet connessi da confermare con firma:</p>
+                    <p className="text-xs text-amber-200">{isEnglish ? "Connected wallets to confirm with signature:" : "Wallet connessi da confermare con firma:"}</p>
                     {pendingWalletAddresses.map((address) => (
                       <div
                         key={`pending-${address}`}
@@ -808,14 +813,14 @@ export default function ProfiloPage() {
                             disabled={verifyingAddress === address}
                             className="rounded-md border border-amber-400/40 px-3 py-1 text-xs text-amber-100 hover:bg-amber-500/20 disabled:opacity-70"
                           >
-                            {verifyingAddress === address ? "Firma..." : "Conferma firma e aggiungi"}
+                            {verifyingAddress === address ? (isEnglish ? "Signing..." : "Firma...") : isEnglish ? "Confirm signature and add" : "Conferma firma e aggiungi"}
                           </button>
                           <button
                             type="button"
                             onClick={() => handleRemovePendingWallet(address)}
                             className="rounded-md border border-rose-400/40 px-2 py-1 text-sm font-semibold leading-none text-rose-200 hover:bg-rose-500/20"
                             aria-label={`Rimuovi wallet in attesa ${address}`}
-                            title="Rimuovi wallet in attesa"
+                            title={isEnglish ? "Remove pending wallet" : "Rimuovi wallet in attesa"}
                           >
                             ×
                           </button>
@@ -847,7 +852,7 @@ export default function ProfiloPage() {
 
                 {walletAddresses.length === 0 && pendingWalletAddresses.length === 0 ? (
                   <div className="rounded-md border border-indigo-500/20 bg-indigo-950/30 px-3 py-2 text-xs text-slate-300">
-                    Nessun wallet connesso al profilo. Collega un wallet e conferma la firma per aggiungerlo.
+                    {isEnglish ? "No wallets connected to this profile. Connect a wallet and confirm signature to add it." : "Nessun wallet connesso al profilo. Collega un wallet e conferma la firma per aggiungerlo."}
                   </div>
                 ) : null}
               </div>
@@ -860,7 +865,7 @@ export default function ProfiloPage() {
               disabled={saving}
               className="rounded-lg bg-indigo-500 px-4 py-2 text-sm font-medium hover:bg-indigo-400 disabled:opacity-70"
             >
-              {saving ? "Salvataggio..." : data.noDatabase ? "Salva localmente" : "Salva impostazioni"}
+              {saving ? (isEnglish ? "Saving..." : "Salvataggio...") : data.noDatabase ? (isEnglish ? "Save locally" : "Salva localmente") : isEnglish ? "Save settings" : "Salva impostazioni"}
             </button>
 
             {profile.xProfileUrl ? (
@@ -870,16 +875,18 @@ export default function ProfiloPage() {
                 rel="noreferrer"
                 className="text-sm text-indigo-300 underline-offset-2 hover:underline"
               >
-                Profilo X pubblico
+                {isEnglish ? "Public X profile" : "Profilo X pubblico"}
               </a>
             ) : (
-              <span className="text-sm text-slate-400">Collega X dalla sezione Social connect</span>
+              <span className="text-sm text-slate-400">{isEnglish ? "Connect X from the Social connect section" : "Collega X dalla sezione Social connect"}</span>
             )}
           </div>
 
           {!PRIVY_ENABLED ? (
             <p className="mt-4 text-xs text-slate-400">
-              Per abilitare wallet connect con Privy imposta `NEXT_PUBLIC_PRIVY_APP_ID` in ambiente.
+              {isEnglish
+                ? "To enable Privy wallet connect, set `NEXT_PUBLIC_PRIVY_APP_ID` in the environment."
+                : "Per abilitare wallet connect con Privy imposta `NEXT_PUBLIC_PRIVY_APP_ID` in ambiente."}
             </p>
           ) : null}
 
@@ -894,20 +901,20 @@ export default function ProfiloPage() {
 
         {activeTab === "contents" && (
         <section className={PANEL_CLASS}>
-          <h2 className="text-xl font-semibold">Contenuti creati per le campagne</h2>
-          <p className="mt-1 text-sm text-slate-300">Qui trovi tutti i contenuti che hai pubblicato e tracciato nelle campagne.</p>
+          <h2 className="text-xl font-semibold">{isEnglish ? "Campaign content you've created" : "Contenuti creati per le campagne"}</h2>
+          <p className="mt-1 text-sm text-slate-300">{isEnglish ? "Here you can find all content you've published and tracked in campaigns." : "Qui trovi tutti i contenuti che hai pubblicato e tracciato nelle campagne."}</p>
 
           <div className="mt-5 space-y-3">
             {contents.length === 0 ? (
               <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4 text-slate-300">
-                Nessun contenuto registrato per ora.
+                {isEnglish ? "No content recorded yet." : "Nessun contenuto registrato per ora."}
               </div>
             ) : (
               contents.map((item) => (
                 <article key={item.id} className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="text-sm text-slate-300">
-                      {item.projectId ? `Progetto: ${item.projectId}` : "Progetto non disponibile"}
+                      {item.projectId ? `${isEnglish ? "Project" : "Progetto"}: ${item.projectId}` : isEnglish ? "Project unavailable" : "Progetto non disponibile"}
                       {typeof item.campaignIndex === "number" ? ` • Campaign ${item.campaignIndex}` : ""}
                       {typeof item.epochIndex === "number" ? ` • Epoch ${item.epochIndex}` : ""}
                     </div>
@@ -918,7 +925,7 @@ export default function ProfiloPage() {
                         rel="noreferrer"
                         className="text-sm text-indigo-300 underline-offset-2 hover:underline"
                       >
-                        Apri su X
+                        {isEnglish ? "Open on X" : "Apri su X"}
                       </a>
                     ) : null}
                   </div>

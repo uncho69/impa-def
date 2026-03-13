@@ -8,11 +8,13 @@ import sandboxLogo from "@/assets/sandbox-logo.jpg";
 import decentralandLogo from "@/assets/decentraland-logo.jpg";
 import { IntroduzioneGiochiModal } from "@/components/IntroduzioneGiochiModal";
 import { BookmarkButton } from "@/components/bookmarks/BookmarkButton";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type GameItem = {
   title: string;
   icon: StaticImageData;
   description: string;
+  descriptionEn: string;
   genre: "metaverse" | "strategy";
   website: string;
   xProfile: string;
@@ -32,6 +34,7 @@ const GAMES: GameItem[] = [
     title: "Axie Infinity",
     icon: axieLogo,
     description: "Pioniere del modello play-to-earn con economia basata su asset digitali.",
+    descriptionEn: "Pioneer of the play-to-earn model with a digital asset-driven economy.",
     genre: "strategy",
     website: "https://axieinfinity.com/",
     xProfile: "https://x.com/AxieInfinity",
@@ -41,6 +44,7 @@ const GAMES: GameItem[] = [
     title: "The Sandbox",
     icon: sandboxLogo,
     description: "Mondo virtuale dove utenti creano, possiedono e monetizzano esperienze di gioco.",
+    descriptionEn: "Virtual world where users create, own, and monetize gaming experiences.",
     genre: "metaverse",
     website: "https://www.sandbox.game/",
     xProfile: "https://x.com/TheSandboxGame",
@@ -50,6 +54,7 @@ const GAMES: GameItem[] = [
     title: "Decentraland",
     icon: decentralandLogo,
     description: "Metaverso decentralizzato con proprieta digitali, eventi e contenuti social.",
+    descriptionEn: "Decentralized metaverse with digital ownership, events, and social content.",
     genre: "metaverse",
     website: "https://decentraland.org/",
     xProfile: "https://x.com/decentraland",
@@ -58,13 +63,30 @@ const GAMES: GameItem[] = [
 ];
 
 export default function GiochiPage() {
+  const { language } = useLanguage();
+  const isEnglish = language === "en";
   const [search, setSearch] = useState("");
   const [activeFilter, setActiveFilter] = useState<FilterId>("all");
   const [introOpen, setIntroOpen] = useState(false);
+  const filters = isEnglish
+    ? [
+        { id: "all", label: "All" },
+        { id: "metaverse", label: "Metaverse" },
+        { id: "strategy", label: "Strategy" },
+      ]
+    : FILTERS;
+  const games = useMemo(
+    () =>
+      GAMES.map((game) => ({
+        ...game,
+        description: isEnglish ? game.descriptionEn : game.description,
+      })),
+    [isEnglish]
+  );
 
   const filteredGames = useMemo(() => {
     const q = search.trim().toLowerCase();
-    return GAMES.filter((game) => {
+    return games.filter((game) => {
       const matchesFilter = activeFilter === "all" ? true : game.genre === activeFilter;
       const matchesSearch =
         q.length === 0 ||
@@ -72,15 +94,15 @@ export default function GiochiPage() {
         game.description.toLowerCase().includes(q);
       return matchesFilter && matchesSearch;
     });
-  }, [search, activeFilter]);
+  }, [search, activeFilter, games]);
 
   return (
     <div className="relative z-10">
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">Giochi</h1>
+          <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">{isEnglish ? "Games" : "Giochi"}</h1>
           <p className="text-slate-600 dark:text-slate-400 text-lg">
-            Ecosistema gaming Web3, Play-to-Earn e ownership digitale
+            {isEnglish ? "Web3 gaming ecosystem, Play-to-Earn and digital ownership" : "Ecosistema gaming Web3, Play-to-Earn e ownership digitale"}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -90,20 +112,20 @@ export default function GiochiPage() {
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-colors shrink-0 border-white/20 bg-white/5 hover:bg-white/10 text-white"
           >
             <span>🎮</span>
-            <span>Intro ai Giochi Web3</span>
+            <span>{isEnglish ? "Web3 Gaming Introduction" : "Intro ai Giochi Web3"}</span>
           </button>
           <Link
             href="/news/gaming"
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-amber-400 hover:bg-amber-500 text-slate-900 transition-colors"
           >
             <span>📰</span>
-            <span>Notizie</span>
+            <span>{isEnglish ? "News" : "Notizie"}</span>
           </Link>
         </div>
       </div>
 
       <div className="flex flex-wrap gap-2 mb-6">
-        {FILTERS.map((filter) => (
+        {filters.map((filter) => (
           <button
             key={filter.id}
             type="button"
@@ -123,7 +145,7 @@ export default function GiochiPage() {
         <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
         <input
           type="search"
-          placeholder="Cerca giochi Web3"
+          placeholder={isEnglish ? "Search Web3 games" : "Cerca giochi Web3"}
           value={search}
           onChange={(event) => setSearch(event.target.value)}
           className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 dark:border-indigo-500/30 bg-white dark:bg-indigo-900/40 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
@@ -146,7 +168,7 @@ export default function GiochiPage() {
                     <span className="font-bold text-slate-900 dark:text-white truncate">{game.title}</span>
                   </div>
                   <span className="shrink-0 px-2 py-1 rounded-lg bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 text-[11px] font-medium whitespace-nowrap">
-                    Web3 Game
+                    {isEnglish ? "Web3 game" : "Web3 Game"}
                   </span>
                 </div>
                 <p className="text-slate-600 dark:text-slate-400 text-sm mb-3 line-clamp-3">{game.description}</p>
@@ -167,14 +189,14 @@ export default function GiochiPage() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-1.5 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-indigo-800/50 transition-colors"
-                  title="Sito web"
-                  aria-label="Sito web"
+                  title={isEnglish ? "Website" : "Sito web"}
+                  aria-label={isEnglish ? "Website" : "Sito web"}
                 >
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>
                 </a>
                 <BookmarkButton
                   url={game.href}
-                  title={`${game.title} - Gioco Web3`}
+                  title={`${game.title} - ${isEnglish ? "Web3 game" : "Gioco Web3"}`}
                   type="page"
                   projectId={game.href.replace("/giochi/", "")}
                   className="ml-auto"
@@ -185,7 +207,7 @@ export default function GiochiPage() {
         </div>
         {filteredGames.length === 0 && (
           <p className="text-center py-12 text-slate-500 dark:text-slate-400">
-            Nessun gioco trovato per i filtri selezionati.
+            {isEnglish ? "No games found for selected filters." : "Nessun gioco trovato per i filtri selezionati."}
           </p>
         )}
       </main>

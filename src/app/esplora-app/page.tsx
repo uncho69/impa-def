@@ -17,6 +17,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import LanguageToggle from "@/components/LanguageToggle";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getDefiSidebarItems } from "@/lib/defi-sidebar";
+import AutoTranslateText from "@/components/AutoTranslateText";
 
 /** Filtri categoria per la pagina Mappa Ecosistema */
 const ECOSYSTEM_FILTERS: { id: MacroCategoryId; label: string }[] = [
@@ -173,7 +174,8 @@ export default function EsploraAppPage() {
   };
 
   return (
-    <div
+    <AutoTranslateText>
+      <div
       className={`min-h-screen overflow-x-hidden transition-colors ${
         isDark
           ? "bg-gradient-to-b from-indigo-950 via-slate-900/95 via-30% to-indigo-950 text-white"
@@ -506,6 +508,7 @@ export default function EsploraAppPage() {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </AutoTranslateText>
   );
 }

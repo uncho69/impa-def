@@ -1,6 +1,5 @@
 "use client";
 
-import { Accordion } from "@/components/Accordion";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -13,6 +12,7 @@ import { LEARNING_PATH_CARDS } from "@/lib/learning-paths";
 import { SiteFooter } from "@/components/SiteFooter";
 import { useLanguage } from "@/contexts/LanguageContext";
 import LanguageToggle from "@/components/LanguageToggle";
+import AutoTranslateText from "@/components/AutoTranslateText";
 
 const SIDEBAR_ITEMS = [
   { labelIt: "Dashboard", labelEn: "Dashboard", href: "/", icon: "📊" },
@@ -38,6 +38,7 @@ const QUICK_SECTIONS = [
   { href: "#fondamenti", label: "Fondamenti Web3" },
   { href: "#guide-rapide", label: "Wallet e sicurezza" },
   { href: "#onramp", label: "Accesso al mercato" },
+  { href: "#stablecoin", label: "Stablecoin" },
   { href: "#analisi", label: "Analisi progetti" },
   { href: "#nft", label: "NFT e community" },
   { href: "#sicurezza", label: "Anti-truffe" },
@@ -117,6 +118,9 @@ const BENEFIT_GROUP_CARDS = [
 
 type Theme = "dark" | "light";
 type ManualQuickGuideId = "navigate" | "blockchain" | "defi" | "wallet";
+type EvaluationPillarId = "fundamentals" | "onchain" | "execution";
+type NftFocusId = "collectibles" | "utility" | "creative";
+type ScamDefenseId = "verification" | "wallet" | "operations";
 
 export default function Manuale() {
   const { language } = useLanguage();
@@ -125,6 +129,9 @@ export default function Manuale() {
   const [theme, setTheme] = useState<Theme>("dark");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeQuickGuide, setActiveQuickGuide] = useState<ManualQuickGuideId | null>(null);
+  const [activeEvaluationPillar, setActiveEvaluationPillar] = useState<EvaluationPillarId>("fundamentals");
+  const [activeNftFocus, setActiveNftFocus] = useState<NftFocusId>("collectibles");
+  const [activeScamDefense, setActiveScamDefense] = useState<ScamDefenseId>("verification");
 
   useEffect(() => {
     const stored = localStorage.getItem("imparodefi-theme") as Theme | null;
@@ -148,6 +155,7 @@ export default function Manuale() {
         { href: "#fondamenti", label: "Web3 Fundamentals" },
         { href: "#guide-rapide", label: "Wallets and security" },
         { href: "#onramp", label: "Market access" },
+        { href: "#stablecoin", label: "Stablecoins" },
         { href: "#analisi", label: "Project analysis" },
         { href: "#nft", label: "NFT and community" },
         { href: "#sicurezza", label: "Anti-scam" },
@@ -264,9 +272,299 @@ export default function Manuale() {
         "Conferma sempre indirizzo e memo/tag se richiesti.",
         "Evita trading impulsivo: l'obiettivo iniziale è apprendimento operativo.",
       ];
+  const evaluationPillars = isEnglish
+    ? [
+        {
+          id: "fundamentals" as const,
+          label: "Fundamental valuation",
+          subtitle: "Supply, dilution, and room to grow.",
+          checks: [
+            "Compare circulating market cap vs FDV to estimate future dilution pressure.",
+            "Check unlock schedule and concentration of tokens in team/VC wallets.",
+            "Benchmark valuation against direct competitors in the same category.",
+          ],
+          redFlags: [
+            "FDV multiple too high versus category median.",
+            "Large unlocks expected in the next 30-90 days.",
+            "Narrative strong but no measurable usage trend.",
+          ],
+        },
+        {
+          id: "onchain" as const,
+          label: "On-chain demand",
+          subtitle: "Real usage quality over pure hype.",
+          checks: [
+            "Track active users, transactions, and net inflows over multiple weeks.",
+            "Review protocol revenue, fee trend, and retention quality.",
+            "Use TVL / Market Cap only together with revenue and liquidity depth.",
+          ],
+          redFlags: [
+            "TVL inflated by incentives with weak organic retention.",
+            "Volume spikes only around announcements and then collapses.",
+            "Liquidity too shallow for your intended position size.",
+          ],
+        },
+        {
+          id: "execution" as const,
+          label: "Execution and risk",
+          subtitle: "Entry discipline and downside control.",
+          checks: [
+            "Define invalidation before entering (where your thesis is wrong).",
+            "Predefine max risk per trade (for example 0.5%-1.0% portfolio risk).",
+            "Scale entries in tranches instead of full-size market entry.",
+          ],
+          redFlags: [
+            "No stop logic, only hope-based position management.",
+            "Overexposure to correlated assets in the same narrative.",
+            "Position too large for available liquidity and volatility.",
+          ],
+        },
+      ]
+    : [
+        {
+          id: "fundamentals" as const,
+          label: "Valutazione fondamentale",
+          subtitle: "Supply, diluizione e spazio di crescita.",
+          checks: [
+            "Confronta market cap circolante e FDV per stimare la pressione da diluizione.",
+            "Controlla calendario unlock e concentrazione token in wallet team/VC.",
+            "Paragona la valutazione con competitor diretti nella stessa categoria.",
+          ],
+          redFlags: [
+            "FDV troppo alto rispetto alla media della categoria.",
+            "Unlock importanti in arrivo nei prossimi 30-90 giorni.",
+            "Narrativa forte ma assenza di trend d'uso misurabile.",
+          ],
+        },
+        {
+          id: "onchain" as const,
+          label: "Domanda on-chain",
+          subtitle: "Uso reale del protocollo oltre l'hype.",
+          checks: [
+            "Monitora utenti attivi, transazioni e net inflow su più settimane.",
+            "Analizza revenue protocollo, trend fee e qualità della retention.",
+            "Usa TVL / Market Cap insieme a revenue e profondità di liquidità.",
+          ],
+          redFlags: [
+            "TVL gonfiato da incentivi con retention organica debole.",
+            "Picchi di volume solo durante annunci, poi crollo.",
+            "Liquidità troppo sottile per la size che vuoi allocare.",
+          ],
+        },
+        {
+          id: "execution" as const,
+          label: "Execution e rischio",
+          subtitle: "Disciplina in entrata e controllo del downside.",
+          checks: [
+            "Definisci l'invalidazione prima dell'ingresso (dove la tesi è sbagliata).",
+            "Imposta rischio massimo per trade (es. 0.5%-1.0% del portafoglio).",
+            "Scala l'ingresso a tranche invece di entrare full-size subito.",
+          ],
+          redFlags: [
+            "Nessuna logica di stop, solo gestione basata sulla speranza.",
+            "Sovraesposizione ad asset correlati della stessa narrativa.",
+            "Size troppo grande rispetto a liquidità e volatilità.",
+          ],
+        },
+      ];
+  const activeEvaluation = evaluationPillars.find((pillar) => pillar.id === activeEvaluationPillar) ?? evaluationPillars[0];
+  const nftFocusPillars = isEnglish
+    ? [
+        {
+          id: "collectibles" as const,
+          label: "Community collectibles",
+          subtitle: "Network quality and long-term culture.",
+          checks: [
+            "Track holder distribution and concentration risk across top wallets.",
+            "Evaluate community quality: recurring events, builders, and useful member-generated content.",
+            "Check social growth quality, not only spikes driven by giveaways.",
+          ],
+          redFlags: [
+            "Volume depends only on hype cycles with no engagement between launches.",
+            "Roadmap changes every month without measurable delivery.",
+            "Team communication is inconsistent or mostly anonymous without proof of work.",
+          ],
+        },
+        {
+          id: "utility" as const,
+          label: "Utility and access",
+          subtitle: "Real value beyond profile pictures.",
+          checks: [
+            "Map concrete benefits: gated products, education, events, royalties, or governance rights.",
+            "Estimate whether utility is sustainable with realistic unit economics.",
+            "Verify if token-gating and contracts are transparent and auditable.",
+          ],
+          redFlags: [
+            "Vague utility language with no timeline or product metrics.",
+            "Benefits depend on new mints instead of existing customer demand.",
+            "No clarity on treasury use, runway, or ongoing operating costs.",
+          ],
+        },
+        {
+          id: "creative" as const,
+          label: "Creative and IP quality",
+          subtitle: "Brand defensibility and execution.",
+          checks: [
+            "Assess visual consistency, storytelling, and uniqueness of the art direction.",
+            "Verify licensing rights and commercial-use permissions for holders.",
+            "Review collaborations and distribution channels that can expand brand reach.",
+          ],
+          redFlags: [
+            "Derivative design with no clear brand identity.",
+            "Unclear intellectual property rights or changing license terms.",
+            "No strategic partnerships to support long-term distribution.",
+          ],
+        },
+      ]
+    : [
+        {
+          id: "collectibles" as const,
+          label: "Collectible community",
+          subtitle: "Qualita del network e cultura nel lungo periodo.",
+          checks: [
+            "Monitora distribuzione holder e rischio concentrazione nei wallet principali.",
+            "Valuta qualita della community: eventi ricorrenti, builder attivi e contenuti utili prodotti dai membri.",
+            "Controlla la qualita della crescita social, non solo picchi da giveaway.",
+          ],
+          redFlags: [
+            "Volume legato solo a cicli hype senza engagement tra un lancio e l'altro.",
+            "Roadmap che cambia ogni mese senza delivery misurabile.",
+            "Comunicazione del team incoerente o anonima senza prove operative.",
+          ],
+        },
+        {
+          id: "utility" as const,
+          label: "Utilita e accesso",
+          subtitle: "Valore reale oltre l'immagine profilo.",
+          checks: [
+            "Mappa benefici concreti: prodotti gated, education, eventi, royalties o governance.",
+            "Stima se l'utilita e sostenibile con economics realistici.",
+            "Verifica se token-gating e contratti sono trasparenti e auditabili.",
+          ],
+          redFlags: [
+            "Utility vaga senza timeline o metriche di prodotto.",
+            "Benefici sostenuti da nuovi mint e non da domanda reale.",
+            "Nessuna chiarezza su tesoreria, runway e costi operativi.",
+          ],
+        },
+        {
+          id: "creative" as const,
+          label: "Qualita creativa e IP",
+          subtitle: "Difendibilita del brand e execution.",
+          checks: [
+            "Valuta coerenza visiva, storytelling e unicita della direzione artistica.",
+            "Verifica diritti di licenza e uso commerciale per holder.",
+            "Analizza collaborazioni e canali distributivi che possono ampliare la reach del brand.",
+          ],
+          redFlags: [
+            "Design derivativo senza identita di brand chiara.",
+            "Diritti IP poco chiari o termini di licenza che cambiano spesso.",
+            "Assenza di partnership strategiche per la distribuzione nel tempo.",
+          ],
+        },
+      ];
+  const activeNftPillar = nftFocusPillars.find((pillar) => pillar.id === activeNftFocus) ?? nftFocusPillars[0];
+  const scamDefensePillars = isEnglish
+    ? [
+        {
+          id: "verification" as const,
+          label: "Source verification",
+          subtitle: "Validate domains, teams, and contracts before any action.",
+          checks: [
+            "Open links only from official channels and verify exact domain spelling.",
+            "Cross-check team identities, audits, and documentation from independent sources.",
+            "Confirm contract addresses from official docs before approving any transaction.",
+          ],
+          redFlags: [
+            "Urgent DMs asking for immediate wallet connection.",
+            "Copied websites with minor URL differences.",
+            "Promises of guaranteed returns with no risk disclosure.",
+          ],
+        },
+        {
+          id: "wallet" as const,
+          label: "Wallet security",
+          subtitle: "Protect keys, approvals, and account boundaries.",
+          checks: [
+            "Keep seed phrase offline and never store it in cloud notes or screenshots.",
+            "Use hardware wallet for treasury and a separate burner wallet for experiments.",
+            "Review and revoke token approvals periodically for unused dApps.",
+          ],
+          redFlags: [
+            "Any request for seed phrase or private key, even from fake support agents.",
+            "Blind-sign prompts without clear transaction simulation.",
+            "Large token approvals requested for simple read-only features.",
+          ],
+        },
+        {
+          id: "operations" as const,
+          label: "Operational discipline",
+          subtitle: "Reduce damage with process and position controls.",
+          checks: [
+            "Run test transactions with small amounts before full-size transfers.",
+            "Set per-trade risk limits and avoid all-in moves during high volatility.",
+            "Document your entry thesis and invalidation before signing transactions.",
+          ],
+          redFlags: [
+            "Decision pressure from countdown timers and fake scarcity.",
+            "Switching networks without checking token compatibility and destination wallet.",
+            "No incident plan for compromised devices or leaked credentials.",
+          ],
+        },
+      ]
+    : [
+        {
+          id: "verification" as const,
+          label: "Verifica delle fonti",
+          subtitle: "Convalida domini, team e contratti prima di agire.",
+          checks: [
+            "Apri link solo da canali ufficiali e verifica con precisione il dominio.",
+            "Controlla identita team, audit e documentazione su fonti indipendenti.",
+            "Conferma indirizzi dei contratti dalla documentazione ufficiale prima di approvare.",
+          ],
+          redFlags: [
+            "DM urgenti che chiedono connessione wallet immediata.",
+            "Siti clonati con differenze minime nell'URL.",
+            "Promesse di rendimenti garantiti senza disclosure del rischio.",
+          ],
+        },
+        {
+          id: "wallet" as const,
+          label: "Sicurezza wallet",
+          subtitle: "Proteggi chiavi, approvazioni e separazione degli account.",
+          checks: [
+            "Conserva la seed phrase offline e mai in cloud, note digitali o screenshot.",
+            "Usa hardware wallet per tesoreria e burner wallet separato per test e dApp nuove.",
+            "Rivedi e revoca periodicamente le autorizzazioni token non piu utilizzate.",
+          ],
+          redFlags: [
+            "Qualsiasi richiesta di seed phrase o private key, anche da finti supporti.",
+            "Prompt di firma cieca senza simulazione chiara della transazione.",
+            "Richieste di approvazioni elevate per funzioni che non le richiedono.",
+          ],
+        },
+        {
+          id: "operations" as const,
+          label: "Disciplina operativa",
+          subtitle: "Riduci i danni con processo e controllo della size.",
+          checks: [
+            "Esegui sempre transazioni test con importi ridotti prima di inviare size piena.",
+            "Imposta limiti di rischio per operazione ed evita mosse all-in in alta volatilita.",
+            "Scrivi tesi d'ingresso e invalidazione prima di firmare transazioni.",
+          ],
+          redFlags: [
+            "Pressione decisionale con countdown e scarsita artificiale.",
+            "Cambio network senza verifica compatibilita token e wallet di destinazione.",
+            "Assenza di un piano di risposta per dispositivo compromesso o credenziali esposte.",
+          ],
+        },
+      ];
+  const activeScamPillar =
+    scamDefensePillars.find((pillar) => pillar.id === activeScamDefense) ?? scamDefensePillars[0];
 
   return (
-    <div
+    <AutoTranslateText>
+      <div
       className={`h-screen overflow-hidden transition-colors ${
         isDark
           ? "bg-gradient-to-b from-indigo-950 via-slate-900/95 via-30% to-indigo-950 text-white"
@@ -447,7 +745,15 @@ export default function Manuale() {
                       </Link>
                     ))}
                   </div>
-                  <div className="mt-5 flex flex-wrap gap-2">
+                </section>
+              </div>
+
+              <div className="mb-6">
+                <div className={`manual-card rounded-2xl border p-4 ${isDark ? "bg-indigo-900/20 border-indigo-500/25" : "bg-white border-slate-200 shadow-lg"}`}>
+                  <p className={`text-xs uppercase tracking-wide mb-3 ${isDark ? "text-indigo-300" : "text-indigo-700"}`}>
+                    {isEnglish ? "Jump to section" : "Vai alla sezione"}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
                     {quickSections.map((section) => (
                       <a
                         key={section.href}
@@ -462,7 +768,7 @@ export default function Manuale() {
                       </a>
                     ))}
                   </div>
-                </section>
+                </div>
               </div>
 
         <div id="fondamenti" className={`manual-card scroll-mt-24 rounded-2xl border p-5 mb-6 ${isDark ? "bg-indigo-900/25 border-indigo-500/20" : "bg-white border-slate-200 shadow-lg"}`}>
@@ -502,9 +808,6 @@ export default function Manuale() {
                       <div className="text-2xl">{group.icon}</div>
                       <p className={`mt-2 font-semibold ${isDark ? "text-white" : "text-slate-900"}`}>{group.title}</p>
                       <p className={`mt-1.5 text-sm ${isDark ? "text-slate-300" : "text-slate-700"}`}>{group.description}</p>
-                      <p className={`mt-3 text-xs font-medium ${isDark ? "text-indigo-300" : "text-indigo-700"}`}>
-                        {isEnglish ? "Open category guide →" : "Apri guida categoria →"}
-                      </p>
                     </Link>
                   ))}
                 </div>
@@ -514,31 +817,31 @@ export default function Manuale() {
 
           <div
             id="guide-rapide"
-            className={`manual-card scroll-mt-24 rounded-2xl border p-5 mb-6 ${
+            className={`manual-card scroll-mt-24 rounded-2xl border p-4 mb-6 ${
               isDark ? "bg-indigo-900/25 border-indigo-500/20" : "bg-white border-slate-200 shadow-lg"
             }`}
           >
-            <div className={`rounded-xl border p-4 ${isDark ? "border-indigo-500/30 bg-indigo-900/15" : "border-slate-200 bg-slate-50"}`}>
+            <div className={`rounded-xl border p-3 ${isDark ? "border-indigo-500/30 bg-indigo-900/15" : "border-slate-200 bg-slate-50"}`}>
               <h3 className={`text-xl font-semibold ${isDark ? "text-white" : "text-slate-900"}`}>{isEnglish ? "Essential quick guides" : "Guide rapide essenziali"}</h3>
               <p className={`mt-2 text-sm ${isDark ? "text-slate-300" : "text-slate-700"}`}>
                 {isEnglish ? "Open a quick guide for core concepts before moving to operational sections." : "Apri una guida rapida per i concetti base prima di passare alle sezioni operative."}
               </p>
 
-              <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 {quickGuideCards.map((item) => (
                   <button
                     key={item.id}
                     type="button"
                     onClick={() => setActiveQuickGuide(item.id)}
-                    className={`aspect-square rounded-xl border p-3.5 text-left transition-colors ${
+                    className={`rounded-xl border p-3 text-left transition-colors ${
                       isDark
                         ? "border-indigo-500/25 bg-indigo-900/20 hover:border-indigo-400/60 hover:bg-indigo-800/30"
                         : "border-slate-200 bg-white hover:border-indigo-300 hover:bg-indigo-50/40"
                     }`}
                   >
-                    <div className="text-xl">{item.icon}</div>
-                    <p className={`mt-2.5 text-base font-semibold leading-tight ${isDark ? "text-white" : "text-slate-900"}`}>{item.title}</p>
-                    <p className={`mt-1.5 text-sm leading-snug ${isDark ? "text-slate-300" : "text-slate-700"}`}>{item.subtitle}</p>
+                    <div className="text-lg">{item.icon}</div>
+                    <p className={`mt-2 text-base font-semibold leading-tight ${isDark ? "text-white" : "text-slate-900"}`}>{item.title}</p>
+                    <p className={`mt-1 text-sm leading-snug ${isDark ? "text-slate-300" : "text-slate-700"}`}>{item.subtitle}</p>
                   </button>
                 ))}
               </div>
@@ -599,6 +902,75 @@ export default function Manuale() {
             </div>
           </div>
 
+          <div id="stablecoin" className="manual-card scroll-mt-24 rounded-2xl border p-8 mb-8 dark:bg-indigo-900/25 dark:border-indigo-500/20 bg-white border-slate-200 shadow-lg">
+            <div className="flex flex-wrap items-start justify-between gap-3 mb-5">
+              <div className="max-w-3xl">
+                <p className={`text-xs uppercase tracking-wide ${isDark ? "text-indigo-300" : "text-indigo-700"}`}>
+                  {isEnglish ? "Capital stability layer" : "Layer di stabilita del capitale"}
+                </p>
+                <h3 className={`mt-1 text-2xl font-bold ${isDark ? "text-white" : "text-slate-900"}`}>
+                  {isEnglish ? "Stablecoins: what they are and how to use them safely" : "Stablecoin: cosa sono e come usarle in sicurezza"}
+                </h3>
+                <p className={`mt-2 text-sm md:text-base ${isDark ? "text-slate-300" : "text-slate-700"}`}>
+                  {isEnglish
+                    ? "Stablecoins are crypto assets designed to track fiat value (usually USD or EUR). They are the operational bridge between cash and DeFi, useful for payments, treasury, and risk management."
+                    : "Le stablecoin sono asset crypto progettati per seguire il valore fiat (di solito USD o EUR). Sono il ponte operativo tra cash e DeFi, utili per pagamenti, tesoreria e gestione del rischio."}
+                </p>
+              </div>
+              <div className={`rounded-xl border px-3 py-2 text-sm ${isDark ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-200" : "border-emerald-200 bg-emerald-50 text-emerald-800"}`}>
+                {isEnglish ? "Priority: preserve purchasing power" : "Priorita: preservare potere d'acquisto"}
+              </div>
+            </div>
+
+            <div className="grid gap-3 md:grid-cols-3 mb-5">
+              <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                <p className="font-semibold text-white">{isEnglish ? "Fiat-collateralized" : "Collateralizzate in fiat"}</p>
+                <p className="mt-2 text-sm text-slate-300">
+                  {isEnglish
+                    ? "Issued against reserves (cash or T-bills). Usually the most liquid and widely used."
+                    : "Emesse contro riserve (cash o T-bills). In genere sono le piu liquide e diffuse."}
+                </p>
+              </div>
+              <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                <p className="font-semibold text-white">{isEnglish ? "Crypto-collateralized" : "Collateralizzate in crypto"}</p>
+                <p className="mt-2 text-sm text-slate-300">
+                  {isEnglish
+                    ? "Backed by on-chain assets, often over-collateralized and transparent on-chain."
+                    : "Garantite da asset on-chain, spesso sovra-collateralizzate e trasparenti on-chain."}
+                </p>
+              </div>
+              <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
+                <p className="font-semibold text-white">{isEnglish ? "Algorithmic/hybrid" : "Algoritmiche/ibride"}</p>
+                <p className="mt-2 text-sm text-slate-300">
+                  {isEnglish
+                    ? "Use market incentives and protocol logic. Higher complexity means higher risk."
+                    : "Usano incentivi di mercato e logiche di protocollo. Piu complessita significa piu rischio."}
+                </p>
+              </div>
+            </div>
+
+            <div className="grid gap-3 md:grid-cols-2">
+              {[
+                isEnglish
+                  ? "Check the issuer, reserve attestations, and legal transparency before holding size."
+                  : "Verifica emittente, attestazioni delle riserve e trasparenza legale prima di allocare size.",
+                isEnglish
+                  ? "Always verify network and token contract (USDT/USDC can exist on multiple chains)."
+                  : "Controlla sempre rete e contratto token (USDT/USDC esistono su chain diverse).",
+                isEnglish
+                  ? "Avoid concentrating all treasury in one stablecoin or one chain."
+                  : "Evita di concentrare tutta la tesoreria su una sola stablecoin o una sola chain.",
+                isEnglish
+                  ? "Use test transfers first and monitor depeg risk during stress events."
+                  : "Usa transazioni test e monitora il rischio depeg durante eventi di stress.",
+              ].map((line) => (
+                <div key={line} className="rounded-xl border border-indigo-500/25 bg-slate-950/20 p-4">
+                  <p className="text-sm text-slate-300">{line}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
           <div id="analisi" className="manual-card scroll-mt-24 rounded-2xl border p-8 mb-8 dark:bg-indigo-900/25 dark:border-indigo-500/20 bg-white border-slate-200 shadow-lg">
             <p className="text-slate-900 dark:text-slate-200 mb-6">
               {isEnglish
@@ -639,543 +1011,450 @@ export default function Manuale() {
             </div>
           </div>
 
-          <div id="nft" className="manual-card scroll-mt-24 rounded-2xl border p-8 mb-8 dark:bg-indigo-900/25 dark:border-indigo-500/20 bg-white border-slate-200 shadow-lg">
-            <h3 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-6">{isEnglish ? "Project evaluation" : "Valutazione dei progetti"}</h3>
-            <p className="text-slate-900 dark:text-slate-300 mb-5">
-              {isEnglish
-                ? "To evaluate a project professionally, combine core metrics (market cap, supply, TVL) with risk analysis and market context."
-                : "Per valutare un progetto in modo professionale, combina metriche fondamentali (market cap, supply, TVL) con analisi del rischio e contesto di mercato."}
-            </p>
-            <div className="grid gap-3 md:grid-cols-3 mb-6">
-              <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-                <p className="text-xs uppercase tracking-wide text-slate-400">{isEnglish ? "Fundamentals" : "Fondamentali"}</p>
-                <p className="mt-1 font-semibold text-white">Market Cap + Supply</p>
-                <p className="mt-2 text-sm text-slate-300">
-                  {isEnglish ? "Understand dilution and potential room for growth." : "Capire diluizione e spazio potenziale di crescita."}
+          <div
+            id="nft"
+            className={`manual-card scroll-mt-24 rounded-2xl border p-6 mb-8 ${
+              isDark ? "bg-indigo-900/25 border-indigo-500/20" : "bg-white border-slate-200 shadow-lg"
+            }`}
+          >
+            <div className="flex flex-wrap items-start justify-between gap-3 mb-5">
+              <div>
+                <h3 className={`text-2xl font-bold ${isDark ? "text-white" : "text-slate-900"}`}>
+                  {isEnglish ? "Project evaluation" : "Valutazione dei progetti"}
+                </h3>
+                <p className={`mt-2 text-sm md:text-base ${isDark ? "text-slate-300" : "text-slate-700"}`}>
+                  {isEnglish
+                    ? "A professional framework to evaluate any crypto project using fundamentals, on-chain demand, and execution discipline."
+                    : "Framework professionale per valutare un progetto crypto con fondamentali, domanda on-chain e disciplina operativa."}
                 </p>
               </div>
-              <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-                <p className="text-xs uppercase tracking-wide text-slate-400">{isEnglish ? "Protocol efficiency" : "Efficienza protocollo"}</p>
-                <p className="mt-1 font-semibold text-white">TVL / Market Cap</p>
-                <p className="mt-2 text-sm text-slate-300">
-                  {isEnglish ? "Compare usage value versus current valuation." : "Confronta valore d&apos;uso e valutazione attuale."}
-                </p>
-              </div>
-              <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-                <p className="text-xs uppercase tracking-wide text-slate-400">Timing</p>
-                <p className="mt-1 font-semibold text-white">Price Action + Risk</p>
-                <p className="mt-2 text-sm text-slate-300">
-                  {isEnglish ? "Scale in gradually, define invalidation, and manage position size." : "Ingresso graduale, invalidazione e gestione size."}
-                </p>
+              <div className={`rounded-xl border px-3 py-2 text-sm ${isDark ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-200" : "border-emerald-200 bg-emerald-50 text-emerald-800"}`}>
+                {isEnglish ? "Decision quality > prediction speed" : "Qualità decisionale > velocità di previsione"}
               </div>
             </div>
-            
-            <div className="space-y-4">
-              <Accordion
-                buttonText={
-                  <div>
-                    <div className="text-lg md:text-xl">
-                      {isEnglish ? "Analyzing a cryptoasset through Market Cap" : "Analizzare un Cryptoasset dalla Market Cap"}
-                    </div>
-                    <p className="mt-1 text-sm font-normal text-slate-400">
-                      {isEnglish ? "Base framework: price, supply, FDV, and comparables." : "Base framework: prezzo, supply, FDV e comparables."}
-                    </p>
-                  </div>
-                }
-                className="mb-4"
-              >
-                <div className="p-5 space-y-6">
-                  <div className="space-y-4">
-                    <p className="text-slate-900 dark:text-slate-200 leading-relaxed">
-                      Prima di tutto bisogna sapere che il prezzo di una criptovaluta è dettato dall'offerta della criptovaluta e la valutazione del progetto della criptovaluta (la capitalizzazione di mercato, o market cap).
-                    </p>
-                    <p className="text-slate-900 dark:text-slate-200 leading-relaxed">
-                      Inversamente, si può dire che la market cap della criptovaluta sia determinata dall'offerta moltiplicata per il prezzo della criptovaluta.
-                    </p>
-                    <p className="text-slate-900 dark:text-slate-200 leading-relaxed">
-                      Gli investitori ragionano con la market cap per poter determinare il potenziale di crescita di una criptovaluta rispetto ad un'altra.
-                    </p>
-                  </div>
-                  
-                  <div className="flex justify-center">
-                    <Image 
-                      src="/analizing.png" 
-                      alt="Analisi Market Cap Bitcoin su CoinGecko"
-                      width={800}
-                      height={600}
-                      className="max-w-full h-auto rounded-lg shadow-md"
-                    />
-                  </div>
-                  <Accordion
-                    buttonText={isEnglish ? "How it works" : "Come funziona"}
-                    className="mb-3"
-                  >
-                    <div className="p-4 space-y-4 text-slate-900 dark:text-slate-200">
-                      <p className="mb-4">
-                        La schermata sopra (accessibile da <a href="https://www.coingecko.com/it/monete/bitcoin" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">https://www.coingecko.com/it/monete/bitcoin</a>) mostra nei rettangoli evidenziati in blu le seguenti:
-                      </p>
-                      
-                             <Accordion buttonText={isEnglish ? "1. Market Capitalization (Market Cap)" : "1. Capitalizzazione di Mercato (Market Cap)"}>
-                               <div className="p-4 space-y-4 text-slate-900 dark:text-slate-200">
-                                 <p>
-                                   La capitalizzazione di mercato di un criptoasset si calcola usando la seguente formula:
-                                 </p>
-                                 
-                                 <div className="bg-gray-50 p-4 rounded-lg border-l-4 border-blue-500">
-                                   <p className="font-semibold mb-2">Consideriamo che:</p>
-                                   <p><strong>A = Prezzo attuale dei criptoasset in USD</strong></p>
-                                   <p><strong>B = Offerta in circolazione del criptoasset</strong></p>
-                                   <div className="mt-3 p-3 bg-white rounded border">
-                                     <p className="text-lg font-bold text-blue-700">
-                                       Capitalizzazione di mercato = A × B
-                                     </p>
-                                   </div>
-                                 </div>
-                                 
-                                 <div className="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
-                                   <p className="font-semibold mb-2">Esempio pratico con Bitcoin:</p>
-                                   <p>
-                                     Ad esempio, la capitalizzazione di mercato di Bitcoin viene calcolata moltiplicando l'Offerta disponibile di BTC per il suo prezzo. Vedendo che l'Offerta disponibile di BTC sia <strong>19.712.371</strong> e che il prezzo di BTC sia <strong>USD $66.147,70</strong>, la capitalizzazione di mercato viene quindi calcolata come:
-                                   </p>
-                                   <div className="mt-3 p-3 bg-white rounded border">
-                                     <p className="text-lg font-bold text-green-700">
-                                       19.712.371 × USD $66.147,70 = <span className="text-xl">USD 1.303.928.022.909</span>
-                                     </p>
-                                   </div>
-                                 </div>
-                               </div>
-                             </Accordion>
-                      
-                      <Accordion buttonText={isEnglish ? "2. Fully Diluted Valuation (FDV)" : "2. Valutazione 100% diluita (Fully diluted valuation, o FDV)"}>
-                        <p className="p-4 text-slate-900 dark:text-slate-200">
-                          La FDV rappresenta la capitalizzazione di mercato se tutti i token fossero già in circolazione. È importante per capire il potenziale di inflazione futura e il vero valore del progetto.
-                        </p>
-                      </Accordion>
-                      
-                      <Accordion buttonText={isEnglish ? "3. Circulating Supply" : "3. Offerta in Circolazione (Circulating Supply)"}>
-                        <p className="p-4 text-slate-900 dark:text-slate-200">
-                          La quantità di valute che circolano sul mercato e sono scambiabili dal pubblico. È paragonabile a guardare le azioni prontamente disponibili sul mercato (non detenute e bloccate dagli addetti ai lavori, dalle autorità governative).
-                        </p>
-                      </Accordion>
-                      
-                      <Accordion buttonText={isEnglish ? "4. Total Supply" : "4. Offerta totale"}>
-                        <p className="p-4 text-slate-900 dark:text-slate-200">
-                          Le quantità di valute che sono già state create, meno le valute che sono state bruciate (rimosse dalla circolazione). È paragonabile alle azioni in circolazione nel mercato azionario.
-                        </p>
-                      </Accordion>
-                      
-                      <Accordion buttonText={isEnglish ? "5. Max Supply" : "5. Offerta Massima (Max Supply)"}>
-                        <div className="p-4 space-y-4 text-slate-900 dark:text-slate-200">
-                          <p>
-                            Il numero massimo di valute codificate per esistere nel periodo di vita della criptovaluta. È paragonabile al numero massimo di azioni emettibili nel mercato azionario.
-                          </p>
-                          
-                          <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
-                            <p className="font-semibold text-blue-800">
-                              Offerta massima = massimo teorico programmato
-                            </p>
-                          </div>
-                          
-                          <p>
-                            Ethereum (ETH) non ha un offerta massima per esempio, come puoi vedere sotto dal simbolo dell'infinito accanto all'offerta massima. (<a href="https://www.coingecko.com/it/monete/ethereum" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">https://www.coingecko.com/it/monete/ethereum</a>)
-                          </p>
-                          
-                          <div className="flex justify-center">
-                            <Image 
-                              src="/analizing2.png" 
-                              alt="Ethereum Max Supply su CoinGecko"
-                              width={800}
-                              height={400}
-                              className="max-w-full h-auto rounded-lg shadow-md"
-                            />
-                          </div>
-                          
-                          <p>
-                            Tuttavia, la quantità di ETH in circolazione è progressivamente diminuita da Settembre 2022, quando è avvenuto il Merge (ETH 2.0, passaggio da <em>POW</em>, Proof-of-Work a <em>POS</em>, Proof-of-Stake) come visibile dal grafico sotto.
-                          </p>
-                          
-                          <p>
-                            <a href="https://etherscan.io/chart/ethersupplygrowth" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">https://etherscan.io/chart/ethersupplygrowth</a>
-                          </p>
-                          
-                          <div className="flex justify-center">
-                            <Image 
-                              src="/analizing3.png" 
-                              alt="Ethereum Supply Growth Chart"
-                              width={800}
-                              height={400}
-                              className="max-w-full h-auto rounded-lg shadow-md"
-                            />
-                          </div>
-                          
-                          <div className="space-y-3">
-                            <Accordion buttonText="Controllare la Market Cap del Cryptoasset">
-                              <div className="p-4 space-y-4 text-slate-900 dark:text-slate-200">
-                                <p>
-                                  Prima di tutto, bisogna vedere se la criptovaluta che si vuole analizzare sia completamente in circolazione, o se una parte della supply debba ancora essere immessa nel mercato.
-                                </p>
-                                
-                                <p>
-                                  Useremo il token di Liquity ($LQTY) nei nostri esempi (<a href="https://www.coingecko.com/it/monete/liquity" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">https://www.coingecko.com/it/monete/liquity</a>)
-                                </p>
-                                
-                                <div className="flex justify-center">
-                                  <Image 
-                                    src="/analizing4.png" 
-                                    alt="Liquity Token su CoinGecko"
-                                    width={800}
-                                    height={400}
-                                    className="max-w-full h-auto rounded-lg shadow-md"
-                                  />
-                                </div>
-                                
-                                <p>
-                                  Cliccando su "Max" in alto a destra potrete osservare la cronologia del prezzo del token desiderato, graficamente.
-                                </p>
-                                
-                                <p>
-                                  Come possiamo notare nel rettangolo in blu, la Cap. di Mercato (Market Cap) è più bassa della Valutaz. 100% diluita (FDV), il che significa che non tutti i token sono stati rilasciati.
-                                </p>
-                                
-                                <p>
-                                  Possiamo usare <a href="https://token.unlocks.app/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">https://token.unlocks.app/</a> per vedere quando verranno immessi nel mercato e come.
-                                </p>
-                                
-                                <p>
-                                  Come vedrete dal grafico del prezzo di $LQTY, sembrerebbe che il prezzo sia andato costantemente giù.
-                                </p>
-                                
-                                <p>
-                                  Tuttavia, se si considera che l'offerta iniziale era più bassa di quella di oggi, e che una parte delle emissioni (o tutte) sono andate a chi possedeva il token $LQTY (tramite Staking o di altro tipo), fare un'analisi usando solamente il prezzo sarebbe errato.
-                                </p>
-                                
-                                <p>
-                                  Visualizzando il grafico della Market Cap invece, potremmo notare un'interessante differenza. 👇🏻
-                                </p>
-                                
-                                <div className="flex justify-center">
-                                  <Image 
-                                    src="/analizing5.png" 
-                                    alt="Liquity Market Cap Chart"
-                                    width={800}
-                                    height={400}
-                                    className="max-w-full h-auto rounded-lg shadow-md"
-                                  />
-                                </div>
-                                
-                                <p>
-                                  Prima di tutto, che l'andamento è stato costantemente a rialzo sin dall'inizio, e secondo poi, che adesso siamo ai minimi storici per questa crypto.
-                                </p>
-                              </div>
-                            </Accordion>
-                            
-                            <Accordion buttonText="Comparare la Market Cap con quella di progetti simili">
-                              <p className="p-4 text-slate-900 dark:text-slate-200">
-                                Confronta la Market Cap del progetto che stai analizzando con quella di progetti simili nel stesso settore. Ad esempio, se stai valutando un DEX, confrontalo con Uniswap, SushiSwap o altri exchange decentralizzati. Questo ti darà un'idea del potenziale di crescita relativo.
-                              </p>
-                            </Accordion>
-                          </div>
-                        </div>
-                      </Accordion>
-                    </div>
-                  </Accordion>
-                  
-                </div>
-              </Accordion>
-              
-              <Accordion
-                buttonText={
-                  <div>
-                    <div className="text-lg md:text-xl">
-                      {isEnglish ? "Calculating risk using price averages" : "Calcolare il Rischio usando la Media del Prezzo"}
-                    </div>
-                    <p className="mt-1 text-sm font-normal text-slate-400">
-                      {isEnglish ? "Positioning against averages and volatility." : "Posizionamento rispetto alle medie e volatilità."}
-                    </p>
-                  </div>
-                }
-                className="mb-4"
-              >
-                <div className="p-5 space-y-4 text-slate-900 dark:text-slate-200">
-                  <div className="flex justify-center">
-                    <Image 
-                      src="/analizing6.png" 
-                      alt="Benjamin Cowen - Into The Cryptoverse"
-                      width={800}
-                      height={400}
-                      className="max-w-full h-auto rounded-lg shadow-md"
-                    />
-                  </div>
-                  
-                  <div className="text-center">
-                    <p className="text-lg font-semibold mb-2">Benjamin Cowen</p>
-                    <p className="mb-4">
-                      You have just jumped into the cryptoverse, which provides high quality cryptocurrency education to those who want to dive deeper
-                    </p>
-                    <a 
-                      href="https://www.youtube.com/@intothecryptoverse" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors"
-                    >
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                      </svg>
-                      https://www.youtube.com/@intothecryptoverse
-                    </a>
-                  </div>
-                </div>
-              </Accordion>
-              
-              <Accordion
-                buttonText={
-                  <div>
-                    <div className="text-lg md:text-xl">TVL to Market Cap ratio</div>
-                    <p className="mt-1 text-sm font-normal text-slate-400">Valuta se il protocollo è caro o economico rispetto all&apos;uso reale.</p>
-                  </div>
-                }
-                className="mb-4"
-              >
-                <div className="p-5 space-y-4 text-slate-900 dark:text-slate-200">
-                  <p>
-                    Valore fondamentale del prodotto: per esempio, il TVL ("Total Value Locked") di un progetto rappresenta il valore in dollari dei token depositati nei suoi smart-contract.
-                  </p>
-                  
-                  <p>
-                    Se si prende la market cap (capitalizzazione di mercato = valore del progetto/azienda) e la si mette accanto al TVL, si ottiene un ratio tra le due, che ci permette di paragonarlo ad altri progetti nella stessa categoria, per capire se è sottovalutato o sopravvalutato rispetto ad essa, e se fosse sottovalutato, si può calcolare il potenziale apprezzamento (upside) calcolando il ratio tra quella sottovalutata e sopravvalutata.
-                  </p>
-                  
-                  <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
-                    <p className="font-semibold text-blue-800 mb-3">Esempio pratico:</p>
-                    
-                    <div className="space-y-3">
-                      <div className="bg-white p-3 rounded border">
-                        <p className="font-semibold text-green-700">AAVE (Leader nel Lending & Borrowing)</p>
-                        <p><strong>TVL:</strong> $13 miliardi</p>
-                        <p><strong>Market Cap:</strong> $1.5 miliardi</p>
-                        <p><strong>Ratio TVL/Market Cap:</strong> 8.67x</p>
-                      </div>
-                      
-                      <div className="bg-white p-3 rounded border">
-                        <p className="font-semibold text-orange-700">Liquity (Progetto sottovalutato)</p>
-                        <p><strong>TVL:</strong> $700 milioni</p>
-                        <p><strong>Market Cap:</strong> $100 milioni</p>
-                        <p><strong>Ratio TVL/Market Cap:</strong> 7x</p>
-                      </div>
-                    </div>
-                    
-                    <div className="mt-4 p-3 bg-yellow-50 rounded border">
-                      <p className="font-semibold text-yellow-800">Calcolo del Potenziale Apprezzamento:</p>
-                      <p className="text-sm">
-                        Se Liquity avesse lo stesso ratio di AAVE (8.67x), la sua Market Cap dovrebbe essere:
-                      </p>
-                      <p className="text-lg font-bold text-yellow-700">
-                        $700M ÷ 8.67 = $80.7M (attuale) → $700M × 8.67 = $6.07B (potenziale)
-                      </p>
-                      <p className="text-sm mt-2">
-                        <strong>Upside potenziale:</strong> Da $100M a $6.07B = <span className="text-green-600 font-bold">6,070% di crescita</span>
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <p>
-                    Il potenziale apprezzamento della market cap di Liquity sarebbe da $100M a $1.5B, se si assume che il mercato eventualmente capirà il suo valore (per mercato si intende i partecipanti ad esso, ovvero gli "investitori").
-                  </p>
-                </div>
-              </Accordion>
-              
-              <Accordion
-                buttonText={
-                  <div>
-                    <div className="text-lg md:text-xl">Price Action (Analisi Tecnica)</div>
-                    <p className="mt-1 text-sm font-normal text-slate-400">Trend, livelli chiave e execution plan.</p>
-                  </div>
-                }
-                className="mb-4"
-              >
-                <div className="p-5 space-y-5 text-slate-900 dark:text-slate-200">
-                  <div className="grid gap-3 md:grid-cols-3">
-                    <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-                      <p className="text-xs uppercase tracking-wide text-slate-400">Trend</p>
-                      <p className="mt-1 font-semibold text-white">Higher High / Lower Low</p>
-                      <p className="mt-2 text-sm text-slate-300">Capisci se il mercato premia o distribuisce rischio.</p>
-                    </div>
-                    <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-                      <p className="text-xs uppercase tracking-wide text-slate-400">Livelli</p>
-                      <p className="mt-1 font-semibold text-white">Supporti e resistenze</p>
-                      <p className="mt-2 text-sm text-slate-300">Zone dove prezzo e liquidità reagiscono più spesso.</p>
-                    </div>
-                    <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-                      <p className="text-xs uppercase tracking-wide text-slate-400">Execution</p>
-                      <p className="mt-1 font-semibold text-white">Entry + invalidazione</p>
-                      <p className="mt-2 text-sm text-slate-300">Ogni trade deve avere stop logico e size coerente.</p>
-                    </div>
-                  </div>
 
-                  <div className="space-y-3">
-                    {[
-                      "Non entrare in breakout estesi: preferisci retest o zone value.",
-                      "Definisci prima rischio massimo per operazione (es. 0.5%-1% del capitale).",
-                      "Se il setup cambia, esci: proteggere capitale è priorità.",
-                      "Usa timeframe multipli: trend su HTF, timing su LTF.",
-                    ].map((rule) => (
-                      <div key={rule} className="rounded-xl border border-indigo-500/25 bg-slate-950/20 p-4">
-                        <p className="text-sm text-slate-300">{rule}</p>
+            <div className="grid gap-3 md:grid-cols-4 mb-5">
+              {[
+                {
+                  label: isEnglish ? "Dilution Risk" : "Rischio Diluizione",
+                  value: "FDV / MCap",
+                  hint: isEnglish ? "Lower is generally healthier." : "Più basso è generalmente meglio.",
+                },
+                {
+                  label: isEnglish ? "Usage Efficiency" : "Efficienza d'Uso",
+                  value: "TVL / MCap",
+                  hint: isEnglish ? "Context-dependent, compare peers." : "Dipende dal settore, confronta i peer.",
+                },
+                {
+                  label: isEnglish ? "Revenue Quality" : "Qualità Revenue",
+                  value: isEnglish ? "Fees + retention" : "Fee + retention",
+                  hint: isEnglish ? "Organic users beat incentive farming." : "Utenti organici > incentivi temporanei.",
+                },
+                {
+                  label: isEnglish ? "Risk Control" : "Controllo Rischio",
+                  value: isEnglish ? "Position sizing" : "Position sizing",
+                  hint: isEnglish ? "Protect downside before upside." : "Proteggi il downside prima dell'upside.",
+                },
+              ].map((metric) => (
+                <div key={metric.label} className={`rounded-xl border p-4 ${isDark ? "border-indigo-500/25 bg-indigo-900/20" : "border-slate-200 bg-slate-50"}`}>
+                  <p className={`text-[11px] uppercase tracking-wide ${isDark ? "text-slate-400" : "text-slate-500"}`}>{metric.label}</p>
+                  <p className={`mt-1 font-semibold ${isDark ? "text-white" : "text-slate-900"}`}>{metric.value}</p>
+                  <p className={`mt-2 text-xs ${isDark ? "text-slate-300" : "text-slate-600"}`}>{metric.hint}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex flex-wrap gap-2 mb-4">
+              {evaluationPillars.map((pillar) => {
+                const active = pillar.id === activeEvaluationPillar;
+                return (
+                  <button
+                    key={pillar.id}
+                    type="button"
+                    onClick={() => setActiveEvaluationPillar(pillar.id)}
+                    className={`rounded-xl border px-3 py-2 text-sm transition-colors ${
+                      active
+                        ? isDark
+                          ? "border-indigo-400/70 bg-indigo-500/20 text-white"
+                          : "border-indigo-300 bg-indigo-50 text-indigo-800"
+                        : isDark
+                          ? "border-indigo-500/25 bg-indigo-900/20 text-slate-300 hover:bg-indigo-800/30"
+                          : "border-slate-200 bg-slate-100 text-slate-700 hover:bg-slate-200"
+                    }`}
+                  >
+                    {pillar.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className={`rounded-2xl border p-5 mb-5 ${isDark ? "border-indigo-500/25 bg-indigo-950/35" : "border-slate-200 bg-white"}`}>
+              <p className={`font-semibold text-lg ${isDark ? "text-white" : "text-slate-900"}`}>{activeEvaluation.label}</p>
+              <p className={`mt-1 text-sm ${isDark ? "text-slate-300" : "text-slate-700"}`}>{activeEvaluation.subtitle}</p>
+
+              <div className="grid gap-4 lg:grid-cols-[1.6fr_1fr] mt-4">
+                <div className={`rounded-xl border p-4 ${isDark ? "border-indigo-500/20 bg-indigo-900/20" : "border-slate-200 bg-slate-50"}`}>
+                  <p className={`text-sm font-semibold mb-2 ${isDark ? "text-white" : "text-slate-900"}`}>
+                    {isEnglish ? "Checklist" : "Checklist operativa"}
+                  </p>
+                  <div className="space-y-2">
+                    {activeEvaluation.checks.map((item) => (
+                      <div key={item} className={`rounded-lg border px-3 py-2 text-sm ${isDark ? "border-indigo-500/20 bg-slate-950/30 text-slate-200" : "border-slate-200 bg-white text-slate-700"}`}>
+                        {item}
                       </div>
                     ))}
                   </div>
+                </div>
 
-                  <div className="rounded-xl border border-indigo-500/25 bg-indigo-900/20 p-4">
-                    <p className="font-semibold text-white">Template pratico</p>
-                    <p className="mt-2 text-sm text-slate-300">
-                      Tesi (perché entro) → Trigger (dove entro) → Invalidazione (dove sbaglio) → Target (dove prendo profitto) → Post-analisi.
-                    </p>
+                <div className={`rounded-xl border p-4 ${isDark ? "border-rose-400/25 bg-rose-500/10" : "border-rose-200 bg-rose-50"}`}>
+                  <p className={`text-sm font-semibold mb-2 ${isDark ? "text-rose-200" : "text-rose-800"}`}>
+                    {isEnglish ? "Red flags" : "Red flags (allerta)"}
+                  </p>
+                  <div className="space-y-2">
+                    {activeEvaluation.redFlags.map((item) => (
+                      <div key={item} className={`rounded-lg border px-3 py-2 text-sm ${isDark ? "border-rose-300/20 bg-rose-950/20 text-rose-100" : "border-rose-200 bg-white text-rose-800"}`}>
+                        {item}
+                      </div>
+                    ))}
                   </div>
                 </div>
-              </Accordion>
+              </div>
+            </div>
+
+            <div className="grid gap-3 md:grid-cols-3 mb-5">
+              {[
+                {
+                  step: isEnglish ? "Step 1" : "Step 1",
+                  title: isEnglish ? "Map the category" : "Mappa la categoria",
+                  desc: isEnglish
+                    ? "Pick 3-5 comparable projects and normalize metrics on the same timeframe."
+                    : "Seleziona 3-5 comparabili e normalizza le metriche sullo stesso timeframe.",
+                },
+                {
+                  step: isEnglish ? "Step 2" : "Step 2",
+                  title: isEnglish ? "Score conviction" : "Assegna conviction score",
+                  desc: isEnglish
+                    ? "Rate fundamentals, demand, and execution from 1-5. Invest only if total score is above your threshold."
+                    : "Valuta fondamentali, domanda e execution da 1 a 5. Entra solo sopra la tua soglia minima.",
+                },
+                {
+                  step: isEnglish ? "Step 3" : "Step 3",
+                  title: isEnglish ? "Build entry plan" : "Costruisci il piano d'ingresso",
+                  desc: isEnglish
+                    ? "Define invalidation, position size, and staged entries before opening the trade."
+                    : "Definisci invalidazione, size e ingressi a tranche prima di aprire la posizione.",
+                },
+              ].map((step) => (
+                <div key={step.title} className={`rounded-xl border p-4 ${isDark ? "border-indigo-500/25 bg-indigo-900/20" : "border-slate-200 bg-slate-50"}`}>
+                  <p className={`text-xs uppercase tracking-wide ${isDark ? "text-indigo-300" : "text-indigo-700"}`}>{step.step}</p>
+                  <p className={`mt-1 font-semibold ${isDark ? "text-white" : "text-slate-900"}`}>{step.title}</p>
+                  <p className={`mt-2 text-sm ${isDark ? "text-slate-300" : "text-slate-700"}`}>{step.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className={`rounded-xl border p-4 ${isDark ? "border-amber-400/25 bg-amber-500/10" : "border-amber-200 bg-amber-50"}`}>
+              <p className={`font-semibold ${isDark ? "text-amber-200" : "text-amber-900"}`}>
+                {isEnglish ? "Position sizing template" : "Template position sizing"}
+              </p>
+              <p className={`mt-2 text-sm ${isDark ? "text-amber-100/90" : "text-amber-900/90"}`}>
+                {isEnglish
+                  ? "Risk per trade = Portfolio x 0.5%-1.0%. Position size = (Risk per trade) / (Entry - Invalidation). This keeps losses controlled even when conviction is high."
+                  : "Rischio per trade = Portafoglio x 0.5%-1.0%. Size = (Rischio per trade) / (Entry - Invalidation). Così controlli le perdite anche con alta convinzione."}
+              </p>
             </div>
           </div>
 
-          <div id="sicurezza" className="manual-card scroll-mt-24 rounded-2xl border p-8 mb-8 dark:bg-indigo-900/25 dark:border-indigo-500/20 bg-white border-slate-200 shadow-lg">
-            <p className="text-slate-900 dark:text-slate-200 mb-6">
-              Gli NFT sono uno dei settori ancora meno sviluppati all&apos;interno del mondo Web3. Se ne è sentito molto parlare negli anni scorsi per via di progetti buoni che ancora esistono (come i Crypto Punk, i Pudgy Penguin, i Bored Ape..) ma anche per i molti scam che ci sono stati (come purtroppo accade in tutti i settori nascenti, anche non-Web3, quindi non preoccupatevi o per lo meno, prestate attenzione).
-            </p>
-            <p className="text-slate-900 dark:text-slate-200 mb-6">
-              Possono essere collezioni di PFP (profile pictures), arte digitale, arte tradizionale tokenizzata, o addirittura interi immobili, e molto altro ancora.
-            </p>
-            
-              <Accordion
-                buttonText="Come scegliere la propria community NFT"
-                className="mb-4"
+          <div id="sicurezza" className="manual-card scroll-mt-24 rounded-2xl border p-6 mb-8 dark:bg-indigo-900/25 dark:border-indigo-500/20 bg-white border-slate-200 shadow-lg">
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div className="max-w-3xl">
+                <p className={`text-xs uppercase tracking-[0.18em] ${isDark ? "text-indigo-300" : "text-indigo-700"}`}>
+                  {isEnglish ? "NFT strategy" : "Strategia NFT"}
+                </p>
+                <h2 className={`mt-2 text-2xl font-semibold ${isDark ? "text-white" : "text-slate-900"}`}>
+                  {isEnglish ? "How to evaluate NFT projects with discipline" : "Come valutare progetti NFT con disciplina"}
+                </h2>
+                <p className={`mt-3 text-sm leading-relaxed ${isDark ? "text-slate-300" : "text-slate-700"}`}>
+                  {isEnglish
+                    ? "NFTs are a broad market: collectibles, utility assets, and tokenized creative IP. The edge is not chasing hype, but scoring community quality, utility sustainability, and brand defensibility with a repeatable framework."
+                    : "Gli NFT sono un mercato ampio: collectible, asset con utilita e IP creativa tokenizzata. Il vantaggio non e inseguire l'hype, ma valutare qualita della community, sostenibilita dell'utilita e difendibilita del brand con un framework ripetibile."}
+                </p>
+              </div>
+              <Link
+                href="/nft"
+                className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2 text-sm font-semibold transition-colors ${
+                  isDark
+                    ? "border-indigo-400/40 bg-indigo-500/10 text-indigo-100 hover:bg-indigo-500/20"
+                    : "border-indigo-200 bg-indigo-50 text-indigo-700 hover:bg-indigo-100"
+                }`}
               >
-                <div className="p-5 space-y-4 text-slate-900 dark:text-slate-200">
-                  <p className="font-semibold text-lg mb-4">
-                    Quando scegli una community NFT, considera i seguenti fattori:
-                  </p>
-                  
-                  <div className="space-y-3">
-                    {[
-                      {
-                        title: "1. Visione e Valori",
-                        text: "La community deve riflettere i tuoi interessi e obiettivi.",
-                      },
-                      {
-                        title: "2. Engagement",
-                        text: "Cerca una community attiva su piattaforme come Discord e Twitter.",
-                      },
-                      {
-                        title: "3. Utilita",
-                        text: "Valuta i benefici dell'NFT, come eventi esclusivi o ricompense previste per gli holders.",
-                      },
-                      {
-                        title: "4. Team e Trasparenza",
-                        text: "Assicurati che il team sia esperto e chiaro sui piani.",
-                      },
-                      {
-                        title: "5. Prezzo della Collezione",
-                        text: "Scegli NFT che puoi permetterti senza sovra-allocare il tuo portafoglio. Evita di impegnarti troppo, a meno che tu non voglia entrarci solo temporaneamente per esplorare la community.",
-                      },
-                    ].map((item) => (
-                      <div key={item.title} className="rounded-xl border border-indigo-500/25 bg-slate-950/20 p-4">
-                        <h4 className="font-semibold text-white mb-2">{item.title}</h4>
-                        <p className="text-slate-300 text-sm">{item.text}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </Accordion>
-            
-            <div className="mt-4">
-              <Link href="/nft">
-                <div className="inline-flex items-center gap-2 text-blue-600 font-bold text-lg hover:text-blue-700 transition-colors cursor-pointer">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
-                  {isEnglish ? "Go to NFT" : "Vai a NFT"}
-                </div>
+                {isEnglish ? "Open NFT section" : "Apri sezione NFT"}
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
               </Link>
             </div>
-          </div>
 
-          <div className="rounded-2xl border p-8 mb-8 dark:bg-indigo-900/25 dark:border-indigo-500/20 bg-white border-slate-200 shadow-lg">
-            <p className="text-slate-900 dark:text-slate-200 mb-6">
-              È <span className="text-red-600 font-bold">importantissimo prestare molta attenzione</span> a non cadere in truffe di vario genere come <em>Phishing</em> o <em>Scam</em>. Ci sono diversi modi in cui si può perdere il proprio denaro cadendo vittima di truffe che purtroppo, sono presenti anche in questo lato del web. Seguendo i consigli che troverai nel manuale Anti Truffe qui sotto, sarai in grado di navigare questo mondo minimizzando i rischi.
-            </p>
-            
-            <Accordion
-              buttonText={
-                <div className="flex items-center gap-2">
-                  <svg className="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                  </svg>
-                  Manuale per evitare truffe
+            <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              {[
+                {
+                  kpi: isEnglish ? "Holder concentration" : "Concentrazione holder",
+                  value: isEnglish ? "Top 10 < 35%" : "Top 10 < 35%",
+                  note: isEnglish ? "Lower concentration, lower fragility." : "Minore concentrazione, minore fragilita.",
+                },
+                {
+                  kpi: isEnglish ? "Engagement quality" : "Qualita engagement",
+                  value: isEnglish ? "Weekly recurrence" : "Ricorrenza settimanale",
+                  note: isEnglish ? "Events and content should be consistent." : "Eventi e contenuti devono essere costanti.",
+                },
+                {
+                  kpi: isEnglish ? "Utility durability" : "Durata utilita",
+                  value: isEnglish ? "Product-backed" : "Supportata da prodotto",
+                  note: isEnglish ? "Benefits should not rely on new buyers." : "I benefici non devono dipendere da nuovi ingressi.",
+                },
+                {
+                  kpi: isEnglish ? "IP defensibility" : "Difendibilita IP",
+                  value: isEnglish ? "Clear licensing" : "Licensing chiaro",
+                  note: isEnglish ? "Rights and terms must be explicit." : "Diritti e termini devono essere espliciti.",
+                },
+              ].map((item) => (
+                <div key={item.kpi} className={`rounded-xl border p-4 ${isDark ? "border-indigo-500/25 bg-indigo-900/20" : "border-slate-200 bg-slate-50"}`}>
+                  <p className={`text-xs uppercase tracking-wide ${isDark ? "text-indigo-300" : "text-indigo-700"}`}>{item.kpi}</p>
+                  <p className={`mt-2 text-lg font-semibold ${isDark ? "text-white" : "text-slate-900"}`}>{item.value}</p>
+                  <p className={`mt-1 text-xs ${isDark ? "text-slate-300" : "text-slate-600"}`}>{item.note}</p>
                 </div>
-              }
-              className="mb-4"
-            >
-              <div className="p-5 space-y-6">
-                <p className="text-slate-900 dark:text-slate-200">
-                  Il mondo delle criptovalute offre enormi opportunità, ma è anche terreno fertile per truffatori. Ecco una guida su come proteggerti dalle truffe, basata su consigli di esperti del settore.
-                </p>
+              ))}
+            </div>
 
-                <div>
-                  <h4 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-3">1. Ricerca Approfondita</h4>
-                  <p className="text-slate-900 dark:text-slate-200">
-                    Prima di investire in qualsiasi criptovaluta o progetto, è fondamentale fare una ricerca approfondita. Leggi il whitepaper del progetto, verifica l&apos;identità del team dietro il progetto e cerca recensioni e analisi indipendenti. Progetti con team anonimi o senza documentazione chiara sono da considerare sospetti.
-                  </p>
-                </div>
+            <div className={`mt-5 rounded-xl border p-4 ${isDark ? "border-indigo-500/25 bg-indigo-900/15" : "border-slate-200 bg-white"}`}>
+              <p className={`text-sm font-semibold ${isDark ? "text-white" : "text-slate-900"}`}>
+                {isEnglish ? "Interactive analysis framework" : "Framework analitico interattivo"}
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {nftFocusPillars.map((pillar) => (
+                  <button
+                    key={pillar.id}
+                    type="button"
+                    onClick={() => setActiveNftFocus(pillar.id)}
+                    className={`rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors ${
+                      activeNftFocus === pillar.id
+                        ? isDark
+                          ? "border-indigo-300 bg-indigo-500/20 text-white"
+                          : "border-indigo-300 bg-indigo-100 text-indigo-900"
+                        : isDark
+                          ? "border-white/15 bg-white/5 text-slate-200 hover:bg-white/10"
+                          : "border-slate-300 bg-slate-100 text-slate-700 hover:bg-slate-200"
+                    }`}
+                  >
+                    {pillar.label}
+                  </button>
+                ))}
+              </div>
 
-                <div>
-                  <h4 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-3">2. Utilizza Solo Wallet Reputati</h4>
-                  <p className="text-slate-900 dark:text-slate-200">
-                    Assicurati che i wallet che scarichi provengano da fonti affidabili. Evita di installare wallet da link ricevuti via email o messaggi privati, poiché potrebbero essere falsi e progettati per rubare le tue criptovalute. Verifica sempre che il wallet sia ufficiale e controlla le recensioni degli utenti.
-                  </p>
-                </div>
-
-                <div>
-                  <h4 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-3">3. Attenzione ai Link Malevoli</h4>
-                  <p className="text-slate-900 dark:text-slate-200">
-                    I link malevoli possono infettare il tuo dispositivo con malware o portarti su siti fasulli che possono drenare i tuoi fondi. Verifica sempre i link accedendo direttamente dal sito ufficiale o dai canali social ufficiali del progetto. Tratta ogni link ricevuto da sconosciuti con estrema cautela.
-                  </p>
-                </div>
-
-                <div>
-                  <h4 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-3">4. Riconosci i Segnali di Allarme</h4>
-                  <ul className="list-disc list-inside space-y-2 text-slate-900 dark:text-slate-200">
-                    <li><strong>Promesse di Guadagni Elevati</strong>: Se un&apos;offerta sembra troppo bella per essere vera, probabilmente è una truffa. Nessuna piattaforma legittima garantisce rendimenti altissimi senza rischi.</li>
-                    <li><strong>Mancanza di Trasparenza</strong>: Progetti che non forniscono informazioni chiare sul loro funzionamento, il team o i loro obiettivi sono sospetti.</li>
-                    <li><strong>Senso di Urgenza</strong>: I truffatori spesso cercano di creare un senso di urgenza per farti agire senza riflettere. Le opportunità di investimento genuine non richiedono decisioni affrettate.</li>
+              <div className="mt-4 grid gap-4 lg:grid-cols-[1.2fr_1fr]">
+                <div className={`rounded-xl border p-4 ${isDark ? "border-indigo-500/20 bg-indigo-950/30" : "border-slate-200 bg-slate-50"}`}>
+                  <p className={`text-sm font-semibold ${isDark ? "text-white" : "text-slate-900"}`}>{activeNftPillar.label}</p>
+                  <p className={`mt-1 text-xs ${isDark ? "text-slate-300" : "text-slate-600"}`}>{activeNftPillar.subtitle}</p>
+                  <ul className={`mt-3 space-y-2 text-sm ${isDark ? "text-slate-200" : "text-slate-700"}`}>
+                    {activeNftPillar.checks.map((check) => (
+                      <li key={check} className="flex items-start gap-2">
+                        <span className={`mt-1 inline-block h-1.5 w-1.5 rounded-full ${isDark ? "bg-emerald-300" : "bg-emerald-600"}`} />
+                        <span>{check}</span>
+                      </li>
+                    ))}
                   </ul>
                 </div>
-
-                <div>
-                  <h4 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-3">5. Utilizza Exchange Reputati</h4>
-                  <p className="text-slate-900 dark:text-slate-200">
-                    Quando compri, vendi o scambi criptovalute, usa solo exchange ben conosciuti e con una buona reputazione. Verifica che l&apos;exchange rispetti le normative, abbia una storia di sicurezza solida e offra protezioni come l&apos;assicurazione sui depositi.
+                <div className={`rounded-xl border p-4 ${isDark ? "border-rose-300/30 bg-rose-500/10" : "border-rose-200 bg-rose-50"}`}>
+                  <p className={`text-sm font-semibold ${isDark ? "text-rose-100" : "text-rose-900"}`}>
+                    {isEnglish ? "Red flags to avoid" : "Red flag da evitare"}
                   </p>
+                  <ul className={`mt-3 space-y-2 text-sm ${isDark ? "text-rose-100/90" : "text-rose-900/90"}`}>
+                    {activeNftPillar.redFlags.map((flag) => (
+                      <li key={flag} className="flex items-start gap-2">
+                        <span className={`mt-1 inline-block h-1.5 w-1.5 rounded-full ${isDark ? "bg-rose-200" : "bg-rose-600"}`} />
+                        <span>{flag}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-
-                <div>
-                  <h4 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-3">6. Proteggi i Tuoi Wallet</h4>
-                  <p className="text-slate-900 dark:text-slate-200">
-                    Mantieni i tuoi software sempre aggiornati per proteggerti dalle vulnerabilità. Usa hardware wallet per conservare quantità significative di criptovalute e attiva l&apos;autenticazione a due fattori (2FA) dove possibile. Utilizza un &quot;burner&quot; wallet per le transazioni quotidiane, lasciando i fondi principali in un wallet separato e più sicuro.
-                  </p>
-                </div>
-
-                <div>
-                  <h4 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-3">7. Evita le Truffe dei Falsi Airdrop</h4>
-                  <p className="text-slate-900 dark:text-slate-200">
-                    I falsi airdrop sono una tattica comune per indurre le persone a rivelare le loro chiavi private o a firmare transazioni malevole. Partecipa solo a airdrop da fonti affidabili e verifica sempre l&apos;autenticità dell&apos;offerta tramite i canali ufficiali del progetto.
-                  </p>
-                </div>
-
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <p className="text-blue-800 font-medium">
-                    Seguendo questi consigli, puoi ridurre significativamente il rischio di cadere vittima di truffe nel mondo delle criptovalute e navigare questo spazio con maggiore sicurezza.
-                  </p>
+              </div>
             </div>
-        </div>
-            </Accordion>
+
+            <div className="mt-5 grid gap-4 lg:grid-cols-3">
+              {[
+                {
+                  step: isEnglish ? "Step 1" : "Step 1",
+                  title: isEnglish ? "Map project quality" : "Mappa qualita progetto",
+                  desc: isEnglish
+                    ? "Start from team credibility, roadmap delivery, and holder distribution."
+                    : "Parti da credibilita team, delivery roadmap e distribuzione holder.",
+                },
+                {
+                  step: isEnglish ? "Step 2" : "Step 2",
+                  title: isEnglish ? "Score conviction" : "Assegna conviction score",
+                  desc: isEnglish
+                    ? "Rate each pillar from 1-5 and proceed only above your minimum threshold."
+                    : "Valuta ogni pillar da 1 a 5 e procedi solo sopra la soglia minima.",
+                },
+                {
+                  step: isEnglish ? "Step 3" : "Step 3",
+                  title: isEnglish ? "Define portfolio sizing" : "Definisci position sizing",
+                  desc: isEnglish
+                    ? "Cap exposure per single collection and use staggered entries."
+                    : "Limita esposizione per singola collezione e usa ingressi a tranche.",
+                },
+              ].map((step) => (
+                <div key={step.title} className={`rounded-xl border p-4 ${isDark ? "border-indigo-500/25 bg-indigo-900/20" : "border-slate-200 bg-slate-50"}`}>
+                  <p className={`text-xs uppercase tracking-wide ${isDark ? "text-indigo-300" : "text-indigo-700"}`}>{step.step}</p>
+                  <p className={`mt-1 font-semibold ${isDark ? "text-white" : "text-slate-900"}`}>{step.title}</p>
+                  <p className={`mt-2 text-sm ${isDark ? "text-slate-300" : "text-slate-700"}`}>{step.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-2xl border p-6 mb-8 dark:bg-indigo-900/25 dark:border-indigo-500/20 bg-white border-slate-200 shadow-lg">
+            <div className="max-w-3xl">
+              <p className={`text-xs uppercase tracking-[0.18em] ${isDark ? "text-amber-300" : "text-amber-700"}`}>
+                {isEnglish ? "Security playbook" : "Playbook di sicurezza"}
+              </p>
+              <h2 className={`mt-2 text-2xl font-semibold ${isDark ? "text-white" : "text-slate-900"}`}>
+                {isEnglish ? "Anti-scam manual: protect capital and credentials" : "Manuale anti-truffe: proteggi capitale e credenziali"}
+              </h2>
+              <p className={`mt-3 text-sm leading-relaxed ${isDark ? "text-slate-300" : "text-slate-700"}`}>
+                {isEnglish
+                  ? "Most losses in crypto come from operational mistakes, not market direction. Build a process: verify sources, secure wallets, and execute with strict risk discipline."
+                  : "Gran parte delle perdite nel crypto deriva da errori operativi, non dalla direzione del mercato. Serve un processo: verifica fonti, proteggi wallet e opera con disciplina di rischio."}
+              </p>
+            </div>
+
+            <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              {[
+                {
+                  kpi: isEnglish ? "Link hygiene" : "Igiene dei link",
+                  value: isEnglish ? "100% verified" : "100% verificati",
+                  note: isEnglish ? "Use bookmarks and official domains only." : "Usa solo bookmark e domini ufficiali.",
+                },
+                {
+                  kpi: isEnglish ? "Wallet architecture" : "Architettura wallet",
+                  value: isEnglish ? "Treasury + burner" : "Tesoreria + burner",
+                  note: isEnglish ? "Separate strategic funds from daily activity." : "Separa fondi strategici da operativita quotidiana.",
+                },
+                {
+                  kpi: isEnglish ? "Approval control" : "Controllo approvazioni",
+                  value: isEnglish ? "Weekly review" : "Revisione settimanale",
+                  note: isEnglish ? "Revoke stale allowances on inactive dApps." : "Revoca allowance non piu necessarie.",
+                },
+                {
+                  kpi: isEnglish ? "Incident readiness" : "Prontezza incidenti",
+                  value: isEnglish ? "< 15 min response" : "Risposta < 15 min",
+                  note: isEnglish ? "Predefine emergency actions before problems happen." : "Definisci azioni di emergenza prima dei problemi.",
+                },
+              ].map((item) => (
+                <div key={item.kpi} className={`rounded-xl border p-4 ${isDark ? "border-indigo-500/25 bg-indigo-900/20" : "border-slate-200 bg-slate-50"}`}>
+                  <p className={`text-xs uppercase tracking-wide ${isDark ? "text-amber-300" : "text-amber-700"}`}>{item.kpi}</p>
+                  <p className={`mt-2 text-lg font-semibold ${isDark ? "text-white" : "text-slate-900"}`}>{item.value}</p>
+                  <p className={`mt-1 text-xs ${isDark ? "text-slate-300" : "text-slate-600"}`}>{item.note}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className={`mt-5 rounded-xl border p-4 ${isDark ? "border-indigo-500/25 bg-indigo-900/15" : "border-slate-200 bg-white"}`}>
+              <p className={`text-sm font-semibold ${isDark ? "text-white" : "text-slate-900"}`}>
+                {isEnglish ? "Interactive anti-scam framework" : "Framework anti-truffe interattivo"}
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {scamDefensePillars.map((pillar) => (
+                  <button
+                    key={pillar.id}
+                    type="button"
+                    onClick={() => setActiveScamDefense(pillar.id)}
+                    className={`rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors ${
+                      activeScamDefense === pillar.id
+                        ? isDark
+                          ? "border-amber-300 bg-amber-500/20 text-white"
+                          : "border-amber-300 bg-amber-100 text-amber-900"
+                        : isDark
+                          ? "border-white/15 bg-white/5 text-slate-200 hover:bg-white/10"
+                          : "border-slate-300 bg-slate-100 text-slate-700 hover:bg-slate-200"
+                    }`}
+                  >
+                    {pillar.label}
+                  </button>
+                ))}
+              </div>
+
+              <div className="mt-4 grid gap-4 lg:grid-cols-[1.2fr_1fr]">
+                <div className={`rounded-xl border p-4 ${isDark ? "border-indigo-500/20 bg-indigo-950/30" : "border-slate-200 bg-slate-50"}`}>
+                  <p className={`text-sm font-semibold ${isDark ? "text-white" : "text-slate-900"}`}>{activeScamPillar.label}</p>
+                  <p className={`mt-1 text-xs ${isDark ? "text-slate-300" : "text-slate-600"}`}>{activeScamPillar.subtitle}</p>
+                  <ul className={`mt-3 space-y-2 text-sm ${isDark ? "text-slate-200" : "text-slate-700"}`}>
+                    {activeScamPillar.checks.map((check) => (
+                      <li key={check} className="flex items-start gap-2">
+                        <span className={`mt-1 inline-block h-1.5 w-1.5 rounded-full ${isDark ? "bg-emerald-300" : "bg-emerald-600"}`} />
+                        <span>{check}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className={`rounded-xl border p-4 ${isDark ? "border-rose-300/30 bg-rose-500/10" : "border-rose-200 bg-rose-50"}`}>
+                  <p className={`text-sm font-semibold ${isDark ? "text-rose-100" : "text-rose-900"}`}>
+                    {isEnglish ? "Attack signals" : "Segnali di attacco"}
+                  </p>
+                  <ul className={`mt-3 space-y-2 text-sm ${isDark ? "text-rose-100/90" : "text-rose-900/90"}`}>
+                    {activeScamPillar.redFlags.map((flag) => (
+                      <li key={flag} className="flex items-start gap-2">
+                        <span className={`mt-1 inline-block h-1.5 w-1.5 rounded-full ${isDark ? "bg-rose-200" : "bg-rose-600"}`} />
+                        <span>{flag}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-5 grid gap-4 lg:grid-cols-3">
+              {[
+                {
+                  step: isEnglish ? "Step 1" : "Step 1",
+                  title: isEnglish ? "Pre-trade checks" : "Check pre-trade",
+                  desc: isEnglish
+                    ? "Confirm domain, contract address, and required permissions before any signature."
+                    : "Conferma dominio, contract address e permessi richiesti prima di ogni firma.",
+                },
+                {
+                  step: isEnglish ? "Step 2" : "Step 2",
+                  title: isEnglish ? "Execute safely" : "Esegui in sicurezza",
+                  desc: isEnglish
+                    ? "Start with a test transfer, then scale size only after successful settlement."
+                    : "Parti con una transazione test, poi aumenta la size solo dopo conferma corretta.",
+                },
+                {
+                  step: isEnglish ? "Step 3" : "Step 3",
+                  title: isEnglish ? "Post-trade cleanup" : "Pulizia post-trade",
+                  desc: isEnglish
+                    ? "Revoke unnecessary approvals, archive tx hashes, and update your risk log."
+                    : "Revoca approvazioni inutili, archivia hash tx e aggiorna il tuo risk log.",
+                },
+              ].map((step) => (
+                <div key={step.title} className={`rounded-xl border p-4 ${isDark ? "border-indigo-500/25 bg-indigo-900/20" : "border-slate-200 bg-slate-50"}`}>
+                  <p className={`text-xs uppercase tracking-wide ${isDark ? "text-amber-300" : "text-amber-700"}`}>{step.step}</p>
+                  <p className={`mt-1 font-semibold ${isDark ? "text-white" : "text-slate-900"}`}>{step.title}</p>
+                  <p className={`mt-2 text-sm ${isDark ? "text-slate-300" : "text-slate-700"}`}>{step.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className={`mt-5 rounded-xl border p-4 ${isDark ? "border-amber-400/30 bg-amber-500/10" : "border-amber-200 bg-amber-50"}`}>
+              <p className={`text-sm font-semibold ${isDark ? "text-amber-100" : "text-amber-900"}`}>
+                {isEnglish ? "Emergency protocol" : "Protocollo di emergenza"}
+              </p>
+              <p className={`mt-2 text-sm ${isDark ? "text-amber-100/90" : "text-amber-900/90"}`}>
+                {isEnglish
+                  ? "If you suspect compromise: disconnect wallet, transfer remaining funds to a safe wallet, revoke approvals, rotate credentials, and document every transaction for forensic review."
+                  : "Se sospetti compromissione: disconnetti wallet, trasferisci i fondi residui su wallet sicuro, revoca approvazioni, ruota credenziali e documenta ogni transazione per analisi successiva."}
+              </p>
+            </div>
           </div>
 
           {activeQuickGuide ? (
@@ -1347,6 +1626,7 @@ export default function Manuale() {
             </div>
           </div>
         </div>
-    </div>
+      </div>
+    </AutoTranslateText>
   );
 }

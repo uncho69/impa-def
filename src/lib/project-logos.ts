@@ -108,6 +108,8 @@ import felixLogo from "@/assets/felix-logo.png";
 import gasZipLogo from "@/assets/gas-zip-logo.png";
 import hyperlendLogo from "@/assets/hyperlend-logo.png";
 import hypurrfiLogo from "@/assets/hypurrfi-logo.png";
+import usdcLogo from "@/assets/usdc-logo.svg";
+import usdtLogo from "@/assets/usdt-logo.svg";
 import placeholderLogo from "@/assets/placeholder.svg";
 
 export const PROJECT_LOGO: Record<string, StaticImageData> = {
@@ -176,6 +178,7 @@ export const PROJECT_LOGO: Record<string, StaticImageData> = {
   trezor: trezorLogo,
   coingecko: coingeckoLogo,
   defillama: defillamaLogo,
+  llamaswap: defillamaLogo,
   liquity: liquityLogo,
   decentraland: decentralandLogo,
   snapshot: snapshotLogo,
@@ -196,6 +199,8 @@ export const PROJECT_LOGO: Record<string, StaticImageData> = {
   gasdotzip: gasZipLogo,
   hyperlend: hyperlendLogo,
   hypurrfi: hypurrfiLogo,
+  usdc: usdcLogo,
+  usdt: usdtLogo,
   cielo: cieloLogo,
   kamino: kaminoLogo,
   moonwell: moonwellLogo,

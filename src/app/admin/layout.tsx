@@ -4,6 +4,8 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useAppAuth } from '@/lib/auth/useAppAuth';
+import { useLanguage } from '@/contexts/LanguageContext';
+import AutoTranslateText from '@/components/AutoTranslateText';
 // import { PageLayout } from '@/components/PageLayout'; // Non più necessario
 
 export default function AdminLayout({
@@ -11,6 +13,8 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const { language } = useLanguage();
+  const isEnglish = language === "en";
   const { isLoaded, isSignedIn } = useAppAuth();
   const router = useRouter();
   const [supportCount, setSupportCount] = useState<number | null>(null);
@@ -85,7 +89,7 @@ export default function AdminLayout({
   if (!isLoaded || checkingAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <p className="text-gray-600">Verifica accesso admin in corso...</p>
+        <p className="text-gray-600">{isEnglish ? "Checking admin access..." : "Verifica accesso admin in corso..."}</p>
       </div>
     );
   }
@@ -94,13 +98,13 @@ export default function AdminLayout({
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-red-600 mb-4">Accesso Negato</h1>
-          <p className="text-gray-600 mb-6">Non hai i permessi per accedere a questa sezione.</p>
+          <h1 className="text-2xl font-bold text-red-600 mb-4">{isEnglish ? "Access denied" : "Accesso Negato"}</h1>
+          <p className="text-gray-600 mb-6">{isEnglish ? "You don't have permission to access this section." : "Non hai i permessi per accedere a questa sezione."}</p>
           <Link
             href="/"
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
           >
-            Torna alla Homepage
+            {isEnglish ? "Back to Homepage" : "Torna alla Homepage"}
           </Link>
         </div>
       </div>
@@ -113,7 +117,7 @@ export default function AdminLayout({
         <div className="px-6">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-8">
-              <h1 className="text-xl font-bold text-white">🛡️ Admin Dashboard</h1>
+              <h1 className="text-xl font-bold text-white">🛡️ {isEnglish ? "Admin Dashboard" : "Admin Dashboard"}</h1>
             </div>
             <div className="flex items-center">
               {supportCount !== null && supportCount > 0 ? (
@@ -121,7 +125,7 @@ export default function AdminLayout({
                   href="/admin/support"
                   className="inline-flex items-center gap-2 rounded-md border border-red-400/40 bg-red-500/10 px-2.5 py-1.5 text-xs text-red-100 hover:bg-red-500/20"
                 >
-                  Supporto
+                  {isEnglish ? "Support" : "Supporto"}
                   <span className="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[11px] font-semibold">
                     {supportCount}
                   </span>
@@ -131,7 +135,9 @@ export default function AdminLayout({
           </div>
         </div>
       </div>
-      <main className="px-6 py-8">{children}</main>
+      <main className="px-6 py-8">
+        <AutoTranslateText>{children}</AutoTranslateText>
+      </main>
     </div>
   );
 
