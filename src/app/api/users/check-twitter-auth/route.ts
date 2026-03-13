@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getUserIdFromRequest } from '@/lib/auth/middleware';
 import { checkUserTokenStatus } from '@/lib/x-api/token-management';
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 /**
  * API endpoint to check if the current user's Twitter token is expired
  * Frontend can call this to show re-authentication prompts

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { BackToHome } from "@/components/BackToHome";
@@ -33,7 +33,7 @@ const TWITTER_ERROR_MESSAGES: Record<string, string> = {
   id_non_trovato: "Profilo X non riconosciuto.",
 };
 
-export default function EpochLeaderboardSelectionPage() {
+function EpochLeaderboardSelectionContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { t } = useLanguage();
@@ -256,6 +256,26 @@ export default function EpochLeaderboardSelectionPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function EpochLeaderboardSelectionPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="relative z-10">
+          <div className="container-custom py-8">
+            <div className="max-w-6xl mx-auto">
+              <div className="bg-white dark:bg-indigo-900/25 rounded-2xl border border-slate-200 dark:border-indigo-500/20 p-8 text-center text-slate-600 dark:text-slate-300">
+                Caricamento campagne...
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    >
+      <EpochLeaderboardSelectionContent />
+    </Suspense>
   );
 }
 

@@ -10,6 +10,9 @@ import { authAccounts, users } from '@/lib/db/schema';
 import { eq, and } from 'drizzle-orm';
 import { ensureAccessControlTables } from '@/lib/db/ensure-access-control-tables';
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 const X_TOKEN_URL = 'https://api.x.com/2/oauth2/token';
 const X_USER_ME_URL = 'https://api.x.com/2/users/me';
 const CODE_VERIFIER_COOKIE = 'x_oauth_code_verifier';
