@@ -110,6 +110,7 @@ import hyperlendLogo from "@/assets/hyperlend-logo.png";
 import hypurrfiLogo from "@/assets/hypurrfi-logo.png";
 import usdcLogo from "@/assets/usdc-logo.svg";
 import usdtLogo from "@/assets/usdt-logo.svg";
+import deriveLogo from "@/assets/derive-logo.png";
 import placeholderLogo from "@/assets/placeholder.svg";
 
 export const PROJECT_LOGO: Record<string, StaticImageData> = {
@@ -179,6 +180,7 @@ export const PROJECT_LOGO: Record<string, StaticImageData> = {
   coingecko: coingeckoLogo,
   defillama: defillamaLogo,
   llamaswap: defillamaLogo,
+  derive: deriveLogo,
   liquity: liquityLogo,
   decentraland: decentralandLogo,
   snapshot: snapshotLogo,

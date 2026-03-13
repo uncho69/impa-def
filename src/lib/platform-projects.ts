@@ -22,6 +22,7 @@ export const PLATFORM_PROJECTS: {
   { id: 'bitcoin', name: 'Bitcoin', tokenConfig: { coingeckoId: 'bitcoin', symbol: 'BTC' } },
   { id: 'blast', name: 'Blast', tokenConfig: { coingeckoId: 'blast', symbol: 'BLAST' } },
   { id: 'degen', name: 'Degen', tokenConfig: { coingeckoId: 'degen-base', symbol: 'DEGEN' } },
+  { id: 'derive', name: 'Derive', tokenConfig: { symbol: 'DRV' } },
   { id: 'ethereum', name: 'Ethereum', tokenConfig: { coingeckoId: 'ethereum', symbol: 'ETH' } },
   { id: 'hyperevm', name: 'HyperEVM' },
   { id: 'hyperlane', name: 'Hyperlane' },

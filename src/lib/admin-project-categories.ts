@@ -96,6 +96,7 @@ export const PROJECT_MACRO_CATEGORY: Record<string, MacroCategoryId> = {
   mirror: "defi",
   "trader-joe": "defi",
   llamaswap: "defi",
+  derive: "defi",
   ostium: "defi",
   pacifica: "defi",
   smilee: "defi",

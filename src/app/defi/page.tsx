@@ -26,6 +26,7 @@ import orbiterIcon from "@/assets/orbiterfinance-icon.png";
 import usdcIcon from "@/assets/usdc-logo.svg";
 import usdtIcon from "@/assets/usdt-logo.svg";
 import defillamaIcon from "@/assets/defillama-logo.png";
+import deriveIcon from "@/assets/derive-logo.png";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const CATEGORIES = [
@@ -43,6 +44,7 @@ const PROTOCOLS = [
   { name: "Uniswap", description: "DEX leader su Ethereum e L2 per swap e liquidity.", icon: uniswapIcon, href: "/defi/uniswap", category: "dex" as CategoryId, token: "UNI", price: "$12.40", marketCap: "$7.2B", airdropPotential: false, twitterUrl: "https://x.com/Uniswap", websiteUrl: "https://uniswap.org", contractAddress: "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984" },
   { name: "Aave", description: "Prestiti e borrowing decentralizzati su più reti.", icon: Placeholder, href: "/defi/aave", category: "lending" as CategoryId, token: "AAVE", price: "$285", marketCap: "$4.1B", airdropPotential: false, twitterUrl: "https://x.com/AaveAave", websiteUrl: "https://aave.com", contractAddress: "0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9" },
   { name: "Hyperliquid", description: "Perpetuals on-chain e trading con potenziale airdrop.", icon: hyperliquidIcon, href: "/defi/hyperliquid", category: "dex" as CategoryId, token: "HYPE", price: "$18.20", marketCap: "$3.5B", airdropPotential: true, twitterUrl: "https://x.com/HyperliquidX", websiteUrl: "https://hyperliquid.xyz", contractAddress: "0xf4b0387084f4b2c4d7266a2c7d1a7f0c2e3d4c5b" },
+  { name: "Derive", description: "Piattaforma DeFi per trading di derivati on-chain con focus su perpetual e opzioni.", icon: deriveIcon, href: "/defi/derive", category: "derivatives" as CategoryId, token: "DRV", price: "—", marketCap: "—", airdropPotential: false, twitterUrl: "https://x.com/derivexyz", websiteUrl: "https://www.derive.xyz", contractAddress: "" },
   { name: "Stargate", description: "Bridge e trasferimenti cross-chain con LayerZero.", icon: stargateIcon, href: "/defi/stargate", category: "bridge" as CategoryId, token: "STG", price: "$0.82", marketCap: "$168M", airdropPotential: false, twitterUrl: "https://x.com/StargateFinance", websiteUrl: "https://stargate.finance", contractAddress: "0xaf5191b0de278c7286d6c7cc6ab6bb8a4ba2a6b8" },
   { name: "Jumper", description: "Swap e bridge multi-chain in un’unica interfaccia.", icon: jumperIcon, href: "/defi/jumper", category: "bridge" as CategoryId, token: "—", price: "—", marketCap: "—", airdropPotential: true, twitterUrl: "https://x.com/JumperExchange", websiteUrl: "https://jumper.exchange", contractAddress: "" },
   { name: "deBridge", description: "Bridge e messaggeria cross-chain per asset e dati.", icon: debridgeIcon, href: "/defi/debridge", category: "bridge" as CategoryId, token: "—", price: "—", marketCap: "—", airdropPotential: false, twitterUrl: "https://x.com/deBridgeFinance", websiteUrl: "https://debridge.finance", contractAddress: "" },
@@ -81,6 +83,7 @@ const PROTOCOL_DESCRIPTION_EN: Record<string, string> = {
   "DEX leader su Ethereum e L2 per swap e liquidity.": "Leading DEX on Ethereum and L2 for swaps and liquidity.",
   "Prestiti e borrowing decentralizzati su più reti.": "Decentralized lending and borrowing across multiple networks.",
   "Perpetuals on-chain e trading con potenziale airdrop.": "On-chain perpetuals trading with potential airdrop upside.",
+  "Piattaforma DeFi per trading di derivati on-chain con focus su perpetual e opzioni.": "DeFi platform for on-chain derivatives trading focused on perpetuals and options.",
   "Bridge e trasferimenti cross-chain con LayerZero.": "Bridge and cross-chain transfers powered by LayerZero.",
   "Swap e bridge multi-chain in un’unica interfaccia.": "Multi-chain swaps and bridging in one interface.",
   "Bridge e messaggeria cross-chain per asset e dati.": "Cross-chain bridge and messaging for assets and data.",

@@ -36,7 +36,7 @@ export type ProjectPageData = {
 type DefiSeed = {
   slug: string;
   name: string;
-  category: "DEX" | "Lending" | "Yield" | "Bridge" | "Stablecoins";
+  category: "DEX" | "Lending" | "Yield" | "Bridge" | "Stablecoins" | "Derivatives";
   tokenSymbol: string;
   description: string;
   appUrl: string;
@@ -509,6 +509,18 @@ export const PROJECT_PAGE_DATA: Record<string, Omit<ProjectPageData, "slug" | "l
     coinId: null,
     docsUrl: "https://docs.llama.fi",
     guideUrl: "/manuale#analisi",
+  }),
+  derive: buildDefiData({
+    slug: "derive",
+    name: "Derive",
+    category: "Derivatives",
+    tokenSymbol: "DRV",
+    description: "Piattaforma DeFi per trading di derivati on-chain con focus su perpetual e opzioni.",
+    appUrl: "https://app.derive.xyz",
+    websiteUrl: "https://www.derive.xyz",
+    twitterUrl: "https://x.com/derivexyz",
+    coinId: null,
+    docsUrl: "https://docs.derive.xyz",
   }),
   traderjoe: buildDefiData({
     slug: "traderjoe",

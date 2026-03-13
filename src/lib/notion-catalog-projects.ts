@@ -42,6 +42,7 @@ export const NOTION_CATALOG_PROJECTS: {
   { id: 'defillama', name: 'Defillama', websiteUrl: 'https://defillama.com/', twitterUrl: 'https://x.com/DefiLlama' },
   { id: 'defined', name: 'Defined', websiteUrl: 'https://www.defined.fi/', twitterUrl: 'https://x.com/definedfi' },
   { id: 'degen', name: 'Degen', websiteUrl: 'https://degen.tips', twitterUrl: 'https://x.com/degentokenbase' },
+  { id: 'derive', name: 'Derive', websiteUrl: 'https://www.derive.xyz', twitterUrl: 'https://x.com/derivexyz', description: 'Piattaforma DeFi per trading di derivati on-chain con focus su perpetual e opzioni.' },
   { id: 'dexscreener', name: 'Dexscreener', websiteUrl: 'https://dexscreener.com', twitterUrl: 'https://x.com/dexscreener' },
   { id: 'dogecoin', name: 'Dogecoin', websiteUrl: 'https://dogecoin.com/', twitterUrl: 'https://x.com/dogecoin' },
   { id: 'dogwifhat-wif', name: 'Dogwifhat (WIF)', websiteUrl: 'https://Dogwifcoin.org', twitterUrl: 'https://x.com/dogwifcoin' },
