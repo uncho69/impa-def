@@ -38,7 +38,7 @@ export default function ExpandableNewsCard({
 
   return (
     <div 
-      className={`bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-xl transition-all duration-300 ${
+      className={`rounded-lg border border-gray-200 dark:border-indigo-500/20 bg-white dark:bg-indigo-900/25 shadow-md dark:shadow-none hover:shadow-xl dark:hover:shadow-indigo-500/10 transition-all duration-300 ${
         isExpanded ? 'md:col-span-2' : ''
       }`}
     >
@@ -63,24 +63,24 @@ export default function ExpandableNewsCard({
           <span className={`${categoryConfig.bgColor} ${categoryConfig.color} text-xs font-medium px-2.5 py-0.5 rounded-full`}>
             {categoryConfig.name}
           </span>
-          <span className="text-gray-500 text-xs">
+          <span className="text-gray-500 dark:text-slate-400 text-xs">
             {new Date(article.publishedAt).toLocaleDateString('it-IT')}
           </span>
         </div>
         
-        <h2 className={`font-bold text-gray-900 mb-2 ${isExpanded ? 'text-2xl' : 'text-xl line-clamp-2'}`}>
+        <h2 className={`font-bold text-gray-900 dark:text-white mb-2 ${isExpanded ? 'text-2xl' : 'text-xl line-clamp-2'}`}>
           {article.title}
         </h2>
         
-        <p className={`text-gray-700 text-sm mb-4 ${isExpanded ? 'text-base leading-relaxed' : 'line-clamp-3'}`}>
+        <p className={`text-gray-700 dark:text-slate-300 text-sm mb-4 ${isExpanded ? 'text-base leading-relaxed' : 'line-clamp-3'}`}>
           {article.summary}
         </p>
 
         {/* Contenuto completo quando espanso */}
         {isExpanded && (
-          <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+          <div className="mb-6 p-4 bg-gray-50 dark:bg-indigo-950/40 rounded-lg border border-transparent dark:border-indigo-500/20">
             <div 
-              className="text-gray-800 leading-relaxed prose prose-sm max-w-none"
+              className="text-gray-800 dark:text-slate-200 leading-relaxed prose prose-sm max-w-none dark:prose-invert"
               dangerouslySetInnerHTML={{ 
                 __html: article.content.replace(/\n/g, '<br>') 
               }}
@@ -91,14 +91,14 @@ export default function ExpandableNewsCard({
         {/* Tags */}
         <div className="flex flex-wrap gap-2 mb-4">
           {article.tags && Array.isArray(article.tags) && article.tags.map((tag: string, index: number) => (
-            <span key={index} className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full">
+            <span key={index} className="bg-gray-100 dark:bg-indigo-900/50 text-gray-600 dark:text-slate-300 text-xs px-2 py-1 rounded-full">
               {tag}
             </span>
           ))}
         </div>
         
                {/* Footer */}
-               <div className="flex items-center justify-end pt-4 border-t border-gray-200">
+               <div className="flex items-center justify-end pt-4 border-t border-gray-200 dark:border-indigo-500/20">
                  {/* Pulsante Leggi di più / Chiudi - SEMPRE PRESENTE */}
                  <button
                    onClick={() => setIsExpanded(!isExpanded)}

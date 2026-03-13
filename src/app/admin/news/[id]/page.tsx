@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useUser } from '@clerk/nextjs';
+import { useAppAuth } from '@/lib/auth/useAppAuth';
 // import { SimpleCard } from '@/components/SimpleCard'; // Non più necessario
 import { NEWS_CATEGORIES } from '@/lib/news-constants';
 
@@ -19,9 +19,26 @@ interface NewsItem {
   tags: string[];
 }
 
+function extractLinkedEmail(linkedAccounts: Array<Record<string, unknown>>): string {
+  for (const account of linkedAccounts) {
+    const candidates = [account.address, account.email, account.emailAddress];
+    for (const value of candidates) {
+      if (typeof value === 'string' && value.includes('@')) {
+        return value.trim().toLowerCase();
+      }
+    }
+  }
+  return '';
+}
+
+function inferAuthorName(email: string): string {
+  const localPart = email.split('@')[0]?.trim();
+  return localPart || 'Admin';
+}
+
 export default function EditNewsPage({ params }: { params: { id: string } }) {
   const router = useRouter();
-  const { user } = useUser();
+  const { isSignedIn, user } = useAppAuth();
   const [loading, setLoading] = useState(false);
   const [loadingData, setLoadingData] = useState(true);
   const [formData, setFormData] = useState({
@@ -70,7 +87,15 @@ export default function EditNewsPage({ params }: { params: { id: string } }) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) return;
+    if (!isSignedIn) return;
+
+    const linkedAccounts = (Array.isArray(user?.linkedAccounts) ? user.linkedAccounts : []) as Array<Record<string, unknown>>;
+    const authorEmail = extractLinkedEmail(linkedAccounts);
+    if (!authorEmail) {
+      alert("Collega un'email (o Google) al profilo prima di aggiornare articoli.");
+      return;
+    }
+    const author = inferAuthorName(authorEmail);
 
     setLoading(true);
     try {
@@ -81,8 +106,8 @@ export default function EditNewsPage({ params }: { params: { id: string } }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
-          author: user.firstName || user.emailAddresses[0]?.emailAddress || 'Admin',
-          authorEmail: user.emailAddresses[0]?.emailAddress || '',
+          author,
+          authorEmail,
           tags: tagsArray
         })
       });

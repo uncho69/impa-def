@@ -1,0 +1,713 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Eventi Storici</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="14bf7518-b039-4bc7-88e0-715926cb21d3" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">🏛️</span></div><h1 class="page-title" dir="auto">Eventi Storici</h1><p class="page-description" dir="auto"></p><table class="properties"><tbody></tbody></table></header><div class="page-body"><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong>1. Lancio di Bitcoin (2009)</strong></summary><div class="indented"><div style="display:contents" dir="auto"><ul id="6551455d-7a71-4e3b-adfb-37f3769a845b" class="bulleted-list"><li style="list-style-type:disc"><strong>Descrizione</strong>: Bitcoin, creato da un individuo o un gruppo sotto lo pseudonimo di Satoshi Nakamoto, è stato il primo esempio di una criptovaluta basata su una blockchain decentralizzata.</li></ul></div><div style="display:contents" dir="auto"><ul id="ba9c4b2a-c13c-4888-852b-1648bc83363c" class="bulleted-list"><li style="list-style-type:disc"><strong>Impatto</strong>: Ha dato origine all&#x27;intero settore delle criptovalute e della blockchain, ponendo le basi per il futuro sviluppo del web3.</li></ul></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Articoli rilevanti</summary><div class="indented"><div style="display:contents" dir="ltr"><figure id="91b81fd9-ed46-40c6-a9ff-0c49a47f4fc2"><a href="https://news.bitcoin.com/13-years-ago-today-satoshi-nakamoto-published-the-first-forum-post-introducing-bitcoin/" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">13 Years Ago Today, Satoshi Nakamoto Published the First Forum Post Introducing Bitcoin – Featured Bitcoin News</div><div class="bookmark-description">13 years ago today, the creator of the Bitcoin network, Satoshi Nakamoto published the inventor’s first forum post.</div></div><div class="bookmark-href"><img src="https://news.bitcoin.com/favicon.ico" class="icon bookmark-icon"/>https://news.bitcoin.com/13-years-ago-today-satoshi-nakamoto-published-the-first-forum-post-introducing-bitcoin/</div></div><img src="https://static.news.bitcoin.com/wp-content/uploads/2022/02/sn.jpg" class="bookmark-image"/></a></figure></div></div></details></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong>2. Creazione di Ethereum (2015)</strong></summary><div class="indented"><div style="display:contents" dir="auto"><ul id="95153ced-7d9b-48ab-bda6-6e68257055c9" class="bulleted-list"><li style="list-style-type:disc"><strong>Descrizione</strong>: Ethereum, fondato da Vitalik Buterin e altri co-fondatori, ha introdotto il concetto di smart contract e una piattaforma per applicazioni decentralizzate (dApp).</li></ul></div><div style="display:contents" dir="auto"><ul id="4a119a57-5d4f-4afe-b34e-c9e3c6e6e0b0" class="bulleted-list"><li style="list-style-type:disc"><strong>Impatto</strong>: Ethereum ha ampliato enormemente le possibilità della tecnologia blockchain, permettendo la creazione di nuove tipologie di applicazioni decentralizzate e contribuendo all&#x27;evoluzione del web3.</li></ul></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Articoli rilevanti</summary><div class="indented"><div style="display:contents" dir="auto"><ol type="1" id="1efa77ef-5be3-45d9-8893-0f28f1f7747d" class="numbered-list" start="1"><li><a href="https://blog.ethereum.org/2015/07/30/ethereum-launches/">Ethereum Launches - Ethereum Foundation Blog</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="1accc95f-a011-410f-ab77-3ac7188f6106" class="numbered-list" start="2"><li><a href="https://cointelegraph.com/news/ethereum-announces-official-launch-date">Ethereum Announces Official Launch Date - Cointelegraph</a></li></ol></div></div></details></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong>3. ICO Boom (2017)</strong></summary><div class="indented"><div style="display:contents" dir="auto"><ul id="790999ad-2b30-41e1-b23c-b272cf325331" class="bulleted-list"><li style="list-style-type:disc"><strong>Descrizione</strong>: L&#x27;Initial Coin Offering (ICO) è diventato un metodo popolare per raccogliere fondi per nuovi progetti blockchain e criptovalute.</li></ul></div><div style="display:contents" dir="auto"><ul id="271dfc97-25b1-4869-b3d2-a0417966dfdb" class="bulleted-list"><li style="list-style-type:disc"><strong>Impatto</strong>: Ha portato a un&#x27;enorme crescita nel numero di progetti blockchain, sebbene molti fossero truffe o fallissero, evidenziando la necessità di regolamentazione e due diligence.</li></ul></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong>4. DeFi Summer (2020)</strong></summary><div class="indented"><div style="display:contents" dir="auto"><ul id="ddc766fd-03d4-4371-8388-d81cfb51cffa" class="bulleted-list"><li style="list-style-type:disc"><strong>Descrizione</strong>: L&#x27;estate del 2020 ha visto un&#x27;esplosione di interesse per le applicazioni di Finanza Decentralizzata (DeFi) come Uniswap, Compound e Aave.</li></ul></div><div style="display:contents" dir="auto"><ul id="ea582aaf-54b8-4ee4-91f0-f6a2f582c03d" class="bulleted-list"><li style="list-style-type:disc"><strong>Impatto</strong>: La DeFi ha rivoluzionato il settore finanziario, offrendo prestiti, scambi e altri servizi finanziari senza intermediari centralizzati.</li></ul></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong>5. NFT Boom (2021)</strong></summary><div class="indented"><div style="display:contents" dir="auto"><ul id="7ccd6346-5f2c-4432-81b6-3b242e3963f0" class="bulleted-list"><li style="list-style-type:disc"><strong>Descrizione</strong>: Gli NFT (Non-Fungible Tokens) sono diventati estremamente popolari, con vendite multimilionarie di opere d&#x27;arte digitale e collezionabili.</li></ul></div><div style="display:contents" dir="auto"><ul id="8e581911-3439-4abe-8872-fd967a22ede7" class="bulleted-list"><li style="list-style-type:disc"><strong>Impatto</strong>: Gli NFT hanno aperto nuove opportunità per artisti, creatori di contenuti e collezionisti, portando alla mainstream la tecnologia blockchain.</li></ul></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong>6. Adozione di Bitcoin come Moneta Legale in El Salvador (2021)</strong></summary><div class="indented"><div style="display:contents" dir="auto"><ul id="22d47988-cc15-4556-9fc9-ff0f774f580d" class="bulleted-list"><li style="list-style-type:disc"><strong>Descrizione</strong>: El Salvador è diventato il primo paese al mondo a adottare Bitcoin come moneta legale.</li></ul></div><div style="display:contents" dir="auto"><ul id="e479abfb-6300-4df1-beae-751a7dc5ca02" class="bulleted-list"><li style="list-style-type:disc"><strong>Impatto</strong>: Questo ha segnato un importante passo verso l&#x27;adozione mainstream delle criptovalute da parte degli stati nazionali.</li></ul></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong>7. Lancio di Ethereum 2.0 (The Merge) (2022)</strong></summary><div class="indented"><div style="display:contents" dir="auto"><ul id="94343115-81ea-4f4e-b3e7-5db8f1fe10f8" class="bulleted-list"><li style="list-style-type:disc"><strong>Descrizione</strong>: Ethereum ha completato il passaggio da un meccanismo di consenso Proof-of-Work (PoW) a Proof-of-Stake (PoS), noto come &quot;The Merge&quot;.</li></ul></div><div style="display:contents" dir="auto"><ul id="c1ba98c4-9cd4-43bd-b9e4-d9fc75dc63d6" class="bulleted-list"><li style="list-style-type:disc"><strong>Impatto</strong>: Ha migliorato l&#x27;efficienza energetica e la scalabilità di Ethereum, segnando una pietra miliare importante nell&#x27;evoluzione della rete.</li></ul></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong>8. Crescita degli Ecosistemi Layer 2 (2022-2023)</strong></summary><div class="indented"><div style="display:contents" dir="auto"><ul id="8289b942-e3fa-4ea1-b1dc-34ff8d3f5de2" class="bulleted-list"><li style="list-style-type:disc"><strong>Descrizione</strong>: Soluzioni Layer 2 come Arbitrum, Optimism e zk-Rollups hanno guadagnato popolarità per migliorare la scalabilità di Ethereum.</li></ul></div><div style="display:contents" dir="auto"><ul id="e67d541f-df3f-46ae-8503-5a34cfd1c96e" class="bulleted-list"><li style="list-style-type:disc"><strong>Impatto</strong>: Hanno consentito transazioni più veloci e meno costose, facilitando una maggiore adozione delle dApp e della DeFi.</li></ul></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong>9. Crollo di FTX (Novembre 2022)</strong></summary><div class="indented"><div style="display:contents" dir="auto"><ul id="59de3dfb-1ec7-441f-a3f3-f43562fe8267" class="bulleted-list"><li style="list-style-type:disc"><strong>Descrizione</strong>: A novembre 2022, l&#x27;exchange di criptovalute FTX, uno dei più grandi e rispettati al mondo, ha dichiarato bancarotta a seguito di gravi problemi di liquidità e accuse di gestione fraudolenta dei fondi dei clienti.</li></ul></div><div style="display:contents" dir="auto"><ul id="73e03257-e47e-4198-9944-1b6d048446e7" class="bulleted-list"><li style="list-style-type:disc"><strong>Impatto</strong>: Il crollo di FTX ha avuto un impatto devastante sul mercato delle criptovalute, causando una perdita di fiducia significativa tra gli investitori e portando a un aumento della regolamentazione nel settore. Molti investitori hanno perso fondi significativi, e l&#x27;evento ha messo in luce la necessità di una maggiore trasparenza e supervisione nelle operazioni degli exchange di criptovalute.</li></ul></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong>10. Lancio di Decentralised Social Media (Lens Protocol, 2023)</strong></summary><div class="indented"><div style="display:contents" dir="auto"><ul id="9b7e1b4a-d2d0-4a07-b2cd-c53ddfe217ec" class="bulleted-list"><li style="list-style-type:disc"><strong>Descrizione</strong>: Il lancio di piattaforme di social media decentralizzate, come Lens Protocol, ha introdotto nuovi modelli per la gestione e la monetizzazione dei contenuti online.</li></ul></div><div style="display:contents" dir="auto"><ul id="75ea46c6-49b3-4014-9f48-9d245e49b034" class="bulleted-list"><li style="list-style-type:disc"><strong>Impatto</strong>: Ha iniziato a sfidare i modelli tradizionali dei social media centralizzati, dando più potere agli utenti.</li></ul></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong>11. Adozione di Soluzioni di Interoperabilità (LayerZero, 2023)</strong></summary><div class="indented"><div style="display:contents" dir="auto"><ul id="0e20f1ff-a66c-4043-be6c-f29e34ffda22" class="bulleted-list"><li style="list-style-type:disc"><strong>Descrizione</strong>: Soluzioni come LayerZero hanno facilitato la comunicazione e il trasferimento di asset tra diverse blockchain.</li></ul></div><div style="display:contents" dir="auto"><ul id="d26fb314-9331-4446-9d24-e304e3caf820" class="bulleted-list"><li style="list-style-type:disc"><strong>Impatto</strong>: Hanno migliorato l&#x27;interoperabilità nel mondo delle blockchain, permettendo una maggiore collaborazione e integrazione tra vari ecosistemi.</li></ul></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong>12. Approvazione del Bitcoin ETF (Gennaio 2024)</strong></summary><div class="indented"><div style="display:contents" dir="auto"><ul id="c9d199bc-f9dc-41d1-a8a1-e50dcd86907e" class="bulleted-list"><li style="list-style-type:disc"><strong>Descrizione</strong>: A gennaio 2024, la Securities and Exchange Commission (SEC) degli Stati Uniti ha approvato il primo ETF (Exchange-Traded Fund) basato su Bitcoin.</li></ul></div><div style="display:contents" dir="auto"><ul id="b10620f1-6d6f-4ef3-804b-2311ccc1f26d" class="bulleted-list"><li style="list-style-type:disc"><strong>Impatto</strong>: L&#x27;approvazione del Bitcoin ETF ha segnato un importante passo avanti per l&#x27;adozione mainstream delle criptovalute, offrendo agli investitori tradizionali un modo più sicuro e regolamentato per investire in Bitcoin. Ha inoltre contribuito a legittimare ulteriormente il mercato delle criptovalute agli occhi del pubblico e degli istituti finanziari.</li></ul></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong>13. Celebrità lanciano Token o supportano progetti Cripto (2023-2024)</strong></summary><div class="indented"><div style="display:contents" dir="auto"><ul id="f9ac8f0f-ee06-408f-a0aa-501eec0da4f7" class="bulleted-list"><li style="list-style-type:disc"><strong>Descrizione</strong>: Tra il 2023 e il 2024, molte celebrità hanno iniziato a lanciare i propri token criptati o a supportare attivamente progetti esistenti nel mondo cripto. Figure come Donald Trump, Snoop Dogg, Kylie Jenner, Floyd Mayweather, Lindsay Lohan, ed atleti di alto profilo hanno partecipato a questo trend, promuovendo criptovalute e NFT sui social media e in altre piattaforme pubbliche.</li></ul></div><div style="display:contents" dir="auto"><ul id="f7ee968a-c2d0-4308-93cd-86a3c275988e" class="bulleted-list"><li style="list-style-type:disc"><strong>Impatto</strong>: Questo movimento ha contribuito a una maggiore visibilità e adozione delle criptovalute tra il pubblico generale. Tuttavia, ha anche sollevato preoccupazioni riguardo alla sicurezza e alla legittimità di alcuni progetti promossi, aumentando la necessità di educazione e vigilanza contro le truffe nel settore delle criptovalute.</li></ul></div></div></details></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

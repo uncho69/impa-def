@@ -1,0 +1,713 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Rabby</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="f130d92d-8f03-443d-a25f-3a38768c857f" class="page sans"><header><div class="page-header-icon undefined"><img class="icon" src="Rabby/rabbylogo.jpeg"/></div><h1 class="page-title" dir="auto">Rabby</h1><p class="page-description" dir="auto"></p><table class="properties"><tbody><tr class="property-row property-row-multi_select"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>Tags</th><td><span class="selected-value select-value-color-yellow">Portafoglio &quot;Wallet&quot; Non-custodial (Extension)</span></td></tr><tr class="property-row property-row-url"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Profilo Twitter/X</th><td><a href="https://x.com/Rabby_io" class="url-value">https://x.com/Rabby_io</a></td></tr><tr class="property-row property-row-url"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Sito Web</th><td><a href="https://rabby.io/" class="url-value">https://rabby.io/</a></td></tr><tr class="property-row property-row-date"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/calendar_gray.svg" style="width:14px;height:14px;display:block"/></span>Last Updated</th><td><time>@May 28, 2024</time></td></tr><tr class="property-row property-row-multi_select"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>Blockchain Supportate</th><td><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-purple">Avalanche</span><span class="selected-value select-value-color-orange">BSC</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-green">Fantom</span><span class="selected-value select-value-color-blue">Gnosis</span><span class="selected-value select-value-color-brown">HyperEVM</span><span class="selected-value select-value-color-red">Linea</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span><span class="selected-value select-value-color-pink">Zora</span><span class="selected-value select-value-color-green">zkSync</span></td></tr></tbody></table></header><div class="page-body"><div style="display:contents" dir="auto"><p id="2148a35d-2f90-8075-85bf-ff6cff924b71" class="">Rabby Wallet è un’estensione open‑source per browser e un’app companion per smartphone, progettata per gestire criptovalute su Ethereum e tutte le chain EVM in modo semplice, sicuro e intuitivo. Oltre alla versione desktop, l’app <strong>Rabby Mobile </strong>(disponibile sia su Android che su iOS) consente di monitorare il portafoglio multi‑chain, scoprire dApp e gestire transazioni direttamente dal telefono. Supporta sia la creazione/importazione di seed (tramite frasi, private key o hardware wallet come Ledger, OneKey e Keystone) sia la connessione a wallet esistenti come MetaMask. L’app integra importanti misure di sicurezza, come simulazioni di saldo pre e post transazione e rilevamento delle truffe, offrendo un’esperienza mobile robusta pensata per utenti DeFi di tutti i livelli.</p></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Caratteristiche Principali di Rabby Wallet</summary><div class="indented"><div style="display:contents" dir="auto"><ol type="1" id="06fc4f48-1034-4d47-a73a-f27dbcfa3fda" class="numbered-list" start="1"><li><strong>Multi-Currency Support</strong>:<div style="display:contents" dir="auto"><ul id="b4613aca-e68b-41f6-a881-2d9ffe013404" class="bulleted-list"><li style="list-style-type:disc"><strong>Supporto per Vari Asset</strong>: Rabby Wallet supporta un&#x27;ampia gamma di criptovalute, consentendo agli utenti di gestire diverse valute digitali all&#x27;interno di un&#x27;unica interfaccia user-friendly.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="5547867b-c4e1-49cc-9897-6a570e5af380" class="numbered-list" start="2"><li><strong>Sicurezza Avanzata</strong>:<div style="display:contents" dir="auto"><ul id="2791089d-303a-4df6-aa1c-8a251ba188a6" class="bulleted-list"><li style="list-style-type:disc"><strong>Transazioni Simulate</strong>: Rabby Wallet include una funzionalità di simulazione delle transazioni che informa gli utenti sulle possibili implicazioni delle loro operazioni prima di confermarle. Questo aiuta a prevenire errori costosi e a proteggere contro transazioni fraudolente.</li></ul></div><div style="display:contents" dir="auto"><ul id="ba780123-7824-4327-8535-25e97cb4e9fa" class="bulleted-list"><li style="list-style-type:disc"><strong>Avvisi di Sicurezza</strong>: Il portafoglio avvisa gli utenti di possibili transazioni di scam, come attacchi di dusting o transazioni di asset falsi, e di altri problemi di sicurezza prima della conferma finale delle transazioni.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="356b5af4-a01f-4b19-a4ab-14e62c4479d0" class="numbered-list" start="3"><li><strong>Interfaccia User-Friendly</strong>:<div style="display:contents" dir="auto"><ul id="b1b86d67-7e17-403f-a4fe-5b665a60cded" class="bulleted-list"><li style="list-style-type:disc"><strong>Facilità d&#x27;Uso</strong>: Progettato per essere semplice da utilizzare sia per i principianti che per gli utenti esperti, Rabby Wallet rende la gestione delle criptovalute e le interazioni con le dApp intuitive e senza problemi.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="9764319b-5e5b-4a6d-a9a2-08b1b1788982" class="numbered-list" start="4"><li><strong>Funzionalità di Swap e Gas Top-Up</strong>:<div style="display:contents" dir="auto"><ul id="8a7342d2-1057-4799-857c-112542467aeb" class="bulleted-list"><li style="list-style-type:disc"><strong>Token Swap</strong>: Rabby Wallet permette di scambiare token direttamente all&#x27;interno del portafoglio, collegandosi a diversi exchange decentralizzati e centralizzati per completare gli swap senza dover uscire dall&#x27;app.</li></ul></div><div style="display:contents" dir="auto"><ul id="f555a5a0-eb6f-468c-8892-3b26f5810e4f" class="bulleted-list"><li style="list-style-type:disc"><strong>Gas Top-Up</strong>: Gli utenti possono acquistare token gas per una rete specifica utilizzando altri asset sulla stessa rete o su altre reti, rendendo facile ricaricare il proprio wallet senza dover utilizzare exchange esterni.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="bc016e71-368a-474e-98cd-dc165377f7b6" class="numbered-list" start="5"><li><strong>Compatibilità Multi-Piattaforma</strong>:<div style="display:contents" dir="auto"><ul id="d7faae23-7283-40db-8647-b51dc51a4f67" class="bulleted-list"><li style="list-style-type:disc"><strong>Estensione del Browser</strong>: Disponibile come estensione per i principali browser come Chrome, Firefox, e Brave.</li></ul></div><div style="display:contents" dir="auto"><ul id="21f892e1-c75c-41aa-8d9e-166e3c109433" class="bulleted-list"><li style="list-style-type:disc"><strong>Applicazione Mobile</strong>: Rabby Wallet è disponibile anche per dispositivi mobili Android, mentre la versione per iOS è ancora in fase di revisione. È importante verificare di scaricare l&#x27;app dal sito ufficiale per evitare versioni false.</li></ul></div></li></ol></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Tutorial</summary><div class="indented"><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Tutorial Scritto</summary><div class="indented"><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Tutorial per Rabby Wallet Mobile App</summary><div class="indented"><div style="display:contents" dir="auto"><ol type="1" id="5cbed047-d6b9-4ba7-9755-c6e0127bb911" class="numbered-list" start="1"><li><strong>Download e Installazione</strong>:<div style="display:contents" dir="auto"><ul id="4dc010ab-4cd0-451e-9e24-c9c1d1ee85ce" class="bulleted-list"><li style="list-style-type:disc"><strong>Android</strong>: Vai al Google Play Store sul tuo dispositivo Android.<div style="display:contents" dir="auto"><ul id="09055e29-ef9a-4348-b576-898bd9c1fa6d" class="bulleted-list"><li style="list-style-type:circle">Cerca &quot;Rabby Wallet&quot; e assicurati di scaricare l&#x27;app sviluppata da DeBank.</li></ul></div><div style="display:contents" dir="auto"><ul id="dc84df2e-2f84-4f44-9cfe-0da4c6d022b7" class="bulleted-list"><li style="list-style-type:circle">Scarica e installa l&#x27;app sul tuo dispositivo.</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="35d62e27-1939-4633-9659-06bd0a5add39" class="bulleted-list"><li style="list-style-type:disc"><strong>iOS</strong>: Vai all&#x27;Apple App Store sul tuo dispositivo iOS.<div style="display:contents" dir="auto"><ul id="b351dc08-f1ae-40c5-b0fb-2818bd9e6093" class="bulleted-list"><li style="list-style-type:circle">Cerca &quot;Rabby Wallet&quot; e assicurati di scaricare l&#x27;app sviluppata da DeBank.</li></ul></div><div style="display:contents" dir="auto"><ul id="b599c2c9-5cce-494a-aeeb-6befc3e1e246" class="bulleted-list"><li style="list-style-type:circle">Scarica e installa l&#x27;app sul tuo dispositivo.</li></ul></div></li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2a496afe-eff7-490a-b733-b7e8cc02ae0b" class="numbered-list" start="2"><li><strong>Creazione di un Nuovo Wallet</strong>:<div style="display:contents" dir="auto"><ul id="befed7d2-6cd9-4967-a6eb-e04c13051063" class="bulleted-list"><li style="list-style-type:disc">Apri l&#x27;app Rabby Wallet.</li></ul></div><div style="display:contents" dir="auto"><ul id="65a11f9f-d3df-40d2-981b-63e84afbd420" class="bulleted-list"><li style="list-style-type:disc">Seleziona &quot;Crea un nuovo wallet&quot; (Create a New Wallet).</li></ul></div><div style="display:contents" dir="auto"><ul id="fc92c2fd-57c1-499e-b635-acc2a5d3e4b4" class="bulleted-list"><li style="list-style-type:disc">Imposta una password sicura e confermala.</li></ul></div><div style="display:contents" dir="auto"><ul id="bcd1741a-7963-469d-9952-73cef6887985" class="bulleted-list"><li style="list-style-type:disc">Annota la tua frase di recupero (seed phrase) di 12 parole e conservala in un luogo sicuro. Questa frase è fondamentale per il recupero del tuo wallet in caso di perdita dell&#x27;accesso.</li></ul></div><div style="display:contents" dir="auto"><ul id="a32463c3-adce-48e4-a2a8-db84a4682ce0" class="bulleted-list"><li style="list-style-type:disc">Conferma la tua frase di recupero inserendo le parole nell&#x27;ordine corretto.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="355ba376-c268-42c4-941a-8e8977457c25" class="numbered-list" start="3"><li><strong>Gestione delle Criptovalute</strong>:<div style="display:contents" dir="auto"><ul id="c40fbb6b-104b-4bb9-8716-6b85cba38ce7" class="bulleted-list"><li style="list-style-type:disc"><strong>Aggiunta di Fondi</strong>: Vai alla sezione &quot;Ricevi&quot; (Receive) e copia il tuo indirizzo pubblico per ricevere criptovalute.</li></ul></div><div style="display:contents" dir="auto"><ul id="430bdf6d-ecdc-4ca2-a114-49f77fcb7a2d" class="bulleted-list"><li style="list-style-type:disc"><strong>Invio di Fondi</strong>: Vai alla sezione &quot;Invia&quot; (Send), inserisci l&#x27;indirizzo del destinatario e l&#x27;importo da inviare.</li></ul></div><div style="display:contents" dir="auto"><ul id="259544bc-db74-4dda-9151-c2d614a31746" class="bulleted-list"><li style="list-style-type:disc"><strong>Visualizzazione del Saldo</strong>: Il saldo delle tue criptovalute sarà visualizzato nella schermata principale dell&#x27;app.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="1d277fb2-0cc6-48ae-9dbb-b95d5d6c9239" class="numbered-list" start="4"><li><strong>Interazione con dApp</strong>:<div style="display:contents" dir="auto"><ul id="0e25fb69-79f9-41dc-9eaf-31861e70619a" class="bulleted-list"><li style="list-style-type:disc">Utilizza il browser integrato nell&#x27;app per accedere a dApp compatibili.</li></ul></div><div style="display:contents" dir="auto"><ul id="11d94d67-4f80-4c17-a813-973d64f2304e" class="bulleted-list"><li style="list-style-type:disc">Collega il tuo wallet Rabby quando richiesto e autorizza le transazioni direttamente dall&#x27;app.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="0d770cb9-ef96-42d1-9798-d14133476137" class="numbered-list" start="5"><li><strong>Sicurezza</strong>:<div style="display:contents" dir="auto"><ul id="9987694c-8a2b-49c0-b5b4-d562d7bf4419" class="bulleted-list"><li style="list-style-type:disc"><strong>PIN e Biometria</strong>: Imposta un PIN o utilizza l&#x27;autenticazione biometrica (impronta digitale/riconoscimento facciale) per proteggere l&#x27;accesso all&#x27;app.</li></ul></div><div style="display:contents" dir="auto"><ul id="5593e66b-6eb2-48f7-8613-ed654ead406b" class="bulleted-list"><li style="list-style-type:disc"><strong>Backup della Frase di Recupero</strong>: Annota la tua frase di recupero e conservala in un luogo sicuro. Puoi accedere alla frase di recupero in qualsiasi momento tramite le impostazioni dell&#x27;app.</li></ul></div></li></ol></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Tutorial per Rabby Wallet Extension</summary><div class="indented"><div style="display:contents" dir="auto"><ol type="1" id="f6d03ee8-7037-4e53-94dc-cb669fbda116" class="numbered-list" start="1"><li><strong>Installazione dell&#x27;Estensione</strong>:<div style="display:contents" dir="auto"><ul id="59e22d38-ed34-4f30-8405-e3e7f2302298" class="bulleted-list"><li style="list-style-type:disc">Vai al sito ufficiale di Rabby Wallet: <a href="https://rabby.io/">Rabby.io</a>.</li></ul></div><div style="display:contents" dir="auto"><ul id="60d49302-d899-4965-a9ae-ccd0bfc0bda1" class="bulleted-list"><li style="list-style-type:disc">Clicca su &quot;Download&quot; e seleziona il browser che utilizzi (Chrome, Firefox, Brave).</li></ul></div><div style="display:contents" dir="auto"><ul id="8792b488-89a0-4954-a833-06c3e3ea7155" class="bulleted-list"><li style="list-style-type:disc">Segui le istruzioni per aggiungere l&#x27;estensione Rabby al tuo browser.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="c7b604ac-5827-4f38-8282-191970f65945" class="numbered-list" start="2"><li><strong>Creazione di un Nuovo Wallet</strong>:<div style="display:contents" dir="auto"><ul id="03b785eb-d20c-4fa9-b8a2-9d9b28d96e8e" class="bulleted-list"><li style="list-style-type:disc">Apri l&#x27;estensione Rabby cliccando sull&#x27;icona nel tuo browser.</li></ul></div><div style="display:contents" dir="auto"><ul id="cd2ead19-c541-4e92-a379-877708147955" class="bulleted-list"><li style="list-style-type:disc">Seleziona &quot;Crea un nuovo wallet&quot; (Create a New Wallet).</li></ul></div><div style="display:contents" dir="auto"><ul id="e5b9edbe-62ff-4d87-9152-14ff49aa30fd" class="bulleted-list"><li style="list-style-type:disc">Imposta una password sicura e confermala.</li></ul></div><div style="display:contents" dir="auto"><ul id="e71a9109-75ba-47ff-807a-8ffcfe8d80c2" class="bulleted-list"><li style="list-style-type:disc">Annota la tua frase di recupero (seed phrase) di 12 parole e conservala in un luogo sicuro. Questa frase è fondamentale per il recupero del tuo wallet in caso di perdita dell&#x27;accesso.</li></ul></div><div style="display:contents" dir="auto"><ul id="35c9da11-5382-4224-87ae-6ae607ecf73c" class="bulleted-list"><li style="list-style-type:disc">Conferma la tua frase di recupero inserendo le parole nell&#x27;ordine corretto.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="29d8c996-d0ad-457d-addf-561a543fea48" class="numbered-list" start="3"><li><strong>Gestione delle Criptovalute</strong>:<div style="display:contents" dir="auto"><ul id="f58cbff4-f57c-4c02-a9a2-e2a818206b57" class="bulleted-list"><li style="list-style-type:disc"><strong>Aggiunta di Fondi</strong>: Vai alla sezione &quot;Ricevi&quot; (Receive) e copia il tuo indirizzo pubblico per ricevere criptovalute.</li></ul></div><div style="display:contents" dir="auto"><ul id="d7afbfa0-341f-4e8d-8829-e2195e152c73" class="bulleted-list"><li style="list-style-type:disc"><strong>Invio di Fondi</strong>: Vai alla sezione &quot;Invia&quot; (Send), inserisci l&#x27;indirizzo del destinatario e l&#x27;importo da inviare.</li></ul></div><div style="display:contents" dir="auto"><ul id="5b2b513c-d27f-40da-8653-dda6c4da4bb1" class="bulleted-list"><li style="list-style-type:disc"><strong>Visualizzazione del Saldo</strong>: Il saldo delle tue criptovalute sarà visualizzato nella schermata principale dell&#x27;estensione.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="515832c4-6db7-4b80-8e26-b9882fab4a55" class="numbered-list" start="4"><li><strong>Interazione con dApp</strong>:<div style="display:contents" dir="auto"><ul id="b6c75244-2d7f-4566-afe5-db3fc0b5d571" class="bulleted-list"><li style="list-style-type:disc">Visita una dApp compatibile con Ethereum o altre blockchain supportate.</li></ul></div><div style="display:contents" dir="auto"><ul id="7a7fb613-27bc-4fac-82e2-863396bd0b3e" class="bulleted-list"><li style="list-style-type:disc">Clicca su &quot;Collega Wallet&quot; (Connect Wallet) e seleziona Rabby.</li></ul></div><div style="display:contents" dir="auto"><ul id="5b260d81-53b0-48bf-b420-03844cf71982" class="bulleted-list"><li style="list-style-type:disc">Autorizza la connessione e le transazioni direttamente dall&#x27;estensione Rabby.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="7af89191-3d36-4196-8f9d-ce5ba0ca6a6c" class="numbered-list" start="5"><li><strong>Funzionalità Avanzate</strong>:<div style="display:contents" dir="auto"><ul id="c968adc4-a85d-40d9-b009-5ffe66478bb3" class="bulleted-list"><li style="list-style-type:disc"><strong>Token Swap</strong>: Utilizza la funzione di swap per scambiare criptovalute direttamente dal wallet.</li></ul></div><div style="display:contents" dir="auto"><ul id="23e772b5-fc9c-4b3a-b348-8949dd619fb7" class="bulleted-list"><li style="list-style-type:disc"><strong>Gas Top-Up</strong>: Ricarica il tuo wallet con token gas per completare le transazioni.</li></ul></div></li></ol></div></div></details></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Tutorial Video</summary></details></div></div></details></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

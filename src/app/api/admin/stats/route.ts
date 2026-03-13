@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { auth, currentUser } from '@clerk/nextjs/server';
 import { db } from '@/lib/db';
 import { news } from '@/lib/db/schema';
-import { eq, sql, count } from 'drizzle-orm';
+import { eq, sql, count, and } from 'drizzle-orm';
 
 export const dynamic = 'force-dynamic';
 
@@ -54,19 +54,19 @@ export async function GET() {
     // Statistiche totali
     const totalResult = await db.select({ count: count() }).from(news);
     const total = totalResult[0]?.count || 0;
-    
+
     const publishedResult = await db
       .select({ count: count() })
       .from(news)
       .where(eq(news.status, 'PUBLISHED'));
     const published = publishedResult[0]?.count || 0;
-    
+
     const draftsResult = await db
       .select({ count: count() })
       .from(news)
       .where(eq(news.status, 'DRAFT'));
     const drafts = draftsResult[0]?.count || 0;
-    
+
     // Somma delle visualizzazioni
     const viewsResult = await db
       .select({ totalViews: sql<number>`COALESCE(SUM(${news.views}), 0)` })

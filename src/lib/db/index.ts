@@ -2,12 +2,11 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import * as schema from "./schema";
 
-if (!process.env.DATABASE_URL) {
-  throw new Error("DATABASE_URL environment variable is not set");
-}
+const DATABASE_URL = process.env.DATABASE_URL || process.env.database_url;
+export const hasDatabase = Boolean(DATABASE_URL);
 
-function useSsl(): boolean {
-  const u = process.env.DATABASE_URL!.toLowerCase();
+function useSsl(url: string): boolean {
+  const u = url.toLowerCase();
   return (
     u.includes("neon.tech") ||
     u.includes("neondb") ||
@@ -21,15 +20,15 @@ function useSsl(): boolean {
   );
 }
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: useSsl() ? { rejectUnauthorized: false } : undefined,
-  max: 1,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 10000,
-});
+export const pool = DATABASE_URL
+  ? new Pool({
+      connectionString: DATABASE_URL,
+      ssl: useSsl(DATABASE_URL) ? { rejectUnauthorized: false } : undefined,
+      max: 1,
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 10000,
+    })
+  : null;
 
-export const db = drizzle(pool, { schema });
-
-export { pool };
+export const db = pool ? drizzle(pool, { schema }) : null;
 

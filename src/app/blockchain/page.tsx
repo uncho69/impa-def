@@ -1,260 +1,275 @@
-import { PageLayout } from "@/components/PageLayout";
-import { ClerkProtectedRoute } from "@/components/ClerkProtectedRoute";
-// import Image from "next/image";
-// import VideoImage from "@/assets/Video.png";
-import { Accordion } from "@/components/Accordion";
-import { List } from "@/components/List";
-import { BlockchainCardList } from "@/components/BlockchainCardList";
-import { ExploreWeb3 } from "@/components/ExploreWeb3";
+"use client";
 
-export default function Blockchain() {
+import { useState, useMemo, useEffect } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { BookmarkButton } from "@/components/bookmarks/BookmarkButton";
+import Placeholder from "@/assets/placeholder.svg";
+import btcIcon from "@/assets/bitcoin-icon.svg";
+import ethIcon from "@/assets/ethereum-icon.svg";
+import solIcon from "@/assets/solana-sol-logo.svg";
+import arbIcon from "@/assets/arbitrum-arb-logo.svg";
+import polIcon from "@/assets/polygon-matic-logo.svg";
+import degIcon from "@/assets/degen-base-degen-logo.svg";
+import basIcon from "@/assets/base-logo.svg";
+import optIcon from "@/assets/optimism-ethereum-op-logo.svg";
+import zorIcon from "@/assets/zora-logo.png";
+import hlqIcon from "@/assets/hyperliquid-logo.png";
+import sclIcon from "@/assets/Scroll-Logo.svg";
+import berIcon from "@/assets/berachain-logo.png";
+import zksIcon from "@/assets/zkSync-logo.png";
+import linIcon from "@/assets/linea-logo.svg";
+import layIcon from "@/assets/layer3-logo.png";
+import hlaIcon from "@/assets/hyperlane-logo.svg";
+import blaIcon from "@/assets/blast-logo.webp";
+import avaIcon from "@/assets/avalanche-avax-logo.svg";
+import abstractLogo from "@/assets/abstract-logo.jpg";
+import inkLogo from "@/assets/ink-logo.jpg";
+import type { StaticImageData } from "next/image";
+import { IntroduzioneBlockchainModal } from "@/components/IntroduzioneBlockchainModal";
+import AutoTranslateText from "@/components/AutoTranslateText";
+
+const QUICK_ACTIONS = [
+  { title: "Introduzione alle Blockchain", icon: "📚", isModal: true },
+  { title: "Guida Blockchain Airdrops", icon: "🎁", href: "/airdrops" },
+  { title: "Notizie Blockchain", icon: "📰", href: "/news" },
+];
+
+/** Id delle blockchain in questa pagina con tag airdrop (Hyperliquid, Base, L2, etc.) */
+const AIRDROP_BLOCKCHAIN_IDS = new Set([
+  "hyperliquid", "base", "optimism", "arbitrum", "scroll", "zksync", "linea",
+  "blast", "berachain", "degen", "layer3", "hyperlane", "polygon_zkEVM", "zora",
+  "abstract", "ink",
+]);
+
+function getBlockchainId(b: { href: string }): string {
+  return b.href.split("/").filter(Boolean).pop() ?? "";
+}
+
+type CoinGeckoRecord = Record<string, { usd?: number; usd_market_cap?: number }>;
+type SortMcap = "none" | "asc" | "desc";
+
+const BLOCKCHAINS: Array<{
+  name: string;
+  description: string;
+  icon: StaticImageData;
+  href: string;
+  ticker: string;
+  coingeckoId: string | null;
+  twitterUrl: string;
+  websiteUrl: string;
+}> = [
+  { name: "Bitcoin", description: "La prima criptovaluta e rete decentralizzata.", icon: btcIcon, href: "/blockchain/bitcoin", ticker: "BTC", coingeckoId: "bitcoin", websiteUrl: "https://bitcoin.org", twitterUrl: "https://x.com/bitcoin" },
+  { name: "Ethereum", description: "Smart contract e ecosistema DeFi e L2.", icon: ethIcon, href: "/blockchain/ethereum", ticker: "ETH", coingeckoId: "ethereum", websiteUrl: "https://ethereum.org/it/", twitterUrl: "https://x.com/ethereum" },
+  { name: "Solana", description: "Alta velocità e bassi costi per dApp e NFT.", icon: solIcon, href: "/blockchain/solana", ticker: "SOL", coingeckoId: "solana", websiteUrl: "https://solana.com/", twitterUrl: "https://x.com/solana" },
+  { name: "Arbitrum", description: "L2 Ethereum con rollup optimistic.", icon: arbIcon, href: "/blockchain/arbitrum", ticker: "ARB", coingeckoId: "arbitrum", websiteUrl: "https://arbitrum.foundation/", twitterUrl: "https://x.com/arbitrum" },
+  { name: "Polygon", description: "Scalabilità Ethereum e sidechain.", icon: polIcon, href: "/blockchain/polygon", ticker: "POL", coingeckoId: "polygon-ecosystem-token", websiteUrl: "https://polygon.technology/", twitterUrl: "https://x.com/0xPolygon" },
+  { name: "Base", description: "L2 di Coinbase su Ethereum.", icon: basIcon, href: "/blockchain/base", ticker: "—", coingeckoId: null, websiteUrl: "https://www.base.org/", twitterUrl: "https://x.com/base" },
+  { name: "Optimism", description: "Layer 2 optimistic rollup per Ethereum.", icon: optIcon, href: "/blockchain/optimism", ticker: "OP", coingeckoId: "optimism", websiteUrl: "https://www.optimism.io/", twitterUrl: "https://twitter.com/Optimism" },
+  { name: "Zora", description: "Rete per creatori e NFT.", icon: zorIcon, href: "/blockchain/zora", ticker: "ZORA", coingeckoId: "zora", websiteUrl: "https://zora.co/", twitterUrl: "https://x.com/ourZORA" },
+  { name: "Sanko", description: "Piattaforma gaming e community.", icon: Placeholder, href: "/blockchain/sanko", ticker: "—", coingeckoId: null, websiteUrl: "https://sanko.xyz/", twitterUrl: "https://x.com/SankoGameCorp" },
+  { name: "Hyperliquid", description: "Perpetuals on-chain e trading DeFi.", icon: hlqIcon, href: "/defi/hyperliquid", ticker: "HYPE", coingeckoId: "hyperliquid", websiteUrl: "https://hyperliquid.xyz/", twitterUrl: "https://twitter.com/HyperliquidX" },
+  { name: "Scroll", description: "L2 Ethereum con ZK rollup.", icon: sclIcon, href: "/blockchain/scroll", ticker: "—", coingeckoId: null, websiteUrl: "https://scroll.io/", twitterUrl: "https://x.com/Scroll_ZKP" },
+  { name: "Berachain", description: "L1 orientata a DeFi e liquidità.", icon: berIcon, href: "/blockchain/berachain", ticker: "BERA", coingeckoId: "berachain-berachain", websiteUrl: "https://www.berachain.com/", twitterUrl: "https://x.com/berachain" },
+  { name: "zkSync", description: "L2 Ethereum con zero-knowledge.", icon: zksIcon, href: "/blockchain/zksync", ticker: "ZK", coingeckoId: "zksync", websiteUrl: "https://zksync.io/", twitterUrl: "https://x.com/zksync" },
+  { name: "Linea", description: "L2 ZK di ConsenSys su Ethereum.", icon: linIcon, href: "/blockchain/linea", ticker: "LINEA", coingeckoId: "linea", websiteUrl: "https://linea.build/", twitterUrl: "https://x.com/LineaBuild" },
+  { name: "Layer3", description: "Quest e incentivi multichain.", icon: layIcon, href: "/blockchain/layer3", ticker: "—", coingeckoId: null, websiteUrl: "https://layer3.xyz/", twitterUrl: "https://x.com/layer3xyz" },
+  { name: "Hyperlane", description: "Interoperabilità e messaggi cross-chain.", icon: hlaIcon, href: "/blockchain/hyperlane", ticker: "—", coingeckoId: null, websiteUrl: "https://www.hyperlane.xyz/", twitterUrl: "https://x.com/hyperlane" },
+  { name: "Polygon zkEVM", description: "EVM equivalente ZK su Polygon.", icon: polIcon, href: "/blockchain/polygon_zkEVM", ticker: "—", coingeckoId: null, websiteUrl: "https://polygon.technology/", twitterUrl: "https://x.com/0xpolygondefi" },
+  { name: "Degen", description: "Chain e community su Base.", icon: degIcon, href: "/blockchain/degen", ticker: "DEGEN", coingeckoId: "degen-base", websiteUrl: "https://degen.tips", twitterUrl: "https://x.com/degentokenbase" },
+  { name: "Blast", description: "L2 con yield nativo su ETH e stablecoin.", icon: blaIcon, href: "/blockchain/blast", ticker: "BLAST", coingeckoId: "blast", websiteUrl: "https://blast.io", twitterUrl: "https://x.com/Blast_L2" },
+  { name: "Avalanche", description: "L1 veloce con subnet e DeFi.", icon: avaIcon, href: "/blockchain/avalanche", ticker: "AVAX", coingeckoId: "avalanche-2", websiteUrl: "https://www.avax.network/", twitterUrl: "https://x.com/avax" },
+  { name: "Abstract", description: "Blockchain Layer-2 su Ethereum con ZK rollup per Web3 più semplice ed economico.", icon: abstractLogo, href: "/blockchain/abstract", ticker: "—", coingeckoId: "abstract", websiteUrl: "https://www.abs.xyz/", twitterUrl: "https://x.com/AbstractChain" },
+  { name: "Ink", description: "Layer 2 sulla Superchain di Optimism, lanciata da Kraken per scalare Ethereum e DeFi.", icon: inkLogo, href: "/blockchain/ink", ticker: "—", coingeckoId: "ink", websiteUrl: "https://inkonchain.com/", twitterUrl: "https://x.com/inkonchain" },
+  { name: "HyperEVM", description: "Componente di Hyperliquid per smart contract in stile Ethereum sulla sua blockchain.", icon: hlqIcon, href: "/blockchain/hyperevm", ticker: "—", coingeckoId: null, websiteUrl: "https://hyperfoundation.org/", twitterUrl: "https://x.com/HyperliquidX" },
+];
+
+export default function BlockchainPage() {
+  const [search, setSearch] = useState("");
+  const [cgData, setCgData] = useState<CoinGeckoRecord | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [sortByMcap, setSortByMcap] = useState<SortMcap>("none");
+  const [airdropOnly, setAirdropOnly] = useState(false);
+  const [introBlockchainOpen, setIntroBlockchainOpen] = useState(false);
+
+  useEffect(() => {
+    const ids = [...new Set(BLOCKCHAINS.map((b) => b.coingeckoId).filter(Boolean))] as string[];
+    if (ids.length === 0) {
+      setLoading(false);
+      return;
+    }
+    fetch(`/api/coingecko?ids=${ids.join(",")}`)
+      .then((r) => (r.ok ? r.json() : {}))
+      .then(setCgData)
+      .catch(() => setCgData(null))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const filtered = useMemo(() => {
+    let list = BLOCKCHAINS;
+    const q = search.trim().toLowerCase();
+    if (q) list = list.filter((b) => b.name.toLowerCase().includes(q) || b.ticker.toLowerCase().includes(q));
+    if (airdropOnly) list = list.filter((b) => AIRDROP_BLOCKCHAIN_IDS.has(getBlockchainId(b)));
+    if (sortByMcap !== "none") {
+      list = [...list].sort((a, b) => {
+        const mcapA = (a.coingeckoId && cgData?.[a.coingeckoId]?.usd_market_cap) ?? null;
+        const mcapB = (b.coingeckoId && cgData?.[b.coingeckoId]?.usd_market_cap) ?? null;
+        const numA = mcapA ?? (sortByMcap === "desc" ? -1 : Infinity);
+        const numB = mcapB ?? (sortByMcap === "desc" ? -1 : Infinity);
+        return sortByMcap === "desc" ? numB - numA : numA - numB;
+      });
+    }
+    return list;
+  }, [search, airdropOnly, sortByMcap, cgData]);
+
+  const formatPrice = (n: number) =>
+    n > 0 ? `$${n.toLocaleString("en-US", { maximumFractionDigits: 2, minimumFractionDigits: 0 })}` : "—";
+  const formatMc = (n: number) =>
+    n >= 1e9 ? `$${(n / 1e9).toFixed(1)}B` : n >= 1e6 ? `$${(n / 1e6).toFixed(1)}M` : n > 0 ? `$${n.toLocaleString()}` : "—";
+
   return (
-    <ClerkProtectedRoute title="Blockchain">
-      <PageLayout 
-        title="Blockchain" 
-        description="Scopri la tecnologia che sta rivoluzionando il modo di trasferire e memorizzare dati"
-      >
-        <div className="bg-white rounded-2xl shadow-lg p-8 border border-neutral-200 mb-8">
-            <p>
-              La <b>blockchain</b> è una tecnologia rivoluzionaria che sta
-              trasformando il modo in cui memorizziamo e trasferiamo dati in
-              internet. Originariamente sviluppata per supportare Bitcoin, la
-              prima criptovaluta, oggi le blockchain hanno applicazioni ben oltre
-              le valute digitali.
-            </p>
-            <Accordion buttonText="Cos'è una Blockchain?">
-              La blockchain è un registro digitale distribuito e decentralizzato.
-              Invece di essere conservata in un&apos;unica posizione, una copia
-              del registro è mantenuta su numerosi computer (noti come nodi) in
-              tutto il mondo. Questo rende la blockchain estremamente sicura e
-              resistente alla manipolazione.
-            </Accordion>
-            <Accordion buttonText="Come funziona?">
-              <List ordered={true}>
-                <li>
-                  <b>Blocchi di Dati:</b> Le informazioni sono memorizzate in
-                  blocchi. Ogni blocco contiene un gruppo di transazioni.
-                </li>
-                <li>
-                  <b>Catena di Blocchi:</b> Ogni blocco è collegato al blocco
-                  precedente tramite un &quot;hash&quot; crittografico, formando
-                  una catena continua.
-                </li>
-                <li>
-                  <b>Decentralizzazione:</b> Non c&apos;è un&apos;autorità
-                  centrale; la rete è mantenuta dai nodi che verificano e
-                  approvano le transazioni attraverso un processo chiamato
-                  consenso.
-                </li>
-                <li>
-                  <b>Trasparenza e Immutabilità:</b> Una volta che un blocco è
-                  aggiunto alla catena, le informazioni in esso contenute non
-                  possono essere modificate. Tutte le transazioni sono visibili
-                  pubblicamente e verificabili.
-                </li>
-              </List>
-            </Accordion>
-            <Accordion buttonText="Che vantaggi offre?">
-              <List>
-                <li>
-                  <b>Sicurezza:</b> La decentralizzazione e la crittografia
-                  rendono le blockchain altamente sicure.
-                </li>
-                <li>
-                  <b>Trasparenza:</b> Tutte le transazioni sono registrate in modo
-                  pubblico e immutabile.
-                </li>
-                <li>
-                  <b>Efficienza:</b> Le transazioni possono essere processate più
-                  velocemente e a costi ridotti rispetto ai sistemi tradizionali.
-                </li>
-                <li>
-                  <b>Affidabilità:</b> La mancanza di un punto centrale di
-                  controllo elimina il rischio di fallimento del sistema.
-                </li>
-              </List>
-            </Accordion>
-            <Accordion buttonText="Applicazioni e casi d'uso">
-              Oltre alle criptovalute, la blockchain ha numerose applicazioni in
-              vari settori:
-              <List>
-                <li>
-                  <b>Finanza:</b> Pagamenti internazionali, smart contracts.
-                </li>
-                <li>
-                  <b>Supply Chain:</b> Tracciabilità dei prodotti
-                  dall&apos;origine al consumatore.
-                </li>
-                <li>
-                  <b>Sanità:</b> Sicurezza e privacy dei dati sanitari.
-                </li>
-                <li>
-                  <b>Governo:</b> Voto elettronico sicuro e trasparente.
-                </li>
-                <li>
-                  <b>Tokenizzazione:</b> Qualsiasi bene che viene tokenizzato
-                  sblocca una superiore efficienza del capitale
-                </li>
-                <li>
-                  <b>NFT:</b> arte, biglietti per eventi, chiavi e molto altro
-                  possono essere rappresentati come token non fungibili (NFT)
-                </li>
-              </List>
-            </Accordion>
-        </div>
-
-        <div className="bg-white rounded-2xl shadow-lg p-8 border border-neutral-200 mb-8">
-          <h2 className="text-3xl font-bold gradient-text mb-6">Cosa sono le Layer2 (L2)</h2>
-          <p>
-            <b>Layer 2</b> è un termine che si riferisce a soluzioni di
-            scalabilità costruite sopra una blockchain Layer 1 come Ethereum.
-            Queste soluzioni mirano a migliorare l&apos;efficienza della rete
-            riducendo le commissioni di transazione e aumentando la velocità,
-            senza compromettere la sicurezza e la decentralizzazione della
-            blockchain principale. Ecco una panoramica delle principali soluzioni
-            di scalabilità di Layer 2:
+    <AutoTranslateText>
+      <>
+      {/* Header: stesso stile della pagina DeFi */}
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
+        <div>
+          <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">Blockchain</h1>
+          <p className="text-slate-600 dark:text-slate-400 text-lg">
+            Scopri le reti e i protocolli che alimentano il Web3
           </p>
-          <Accordion buttonText="Optimistic Rollups">
-            <p>
-              <strong>Optimistic Rollups</strong> sono una tecnologia di
-              scalabilità che consente di eseguire transazioni off-chain e
-              registrarle periodicamente sulla chain principale (Layer 1). Ecco
-              come funzionano:
-            </p>
-            <List ordered={true}>
-              <li>
-                <p>
-                  <strong>Transazioni Off-Chain:</strong>
-                </p>
-                <List>
-                  <li>
-                    Le transazioni sono elaborate off-chain in un ambiente Layer
-                    2, riducendo la congestione sulla chain principale e
-                    abbassando le commissioni di gas.
-                  </li>
-                </List>
-              </li>
-              <li>
-                <p>
-                  <strong>Validazione e Sfida:</strong>
-                </p>
-                <List>
-                  <li>
-                    Le transazioni eseguite su un Optimistic Rollup sono
-                    considerate valide per impostazione predefinita
-                    (&quot;optimistic&quot;). I validatori inviano i risultati
-                    delle transazioni al Layer 1, dove altri partecipanti possono
-                    sfidare i risultati entro un certo periodo di tempo. Se viene
-                    trovata una frode, viene applicata una penalità.
-                  </li>
-                </List>
-              </li>
-              <li>
-                <p>
-                  <strong>Benefici:</strong>
-                </p>
-                <List>
-                  <li>
-                    Elevata scalabilità con migliaia di transazioni al secondo
-                    (TPS).
-                  </li>
-                  <li>Costi di transazione significativamente ridotti.</li>
-                  <li>Sicurezza mantenuta dalla chain principale.</li>
-                </List>
-              </li>
-            </List>
-          </Accordion>
-          <Accordion buttonText="ZK-Rollups (Zero-Knowledge Rollups)">
-            <List>
-              <li>
-                Simili agli Optimistic Rollups, i ZK-Rollups eseguono transazioni
-                off-chain, ma utilizzano prove crittografiche (Zero-Knowledge
-                Proofs) per garantire che le transazioni siano valide.
-              </li>
-              <li>
-                Offrono vantaggi in termini di sicurezza e efficienza poiché le
-                transazioni vengono verificate in batch con una singola prova di
-                validità.
-              </li>
-            </List>
-          </Accordion>
-          <Accordion buttonText="State Channels">
-            <List>
-              <li>
-                Permettono a due o più partecipanti di creare un canale privato
-                per eseguire un numero illimitato di transazioni off-chain.
-              </li>
-              <li>
-                Solo il saldo finale viene registrato sulla chain principale,
-                riducendo il carico di lavoro e i costi di gas.
-              </li>
-              <li>
-                Esempi: Lightning Network (per Bitcoin), Raiden Network (per
-                Ethereum).
-              </li>
-            </List>
-          </Accordion>
-          <Accordion buttonText="Plasma">
-            <List>
-              <li>
-                Consiste in una serie di child chains (sotto-reti) che operano
-                indipendentemente dalla chain principale.
-              </li>
-              <li>
-                Le transazioni sono processate su queste sotto-reti e
-                periodicamente ancorate alla chain principale.
-              </li>
-              <li>
-                Plasma è altamente scalabile ma più complesso da implementare
-                rispetto ad altre soluzioni.
-              </li>
-            </List>
-          </Accordion>
-          <Accordion buttonText="Sidechains">
-            <List>
-              <li>
-                Blockchain indipendenti che funzionano in parallelo alla chain
-                principale.
-              </li>
-              <li>
-                Consentono trasferimenti di asset tra la chain principale e la
-                sidechain, migliorando la scalabilità senza sovraccaricare la
-                chain principale.
-              </li>
-              <li>Esempi: Polygon (precedentemente Matic), xDai.</li>
-            </List>
-          </Accordion>
-          <Accordion buttonText="Confronto e Utilizzo">
-            <List>
-              <li>
-                <strong>Optimistic Rollups:</strong> Utilizzati da piattaforme
-                come Optimism e Arbitrum, sono adatti per applicazioni che
-                richiedono alta scalabilità e transazioni a basso costo.
-              </li>
-              <li>
-                <strong>ZK-Rollups:</strong> Adatti per applicazioni che
-                richiedono maggiore sicurezza e privacy, come i DEX (exchange
-                decentralizzati).
-              </li>
-              <li>
-                <strong>State Channels e Plasma:</strong> Ideali per
-                microtransazioni e giochi blockchain.
-              </li>
-              <li>
-                <strong>Sidechains:</strong> Utilizzati per espandere
-                l&apos;ecosistema di applicazioni e dApps con esigenze specifiche.
-              </li>
-            </List>
-          </Accordion>
         </div>
+        <div className="flex flex-wrap justify-end items-center gap-2 sm:ml-auto">
+          {QUICK_ACTIONS.map((a) =>
+            "isModal" in a && a.isModal ? (
+              <button
+                key={a.title}
+                type="button"
+                onClick={() => setIntroBlockchainOpen(true)}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-colors shrink-0 border-white/20 bg-white/5 hover:bg-white/10 text-white"
+              >
+                <span>{a.icon}</span>
+                <span>{a.title}</span>
+              </button>
+            ) : (
+              <Link
+                key={(a as { href: string }).href + a.title}
+                href={(a as { href: string }).href}
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm transition-colors shrink-0 ${
+                  a.title === "Notizie Blockchain"
+                    ? "font-semibold bg-amber-400 hover:bg-amber-500 text-slate-900"
+                    : "font-medium border border-white/20 bg-white/5 hover:bg-white/10 text-white"
+                }`}
+              >
+                <span>{a.icon}</span>
+                <span>{a.title}</span>
+              </Link>
+            )
+          )}
+        </div>
+      </div>
 
-        <div className="bg-white rounded-2xl shadow-lg p-8 border border-neutral-200 mb-8">
-          <h2 className="text-3xl font-bold gradient-text mb-6">Lista Blockchain</h2>
-          <BlockchainCardList />
+      <IntroduzioneBlockchainModal isOpen={introBlockchainOpen} onClose={() => setIntroBlockchainOpen(false)} />
+
+      {/* Search: stesso stile DeFi */}
+      <div className="relative mb-4 max-w-2xl">
+        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
+        <input
+          type="search"
+          placeholder="Cerca blockchain"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 dark:border-indigo-500/30 bg-white dark:bg-indigo-900/40 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+        />
+      </div>
+
+      {/* Filtri: ordinamento market cap + Airdrop */}
+      <div className="flex flex-wrap items-center gap-2 mb-8">
+        <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Ordina per market cap:</span>
+        <div className="flex gap-2">
+          {(["none", "asc", "desc"] as const).map((opt) => (
+            <button
+              key={opt}
+              type="button"
+              onClick={() => setSortByMcap(opt)}
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                sortByMcap === opt
+                  ? "bg-indigo-600 text-white dark:bg-indigo-500"
+                  : "border border-slate-200 dark:border-indigo-500/30 bg-white dark:bg-indigo-900/40 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-indigo-800/50"
+              }`}
+            >
+              {opt === "none" ? "Nessuno" : opt === "asc" ? "Crescente" : "Decrescente"}
+            </button>
+          ))}
         </div>
-        
-        <ExploreWeb3 />
-      </PageLayout>
-    </ClerkProtectedRoute>
+        <button
+          type="button"
+          onClick={() => setAirdropOnly((v) => !v)}
+          className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+            airdropOnly
+              ? "bg-emerald-600 text-white dark:bg-emerald-500"
+              : "border border-slate-200 dark:border-indigo-500/30 bg-white dark:bg-indigo-900/40 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-indigo-800/50"
+          }`}
+        >
+          <span>🎁</span>
+          Airdrop
+        </button>
+      </div>
+
+      {/* Grid: stesse card della pagina DeFi */}
+      <main className="flex-1 min-w-0">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+          {filtered.map((b) => {
+            const price = b.coingeckoId && cgData?.[b.coingeckoId]?.usd;
+            const mcap = b.coingeckoId && cgData?.[b.coingeckoId]?.usd_market_cap;
+            const tickerDisplay = b.ticker === "—" ? "—" : b.ticker;
+            const priceDisplay = loading && b.coingeckoId ? "—" : price != null ? formatPrice(price) : "—";
+            const mcapDisplay = loading && b.coingeckoId ? "—" : mcap != null ? formatMc(mcap) : "—";
+            return (
+              <div
+                key={b.href + b.name}
+                className="group block p-5 rounded-2xl border border-slate-200 dark:border-indigo-500/20 bg-white dark:bg-indigo-900/25 hover:border-indigo-400 dark:hover:border-indigo-500 transition-colors"
+              >
+                <Link href={b.href} className="block">
+                  <div className="flex items-start justify-between gap-2 mb-2 min-w-0">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-indigo-800/40 flex items-center justify-center overflow-hidden shrink-0">
+                        <Image src={b.icon} alt={b.name} width={32} height={32} className="object-contain" />
+                      </div>
+                      <span className="font-bold text-slate-900 dark:text-white truncate">{b.name}</span>
+                    </div>
+                  </div>
+                  <p className="text-slate-600 dark:text-slate-400 text-sm mb-4 line-clamp-2">{b.description}</p>
+                  <div className="text-xs font-bold text-slate-700 dark:text-slate-300 space-y-1">
+                    <div>Token: {tickerDisplay}</div>
+                    <div>Prezzo: {priceDisplay}</div>
+                    <div>Market Cap: {mcapDisplay}</div>
+                    <div>TVL: —</div>
+                  </div>
+                </Link>
+                <div className="flex items-center gap-2 mt-3 pt-3 border-t border-slate-200 dark:border-indigo-500/20" onClick={(e) => e.stopPropagation()}>
+                  <a href={b.twitterUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="p-1.5 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-indigo-800/50 transition-colors" title="X (Twitter)" aria-label="X (Twitter)">
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
+                  </a>
+                  <a href={b.websiteUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="p-1.5 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-indigo-800/50 transition-colors" title="Sito web" aria-label="Sito web">
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>
+                  </a>
+                  <BookmarkButton
+                    url={b.href}
+                    title={`${b.name} - Pagina progetto`}
+                    type="page"
+                    projectId={b.href.includes("/defi/") ? b.href.replace("/defi/", "") : b.href.replace("/blockchain/", "")}
+                    className="ml-auto"
+                  />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        {filtered.length === 0 && (
+          <p className="text-center py-12 text-slate-500 dark:text-slate-400">Nessuna blockchain trovata.</p>
+        )}
+      </main>
+      </>
+    </AutoTranslateText>
   );
 }

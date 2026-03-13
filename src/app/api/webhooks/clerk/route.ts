@@ -276,10 +276,16 @@ export async function POST(request: NextRequest) {
           { message: 'User created successfully', userId },
           { status: 201 }
         );
-      } catch (dbError: any) {
+      } catch (dbError: unknown) {
         console.error('❌ Database error creating user:', dbError);
         // Check if it's a unique constraint violation (email, twitterId, or username)
-        if (dbError?.code === '23505' || dbError?.message?.includes('unique')) {
+        const errorCode = typeof dbError === 'object' && dbError !== null && 'code' in dbError
+          ? String((dbError as { code?: unknown }).code ?? '')
+          : '';
+        const errorMessage = typeof dbError === 'object' && dbError !== null && 'message' in dbError
+          ? String((dbError as { message?: unknown }).message ?? '')
+          : '';
+        if (errorCode === '23505' || errorMessage.includes('unique')) {
           console.log(`⚠️  Unique constraint violation, checking for soft-deleted user...`);
           
           // Try to find soft-deleted user by email, twitterId, or username
@@ -372,7 +378,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (eventType === 'user.updated') {
-      const { id: clerkId, email_addresses, username, external_accounts } = evt.data;
+      const { id: clerkId, email_addresses, external_accounts } = evt.data;
 
       const existingAuthAccount = await db
         .select({ userId: authAccounts.userId })
@@ -421,7 +427,9 @@ export async function POST(request: NextRequest) {
         .set({
           email: email || existingUser[0].email,
           twitterId: twitterId,
-          username: username || existingUser[0].username,
+          // Non sovrascrivere username applicativo dal webhook Clerk:
+          // il profilo lo gestisce tramite /api/profile/me.
+          username: existingUser[0].username,
           updatedAt: new Date(),
         })
         .where(eq(users.id, userId));

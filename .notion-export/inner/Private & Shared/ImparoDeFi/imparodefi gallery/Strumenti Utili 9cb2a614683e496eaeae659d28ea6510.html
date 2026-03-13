@@ -1,0 +1,715 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Strumenti Utili</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="9cb2a614-683e-496e-aeae-659d28ea6510" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">🌐</span></div><h1 class="page-title" dir="auto">Strumenti Utili</h1><p class="page-description" dir="auto"></p><table class="properties"><tbody></tbody></table></header><div class="page-body"><div style="display:contents" dir="auto"><p id="8c06c22b-4c0d-4cab-9620-eb669eb19a15" class="">— Video Intro —</p></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Per navigare la blockchain (”<em>Blockchain Explorers</em>”)</summary><div class="indented"><div style="display:contents" dir="auto"><p id="1088a35d-2f90-8085-8d66-c45ef2f4bc0d" class="">Ethereum explorer: <a href="https://etherscan.io/">https://etherscan.io/</a></p></div><div style="display:contents" dir="auto"><p id="1088a35d-2f90-80ea-ac50-f1d0f03b81d7" class="">Solana explorer: <a href="https://solscan.io/">https://solscan.io/</a></p></div><div style="display:contents" dir="auto"><p id="1088a35d-2f90-80de-acec-c5fc7f63a597" class="">Base explorer: <a href="https://basescan.org/">https://basescan.org/</a></p></div><div style="display:contents" dir="auto"><p id="30b8a35d-2f90-8091-ab01-d31f22035a24" class="">HyperEVM: <a href="https://www.flowscan.xyz/">https://www.flowscan.xyz/</a></p></div><div style="display:contents" dir="auto"><p id="1088a35d-2f90-80c8-a204-ce3c317230e4" class="">Bitcoin explorer: <a href="https://www.blockchain.com/explorer">https://www.blockchain.com/explorer</a></p></div><div style="display:contents" dir="auto"><p id="1088a35d-2f90-80dd-a2a0-e3c6df5d917a" class="">Layerzero explorer: <a href="https://layerzeroscan.com/">https://layerzeroscan.com/</a></p></div><div style="display:contents" dir="auto"><p id="1088a35d-2f90-806b-a009-c93af9be1211" class="">bArtio Beratrail explorer: <a href="https://bartio.beratrail.io/">https://bartio.beratrail.io/</a></p></div><div style="display:contents" dir="auto"><p id="1088a35d-2f90-807d-b649-f332e7215e99" class="">Multiple Testnet explorer: <a href="https://testnet.routescan.io/">https://testnet.routescan.io/</a></p></div><div style="display:contents" dir="ltr"><div id="cc11f2bf-16e4-4533-924c-7c110ef97a73" class="collection-content"><h4 class="collection-title">imparodefi db ITA</h4><table class="collection-content"><thead><tr><th><span class="icon property-icon"><img src="https://www.notion.so/icons/font_gray.svg" style="width:14px;height:14px;display:block"/></span>Name</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>Tags</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Sito Web</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Profilo Twitter/X</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/calendar_gray.svg" style="width:14px;height:14px;display:block"/></span>Last Updated</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>Blockchain Supportate</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Token/NFT</th></tr></thead><tbody><tr id="767df14c-e6e6-45ba-829b-467ddd064814"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Socketscan%20767df14ce6e645ba829b467ddd064814.html"><img class="icon" src="../imparodefi%20db%20ITA/Socketscan/socketscan-logo.jpg"/>Socketscan</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span><span class="selected-value select-value-color-orange">Bridge Explorer</span></td><td class="cell-zl^h"><a href="https://www.socketscan.io/" class="url-value">https://www.socketscan.io/</a></td><td class="cell-\}jJ"><a href="https://x.com/SocketDotTech" class="url-value">https://x.com/SocketDotTech</a></td><td class="cell-Z^fp"><time>@June 11, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-orange">Bitcoin</span><span class="selected-value select-value-color-gray">Cosmos</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span><span class="selected-value select-value-color-purple">Solana</span><span class="selected-value select-value-color-green">zkSync</span></td><td class="cell-TaD\"></td></tr><tr id="9e6a36ce-2660-49a1-b57c-518b4abaec1a"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Symbiosis%20Explorer%209e6a36ce266049a1b57c518b4abaec1a.html"><img class="icon" src="../imparodefi%20db%20ITA/Symbiosis%20Explorer/symbiosis-logo.png"/>Symbiosis Explorer</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span><span class="selected-value select-value-color-orange">Bridge Explorer</span></td><td class="cell-zl^h"><a href="https://explorer.symbiosis.finance/" class="url-value">https://explorer.symbiosis.finance/</a></td><td class="cell-\}jJ"><a href="https://x.com/symbiosis_fi" class="url-value">https://x.com/symbiosis_fi</a></td><td class="cell-Z^fp"><time>@June 11, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-orange">Bitcoin</span><span class="selected-value select-value-color-gray">Cosmos</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span><span class="selected-value select-value-color-purple">Solana</span><span class="selected-value select-value-color-green">zkSync</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/symbiosis" class="url-value">https://www.coingecko.com/en/coins/symbiosis</a></td></tr></tbody></table><br/><br/></div></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Per tracciare prezzi e altri dati dei token (<em>”Data Aggregators”</em>)</summary><div class="indented"><div style="display:contents" dir="ltr"><div id="30c8a35d-2f90-80b0-a41b-da21a9eeb6fb" class="collection-content"><h4 class="collection-title">imparodefi db ITA</h4><table class="collection-content"><thead><tr><th><span class="icon property-icon"><img src="https://www.notion.so/icons/font_gray.svg" style="width:14px;height:14px;display:block"/></span>Name</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>Tags</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Sito Web</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Profilo Twitter/X</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/calendar_gray.svg" style="width:14px;height:14px;display:block"/></span>Last Updated</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>Blockchain Supportate</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Token/NFT</th></tr></thead><tbody><tr id="2227399e-a912-4179-a387-96adab14789b"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Defillama%202227399ea9124179a38796adab14789b.html"><img class="icon" src="../imparodefi%20db%20ITA/Defillama/Screenshot_2024-03-21_at_16.48.29.png"/>Defillama</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span><span class="selected-value select-value-color-brown">Bridge Aggregator</span><span class="selected-value select-value-color-orange">DEX Aggregator</span><span class="selected-value select-value-color-orange">DeFi</span></td><td class="cell-zl^h"><a href="https://defillama.com/" class="url-value">https://defillama.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/DefiLlama" class="url-value">https://x.com/DefiLlama</a></td><td class="cell-Z^fp"><time>@May 29, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span></td><td class="cell-TaD\"></td></tr><tr id="2f48a35d-2f90-80c8-b446-f31ee0034663"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Tokenomist%202f48a35d2f9080c8b446f31ee0034663.html">Tokenomist</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span><span class="selected-value select-value-color-yellow">Unlocks Tracker</span></td><td class="cell-zl^h"><a href="https://tokenomist.ai/" class="url-value">https://tokenomist.ai/</a></td><td class="cell-\}jJ"><a href="https://x.com/Tokenomist_ai" class="url-value">https://x.com/Tokenomist_ai</a></td><td class="cell-Z^fp"><time>@January 26, 2026</time></td><td class="cell-YExk"></td><td class="cell-TaD\"></td></tr><tr id="2528a35d-2f90-8066-8184-f5e4bbf3bb5c"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Perpetual%20Pulse%202528a35d2f9080668184f5e4bbf3bb5c.html">Perpetual Pulse</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span></td><td class="cell-zl^h"><a href="https://www.perpetualpulse.xyz/" class="url-value">https://www.perpetualpulse.xyz/</a></td><td class="cell-\}jJ"></td><td class="cell-Z^fp"></td><td class="cell-YExk"></td><td class="cell-TaD\"></td></tr><tr id="24e8a35d-2f90-8095-8843-dfd934a10c8f"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Coinglass%2024e8a35d2f9080958843dfd934a10c8f.html">Coinglass</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span></td><td class="cell-zl^h"><a href="https://www.coinglass.com/" class="url-value">https://www.coinglass.com/</a></td><td class="cell-\}jJ"></td><td class="cell-Z^fp"></td><td class="cell-YExk"></td><td class="cell-TaD\"></td></tr><tr id="d630fbfb-6000-40b8-9cd2-9639ea0cd8e1"><td class="cell-title"><a href="../imparodefi%20db%20ITA/The%20Honey%20Jar%20d630fbfb600040b89cd29639ea0cd8e1.html"><img class="icon" src="../imparodefi%20db%20ITA/The%20Honey%20Jar/SzbuWvjo_400x400.jpg"/>The Honey Jar</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span><span class="selected-value select-value-color-pink">Community</span><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://hub.xyz/honeyjar" class="url-value">https://hub.xyz/honeyjar</a></td><td class="cell-\}jJ"><a href="https://x.com/0xhoneyjar" class="url-value">https://x.com/0xhoneyjar</a></td><td class="cell-Z^fp"><time>@September 10, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-brown">Berachain</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-pink">Zora</span></td><td class="cell-TaD\"><a href="https://opensea.io/collection/honey-comb-2" class="url-value">https://opensea.io/collection/honey-comb-2</a></td></tr><tr id="c6e04721-0d28-4113-81b6-62a28f82d1f2"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Defined%20c6e047210d28411381b662a28f82d1f2.html"><img class="icon" src="../imparodefi%20db%20ITA/Defined/defined-logo.png"/>Defined</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span></td><td class="cell-zl^h"><a href="https://www.defined.fi/" class="url-value">https://www.defined.fi/</a></td><td class="cell-\}jJ"><a href="https://x.com/definedfi" class="url-value">https://x.com/definedfi</a></td><td class="cell-Z^fp"><time>@June 27, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-purple">Avalanche</span><span class="selected-value select-value-color-orange">BSC</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-brown">Berachain</span><span class="selected-value select-value-color-green">Blast</span><span class="selected-value select-value-color-default">Degen</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-red">Linea</span><span class="selected-value select-value-color-pink">Moonbeam</span><span class="selected-value select-value-color-purple">Moonriver</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span><span class="selected-value select-value-color-brown">Polygon zkEVM</span><span class="selected-value select-value-color-purple">Sanko</span><span class="selected-value select-value-color-blue">Scroll</span><span class="selected-value select-value-color-purple">Solana</span><span class="selected-value select-value-color-red">XAI</span><span class="selected-value select-value-color-green">zkSync</span></td><td class="cell-TaD\"></td></tr><tr id="e07f84cf-c37d-400e-9071-7bea74164687"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Nansen%20e07f84cfc37d400e90717bea74164687.html"><img class="icon" src="../imparodefi%20db%20ITA/Nansen/nansen-logo.jpg"/>Nansen</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span><span class="selected-value select-value-color-yellow">Unlocks Tracker</span></td><td class="cell-zl^h"><a href="https://www.nansen.ai/" class="url-value">https://www.nansen.ai/</a></td><td class="cell-\}jJ"><a href="https://x.com/nansen_ai" class="url-value">https://x.com/nansen_ai</a></td><td class="cell-Z^fp"><time>@June 21, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-purple">Avalanche</span><span class="selected-value select-value-color-orange">BSC</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-red">Linea</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span><span class="selected-value select-value-color-green">zkSync</span></td><td class="cell-TaD\"></td></tr><tr id="af2beac9-b77b-44b2-aede-10d17e87cd1e"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Token%20Unlocks%20af2beac9b77b44b2aede10d17e87cd1e.html"><img class="icon" src="../imparodefi%20db%20ITA/Token%20Unlocks/tokenunlocks-logo.jpg"/>Token Unlocks</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span><span class="selected-value select-value-color-yellow">Unlocks Tracker</span></td><td class="cell-zl^h"><a href="https://token.unlocks.app/" class="url-value">https://token.unlocks.app/</a></td><td class="cell-\}jJ"><a href="https://x.com/Token_Unlocks" class="url-value">https://x.com/Token_Unlocks</a></td><td class="cell-Z^fp"><time>@June 14, 2024</time></td><td class="cell-YExk"></td><td class="cell-TaD\"></td></tr><tr id="9e6a36ce-2660-49a1-b57c-518b4abaec1a"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Symbiosis%20Explorer%209e6a36ce266049a1b57c518b4abaec1a.html"><img class="icon" src="../imparodefi%20db%20ITA/Symbiosis%20Explorer/symbiosis-logo.png"/>Symbiosis Explorer</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span><span class="selected-value select-value-color-orange">Bridge Explorer</span></td><td class="cell-zl^h"><a href="https://explorer.symbiosis.finance/" class="url-value">https://explorer.symbiosis.finance/</a></td><td class="cell-\}jJ"><a href="https://x.com/symbiosis_fi" class="url-value">https://x.com/symbiosis_fi</a></td><td class="cell-Z^fp"><time>@June 11, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-orange">Bitcoin</span><span class="selected-value select-value-color-gray">Cosmos</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span><span class="selected-value select-value-color-purple">Solana</span><span class="selected-value select-value-color-green">zkSync</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/symbiosis" class="url-value">https://www.coingecko.com/en/coins/symbiosis</a></td></tr><tr id="25482b3e-2f83-4779-a932-2cb8f71f3506"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Core%20Explorer%20(allbridge)%2025482b3e2f834779a9322cb8f71f3506.html"><img class="icon" src="../imparodefi%20db%20ITA/Core%20Explorer%20(allbridge)/coreexplorer-debridge-logo.png"/>Core Explorer (allbridge)</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span></td><td class="cell-zl^h"><a href="https://core.allbridge.io/explorer" class="url-value">https://core.allbridge.io/explorer</a></td><td class="cell-\}jJ"><a href="https://x.com/Allbridge_io" class="url-value">https://x.com/Allbridge_io</a></td><td class="cell-Z^fp"><time>@June 11, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-orange">Bitcoin</span><span class="selected-value select-value-color-gray">Cosmos</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span><span class="selected-value select-value-color-purple">Solana</span><span class="selected-value select-value-color-green">zkSync</span></td><td class="cell-TaD\"></td></tr><tr id="767df14c-e6e6-45ba-829b-467ddd064814"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Socketscan%20767df14ce6e645ba829b467ddd064814.html"><img class="icon" src="../imparodefi%20db%20ITA/Socketscan/socketscan-logo.jpg"/>Socketscan</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span><span class="selected-value select-value-color-orange">Bridge Explorer</span></td><td class="cell-zl^h"><a href="https://www.socketscan.io/" class="url-value">https://www.socketscan.io/</a></td><td class="cell-\}jJ"><a href="https://x.com/SocketDotTech" class="url-value">https://x.com/SocketDotTech</a></td><td class="cell-Z^fp"><time>@June 11, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-orange">Bitcoin</span><span class="selected-value select-value-color-gray">Cosmos</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span><span class="selected-value select-value-color-purple">Solana</span><span class="selected-value select-value-color-green">zkSync</span></td><td class="cell-TaD\"></td></tr><tr id="d55e2ea4-ab23-42f2-8baa-b318d8c98cad"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Cielo%20d55e2ea4ab2342f28baab318d8c98cad.html"><img class="icon" src="../imparodefi%20db%20ITA/Cielo/cielo-logo.jpg"/>Cielo</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span><span class="selected-value select-value-color-default">Portfolio Tracker</span></td><td class="cell-zl^h"><a href="https://cielo.finance/" class="url-value">https://cielo.finance/</a></td><td class="cell-\}jJ"><a href="https://x.com/cielofinance" class="url-value">https://x.com/cielofinance</a></td><td class="cell-Z^fp"><time>@June 6, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-orange">Bitcoin</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span><span class="selected-value select-value-color-purple">Solana</span><span class="selected-value select-value-color-green">zkSync</span></td><td class="cell-TaD\"></td></tr><tr id="5db29425-4aa1-43b7-9b00-1ea2810d6988"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Dexscreener%205db294254aa143b79b001ea2810d6988.html"><img class="icon" src="../imparodefi%20db%20ITA/Dexscreener/dexscreener-logo.jpg"/>Dexscreener</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span></td><td class="cell-zl^h"><a href="dexscreener.com" class="url-value">dexscreener.com</a></td><td class="cell-\}jJ"><a href="https://x.com/dexscreener" class="url-value">https://x.com/dexscreener</a></td><td class="cell-Z^fp"><time>@June 6, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-purple">Avalanche</span><span class="selected-value select-value-color-orange">BSC</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span><span class="selected-value select-value-color-purple">Solana</span></td><td class="cell-TaD\"></td></tr><tr id="2f875f83-9a20-4f72-a3d8-884cabfaa8b2"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Coingecko%202f875f839a204f72a3d8884cabfaa8b2.html"><img class="icon" src="../imparodefi%20db%20ITA/Coingecko/coingecko-logo.jpg"/>Coingecko</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span><span class="selected-value select-value-color-pink">Analisi di Mercato</span><span class="selected-value select-value-color-default">Portfolio Tracker</span></td><td class="cell-zl^h"><a href="coingecko.com" class="url-value">coingecko.com</a></td><td class="cell-\}jJ"><a href="https://x.com/coingecko" class="url-value">https://x.com/coingecko</a></td><td class="cell-Z^fp"><time>@June 6, 2024</time></td><td class="cell-YExk"></td><td class="cell-TaD\"></td></tr><tr id="a604d230-45ca-43c5-9353-d51df73ffa2e"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Gitcoin%20a604d23045ca43c59353d51df73ffa2e.html"><img class="icon" src="../imparodefi%20db%20ITA/Gitcoin/Screenshot_2024-03-21_at_17.03.09.png"/>Gitcoin</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span><span class="selected-value select-value-color-brown">Grants</span></td><td class="cell-zl^h"><a href="https://www.gitcoin.co/" class="url-value">https://www.gitcoin.co/</a></td><td class="cell-\}jJ"><a href="https://twitter.com/gitcoin" class="url-value">https://twitter.com/gitcoin</a></td><td class="cell-Z^fp"><time>@March 1, 2026 8:01 PM</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span><span class="selected-value select-value-color-green">zkSync</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/gitcoin" class="url-value">https://www.coingecko.com/en/coins/gitcoin</a></td></tr><tr id="fd043e28-cd3d-4e17-b8b5-afff158e8e1a"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Token%20Terminal%20fd043e28cd3d4e17b8b5afff158e8e1a.html"><img class="icon" src="../imparodefi%20db%20ITA/Token%20Terminal/Screenshot_2024-03-21_at_16.50.20.png"/>Token Terminal</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span><span class="selected-value select-value-color-pink">Analisi di Mercato</span></td><td class="cell-zl^h"><a href="https://tokenterminal.com/" class="url-value">https://tokenterminal.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/tokenterminal" class="url-value">https://x.com/tokenterminal</a></td><td class="cell-Z^fp"><time>@May 29, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-purple">Avalanche</span><span class="selected-value select-value-color-orange">BSC</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-orange">Bitcoin</span><span class="selected-value select-value-color-green">Blast</span><span class="selected-value select-value-color-pink">Celestia</span><span class="selected-value select-value-color-gray">Cosmos</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-green">Fantom</span><span class="selected-value select-value-color-blue">Gnosis</span><span class="selected-value select-value-color-brown">HyperEVM</span><span class="selected-value select-value-color-red">Linea</span><span class="selected-value select-value-color-pink">Moonbeam</span><span class="selected-value select-value-color-purple">Moonriver</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span><span class="selected-value select-value-color-purple">Sanko</span><span class="selected-value select-value-color-blue">Scroll</span><span class="selected-value select-value-color-purple">Solana</span><span class="selected-value select-value-color-pink">Starknet</span><span class="selected-value select-value-color-pink">Zora</span></td><td class="cell-TaD\"></td></tr><tr id="30c8a35d-2f90-80a5-b8f9-fe06bb5bf0c9"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Gecko%20Terminal%2030c8a35d2f9080a5b8f9fe06bb5bf0c9.html">Gecko Terminal</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span></td><td class="cell-zl^h"><a href="https://www.geckoterminal.com/" class="url-value">https://www.geckoterminal.com/</a></td><td class="cell-\}jJ"></td><td class="cell-Z^fp"><time>@February 19, 2026</time></td><td class="cell-YExk"></td><td class="cell-TaD\"></td></tr></tbody></table><br/><br/></div></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Strumenti di Analisi di Criptovalute e Blockchain</summary><div class="indented"><div style="display:contents" dir="auto"><ul id="2f18a35d-2f90-80d1-ae78-f83a60836a2e" class="toggle"><li><details open=""><summary><strong>Cosa sono</strong></summary><div style="display:contents" dir="auto"><p id="caa881c7-7f01-462c-af17-c3a5780e4977" class="">Gli <strong>Strumenti di Analisi di Criptovalute e Blockchain</strong> sono piattaforme che forniscono dati dettagliati, metriche e approfondimenti sulle performance, l&#x27;attività e la salute delle reti blockchain, delle criptovalute e delle applicazioni decentralizzate (dApp). Questi strumenti permettono agli utenti—dagli investitori e sviluppatori ai ricercatori e trader—di monitorare vari aspetti come volumi di transazione, economia dei token, attività degli utenti, dati on-chain, generazione di entrate e altro ancora.</p></div><div style="display:contents" dir="auto"><p id="1088a35d-2f90-8088-85b9-e7fcaad6cdba" class="">Tra le funzionalità più popolari vi sono aggiornamenti in tempo reale sui prezzi, statistiche sull&#x27;uso delle reti, metriche finanziarie (come i ricavi del protocollo o il valore totale bloccato) e tendenze di mercato. Queste piattaforme svolgono un ruolo cruciale nell&#x27;aiutare gli utenti a prendere decisioni informate offrendo trasparenza e analisi basate sui dati degli ecosistemi blockchain. Esempi di questi strumenti includono <strong>Token Terminal</strong>, <strong>Glassnode</strong> e <strong>Dune Analytics</strong>.</p></div></details></li></ul></div><div style="display:contents" dir="auto"><p id="2f18a35d-2f90-8081-abdf-c189d0b369b2" class="">
+</p></div><div style="display:contents" dir="auto"><p id="27c8a35d-2f90-80c8-b000-e7da1476e76f" class="">Controlla se il volume sia proporzionato all’attività di traffico mostrata su Similarweb: </p></div><div style="display:contents" dir="ltr"><figure id="27c8a35d-2f90-8038-8c94-c445895de237"><a href="https://chromewebstore.google.com/detail/similarweb-website-traffi/hoklmmgfnpapgjgcpechhaamimifchmp?pli=1" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">Similarweb - Website Traffic &amp; SEO Checker - Chrome Web Store</div><div class="bookmark-description">Instant website analysis and SEO metrics at your fingertips.</div></div><div class="bookmark-href"><img src="https://ssl.gstatic.com/chrome/webstore/images/icon_144px.png" class="icon bookmark-icon"/>https://chromewebstore.google.com/detail/similarweb-website-traffi/hoklmmgfnpapgjgcpechhaamimifchmp?pli=1</div></div><img src="https://lh3.googleusercontent.com/LnJrLRTGAuGAe2cXmaMFAEq9Mp3pVsL5qkIUot4yVqsKpdV7d_tKEartkwEbyFKrRY8BAsNGqE4j0vn2MQDEm_UPmWQ=s128-rj-sc0x00ffffff" class="bookmark-image"/></a></figure></div><div style="display:contents" dir="ltr"><figure id="27c8a35d-2f90-80a2-b4c2-da55980d2a42"><div class="source"><a href="https://x.com/0xLoris/status/1965436606841848158">https://x.com/0xLoris/status/1965436606841848158</a></div></figure></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Per monitorare i propri portafogli (”<em>Wallet Trackers</em>”)</summary><div class="indented"><div style="display:contents" dir="ltr"><div id="c9bb29fb-6d6b-4e1a-98d8-fb0651044420" class="collection-content"><h4 class="collection-title">imparodefi db ITA</h4><table class="collection-content"><thead><tr><th><span class="icon property-icon"><img src="https://www.notion.so/icons/font_gray.svg" style="width:14px;height:14px;display:block"/></span>Name</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>Tags</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Sito Web</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Profilo Twitter/X</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Token/NFT</th></tr></thead><tbody><tr id="2f875f83-9a20-4f72-a3d8-884cabfaa8b2"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Coingecko%202f875f839a204f72a3d8884cabfaa8b2.html"><img class="icon" src="../imparodefi%20db%20ITA/Coingecko/coingecko-logo.jpg"/>Coingecko</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span><span class="selected-value select-value-color-pink">Analisi di Mercato</span><span class="selected-value select-value-color-default">Portfolio Tracker</span></td><td class="cell-zl^h"><a href="coingecko.com" class="url-value">coingecko.com</a></td><td class="cell-\}jJ"><a href="https://x.com/coingecko" class="url-value">https://x.com/coingecko</a></td><td class="cell-TaD\"></td></tr><tr id="d55e2ea4-ab23-42f2-8baa-b318d8c98cad"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Cielo%20d55e2ea4ab2342f28baab318d8c98cad.html"><img class="icon" src="../imparodefi%20db%20ITA/Cielo/cielo-logo.jpg"/>Cielo</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span><span class="selected-value select-value-color-default">Portfolio Tracker</span></td><td class="cell-zl^h"><a href="https://cielo.finance/" class="url-value">https://cielo.finance/</a></td><td class="cell-\}jJ"><a href="https://x.com/cielofinance" class="url-value">https://x.com/cielofinance</a></td><td class="cell-TaD\"></td></tr><tr id="46baf37a-2e7e-4f1e-a5a8-0348e4f612e2"><td class="cell-title"><a href="../imparodefi%20db%20ITA/DeBank%2046baf37a2e7e4f1ea5a80348e4f612e2.html"><img class="icon" src="../imparodefi%20db%20ITA/DeBank/debank-logo.jpg"/>DeBank</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-orange">DEX Aggregator</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-default">Portfolio Tracker</span></td><td class="cell-zl^h"><a href="DeBank.com" class="url-value">DeBank.com</a></td><td class="cell-\}jJ"><a href="https://x.com/DeBankDeFi" class="url-value">https://x.com/DeBankDeFi</a></td><td class="cell-TaD\"></td></tr><tr id="f2419f5c-0232-45ec-ba74-7bf779ad065c"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Zapper%20f2419f5c023245ecba747bf779ad065c.html"><img class="icon" src="../imparodefi%20db%20ITA/Zapper/zapper-logo.jpg"/>Zapper</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-orange">DEX Aggregator</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-default">Portfolio Tracker</span></td><td class="cell-zl^h"><a href="https://zapper.xyz/" class="url-value">https://zapper.xyz/</a></td><td class="cell-\}jJ"><a href="https://x.com/zapper_fi" class="url-value">https://x.com/zapper_fi</a></td><td class="cell-TaD\"></td></tr><tr id="da8812d5-1bcd-44f6-9dab-f35a9d038767"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Zerion%20da8812d51bcd44f69dabf35a9d038767.html"><img class="icon" src="../imparodefi%20db%20ITA/Zerion/zerion-logo.jpg"/>Zerion</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-brown">Bridge Aggregator</span><span class="selected-value select-value-color-orange">DEX Aggregator</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-default">Portfolio Tracker</span></td><td class="cell-zl^h"><a href="https://zerion.io/" class="url-value">https://zerion.io/</a></td><td class="cell-\}jJ"><a href="https://x.com/zerion" class="url-value">https://x.com/zerion</a></td><td class="cell-TaD\"></td></tr></tbody></table><br/><br/></div></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Altri Tools dalla community</summary><div class="indented"><div style="display:contents" dir="auto"><p id="64461c66-091f-4767-9925-2a7fc1ef0e49" class="">Tracker di DAT </p></div><div style="display:contents" dir="ltr"><figure id="27c8a35d-2f90-8063-999c-cd115bf9e123"><div class="source"><a href="https://x.com/lukecannon727/status/1960715684842762308">https://x.com/lukecannon727/status/1960715684842762308</a></div></figure></div></div></details></div><div style="display:contents" dir="auto"><p id="27c8a35d-2f90-80e3-9a68-db19148c63c0" class="">
+</p></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

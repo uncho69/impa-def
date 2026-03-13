@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
+import { db, hasDatabase } from '@/lib/db';
 import { userEpochScores, users, epochs } from '@/lib/db/schema';
 import { eq, and, desc, sql } from 'drizzle-orm';
+import { FALLBACK_EPOCHS } from '@/lib/leaderboards-fallback';
 
 export async function GET(
   request: NextRequest,
@@ -25,6 +26,37 @@ export async function GET(
     const epochIndex = parseInt(epochIdStr.substring(lastDashIndex + 1), 10);
     const campaignIndex = parseInt(epochIdStr.substring(secondLastDashIndex + 1, lastDashIndex), 10);
     const projectId = epochIdStr.substring(0, secondLastDashIndex);
+
+    if (!hasDatabase || !db) {
+      const fallbackEpoch = FALLBACK_EPOCHS.find(
+        (e) => e.projectId === projectId && e.campaignIndex === campaignIndex && e.index === epochIndex
+      );
+      if (!fallbackEpoch) {
+        return NextResponse.json({ error: 'Epoch not found' }, { status: 404 });
+      }
+      const { searchParams } = new URL(request.url);
+      const limit = parseInt(searchParams.get('limit') || '50', 10);
+      const offset = parseInt(searchParams.get('offset') || '0', 10);
+      return NextResponse.json(
+        {
+          epoch: {
+            projectId: fallbackEpoch.projectId,
+            campaignIndex: fallbackEpoch.campaignIndex,
+            epochIndex: fallbackEpoch.index,
+            startDate: fallbackEpoch.startDate,
+            endDate: fallbackEpoch.endDate,
+          },
+          leaderboard: [],
+          pagination: {
+            limit,
+            offset,
+            total: 0,
+            hasMore: false,
+          },
+        },
+        { status: 200 }
+      );
+    }
 
     if (isNaN(campaignIndex) || isNaN(epochIndex)) {
       return NextResponse.json(
@@ -77,7 +109,9 @@ export async function GET(
           eq(userEpochScores.campaignIndex, campaignIndex),
           eq(userEpochScores.epochIndex, epochIndex),
           eq(userEpochScores.isActive, 1),
-          eq(users.isActive, 1)
+          eq(users.isActive, 1),
+          // Nascondi gli utenti che non hanno più punti né tweet per questo epoch
+          sql`${userEpochScores.points} > 0 OR ${userEpochScores.tweetCount} > 0`
         )
       )
       .orderBy(desc(userEpochScores.points))
@@ -97,7 +131,8 @@ export async function GET(
           eq(userEpochScores.projectId, projectId),
           eq(userEpochScores.campaignIndex, campaignIndex),
           eq(userEpochScores.epochIndex, epochIndex),
-          eq(userEpochScores.isActive, 1)
+          eq(userEpochScores.isActive, 1),
+          sql`${userEpochScores.points} > 0 OR ${userEpochScores.tweetCount} > 0`
         )
       );
 

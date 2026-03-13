@@ -20,6 +20,31 @@ export const projects = pgTable('projects', {
     check('projects_is_active_check', sql`${table.isActive} IN (0, 1)`),
 ]);
 
+// Catalog projects: progetti aggiunti dall'admin (es. da Notion), con sito/twitter/descrizione
+export const projectCatalog = pgTable('project_catalog', {
+    id: varchar('id', { length: 80 }).primaryKey(),
+    name: varchar('name', { length: 255 }).notNull(),
+    websiteUrl: varchar('website_url', { length: 512 }),
+    twitterUrl: varchar('twitter_url', { length: 512 }),
+    description: text('description'),
+    category: varchar('category', { length: 80 }),
+    tags: text('tags'), // JSON array of tag strings, e.g. ["DeFi","Airdrop"]
+    deletedAt: timestamp('deleted_at'),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
+// Metadata per qualsiasi progetto (platform o catalog): link e descrizione modificabili
+export const projectMetadata = pgTable('project_metadata', {
+    projectId: varchar('project_id', { length: 80 }).primaryKey(),
+    websiteUrl: varchar('website_url', { length: 512 }),
+    twitterUrl: varchar('twitter_url', { length: 512 }),
+    description: text('description'),
+    category: varchar('category', { length: 80 }),
+    tags: text('tags'), // JSON array of tag strings, e.g. ["DeFi","Airdrop"]
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
 // Campaigns table
 export const campaigns = pgTable('campaigns', {
     projectId: varchar('project_id', { length: 50 }).notNull().references(() => projects.id, { onDelete: 'cascade' }),
@@ -210,6 +235,35 @@ export const sessions = pgTable('sessions', {
     index('sessions_device_id_idx').on(table.deviceId),
     unique('sessions_session_token_unique').on(table.sessionToken),
     check('sessions_is_active_check', sql`${table.isActive} IN (0, 1)`),
+]);
+
+// Support conversations - live support tickets between users e team
+export const supportConversations = pgTable('support_conversations', {
+    id: varchar('id', { length: 255 }).primaryKey(),
+    userId: varchar('user_id', { length: 50 }).notNull().references(() => users.id, { onDelete: 'cascade' }),
+    status: varchar('status', { length: 20 }).notNull().default('OPEN'), // OPEN, IN_PROGRESS, CLOSED
+    reason: varchar('reason', { length: 100 }).notNull(),
+    assignedAdminId: varchar('assigned_admin_id', { length: 50 }).references(() => users.id, { onDelete: 'set null' }),
+    lastMessageAt: timestamp('last_message_at'),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => [
+    index('support_conversations_user_idx').on(table.userId),
+    index('support_conversations_status_idx').on(table.status),
+    index('support_conversations_last_message_idx').on(table.lastMessageAt),
+]);
+
+// Support messages - messaggi di chat per una conversazione di supporto
+export const supportMessages = pgTable('support_messages', {
+    id: serial('id').primaryKey(),
+    conversationId: varchar('conversation_id', { length: 255 }).notNull().references(() => supportConversations.id, { onDelete: 'cascade' }),
+    senderType: varchar('sender_type', { length: 10 }).notNull(), // USER, ADMIN
+    senderUserId: varchar('sender_user_id', { length: 50 }).references(() => users.id, { onDelete: 'set null' }),
+    content: text('content').notNull(),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+}, (table) => [
+    index('support_messages_conversation_idx').on(table.conversationId),
+    index('support_messages_created_at_idx').on(table.createdAt),
 ]);
 
 // Verification tokens table - for email verification, password reset, etc.
@@ -495,6 +549,7 @@ export const campaignsRelations = relations(campaigns, ({ one, many }) => ({
     }),
     epochs: many(epochs),
     rewards: many(rewards),
+    campaignParticipationRequests: many(campaignParticipationRequests),
 }));
 
 export const rewardsRelations = relations(rewards, ({ one }) => ({
@@ -530,6 +585,10 @@ export const campaignParticipationRequestsRelations = relations(campaignParticip
     user: one(users, {
         fields: [campaignParticipationRequests.userId],
         references: [users.id],
+    }),
+    campaign: one(campaigns, {
+        fields: [campaignParticipationRequests.projectId, campaignParticipationRequests.campaignIndex],
+        references: [campaigns.projectId, campaigns.index],
     }),
 }));
 

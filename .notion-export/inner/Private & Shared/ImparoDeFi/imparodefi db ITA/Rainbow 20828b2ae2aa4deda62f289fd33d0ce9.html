@@ -1,0 +1,713 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Rainbow</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="20828b2a-e2aa-4ded-a62f-289fd33d0ce9" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">🌈</span></div><h1 class="page-title" dir="auto">Rainbow</h1><p class="page-description" dir="auto"></p><table class="properties"><tbody><tr class="property-row property-row-multi_select"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>Tags</th><td><span class="selected-value select-value-color-yellow">Portafoglio &quot;Wallet&quot; Non-custodial (Extension)</span></td></tr><tr class="property-row property-row-url"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Profilo Twitter/X</th><td><a href="https://x.com/rainbowdotme" class="url-value">https://x.com/rainbowdotme</a></td></tr><tr class="property-row property-row-url"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Sito Web</th><td><a href="https://rainbow.me/" class="url-value">https://rainbow.me/</a></td></tr><tr class="property-row property-row-url"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Token/NFT</th><td><a href="https://www.coingecko.com/en/coins/rainbow-3" class="url-value">https://www.coingecko.com/en/coins/rainbow-3</a></td></tr><tr class="property-row property-row-date"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/calendar_gray.svg" style="width:14px;height:14px;display:block"/></span>Last Updated</th><td><time>@March 1, 2026</time></td></tr><tr class="property-row property-row-multi_select"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>Blockchain Supportate</th><td><span class="selected-value select-value-color-blue">Arbitrum</span><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-red">Optimism</span><span class="selected-value select-value-color-pink">Polygon</span></td></tr></tbody></table></header><div class="page-body"><div style="display:contents" dir="auto"><p id="770bb138-5a32-441a-bafa-5b69a9b3dddd" class=""><strong>Rainbow Wallet</strong> è un portafoglio di criptovalute non-custodial progettato per Ethereum e altri asset basati su Ethereum. Con una forte attenzione alla sicurezza e alla privacy, Rainbow è noto per la sua interfaccia user-friendly e le sue funzionalità avanzate che lo rendono ideale sia per i nuovi utenti che per gli esperti di criptovalute.</p></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Caratteristiche Principali di Rainbow Wallet</summary><div class="indented"><div style="display:contents" dir="auto"><ol type="1" id="1dcd5e61-da44-4c37-b07b-b980a026d6e1" class="numbered-list" start="1"><li><strong>Supporto Multi-Chain</strong>:<div style="display:contents" dir="auto"><ul id="32a7145b-88fc-4aa4-9bef-4ed80585062e" class="bulleted-list"><li style="list-style-type:disc"><strong>Blockchain Supportate</strong>: Principalmente Ethereum, con supporto per altri asset basati su questa blockchain.</li></ul></div><div style="display:contents" dir="auto"><ul id="4c98fced-f156-4ff7-b4d8-292631f9ff39" class="bulleted-list"><li style="list-style-type:disc"><strong>Gestione Unificata</strong>: Permette di gestire tutte le tue criptovalute e NFT in un unico portafoglio senza dover cambiare tra diverse reti.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="a8d371fd-aad2-4dd8-a399-c9fdd12be9ff" class="numbered-list" start="2"><li><strong>Sicurezza Avanzata</strong>:<div style="display:contents" dir="auto"><ul id="3277cefd-12dd-4723-8391-6f4c499f6b4c" class="bulleted-list"><li style="list-style-type:disc"><strong>Autocustodia</strong>: Gli utenti hanno il controllo completo delle loro chiavi private, che sono generate e memorizzate localmente sui dispositivi degli utenti.</li></ul></div><div style="display:contents" dir="auto"><ul id="c717ff15-3548-4369-b793-309d2c5b1962" class="bulleted-list"><li style="list-style-type:disc"><strong>Rilevamento di Scam</strong>: Rileva e segnala transazioni sospette o potenzialmente pericolose.</li></ul></div><div style="display:contents" dir="auto"><ul id="dedba0c1-745e-4e22-a957-5e0a301f55f3" class="bulleted-list"><li style="list-style-type:disc"><strong>Backup Sicuro</strong>: Opzioni di backup su iCloud per iOS e Google Drive per Android, oltre alla possibilità di annotare manualmente la frase di recupero su un pezzo di carta.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="9f17c46d-4e69-45fe-addb-3af77d816549" class="numbered-list" start="3"><li><strong>Interfaccia User-Friendly</strong>:<div style="display:contents" dir="auto"><ul id="e5164ddc-00a7-4eba-941d-4c70b0c77f88" class="bulleted-list"><li style="list-style-type:disc"><strong>Facilità d&#x27;Uso</strong>: Un&#x27;interfaccia semplice e intuitiva che rende la gestione delle criptovalute e degli NFT accessibile anche ai principianti.</li></ul></div><div style="display:contents" dir="auto"><ul id="ed5747e0-3e3f-4679-a8c9-3184e08b7db0" class="bulleted-list"><li style="list-style-type:disc"><strong>Open Source</strong>: Il codice di Rainbow è open source, permettendo alla comunità di controllare e migliorare continuamente la sicurezza e l&#x27;affidabilità del portafoglio.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="830a03e7-ce08-42c1-91cb-13009b2b2da8" class="numbered-list" start="4"><li><strong>Funzionalità per NFT</strong>:<div style="display:contents" dir="auto"><ul id="3cc1c8e4-88a8-479e-aa0b-8ad497912da2" class="bulleted-list"><li style="list-style-type:disc"><strong>Gestione Completa degli NFT</strong>: Visualizza, elenca, brucia e nasconde NFT direttamente dal portafoglio.</li></ul></div><div style="display:contents" dir="auto"><ul id="586fb974-8ddd-4491-b508-67173ca77155" class="bulleted-list"><li style="list-style-type:disc"><strong>Accesso ai Mercati NFT</strong>: Accesso integrato ai principali mercati NFT per acquistare e vendere NFT facilmente.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="a2466b5e-ca14-409d-826a-ea4e29222cda" class="numbered-list" start="5"><li><strong>Integrazione con Hardware Wallet</strong>:<div style="display:contents" dir="auto"><ul id="cb4ab508-c66e-4d0f-a89e-d193f080c6e8" class="bulleted-list"><li style="list-style-type:disc"><strong>Supporto per Trezor e Ledger</strong>: Rainbow si integra con hardware wallet come Trezor e Ledger per una sicurezza aggiuntiva.</li></ul></div></li></ol></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Tutorial</summary><div class="indented"><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Tutorial Scritti</summary><div class="indented"><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Tutorial per Rainbow Wallet Mobile App</summary><div class="indented"><div style="display:contents" dir="auto"><ol type="1" id="f9e25b73-e970-4a10-9a1b-cbdca85277f7" class="numbered-list" start="1"><li><strong>Download e Installazione</strong>:<div style="display:contents" dir="auto"><ul id="7029920f-a995-4914-a504-2fb9570ab22a" class="bulleted-list"><li style="list-style-type:disc"><strong>Android</strong>: Vai al Google Play Store e cerca &quot;Rainbow Wallet&quot;.</li></ul></div><div style="display:contents" dir="auto"><ul id="60076a26-35b8-45a8-af8c-d8e370831671" class="bulleted-list"><li style="list-style-type:disc"><strong>iOS</strong>: Vai all&#x27;Apple App Store e cerca &quot;Rainbow Wallet&quot;.</li></ul></div><div style="display:contents" dir="auto"><ul id="6c75b1bf-e410-4b4a-8d9b-bb84f2061a3f" class="bulleted-list"><li style="list-style-type:disc">Scarica e installa l&#x27;app sul tuo dispositivo mobile.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="aba893e3-8273-42bd-bc54-cf6376f14c8e" class="numbered-list" start="2"><li><strong>Creazione di un Nuovo Wallet</strong>:<div style="display:contents" dir="auto"><ul id="c455dafd-340a-48db-b5fa-722fed8d48e9" class="bulleted-list"><li style="list-style-type:disc">Apri l&#x27;app Rainbow.</li></ul></div><div style="display:contents" dir="auto"><ul id="67a4a22f-78b6-403d-84a0-1d7ff7511c4d" class="bulleted-list"><li style="list-style-type:disc">Seleziona &quot;Crea un nuovo wallet&quot; (Create a New Wallet).</li></ul></div><div style="display:contents" dir="auto"><ul id="4a8deea9-3b39-4be3-b046-dce9ec9b953c" class="bulleted-list"><li style="list-style-type:disc">Imposta una password sicura e confermala.</li></ul></div><div style="display:contents" dir="auto"><ul id="fb3a38fe-9bbf-4d5f-a8ff-576dec40da11" class="bulleted-list"><li style="list-style-type:disc">Annota la tua frase di recupero (seed phrase) di 12 parole e conservala in un luogo sicuro.</li></ul></div><div style="display:contents" dir="auto"><ul id="06c97698-b410-4c6c-8ec7-26d25351f783" class="bulleted-list"><li style="list-style-type:disc">Conferma la tua frase di recupero inserendo le parole nell&#x27;ordine corretto.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="637091d4-01e4-459d-8e0a-87353a68afe9" class="numbered-list" start="3"><li><strong>Gestione delle Criptovalute</strong>:<div style="display:contents" dir="auto"><ul id="115ea2e9-21b9-4ec7-b65f-5c992e70ff1d" class="bulleted-list"><li style="list-style-type:disc"><strong>Aggiunta di Fondi</strong>: Vai alla sezione &quot;Ricevi&quot; (Receive) e copia il tuo indirizzo pubblico per ricevere criptovalute.</li></ul></div><div style="display:contents" dir="auto"><ul id="c4064b06-7798-409b-ae08-22ed14582d65" class="bulleted-list"><li style="list-style-type:disc"><strong>Invio di Fondi</strong>: Vai alla sezione &quot;Invia&quot; (Send), inserisci l&#x27;indirizzo del destinatario e l&#x27;importo da inviare.</li></ul></div><div style="display:contents" dir="auto"><ul id="a782d5f3-f4bd-4d94-aaf1-3814dfc1e68b" class="bulleted-list"><li style="list-style-type:disc"><strong>Visualizzazione del Saldo</strong>: Il saldo delle tue criptovalute sarà visualizzato nella schermata principale dell&#x27;app.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="41f1a9a8-ef6c-46fb-9f22-c3ff4496b4fe" class="numbered-list" start="4"><li><strong>Interazione con dApp</strong>:<div style="display:contents" dir="auto"><ul id="699c9e09-c60c-4971-ac05-cc186c7b8295" class="bulleted-list"><li style="list-style-type:disc">Utilizza il browser integrato nell&#x27;app per accedere a dApp compatibili.</li></ul></div><div style="display:contents" dir="auto"><ul id="af8ef9e8-6577-45c7-af51-53b0be3755a6" class="bulleted-list"><li style="list-style-type:disc">Collega il tuo wallet Rainbow quando richiesto e autorizza le transazioni direttamente dall&#x27;app.</li></ul></div></li></ol></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Tutorial per Rainbow Wallet Extension</summary><div class="indented"><div style="display:contents" dir="auto"><ol type="1" id="0b0547f1-e3fb-44f9-8ad5-4d3cc83c810a" class="numbered-list" start="1"><li><strong>Installazione dell&#x27;Estensione</strong>:<div style="display:contents" dir="auto"><ul id="75082785-a597-491b-beb2-821621554092" class="bulleted-list"><li style="list-style-type:disc">Vai al sito ufficiale di Rainbow: Rainbow.</li></ul></div><div style="display:contents" dir="auto"><ul id="eac99829-55a1-475c-9fcb-33868f79c3f0" class="bulleted-list"><li style="list-style-type:disc">Seleziona il browser che utilizzi (Chrome, Firefox, Brave) e segui le istruzioni per aggiungere l&#x27;estensione.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="74b35802-791a-42a0-b702-855a48f66af0" class="numbered-list" start="2"><li><strong>Creazione di un Nuovo Wallet</strong>:<div style="display:contents" dir="auto"><ul id="8f03f8ca-0533-4a8d-b125-f87473bfa297" class="bulleted-list"><li style="list-style-type:disc">Apri l&#x27;estensione Rainbow cliccando sull&#x27;icona nel tuo browser.</li></ul></div><div style="display:contents" dir="auto"><ul id="202165a2-0f31-4432-8ad1-07836014972a" class="bulleted-list"><li style="list-style-type:disc">Seleziona &quot;Crea un nuovo wallet&quot; (Create a New Wallet).</li></ul></div><div style="display:contents" dir="auto"><ul id="1b3e2f74-36a3-4df1-afd9-a7eb8260e4d2" class="bulleted-list"><li style="list-style-type:disc">Imposta una password sicura e confermala.</li></ul></div><div style="display:contents" dir="auto"><ul id="4652973b-7c69-4826-b489-fc481c7d5a72" class="bulleted-list"><li style="list-style-type:disc">Annota la tua frase di recupero (seed phrase) di 12 parole e conservala in un luogo sicuro.</li></ul></div><div style="display:contents" dir="auto"><ul id="c11b8d5f-7e98-41bc-b700-ef67b90396f7" class="bulleted-list"><li style="list-style-type:disc">Conferma la tua frase di recupero inserendo le parole nell&#x27;ordine corretto.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="e13a94c8-7d1c-4d27-8551-1f8c4ec37347" class="numbered-list" start="3"><li><strong>Gestione delle Criptovalute</strong>:<div style="display:contents" dir="auto"><ul id="426a1c87-80f4-408c-824d-e349f4d632a8" class="bulleted-list"><li style="list-style-type:disc"><strong>Aggiunta di Fondi</strong>: Vai alla sezione &quot;Ricevi&quot; (Receive) e copia il tuo indirizzo pubblico per ricevere criptovalute.</li></ul></div><div style="display:contents" dir="auto"><ul id="26522c09-5630-4f7d-abdb-28f6f6390758" class="bulleted-list"><li style="list-style-type:disc"><strong>Invio di Fondi</strong>: Vai alla sezione &quot;Invia&quot; (Send), inserisci l&#x27;indirizzo del destinatario e l&#x27;importo da inviare.</li></ul></div><div style="display:contents" dir="auto"><ul id="aaea131d-6ddb-4a18-93d2-21951d681a59" class="bulleted-list"><li style="list-style-type:disc"><strong>Visualizzazione del Saldo</strong>: Il saldo delle tue criptovalute sarà visualizzato nella schermata principale dell&#x27;estensione.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="e8a67a9a-dad2-4bdc-86cb-779ea7c8ee3a" class="numbered-list" start="4"><li><strong>Interazione con dApp</strong>:<div style="display:contents" dir="auto"><ul id="f20a0d54-0352-4e24-9851-afe73e3413bd" class="bulleted-list"><li style="list-style-type:disc">Visita una dApp compatibile con Ethereum o altre blockchain supportate.</li></ul></div><div style="display:contents" dir="auto"><ul id="abe4ffe1-1089-4a43-816a-1ff652938b97" class="bulleted-list"><li style="list-style-type:disc">Clicca su &quot;Collega Wallet&quot; (Connect Wallet) e seleziona Rainbow.</li></ul></div><div style="display:contents" dir="auto"><ul id="5d4c8031-0157-4f0a-a958-94b23dc26d1a" class="bulleted-list"><li style="list-style-type:disc">Autorizza la connessione e le transazioni direttamente dall&#x27;estensione Rainbow.</li></ul></div></li></ol></div></div></details></div></div></details></div></div></details></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

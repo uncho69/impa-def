@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
 import { BackToHome } from "@/components/BackToHome";
 import { ClerkProtectedRoute } from "@/components/ClerkProtectedRoute";
 import Link from "next/link";
+import { Plus } from "lucide-react";
+import { useAppAuth } from "@/lib/auth/useAppAuth";
 
 interface Epoch {
   projectId: string;
@@ -22,11 +23,12 @@ interface Epoch {
   totalQuotes: number;
   totalPoints: number;
   createdAt: string;
+  campaignName?: string;
 }
 
 export default function EpochsPage() {
   const router = useRouter();
-  const { isSignedIn, isLoaded } = useUser();
+  const { isSignedIn, isLoaded } = useAppAuth();
   const [epochs, setEpochs] = useState<Epoch[]>([]);
   const [selectedEpoch, setSelectedEpoch] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -37,10 +39,8 @@ export default function EpochsPage() {
   const limit = 20;
 
   useEffect(() => {
-    if (isLoaded) {
-      fetchEpochs();
-    }
-  }, [isLoaded, currentPage]);
+    fetchEpochs();
+  }, [currentPage]);
 
   const fetchEpochs = async () => {
     try {
@@ -79,17 +79,6 @@ export default function EpochsPage() {
   const getEpochId = (epoch: Epoch) => {
     return `${epoch.projectId}-${epoch.campaignIndex}-${epoch.index}`;
   };
-
-  if (!isLoaded) {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-primary-50 to-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto mb-4"></div>
-          <p className="text-neutral-600">Caricamento...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <ClerkProtectedRoute title="Epochs">
@@ -170,7 +159,7 @@ export default function EpochsPage() {
                             <div className="flex-1">
                               <div className="flex items-center gap-3 mb-2">
                                 <h3 className="font-bold text-lg text-neutral-900">
-                                  {epoch.campaignName ?? `Campaign ${epoch.campaignIndex}`} — Epoch {epoch.index}
+                                  {epoch.campaignName ?? `${epoch.projectId} - Campaign ${epoch.campaignIndex}`} - Epoch {epoch.index}
                                 </h3>
                                 {isSelected && (
                                   <span className="px-2 py-1 bg-primary-600 text-white text-xs rounded">

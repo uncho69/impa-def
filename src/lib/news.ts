@@ -197,7 +197,7 @@ export async function deleteNews(id: string) {
     .delete(news)
     .where(eq(news.id, id))
     .returning();
-  
+
   return result[0] || null;
 }
 

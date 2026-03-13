@@ -1,133 +1,145 @@
 "use client";
 
-import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useAppAuth } from '@/lib/auth/useAppAuth';
+import { useLanguage } from '@/contexts/LanguageContext';
+import AutoTranslateText from '@/components/AutoTranslateText';
 // import { PageLayout } from '@/components/PageLayout'; // Non più necessario
-
-// AGGIORNA QUESTE EMAIL CON LE TUE REALI!
-const ADMIN_EMAILS = [
-  "jeffben69zos@gmail.com",    // La tua email per testing
-  "admin@imparodefi.com",      // Email admin principale
-  "cofounder@imparodefi.com",  // Email cofounder
-  "lordbaconf@gmail.com"       // Admin per gestione articoli
-];
-
-function isAdminEmail(email: string): boolean {
-  return ADMIN_EMAILS.includes(email.toLowerCase());
-}
 
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { user, isLoaded } = useUser();
+  const { language } = useLanguage();
+  const isEnglish = language === "en";
+  const { isLoaded, isSignedIn } = useAppAuth();
   const router = useRouter();
+  const [supportCount, setSupportCount] = useState<number | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [checkingAdmin, setCheckingAdmin] = useState(true);
 
   useEffect(() => {
-    if (isLoaded) {
-      if (!user) {
-        window.location.href = 'https://accounts.imparodefi.xyz/sign-in';
-        return;
-      }
-
-      const userEmail = user.emailAddresses?.[0]?.emailAddress;
-      if (!userEmail || !isAdminEmail(userEmail)) {
-        router.push('/');
-        return;
-      }
+    if (!isLoaded) return;
+    if (!isSignedIn) {
+      setIsAdmin(false);
+      setCheckingAdmin(false);
+      router.push('/');
+      return;
     }
-  }, [user, isLoaded, router]);
 
-  // Loading state
-  if (!isLoaded) {
+    let cancelled = false;
+    const resolveAdmin = async () => {
+      setCheckingAdmin(true);
+      try {
+        const res = await fetch('/api/auth/admin-status', { cache: 'no-store' });
+        const payload = await res.json().catch(() => ({}));
+        const nextAdmin = Boolean(payload?.isAdmin);
+        if (cancelled) return;
+        setIsAdmin(nextAdmin);
+        if (!nextAdmin) {
+          router.push('/');
+        }
+      } catch {
+        if (cancelled) return;
+        setIsAdmin(false);
+        router.push('/');
+      } finally {
+        if (!cancelled) setCheckingAdmin(false);
+      }
+    };
+    resolveAdmin();
+    return () => {
+      cancelled = true;
+    };
+  }, [isLoaded, isSignedIn, router]);
+
+  // Carica numero richieste supporto attive per badge nel menu
+  useEffect(() => {
+    if (!isLoaded || !isSignedIn || !isAdmin) return;
+
+    let cancelled = false;
+    const loadSupportCount = async () => {
+      try {
+        const res = await fetch('/api/admin/support/conversations?status=ACTIVE', {
+          cache: 'no-store',
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!cancelled) {
+          const list = Array.isArray(data.conversations) ? data.conversations : [];
+          setSupportCount(list.length);
+        }
+      } catch {
+        // silenzioso: il badge è solo informativo
+      }
+    };
+
+    loadSupportCount();
+    const interval = setInterval(loadSupportCount, 15000);
+
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, [isLoaded, isSignedIn, isAdmin]);
+
+  if (!isLoaded || checkingAdmin) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Verificando accesso...</p>
-        </div>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <p className="text-gray-600">{isEnglish ? "Checking admin access..." : "Verifica accesso admin in corso..."}</p>
       </div>
     );
   }
 
-  // Not authenticated
-  if (!user) {
-    return null;
-  }
-
-  // Not admin
-  const userEmail = user.emailAddresses?.[0]?.emailAddress;
-  if (!userEmail || !isAdminEmail(userEmail)) {
+  if (!isSignedIn || !isAdmin) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-red-600 mb-4">Accesso Negato</h1>
-          <p className="text-gray-600 mb-6">Non hai i permessi per accedere a questa sezione.</p>
-          <Link 
-            href="/" 
+          <h1 className="text-2xl font-bold text-red-600 mb-4">{isEnglish ? "Access denied" : "Accesso Negato"}</h1>
+          <p className="text-gray-600 mb-6">{isEnglish ? "You don't have permission to access this section." : "Non hai i permessi per accedere a questa sezione."}</p>
+          <Link
+            href="/"
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
           >
-            Torna alla Homepage
+            {isEnglish ? "Back to Homepage" : "Torna alla Homepage"}
           </Link>
         </div>
       </div>
     );
   }
 
-  // Admin layout
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Admin Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  const adminShell = (
+    <div className="min-h-screen text-white">
+      <div className="bg-indigo-950/50 border-b border-indigo-500/20 backdrop-blur">
+        <div className="px-6">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-8">
-              <h1 className="text-xl font-bold text-gray-900">
-                🛡️ Admin Dashboard
-              </h1>
-              <nav className="flex space-x-6">
-                <Link 
-                  href="/admin/dashboard" 
-                  className="text-gray-600 hover:text-blue-600 font-medium transition-colors"
-                >
-                  Dashboard
-                </Link>
-                <Link 
-                  href="/admin/news" 
-                  className="text-gray-600 hover:text-blue-600 font-medium transition-colors"
-                >
-                  News
-                </Link>
-                <Link 
-                  href="/admin/participation-requests" 
-                  className="text-gray-600 hover:text-blue-600 font-medium transition-colors"
-                >
-                  Richieste partecipazione
-                </Link>
-              </nav>
+              <h1 className="text-xl font-bold text-white">🛡️ {isEnglish ? "Admin Dashboard" : "Admin Dashboard"}</h1>
             </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600">
-                👋 {user.firstName || userEmail}
-              </span>
-              <Link 
-                href="/" 
-                className="text-sm text-blue-600 hover:text-blue-700 font-medium"
-              >
-                Vai al Sito
-              </Link>
+            <div className="flex items-center">
+              {supportCount !== null && supportCount > 0 ? (
+                <Link
+                  href="/admin/support"
+                  className="inline-flex items-center gap-2 rounded-md border border-red-400/40 bg-red-500/10 px-2.5 py-1.5 text-xs text-red-100 hover:bg-red-500/20"
+                >
+                  {isEnglish ? "Support" : "Supporto"}
+                  <span className="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[11px] font-semibold">
+                    {supportCount}
+                  </span>
+                </Link>
+              ) : null}
             </div>
           </div>
         </div>
       </div>
-
-      {/* Admin Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {children}
+      <main className="px-6 py-8">
+        <AutoTranslateText>{children}</AutoTranslateText>
       </main>
     </div>
   );
+
+  return adminShell;
 }

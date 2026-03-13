@@ -94,7 +94,23 @@ export async function updateTweetMetrics(
   for (const tweet of verifiedTweets) {
     const metrics = metricsMap.get(tweet.postId);
     if (!metrics) {
-      errors.push(`No metrics found for tweet ${tweet.postId}`);
+      // Se X non restituisce più metriche per questo tweet,
+      // lo consideriamo non più valido per la leaderboard
+      // (eliminato, reso privato o non accessibile).
+      errors.push(`No metrics found for tweet ${tweet.postId} - marking as inactive`);
+      try {
+        await db
+          .update(tweets)
+          .set({
+            isActive: 0,
+            deletedAt: new Date(),
+            updatedAt: new Date(),
+          })
+          .where(eq(tweets.id, tweet.id));
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        errors.push(`Error soft-deleting tweet ${tweet.postId}: ${errorMessage}`);
+      }
       continue;
     }
 

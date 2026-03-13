@@ -1,10 +1,10 @@
 "use client";
 
-import { useUser } from '@clerk/nextjs';
-import { ReactNode, useState } from 'react';
+import { ReactNode, useState, useEffect } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { AuthModal } from '@/components/auth/AuthModal';
 import { usePathname } from 'next/navigation';
+import { useAppAuth } from '@/lib/auth/useAppAuth';
 
 interface ClerkProtectedRouteProps {
   children: ReactNode;
@@ -13,12 +13,18 @@ interface ClerkProtectedRouteProps {
 
 export function ClerkProtectedRoute({ children, title }: ClerkProtectedRouteProps) {
   const { t } = useLanguage();
-  const { isLoaded, isSignedIn } = useUser();
+  const { isLoaded, isSignedIn } = useAppAuth();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
+  const [loadTimeout, setLoadTimeout] = useState(false);
   const pathname = usePathname();
 
-  if (!isLoaded) {
+  useEffect(() => {
+    const tId = setTimeout(() => setLoadTimeout(true), 8000);
+    return () => clearTimeout(tId);
+  }, []);
+
+  if (!isLoaded && !loadTimeout) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-primary-50 to-background flex items-center justify-center">
         <div className="text-center">
@@ -27,6 +33,9 @@ export function ClerkProtectedRoute({ children, title }: ClerkProtectedRouteProp
         </div>
       </div>
     );
+  }
+  if (!isLoaded && loadTimeout) {
+    return <>{children}</>;
   }
 
   if (!isSignedIn) {

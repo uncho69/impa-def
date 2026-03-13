@@ -10,17 +10,17 @@ export default function LeaderboardsLayout({ children }: { children: ReactNode }
   const pathname = usePathname();
   
   return (
-    <div className="min-h-screen bg-gradient-to-b from-primary-50 to-background">
+    <div className="relative z-10">
       <div className="container-custom py-8">
         {/* Navigation Tabs */}
         <div className="flex justify-center mb-8">
-          <div className="inline-flex rounded-lg border border-neutral-200 bg-white p-1 shadow-sm">
+          <div className="inline-flex rounded-xl border border-slate-200 dark:border-indigo-500/20 bg-white dark:bg-indigo-900/25 p-1">
             <Link
               href="/leaderboards/global"
               className={`px-6 py-2 rounded-md text-sm font-medium transition-all ${
                 pathname === '/leaderboards/global'
-                  ? 'bg-primary-600 text-white shadow-sm'
-                  : 'text-neutral-600 hover:text-primary-600 hover:bg-primary-50'
+                  ? 'bg-indigo-600 text-white shadow-sm'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-white hover:bg-indigo-50 dark:hover:bg-white/10'
               }`}
             >
               {t('leaderboards.global')}
@@ -29,8 +29,8 @@ export default function LeaderboardsLayout({ children }: { children: ReactNode }
               href="/leaderboards/epoch"
               className={`px-6 py-2 rounded-md text-sm font-medium transition-all ${
                 pathname?.startsWith('/leaderboards/epoch')
-                  ? 'bg-primary-600 text-white shadow-sm'
-                  : 'text-neutral-600 hover:text-primary-600 hover:bg-primary-50'
+                  ? 'bg-indigo-600 text-white shadow-sm'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-white hover:bg-indigo-50 dark:hover:bg-white/10'
               }`}
             >
               {t('leaderboards.epoch')}

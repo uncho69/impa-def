@@ -3,6 +3,7 @@ import { db } from '@/lib/db';
 import { campaignParticipationRequests, campaigns } from '@/lib/db/schema';
 import { eq, and } from 'drizzle-orm';
 import { getUserIdFromRequest } from '@/lib/auth/middleware';
+import { ensureCampaignParticipationRequestsTable } from '@/lib/db/ensure-participation-table';
 
 /**
  * Parse campaignId into projectId and campaignIndex.
@@ -19,6 +20,7 @@ function parseCampaignId(campaignId: string): { projectId: string; campaignIndex
 
 /**
  * POST: Request participation in a campaign (creates a pending request).
+ * Se la tabella non esiste, la crea e riprova (così funziona anche senza migrazione).
  */
 export async function POST(
   request: NextRequest,
@@ -33,7 +35,9 @@ export async function POST(
       );
     }
 
-    const parsed = parseCampaignId(params.campaignId);
+    const campaignIdParam = typeof params.campaignId === 'string' ? params.campaignId : (params as unknown as { campaignId: Promise<string> }).campaignId;
+    const campaignId = typeof campaignIdParam === 'string' ? campaignIdParam : await campaignIdParam;
+    const parsed = parseCampaignId(campaignId);
     if (!parsed) {
       return NextResponse.json(
         { error: 'Invalid campaign ID format' },
@@ -61,53 +65,73 @@ export async function POST(
       );
     }
 
-    const existing = await db
-      .select()
-      .from(campaignParticipationRequests)
-      .where(
-        and(
-          eq(campaignParticipationRequests.userId, userId),
-          eq(campaignParticipationRequests.projectId, projectId),
-          eq(campaignParticipationRequests.campaignIndex, campaignIndex)
-        )
-      )
-      .limit(1);
+    try {
+      await ensureCampaignParticipationRequestsTable();
+    } catch (ensureErr) {
+      console.error('ensureCampaignParticipationRequestsTable failed:', ensureErr);
+      return NextResponse.json(
+        { error: 'Internal server error' },
+        { status: 500 }
+      );
+    }
 
-    if (existing.length > 0) {
-      const status = existing[0].status;
-      if (status === 'approved') {
-        return NextResponse.json(
-          { message: 'You already have access to this campaign', status: 'approved' },
-          { status: 200 }
-        );
+    const runInsert = async (): Promise<{ status: number; body: { message: string; status: string } }> => {
+      const existing = await db
+        .select()
+        .from(campaignParticipationRequests)
+        .where(
+          and(
+            eq(campaignParticipationRequests.userId, userId),
+            eq(campaignParticipationRequests.projectId, projectId),
+            eq(campaignParticipationRequests.campaignIndex, campaignIndex)
+          )
+        )
+        .limit(1);
+
+      if (existing.length > 0) {
+        const status = existing[0].status;
+        if (status === 'approved') {
+          return { status: 200, body: { message: 'You already have access to this campaign', status: 'approved' } };
+        }
+        if (status === 'pending') {
+          return { status: 200, body: { message: 'Your request is pending review', status: 'pending' } };
+        }
+        if (status === 'rejected') {
+          throw Object.assign(new Error('Rejected'), { status: 403 });
+        }
       }
-      if (status === 'pending') {
-        return NextResponse.json(
-          { message: 'Your request is pending review', status: 'pending' },
-          { status: 200 }
-        );
+
+      try {
+        await db.insert(campaignParticipationRequests).values({
+          userId,
+          projectId,
+          campaignIndex,
+          status: 'pending',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        });
+        return { status: 201, body: { message: 'Participation request submitted. An admin will review it.', status: 'pending' } };
+      } catch (insertError: unknown) {
+        const code = (insertError as { code?: string })?.code;
+        if (code === '23505') {
+          return { status: 200, body: { message: 'Your request is pending review', status: 'pending' } };
+        }
+        throw insertError;
       }
-      if (status === 'rejected') {
+    };
+
+    try {
+      const result = await runInsert();
+      return NextResponse.json(result.body, { status: result.status });
+    } catch (rejectedErr: unknown) {
+      if ((rejectedErr as { status?: number }).status === 403) {
         return NextResponse.json(
           { error: 'Your previous request was denied. Contact an admin to try again.' },
           { status: 403 }
         );
       }
+      throw rejectedErr;
     }
-
-    await db.insert(campaignParticipationRequests).values({
-      userId,
-      projectId,
-      campaignIndex,
-      status: 'pending',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
-
-    return NextResponse.json(
-      { message: 'Participation request submitted. An admin will review it.', status: 'pending' },
-      { status: 201 }
-    );
   } catch (error) {
     console.error('Error creating participation request:', error);
     return NextResponse.json(
@@ -133,7 +157,9 @@ export async function GET(
       );
     }
 
-    const parsed = parseCampaignId(params.campaignId);
+    const campaignIdParam = typeof params.campaignId === 'string' ? params.campaignId : (params as unknown as { campaignId: Promise<string> }).campaignId;
+    const campaignId = typeof campaignIdParam === 'string' ? campaignIdParam : await campaignIdParam;
+    const parsed = parseCampaignId(campaignId);
     if (!parsed) {
       return NextResponse.json(
         { error: 'Invalid campaign ID format' },
@@ -142,6 +168,16 @@ export async function GET(
     }
 
     const { projectId, campaignIndex } = parsed;
+
+    try {
+      await ensureCampaignParticipationRequestsTable();
+    } catch (ensureErr) {
+      console.error('ensureCampaignParticipationRequestsTable (GET) failed:', ensureErr);
+      return NextResponse.json(
+        { error: 'Internal server error' },
+        { status: 500 }
+      );
+    }
 
     const existing = await db
       .select({ status: campaignParticipationRequests.status })

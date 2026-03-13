@@ -1,198 +1,214 @@
-import { MobileContainer } from "@/components/MobileContainer";
-import { SectionTitle } from "@/components/SectionTitle";
-import { SectionBody } from "@/components/SectionBody";
-import { Accordion } from "@/components/Accordion";
-import { List } from "@/components/List";
-import Image from "next/image";
-import polymarketIcon from "@/assets/polymarket-logo.png";
-// Loghi delle reti supportate
-import polygonIcon from "@/assets/polygon-matic-logo.svg";
+"use client";
 
-export default function Polymarket() {
+import { useMemo, useState } from "react";
+import Image, { type StaticImageData } from "next/image";
+import Link from "next/link";
+import polymarketLogo from "@/assets/polymarket-logo.png";
+import kalshiLogo from "@/assets/kalshi-logo.png";
+import { IntroduzioneMercatiPredizioneModal } from "@/components/IntroduzioneMercatiPredizioneModal";
+import { BookmarkButton } from "@/components/bookmarks/BookmarkButton";
+import { useLanguage } from "@/contexts/LanguageContext";
+
+type PredictionApp = {
+  title: string;
+  icon: StaticImageData;
+  description: string;
+  descriptionEn: string;
+  type: "decentralized" | "regulated";
+  website: string;
+  xProfile: string;
+  href: string;
+};
+
+const FILTERS = [
+  { id: "all", label: "Tutti" },
+  { id: "decentralized", label: "Decentralizzati" },
+  { id: "regulated", label: "Regolamentati" },
+] as const;
+
+type FilterId = (typeof FILTERS)[number]["id"];
+
+const APPS: PredictionApp[] = [
+  {
+    title: "Polymarket",
+    icon: polymarketLogo,
+    description: "Piattaforma prediction market Web3 su Polygon con quote dinamiche in tempo reale.",
+    descriptionEn: "Web3 prediction market platform on Polygon with real-time dynamic odds.",
+    type: "decentralized",
+    website: "https://polymarket.com/",
+    xProfile: "https://x.com/Polymarket",
+    href: "/giochi/polymarket-progetto",
+  },
+  {
+    title: "Kalshi",
+    icon: kalshiLogo,
+    description: "Prediction market regolamentato orientato a eventi macro, economici e politici.",
+    descriptionEn: "Regulated prediction market focused on macro, economic, and political events.",
+    type: "regulated",
+    website: "https://kalshi.com/",
+    xProfile: "https://x.com/Kalshi",
+    href: "/giochi/kalshi",
+  },
+];
+
+export default function MercatiPredizionePage() {
+  const { language } = useLanguage();
+  const isEnglish = language === "en";
+  const [search, setSearch] = useState("");
+  const [activeFilter, setActiveFilter] = useState<FilterId>("all");
+  const [introOpen, setIntroOpen] = useState(false);
+  const filters = isEnglish
+    ? [
+        { id: "all", label: "All" },
+        { id: "decentralized", label: "Decentralized" },
+        { id: "regulated", label: "Regulated" },
+      ]
+    : FILTERS;
+  const apps = useMemo(
+    () =>
+      APPS.map((app) => ({
+        ...app,
+        description: isEnglish ? app.descriptionEn : app.description,
+      })),
+    [isEnglish]
+  );
+
+  const filteredApps = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return apps.filter((app) => {
+      const matchesFilter = activeFilter === "all" ? true : app.type === activeFilter;
+      const matchesSearch =
+        q.length === 0 ||
+        app.title.toLowerCase().includes(q) ||
+        app.description.toLowerCase().includes(q);
+      return matchesFilter && matchesSearch;
+    });
+  }, [search, activeFilter, apps]);
+
   return (
-    <MobileContainer>
-        <div className="flex items-center gap-4 mb-6">
-          <Image src={polymarketIcon} alt="Polymarket" width={64} height={64} />
-          <div>
-            <SectionTitle>Polymarket</SectionTitle>
-            <div className="flex flex-wrap gap-2 mt-2">
-              <span className="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm font-medium">
-                Prediction Market
-              </span>
-              <span className="px-3 py-1 bg-secondary-100 text-secondary-700 rounded-full text-sm font-medium">
-                DeFi
-              </span>
-              <span className="px-3 py-1 bg-neutral-100 text-neutral-700 rounded-full text-sm font-medium">
-                Polygon
-              </span>
-              <span className="px-3 py-1 bg-neutral-200 text-neutral-800 rounded-full text-sm font-medium">
-                Scommesse
-              </span>
-              <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
-                Airdrop
-              </span>
-            </div>
-          </div>
+    <div className="relative z-10">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
+        <div>
+          <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">{isEnglish ? "Prediction markets" : "Mercati di Predizione"}</h1>
+          <p className="text-slate-600 dark:text-slate-400 text-lg">
+            {isEnglish ? "Betting and forecasting platforms for future events in Web3" : "Piattaforme di scommesse e previsioni su eventi futuri in ambito Web3"}
+          </p>
         </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setIntroOpen(true)}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-colors shrink-0 border-white/20 bg-white/5 hover:bg-white/10 text-white"
+          >
+            <span>📈</span>
+            <span>{isEnglish ? "Prediction Markets Introduction" : "Intro ai Mercati di Predizione"}</span>
+          </button>
+          <Link
+            href="/news/gaming"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-amber-400 hover:bg-amber-500 text-slate-900 transition-colors"
+          >
+            <span>📰</span>
+            <span>{isEnglish ? "News" : "Notizie"}</span>
+          </Link>
+        </div>
+      </div>
 
-        <SectionBody>
-          <strong>Polymarket</strong> è una piattaforma di mercato di previsione basata sulla blockchain di Polygon. Su Polymarket, gli utenti possono scommettere su vari eventi futuri, come elezioni politiche, risultati sportivi, o qualsiasi altro evento di interesse pubblico, e guadagnare denaro in base alle loro previsioni.
-        </SectionBody>
+      <div className="flex flex-wrap gap-2 mb-6">
+        {filters.map((filter) => (
+          <button
+            key={filter.id}
+            type="button"
+            onClick={() => setActiveFilter(filter.id)}
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
+              activeFilter === filter.id
+                ? "bg-slate-900 dark:bg-white text-white dark:text-slate-900"
+                : "bg-white dark:bg-indigo-900/40 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-indigo-800/50 border border-slate-200 dark:border-indigo-500/20"
+            }`}
+          >
+            {filter.label}
+          </button>
+        ))}
+      </div>
 
-        <SectionTitle>Caratteristiche Principali</SectionTitle>
-        <SectionBody>
-          <Accordion buttonText="Mercati di Previsione" defaultOpen={true}>
-            <List>
-              <li>
-                <strong>Creazione di Mercati</strong>: Gli utenti possono creare o partecipare a mercati di previsione su qualsiasi evento. Ogni mercato ha due o più possibili risultati su cui gli utenti possono scommettere.
-              </li>
-              <li>
-                <strong>Eventi Diversificati</strong>: Dalle elezioni politiche ai risultati sportivi, dai mercati finanziari agli eventi di intrattenimento, Polymarket copre una vasta gamma di tematiche.
-              </li>
-              <li>
-                <strong>Risultati Verificati</strong>: Una volta che l'evento è concluso, il risultato viene verificato in modo decentralizzato tramite oracoli, che forniscono dati affidabili e non manipolabili.
-              </li>
-            </List>
-          </Accordion>
+      <div className="relative mb-8 max-w-2xl">
+        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
+        <input
+          type="search"
+          placeholder={isEnglish ? "Search prediction market apps" : "Cerca app per scommesse e prediction markets"}
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+          className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 dark:border-indigo-500/30 bg-white dark:bg-indigo-900/40 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+        />
+      </div>
 
-          <Accordion buttonText="Scommesse in Criptovaluta">
-            <List>
-              <li>
-                <strong>USDC come Valuta Principale</strong>: Le scommesse sono effettuate utilizzando criptovalute, principalmente USDC (una stablecoin legata al dollaro americano).
-              </li>
-              <li>
-                <strong>Stabilità dei Prezzi</strong>: L'uso di USDC garantisce che il valore delle scommesse rimanga stabile, eliminando la volatilità delle criptovalute tradizionali.
-              </li>
-              <li>
-                <strong>Transazioni Rapide</strong>: Grazie alla blockchain Polygon, le transazioni sono veloci ed economiche.
-              </li>
-            </List>
-          </Accordion>
-
-          <Accordion buttonText="Decentralizzazione e Sicurezza">
-            <List>
-              <li>
-                <strong>Blockchain Polygon</strong>: Polymarket è costruito sulla blockchain di Polygon, garantendo decentralizzazione senza un'autorità centrale che controlla la piattaforma.
-              </li>
-              <li>
-                <strong>Trasparenza Totale</strong>: Tutte le transazioni e le scommesse sono pubbliche e verificabili sulla blockchain.
-              </li>
-              <li>
-                <strong>Smart Contract</strong>: La logica della piattaforma è gestita da smart contract non modificabili, garantendo equità e sicurezza.
-              </li>
-            </List>
-          </Accordion>
-
-          <Accordion buttonText="Liquidità e Trading">
-            <List>
-              <li>
-                <strong>Scambi Flessibili</strong>: Gli utenti possono comprare e vendere le loro posizioni nei mercati in qualsiasi momento prima che l'evento si concluda.
-              </li>
-              <li>
-                <strong>Gestione del Rischio</strong>: La possibilità di chiudere le posizioni anticipatamente offre flessibilità nella gestione del rischio.
-              </li>
-              <li>
-                <strong>Mercati Liquidi</strong>: I mercati più popolari offrono alta liquidità, facilitando gli scambi.
-              </li>
-            </List>
-          </Accordion>
-        </SectionBody>
-
-        <SectionTitle>Come Iniziare</SectionTitle>
-        <SectionBody>
-          <Accordion buttonText="Registrazione e Setup">
-            <List>
-              <li>
-                <strong>Collega il Wallet</strong>: Connetti un wallet compatibile con Polygon (MetaMask, WalletConnect, etc.)
-              </li>
-              <li>
-                <strong>Acquista USDC</strong>: Deposita USDC sul tuo wallet o acquistali direttamente sulla piattaforma
-              </li>
-              <li>
-                <strong>Verifica l'Account</strong>: Completa la verifica dell'identità se richiesta per mercati specifici
-              </li>
-            </List>
-          </Accordion>
-
-          <Accordion buttonText="Fare la Prima Scommessa">
-            <List>
-              <li>
-                <strong>Scegli un Mercato</strong>: Esplora i mercati disponibili e seleziona quello di tuo interesse
-              </li>
-              <li>
-                <strong>Analizza le Probabilità</strong>: Studia le quote e le probabilità di ogni possibile risultato
-              </li>
-              <li>
-                <strong>Piazza la Scommessa</strong>: Seleziona il risultato su cui vuoi scommettere e inserisci l'importo
-              </li>
-              <li>
-                <strong>Monitora la Posizione</strong>: Tieni traccia della tua posizione e considera di chiuderla anticipatamente se necessario
-              </li>
-            </List>
-          </Accordion>
-        </SectionBody>
-
-        <SectionTitle>Informazioni Aggiuntive</SectionTitle>
-        <SectionBody>
-          <div className="bg-white rounded-xl p-6 border border-neutral-200 shadow-sm">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Reti Supportate */}
-              <div className="bg-white rounded-lg p-4 border border-neutral-200 shadow-sm">
-                <h3 className="font-semibold text-neutral-900 mb-3">Reti Supportate</h3>
-                <p className="text-neutral-600 text-sm mb-4">
-                  Polymarket opera sulla blockchain di Polygon, offrendo transazioni veloci ed economiche per i mercati di previsione.
-                </p>
-                <div className="flex flex-wrap gap-3">
-                  <Image 
-                    src={polygonIcon} 
-                    alt="Polygon" 
-                    className="w-8 h-8 hover:scale-110 transition-transform duration-300"
-                    width={32}
-                    height={32}
-                  />
+      <main className="flex-1 min-w-0">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+          {filteredApps.map((app) => (
+            <div
+              key={app.title}
+              className="rounded-2xl border border-slate-200 dark:border-indigo-500/20 bg-white dark:bg-indigo-900/25 p-5 hover:border-indigo-400 dark:hover:border-indigo-500 transition-colors"
+            >
+              <Link href={app.href} className="block">
+                <div className="flex items-start justify-between gap-2 mb-2 min-w-0">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-indigo-800/40 flex items-center justify-center overflow-hidden shrink-0">
+                      <Image src={app.icon} alt={app.title} width={32} height={32} className="object-contain" />
+                    </div>
+                    <span className="font-bold text-slate-900 dark:text-white truncate">{app.title}</span>
+                  </div>
+                  <span
+                    className={`shrink-0 px-2 py-1 rounded-lg text-[11px] font-medium whitespace-nowrap ${
+                      app.type === "decentralized"
+                        ? "bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300"
+                        : "bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300"
+                    }`}
+                  >
+                    {app.type === "decentralized" ? "Decentralized" : "Regulated"}
+                  </span>
                 </div>
-              </div>
-
-              {/* Link Utili */}
-              <div className="bg-white rounded-lg p-4 border border-neutral-200 shadow-sm">
-                <h3 className="font-semibold text-neutral-900 mb-3">Link Utili</h3>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <span className="text-neutral-600">🌐</span>
-                    <a 
-                      href="https://polymarket.com/" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:text-blue-800 underline text-sm"
-                    >
-                      Sito Web
-                    </a>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-neutral-600">🐦</span>
-                    <a 
-                      href="https://x.com/Polymarket" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:text-blue-800 underline text-sm"
-                    >
-                      Twitter/X
-                    </a>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-neutral-600">📊</span>
-                    <a 
-                      href="#" 
-                      className="text-blue-600 hover:text-blue-800 underline text-sm"
-                    >
-                      Token POLY
-                    </a>
-                  </div>
-                </div>
+                <p className="text-slate-600 dark:text-slate-400 text-sm mb-3 line-clamp-3">{app.description}</p>
+              </Link>
+              <div className="flex items-center gap-2 pt-3 mt-3 border-t border-slate-200 dark:border-slate-600">
+                <a
+                  href={app.xProfile}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-1.5 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-indigo-800/50 transition-colors"
+                  title="X (Twitter)"
+                  aria-label="X (Twitter)"
+                >
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
+                </a>
+                <a
+                  href={app.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-1.5 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-indigo-800/50 transition-colors"
+                  title={isEnglish ? "Website" : "Sito web"}
+                  aria-label={isEnglish ? "Website" : "Sito web"}
+                >
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>
+                </a>
+                <BookmarkButton
+                  url={app.href}
+                  title={`${app.title} - ${isEnglish ? "Prediction markets" : "Mercati di predizione"}`}
+                  type="page"
+                  projectId={app.title.toLowerCase().replace(/\s+/g, "-")}
+                  className="ml-auto"
+                />
               </div>
             </div>
-          </div>
-        </SectionBody>
-    </MobileContainer>
+          ))}
+        </div>
+        {filteredApps.length === 0 && (
+          <p className="text-center py-12 text-slate-500 dark:text-slate-400">
+            {isEnglish ? "No apps found for selected filters." : "Nessuna app trovata per i filtri selezionati."}
+          </p>
+        )}
+      </main>
+
+      <IntroduzioneMercatiPredizioneModal isOpen={introOpen} onClose={() => setIntroOpen(false)} />
+    </div>
   );
 }
+

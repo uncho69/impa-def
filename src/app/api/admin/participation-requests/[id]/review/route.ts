@@ -5,7 +5,7 @@ import { eq } from 'drizzle-orm';
 import { getUserIdFromRequest } from '@/lib/auth/middleware';
 import { isModeratorOrAdmin } from '@/lib/auth/permissions';
 
-const ADMIN_EMAILS_RAW = process.env.ADMIN_EMAILS ?? '';
+const ADMIN_EMAILS_RAW = process.env.ADMIN_EMAILS ?? process.env.admin_emails ?? '';
 const ADMIN_EMAILS_SET = new Set(
   ADMIN_EMAILS_RAW.split(',').map((e) => e.trim().toLowerCase()).filter(Boolean)
 );

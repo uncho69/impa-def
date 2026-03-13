@@ -1,0 +1,713 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>NFT</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="1c37705e-0898-4210-8b3f-d7c54ca2fa29" class="page sans"><header><div class="page-header-icon undefined"><img class="icon" src="NFT/cryptopunk1.jpeg"/></div><h1 class="page-title" dir="auto">NFT</h1><p class="page-description" dir="auto"></p><table class="properties"><tbody></tbody></table></header><div class="page-body"><div style="display:contents" dir="auto"><p id="be0ff40b-fd17-410b-a3e6-ba6e42b6fbf4" class="">— Video Intro —</p></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Cosa sono gli NFT?</summary><div class="indented"><div style="display:contents" dir="auto"><p id="88027702-9bcc-4062-8e6b-78d27f4c010a" class="">Un NFT (Non-Fungible Token) è un tipo di asset digitale unico che utilizza la tecnologia blockchain per rappresentare la proprietà o la prova di autenticità di un oggetto specifico. </p></div><div style="display:contents" dir="auto"><p id="5f9d115e-006a-4eb4-83a6-cb06baf3b80e" class="">A differenza delle criptovalute tradizionali, che sono fungibili e intercambiabili, gli NFT sono distinti e non intercambiabili, rendendoli ideali per opere d&#x27;arte digitali, collezionabili, musica, video e altri contenuti esclusivi. </p></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong>Caratteristiche Principali degli NFT</strong></summary><div class="indented"><div style="display:contents" dir="auto"><ol type="1" id="444033ec-7b73-47c1-b3fe-9d9b7927e070" class="numbered-list" start="1"><li><strong>Unicità</strong>: Ogni NFT è unico o parte di una quantità limitata, il che lo distingue dagli altri token o criptovalute che sono fungibili (intercambiabili tra loro). Questo significa che due NFT non sono mai identici.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="377a8c21-09a4-4789-b347-b732071e4a25" class="numbered-list" start="2"><li><strong>Proprietà</strong>: Gli NFT utilizzano la tecnologia blockchain per registrare la proprietà. Quando acquisti un NFT, ottieni una prova verificabile di possesso dell&#x27;oggetto digitale o fisico associato.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="d26b5e3c-1acc-4061-8b5d-ebae79b9ec67" class="numbered-list" start="3"><li><strong>Immutabilità</strong>: Una volta registrato su una blockchain, un NFT non può essere modificato o duplicato. Questo garantisce l&#x27;integrità e la rarità dell&#x27;oggetto.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="3433759f-adb6-427c-b379-29db772339b8" class="numbered-list" start="4"><li><strong>Interoperabilità</strong>: Gli NFT possono essere trasferiti e scambiati su diverse piattaforme e mercati che supportano lo stesso standard di token, come ERC-721 o ERC-1155 su Ethereum.</li></ol></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong>Utilizzi Comuni degli NFT</strong></summary><div class="indented"><div style="display:contents" dir="auto"><ol type="1" id="228b2a0f-a0ea-4a13-afbe-fb0233caa2c0" class="numbered-list" start="1"><li><strong>Arte Digitale</strong>: Gli artisti possono creare opere d&#x27;arte digitali e venderle come NFT. Esempi famosi includono opere vendute su piattaforme come OpenSea, Rarible e Foundation.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="9759e491-e9db-48f8-b22b-537a59deeb49" class="numbered-list" start="2"><li><strong>Collezionabili</strong>: Gli NFT possono rappresentare oggetti da collezione digitali come carte, giochi e memorabilia. Progetti come CryptoPunks e NBA Top Shot sono esempi popolari.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="215f8319-3a42-4936-afee-f75870e75f06" class="numbered-list" start="3"><li><strong>Giochi</strong>: Nei giochi basati su blockchain, gli NFT possono rappresentare oggetti di gioco unici, come armi, skin o terreni virtuali. Esempi includono Axie Infinity e Decentraland.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="5240f43f-103b-4a1f-8fa5-c0662610876e" class="numbered-list" start="4"><li><strong>Musica e Media</strong>: Musicisti e creatori di contenuti possono vendere opere originali e diritti di accesso esclusivi attraverso gli NFT. Questo offre un nuovo modello di monetizzazione per gli artisti.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="044e5942-d0b7-40f9-98f5-45ac788b6825" class="numbered-list" start="5"><li><strong>Proprietà Virtuale</strong>: In mondi virtuali come Decentraland e The Sandbox, i terreni e le proprietà possono essere acquistati e venduti come NFT, consentendo agli utenti di possedere e sviluppare spazi virtuali.</li></ol></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Ethereum Name Service (ENS) NFTs</summary><div class="indented"><div style="display:contents" dir="auto"><p id="767d9b87-e4a4-4849-bb13-cd933f182753" class=""><strong>Ethereum Name Service (ENS)</strong> è un protocollo decentralizzato basato su Ethereum che permette di assegnare nomi leggibili dall&#x27;uomo a indirizzi di criptovaluta, contenuti decentralizzati, e altri risorse. ENS mira a rendere la blockchain più accessibile agli utenti, sostituendo gli indirizzi alfanumerici complessi con nomi più semplici e intuitivi.</p></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Come Funzionano gli NFT</summary><div class="indented"><div style="display:contents" dir="auto"><ol type="1" id="b974d668-825d-48a8-b546-330d76f63867" class="numbered-list" start="1"><li><strong>Creazione (Minting)</strong>: La creazione di un NFT, chiamata &quot;minting&quot;, implica la registrazione del token sulla blockchain. Questo processo assegna un identificatore unico al token e lo lega al contenuto digitale o fisico che rappresenta.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="93a5b324-c462-4ba4-b459-b9e5c2b3f4e0" class="numbered-list" start="2"><li><strong>Acquisto e Vendita</strong>: Gli NFT possono essere acquistati e venduti su mercati specializzati come OpenSea, Rarible, e SuperRare. Gli utenti possono fare offerte, acquistare immediatamente o partecipare a aste.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="f32d7bf7-2250-483a-85e4-a18e53269610" class="numbered-list" start="3"><li><strong>Portafogli Digitali</strong>: Gli NFT sono conservati in portafogli digitali compatibili con i token non fungibili, come MetaMask, Trust Wallet o portafogli hardware come Ledger.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="18370288-9706-4b17-844f-cc10e75bf02c" class="numbered-list" start="4"><li><strong>Prove di Proprietà</strong>: La proprietà di un NFT è verificabile pubblicamente sulla blockchain. Questo fornisce trasparenza e autenticità, riducendo il rischio di frodi.</li></ol></div></div></details></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Lista NFT</summary><div class="indented"><div style="display:contents" dir="ltr"><div id="0cbec0e3-54f6-4fdb-9b07-a0b37720480f" class="collection-content"><h4 class="collection-title">imparodefi db ITA</h4><table class="collection-content"><thead><tr><th><span class="icon property-icon"><img src="https://www.notion.so/icons/font_gray.svg" style="width:14px;height:14px;display:block"/></span>Name</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>Tags</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Sito Web</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Profilo Twitter/X</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/calendar_gray.svg" style="width:14px;height:14px;display:block"/></span>Last Updated</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>Blockchain Supportate</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Token/NFT</th></tr></thead><tbody><tr id="7afc27fb-d3fc-438f-b6ca-6aa3185a13e7"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Shroomiez%207afc27fbd3fc438fb6ca6aa3185a13e7.html"><img class="icon" src="../imparodefi%20db%20ITA/Shroomiez/logo_color.jpg"/>Shroomiez</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="shroomiez.world" class="url-value">shroomiez.world</a></td><td class="cell-\}jJ"><a href="https://x.com/ShroomiezNFTs" class="url-value">https://x.com/ShroomiezNFTs</a></td><td class="cell-Z^fp"><time>@May 29, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-default">Ethereum</span></td><td class="cell-TaD\"><a href="https://opensea.io/collection/shroomieznfts" class="url-value">https://opensea.io/collection/shroomieznfts</a></td></tr><tr id="94c09741-82de-43ad-ab34-666a1d955865"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Pudgy%20Penguins%2094c0974182de43adab34666a1d955865.html"><img class="icon" src="../imparodefi%20db%20ITA/Pudgy%20Penguins/pudgy-logo.jpg"/>Pudgy Penguins</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://www.pudgypenguins.com/" class="url-value">https://www.pudgypenguins.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/pudgypenguins" class="url-value">https://x.com/pudgypenguins</a></td><td class="cell-Z^fp"><time>@June 6, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-purple">Layerzero</span></td><td class="cell-TaD\"><a href="https://opensea.io/collection/pudgypenguins" class="url-value">https://opensea.io/collection/pudgypenguins</a></td></tr><tr id="0519f89f-a93c-4163-9018-9564dcba6753"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Radbro%200519f89fa93c416390189564dcba6753.html"><img class="icon" src="../imparodefi%20db%20ITA/Radbro/radbro-logo.jpg"/>Radbro</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://radbro.xyz/" class="url-value">https://radbro.xyz/</a></td><td class="cell-\}jJ"><a href="https://x.com/radbro_webring" class="url-value">https://x.com/radbro_webring</a></td><td class="cell-Z^fp"><time>@June 18, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-default">Ethereum</span></td><td class="cell-TaD\"><a href="https://opensea.io/collection/radbro-webring" class="url-value">https://opensea.io/collection/radbro-webring</a></td></tr><tr id="b4f0a766-0077-4128-8b9a-d48f6db19cc4"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Tubby%20Cats%20b4f0a766007741288b9ad48f6db19cc4.html"><img class="icon" src="../imparodefi%20db%20ITA/Tubby%20Cats/tubby.jpeg"/>Tubby Cats</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://hub.xyz/tubby-cats" class="url-value">https://hub.xyz/tubby-cats</a></td><td class="cell-\}jJ"><a href="https://x.com/tubbycatsnft" class="url-value">https://x.com/tubbycatsnft</a></td><td class="cell-Z^fp"><time>@May 28, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-default">Ethereum</span></td><td class="cell-TaD\"><a href="https://opensea.io/collection/tubby-cats" class="url-value">https://opensea.io/collection/tubby-cats</a></td></tr><tr id="c06b16f9-91fc-4638-bedb-85c194d968e7"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Milady%20c06b16f991fc4638bedb85c194d968e7.html"><img class="icon" src="../imparodefi%20db%20ITA/Milady/milady.jpeg"/>Milady</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://miladymaker.net/" class="url-value">https://miladymaker.net/</a></td><td class="cell-\}jJ"><a href="https://x.com/miladymaker" class="url-value">https://x.com/miladymaker</a></td><td class="cell-Z^fp"><time>@June 18, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-default">Ethereum</span></td><td class="cell-TaD\"><a href="https://opensea.io/collection/milady" class="url-value">https://opensea.io/collection/milady</a></td></tr><tr id="ee2edcac-c9d2-48e7-9585-210a85650840"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Crypto%20Punks%20ee2edcacc9d248e79585210a85650840.html"><img class="icon" src="../imparodefi%20db%20ITA/Crypto%20Punks/cryptopunk1.jpeg"/>Crypto Punks</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://cryptopunks.app/" class="url-value">https://cryptopunks.app/</a></td><td class="cell-\}jJ"><a href="https://x.com/cryptopunksnfts" class="url-value">https://x.com/cryptopunksnfts</a></td><td class="cell-Z^fp"><time>@June 20, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-default">Ethereum</span></td><td class="cell-TaD\"><a href="https://cryptopunks.app/" class="url-value">https://cryptopunks.app/</a></td></tr><tr id="94294013-6853-46c4-ae59-11dff23c34bf"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Decentraland%2094294013685346c4ae5911dff23c34bf.html"><img class="icon" src="../imparodefi%20db%20ITA/Decentraland/decentraland-logo.jpg"/>Decentraland</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-blue">Metaverso</span><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://decentraland.org/" class="url-value">https://decentraland.org/</a></td><td class="cell-\}jJ"><a href="https://x.com/decentraland" class="url-value">https://x.com/decentraland</a></td><td class="cell-Z^fp"><time>@June 6, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-pink">Polygon</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/decentraland" class="url-value">https://www.coingecko.com/en/coins/decentraland</a></td></tr><tr id="1b827de9-9ea6-49b5-9335-929ab78e57a3"><td class="cell-title"><a href="../imparodefi%20db%20ITA/The%20Sandbox%201b827de99ea649b59335929ab78e57a3.html"><img class="icon" src="../imparodefi%20db%20ITA/The%20Sandbox/sandbox-logo.jpg"/>The Sandbox</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-blue">Metaverso</span><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://x.com/TheSandboxGame" class="url-value">https://x.com/TheSandboxGame</a></td><td class="cell-\}jJ"><a href="https://x.com/TheSandboxGame" class="url-value">https://x.com/TheSandboxGame</a></td><td class="cell-Z^fp"><time>@June 6, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-pink">Polygon</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/the-sandbox" class="url-value">https://www.coingecko.com/en/coins/the-sandbox</a></td></tr><tr id="38c1c36b-ac64-4b37-b2f4-60e0478888c8"><td class="cell-title"><a href="../imparodefi%20db%20ITA/TN100X%20(Ham%20TheLP)%2038c1c36bac644b37b2f460e0478888c8.html"><span class="icon">🍖</span>TN100X (Ham / TheLP)</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-pink">Memecoin</span><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://ham.fun/" class="url-value">https://ham.fun/</a></td><td class="cell-\}jJ"><a href="https://x.com/HamOnWarpcast" class="url-value">https://x.com/HamOnWarpcast</a></td><td class="cell-Z^fp"><time>@June 6, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-blue">Base</span><span class="selected-value select-value-color-default">Ethereum</span></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/tn100x" class="url-value">https://www.coingecko.com/en/coins/tn100x</a></td></tr><tr id="10c8a35d-2f90-80ba-abe8-db505b52ead7"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Smilee%20Beras%2010c8a35d2f9080baabe8db505b52ead7.html">Smilee Beras</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-Z^fp"></td><td class="cell-YExk"></td><td class="cell-TaD\"><a href="https://opensea.io/collection/smilee-beras" class="url-value">https://opensea.io/collection/smilee-beras</a></td></tr><tr id="d630fbfb-6000-40b8-9cd2-9639ea0cd8e1"><td class="cell-title"><a href="../imparodefi%20db%20ITA/The%20Honey%20Jar%20d630fbfb600040b89cd29639ea0cd8e1.html"><img class="icon" src="../imparodefi%20db%20ITA/The%20Honey%20Jar/SzbuWvjo_400x400.jpg"/>The Honey Jar</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span><span class="selected-value select-value-color-pink">Community</span><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://hub.xyz/honeyjar" class="url-value">https://hub.xyz/honeyjar</a></td><td class="cell-\}jJ"><a href="https://x.com/0xhoneyjar" class="url-value">https://x.com/0xhoneyjar</a></td><td class="cell-Z^fp"><time>@September 10, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-brown">Berachain</span><span class="selected-value select-value-color-default">Ethereum</span><span class="selected-value select-value-color-pink">Zora</span></td><td class="cell-TaD\"><a href="https://opensea.io/collection/honey-comb-2" class="url-value">https://opensea.io/collection/honey-comb-2</a></td></tr><tr id="38b691e0-b8e0-45c0-b799-96af64271af5"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Redacted%20Remilio%20Babies%2038b691e0b8e045c0b79996af64271af5.html"><img class="icon" src="../imparodefi%20db%20ITA/Redacted%20Remilio%20Babies/remilio-logo.jpg"/>Redacted Remilio Babies</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://remilio.org/" class="url-value">https://remilio.org/</a></td><td class="cell-\}jJ"><a href="https://x.com/RemilioBaby" class="url-value">https://x.com/RemilioBaby</a></td><td class="cell-Z^fp"><time>@June 24, 2024</time></td><td class="cell-YExk"><span class="selected-value select-value-color-default">Ethereum</span></td><td class="cell-TaD\"><a href="https://opensea.io/collection/remilio-babies" class="url-value">https://opensea.io/collection/remilio-babies</a></td></tr><tr id="2b799377-7998-4e0e-b8c0-1c1cea704321"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Bong%20Bears%20&amp;%20Rebase%202b79937779984e0eb8c01c1cea704321.html"><img class="icon" src="../imparodefi%20db%20ITA/Bong%20Bears%20&amp;%20Rebase/bongbears.jpeg"/>Bong Bears &amp; Rebase</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://www.berachain.com/" class="url-value">https://www.berachain.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/BongBearsNFT" class="url-value">https://x.com/BongBearsNFT</a></td><td class="cell-Z^fp"><time>@March 1, 2026</time></td><td class="cell-YExk"><span class="selected-value select-value-color-brown">Berachain</span><span class="selected-value select-value-color-default">Ethereum</span></td><td class="cell-TaD\"><a href="https://opensea.io/collection/bongbears" class="url-value">https://opensea.io/collection/bongbears</a></td></tr><tr id="2638a35d-2f90-8023-b6fe-f92cef3b54ec"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Audioglyphs%202638a35d2f908023b6fef92cef3b54ec.html">Audioglyphs</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-Z^fp"><time>@September 3, 2025</time></td><td class="cell-YExk"><span class="selected-value select-value-color-default">Ethereum</span></td><td class="cell-TaD\"><a href="https://opensea.io/collection/autoglyphs" class="url-value">https://opensea.io/collection/autoglyphs</a></td></tr><tr id="2638a35d-2f90-8014-b707-d9b3fa012ede"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Lil%20Pudgys%202638a35d2f908014b707d9b3fa012ede.html">Lil Pudgys</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-Z^fp"><time>@September 3, 2025</time></td><td class="cell-YExk"></td><td class="cell-TaD\"><a href="https://opensea.io/collection/lilpudgys" class="url-value">https://opensea.io/collection/lilpudgys</a></td></tr><tr id="2638a35d-2f90-8078-a7c1-c81375e14a81"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Sproto%20Gremlins%202638a35d2f908078a7c1c81375e14a81.html">Sproto Gremlins</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-Z^fp"></td><td class="cell-YExk"><span class="selected-value select-value-color-default">Ethereum</span></td><td class="cell-TaD\"><a href="https://opensea.io/collection/sproto-gremlins" class="url-value">https://opensea.io/collection/sproto-gremlins</a></td></tr><tr id="2638a35d-2f90-809d-957e-fceb267380d9"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Hypio%20Babies%202638a35d2f90809d957efceb267380d9.html">Hypio Babies</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-Z^fp"><time>@September 3, 2025</time></td><td class="cell-YExk"><span class="selected-value select-value-color-brown">HyperEVM</span></td><td class="cell-TaD\"><a href="https://drip.trade/collections/hypio" class="url-value">https://drip.trade/collections/hypio</a></td></tr><tr id="2638a35d-2f90-80e2-a978-f57b6a3ad984"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Pip%20&amp;%20Friends%202638a35d2f9080e2a978f57b6a3ad984.html">Pip &amp; Friends</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-Z^fp"><time>@September 3, 2025</time></td><td class="cell-YExk"><span class="selected-value select-value-color-brown">HyperEVM</span></td><td class="cell-TaD\"><a href="https://drip.trade/collections/pip" class="url-value">https://drip.trade/collections/pip</a></td></tr></tbody></table><br/><br/></div></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Piattaforme per comprare, vendere e creare NFT</summary><div class="indented"><div style="display:contents" dir="ltr"><div id="118f7bbd-4109-4f75-9516-f11dc8ad771b" class="collection-content"><h4 class="collection-title">imparodefi db ITA</h4><table class="collection-content"><thead><tr><th><span class="icon property-icon"><img src="https://www.notion.so/icons/font_gray.svg" style="width:14px;height:14px;display:block"/></span>Name</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>Tags</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Sito Web</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Profilo Twitter/X</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Token/NFT</th></tr></thead><tbody><tr id="3b627bfa-76b9-4f71-90d0-03d4a6d4f87b"><td class="cell-title"><a href="../imparodefi%20db%20ITA/OpenSea%203b627bfa76b94f7190d003d4a6d4f87b.html"><img class="icon" src="../imparodefi%20db%20ITA/OpenSea/opensea-logo.png"/>OpenSea</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-yellow">Marketplace NFT</span></td><td class="cell-zl^h"><a href="https://opensea.io/" class="url-value">https://opensea.io/</a></td><td class="cell-\}jJ"><a href="https://x.com/opensea" class="url-value">https://x.com/opensea</a></td><td class="cell-TaD\"></td></tr><tr id="49768823-dde9-4ef5-bae9-c4522eb59bbd"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Blur%2049768823dde94ef5bae9c4522eb59bbd.html"><img class="icon" src="../imparodefi%20db%20ITA/Blur/blur-logo.jpg"/>Blur</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-yellow">Marketplace NFT</span></td><td class="cell-zl^h"><a href="https://blur.io/" class="url-value">https://blur.io/</a></td><td class="cell-\}jJ"><a href="https://x.com/blur_io" class="url-value">https://x.com/blur_io</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/blur" class="url-value">https://www.coingecko.com/en/coins/blur</a></td></tr><tr id="64392445-3afb-4280-89dc-25b1c7414b83"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Sudoswap%20643924453afb428089dc25b1c7414b83.html"><img class="icon" src="../imparodefi%20db%20ITA/Sudoswap/sudoswap-logo.jpg"/>Sudoswap</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-yellow">Marketplace NFT</span></td><td class="cell-zl^h"><a href="sudoswap.xyz" class="url-value">sudoswap.xyz</a></td><td class="cell-\}jJ"><a href="https://x.com/sudoswap" class="url-value">https://x.com/sudoswap</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/sudoswap" class="url-value">https://www.coingecko.com/en/coins/sudoswap</a></td></tr><tr id="be2069bb-e554-4425-8aea-d153b25628cc"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Zora%20be2069bbe55444258aead153b25628cc.html"><img class="icon" src="../imparodefi%20db%20ITA/Zora/zora-logo.jpg"/>Zora</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-gray">L2</span><span class="selected-value select-value-color-yellow">Marketplace NFT</span></td><td class="cell-zl^h"><a href="https://zora.co/" class="url-value">https://zora.co/</a></td><td class="cell-\}jJ"><a href="https://x.com/ourZORA" class="url-value">https://x.com/ourZORA</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/zora" class="url-value">https://www.coingecko.com/en/coins/zora</a></td></tr><tr id="e62c4929-830e-433a-a177-b37356c93f09"><td class="cell-title"><a href="../imparodefi%20db%20ITA/ENS%20e62c4929830e433aa177b37356c93f09.html"><img class="icon" src="../imparodefi%20db%20ITA/ENS/ens-logo.jpg"/>ENS</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Marketplace NFT</span></td><td class="cell-zl^h"><a href="https://ens.domains/" class="url-value">https://ens.domains/</a></td><td class="cell-\}jJ"><a href="https://x.com/ensdomains" class="url-value">https://x.com/ensdomains</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/ethereum-name-service" class="url-value">https://www.coingecko.com/en/coins/ethereum-name-service</a></td></tr><tr id="2f18a35d-2f90-80d0-a548-f5d68302ebbd"><td class="cell-title"><a href="../imparodefi%20db%20ITA/Drip%20trade%202f18a35d2f9080d0a548f5d68302ebbd.html"><img class="icon" src="../imparodefi%20db%20ITA/Drip%20trade/driptrade-logo.png"/>Drip.trade</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Marketplace NFT</span><span class="selected-value select-value-color-green">Piattaforma Lancio NFT</span></td><td class="cell-zl^h"><a href="drip.trade" class="url-value">drip.trade</a></td><td class="cell-\}jJ"><a href="https://x.com/drip__trade" class="url-value">https://x.com/drip__trade</a></td><td class="cell-TaD\"></td></tr></tbody></table><br/><br/></div></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Tutorial</summary></details></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

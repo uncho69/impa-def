@@ -20,10 +20,10 @@ export function Accordion({
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
   
   return (
-    <div className={className}>
+    <div className={`accordion-root ${className || ""}`}>
       <button
         onClick={() => setOpen((prev) => !prev)}
-        className="w-full flex items-center gap-2 text-left font-semibold text-neutral-900"
+        className="accordion-trigger w-full flex items-center gap-2 text-left font-semibold text-slate-900 dark:text-slate-100"
       >
         <div className="flex items-center gap-2">
           {showTooltip ? (
@@ -44,7 +44,7 @@ export function Accordion({
                   <div className="text-center">
                     <div className="font-semibold text-yellow-300 mb-1">💡 Suggerimento</div>
                     <div className="leading-relaxed">
-                      Clicca sulle > per {open ? 'chiudere' : 'aprire'} le sezioni
+                      Clicca sulle {" > "} per {open ? "chiudere" : "aprire"} le sezioni
                     </div>
                   </div>
                 </div>
@@ -65,7 +65,7 @@ export function Accordion({
           buttonText
         )}
       </button>
-      {open && <div className="mt-3 text-neutral-900">{children}</div>}
+      {open && <div className="accordion-content mt-3 text-slate-900 dark:text-slate-200">{children}</div>}
     </div>
   );
 }

@@ -5,47 +5,27 @@ import Image from "next/image";
 import logo from "@/assets/imparodefi-logo-nobg.webp";
 import { MobileMenu } from "./MobileMenu";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { ClerkAuthStatus } from "./ClerkAuthStatus";
+import { UnifiedAuthControls } from "@/components/auth/UnifiedAuthControls";
 import { useState, useEffect, useRef } from "react";
 import { SearchBar } from "./SearchBar";
-import { useUser } from "@clerk/nextjs";
 import { AuthModal } from "@/components/auth/AuthModal";
 import { usePathname } from "next/navigation";
-
-// Admin emails - AGGIORNA CON LE TUE REALI
-const ADMIN_EMAILS = [
-  "jeffben69zos@gmail.com",    // La tua email per testing
-  "admin@imparodefi.com",      // Email admin principale
-  "cofounder@imparodefi.com",  // Email cofounder
-  "lordbaconf@gmail.com"       // Admin per gestione articoli
-];
-
-function isAdminEmail(email: string): boolean {
-  return ADMIN_EMAILS.includes(email.toLowerCase());
-}
+import { useAppAuth } from "@/lib/auth/useAppAuth";
+import LanguageToggle from "./LanguageToggle";
 
 export function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isAdminDropdownOpen, setIsAdminDropdownOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const adminDropdownRef = useRef<HTMLDivElement>(null);
-  const { isSignedIn, user } = useUser();
+  const { isSignedIn } = useAppAuth();
   const { t } = useLanguage();
   const pathname = usePathname();
-  
-  // Check if user is admin
-  const isAdmin = user?.emailAddresses?.[0]?.emailAddress && 
-                  isAdminEmail(user.emailAddresses[0].emailAddress);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false);
-      }
-      if (adminDropdownRef.current && !adminDropdownRef.current.contains(event.target as Node)) {
-        setIsAdminDropdownOpen(false);
       }
     }
 
@@ -67,11 +47,11 @@ export function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full backdrop-blur-lg bg-background/80 border-b border-neutral-200">
+    <header className="sticky top-0 z-50 w-full backdrop-blur-lg bg-background/80 border-b border-neutral-200 dark:bg-indigo-950/90 dark:border-indigo-500/20">
       <div className="w-full px-4 md:px-8 lg:px-12 mx-auto">
-        <nav className="flex items-center justify-between h-16 lg:h-20 py-2">
-          <Link href="/" className="group flex items-center">
-            <div className="flex items-center">
+        <nav className="flex items-center justify-between gap-4 h-16 lg:h-20 py-2">
+          <Link href="/" className="group flex items-center shrink-0 min-w-0">
+            <div className="flex items-center min-w-0">
               <Image 
                 src={logo} 
                 alt="ImparoDeFi Logo" 
@@ -91,8 +71,10 @@ export function Navbar() {
             </div>
           </Link>
           
-          <div className="hidden lg:flex items-center space-x-8">
-            <SearchBar />
+          <div className="hidden lg:flex items-center flex-1 justify-end min-w-0 gap-6 lg:gap-8">
+            <div className="min-w-0 max-w-[13rem] xl:max-w-[16rem] flex-shrink">
+              <SearchBar />
+            </div>
             <div className="flex space-x-6">
               <Link href="/manuale" className="gradient-text hover:opacity-80 transition-opacity font-bold text-sm">
                 {t('nav.manuale')}
@@ -119,30 +101,6 @@ export function Navbar() {
                 News
               </Link>
               
-              {/* Admin Panel Dropdown (solo per admin) */}
-              {isAdmin && (
-                <div className="relative" ref={adminDropdownRef}>
-                  <button
-                    onClick={() => setIsAdminDropdownOpen(!isAdminDropdownOpen)}
-                    className="gradient-text hover:opacity-80 transition-opacity font-bold text-sm"
-                  >
-                    Admin Panel
-                  </button>
-                  
-                  {isAdminDropdownOpen && (
-                    <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-blue-200 rounded-lg shadow-lg py-2 z-50">
-                      <Link 
-                        href="/admin/dashboard" 
-                        onClick={() => setIsAdminDropdownOpen(false)}
-                        className="block px-4 py-2 text-sm font-bold text-blue-700 hover:bg-blue-50 transition-colors"
-                      >
-                        📊 Dashboard
-                      </Link>
-                    </div>
-                  )}
-                </div>
-              )}
-              
               {/* Dropdown Menu */}
               <div className="relative" ref={dropdownRef}>
                 <button
@@ -153,31 +111,31 @@ export function Navbar() {
                 </button>
                 
                 {isDropdownOpen && (
-                  <div className="absolute top-full right-0 mt-2 w-48 bg-white border border-blue-200 rounded-lg shadow-lg py-2 z-50">
-                    <Link href="/compraevendicrypto" onClick={showAuthModal} className="block px-4 py-2 text-sm font-bold text-blue-700 hover:bg-blue-50 transition-colors">
+                  <div className="absolute top-full right-0 mt-2 w-48 bg-white dark:bg-indigo-900/90 border border-blue-200 dark:border-indigo-500/30 rounded-lg shadow-lg py-2 z-50">
+                    <Link href="/compraevendicrypto" onClick={showAuthModal} className="block px-4 py-2 text-sm font-bold text-blue-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-indigo-800/60 transition-colors">
                       Compra e vendi crypto
                     </Link>
-                    <Link href="/nft" onClick={showAuthModal} className="block px-4 py-2 text-sm font-bold text-blue-700 hover:bg-blue-50 transition-colors">
+                    <Link href="/nft" onClick={showAuthModal} className="block px-4 py-2 text-sm font-bold text-blue-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-indigo-800/60 transition-colors">
                       NFTs
                     </Link>
-                    <Link href="/giochi" onClick={showAuthModal} className="block px-4 py-2 text-sm font-bold text-blue-700 hover:bg-blue-50 transition-colors">
+                    <Link href="/giochi" onClick={showAuthModal} className="block px-4 py-2 text-sm font-bold text-blue-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-indigo-800/60 transition-colors">
                       Giochi & Mercati di Predizione
                     </Link>
-                    <Link href="/strumenti-utili" onClick={showAuthModal} className="block px-4 py-2 text-sm font-bold text-blue-700 hover:bg-blue-50 transition-colors">
+                    <Link href="/strumenti-utili" onClick={showAuthModal} className="block px-4 py-2 text-sm font-bold text-blue-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-indigo-800/60 transition-colors">
                       Strumenti Utili
                     </Link>
-                    <Link href="/eventi-storici" onClick={showAuthModal} className="block px-4 py-2 text-sm font-bold text-blue-700 hover:bg-blue-50 transition-colors">
+                    <Link href="/eventi-storici" onClick={showAuthModal} className="block px-4 py-2 text-sm font-bold text-blue-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-indigo-800/60 transition-colors">
                       Eventi Storici
-                    </Link>
-                    <Link href="/supporto" className="block px-4 py-2 text-sm font-bold text-blue-700 hover:bg-blue-50 transition-colors">
-                      Assistenza
                     </Link>
                   </div>
                 )}
               </div>
             </div>
             
-            <ClerkAuthStatus />
+            <div className="flex items-center gap-3">
+              <LanguageToggle />
+              <UnifiedAuthControls />
+            </div>
           </div>
           
           <div className="lg:hidden">

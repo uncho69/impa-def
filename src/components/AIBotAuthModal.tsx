@@ -1,14 +1,13 @@
 "use client";
 
-import { SignInButton, SignUpButton } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
 import { createPortal } from "react-dom";
+import { useAppAuth } from "@/lib/auth/useAppAuth";
 
 export function AIBotAuthModal() {
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const pathname = usePathname();
+  const { login, hasPrivy } = useAppAuth();
 
   useEffect(() => {
     setMounted(true);
@@ -39,8 +38,6 @@ export function AIBotAuthModal() {
 
   if (!mounted) return null;
 
-  const finalRedirectUrl = pathname || '/';
-
   const modalContent = (
     <div 
       className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
@@ -65,40 +62,25 @@ export function AIBotAuthModal() {
           </div>
           
           <h2 className="text-2xl font-bold text-neutral-900 mb-2">
-            Accedi per utilizzare l'AI Bot
+            Accedi per utilizzare l&apos;AI Bot
           </h2>
           
           <p className="text-neutral-600 text-base">
-            Per utilizzare l'assistente AI, devi prima registrarti o effettuare il login.
+            Per utilizzare l&apos;assistente AI, devi prima registrarti o effettuare il login.
           </p>
         </div>
         
         <div className="space-y-3">
-          <SignInButton 
-            mode="modal" 
-            redirectUrl={finalRedirectUrl}
-            afterSignInUrl={finalRedirectUrl}
+          <button
+            onClick={async () => {
+              setIsOpen(false);
+              if (!hasPrivy) return;
+              await login();
+            }}
+            className="w-full bg-primary-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-primary-700 transition-colors"
           >
-            <button 
-              onClick={() => setIsOpen(false)}
-              className="w-full bg-primary-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-primary-700 transition-colors"
-            >
-              Accedi
-            </button>
-          </SignInButton>
-          
-          <SignUpButton 
-            mode="modal" 
-            redirectUrl={finalRedirectUrl}
-            afterSignUpUrl={finalRedirectUrl}
-          >
-            <button 
-              onClick={() => setIsOpen(false)}
-              className="w-full bg-white text-primary-600 py-3 px-4 rounded-xl font-semibold border-2 border-primary-600 hover:bg-primary-50 transition-colors"
-            >
-              Registrati
-            </button>
-          </SignUpButton>
+            Accedi / Registrati
+          </button>
         </div>
       </div>
     </div>

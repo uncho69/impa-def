@@ -12,18 +12,18 @@ const nextConfig = {
               key: "Content-Security-Policy",
               value: `
                 default-src 'self';
-                script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
-                style-src 'self' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
-                img-src 'self' data: blob: https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
-                font-src 'self' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
+                script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app https://auth.privy.io https://*.privy.io https://www.googletagmanager.com;
+                style-src 'self' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app https://auth.privy.io https://*.privy.io;
+                img-src 'self' data: blob: https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app https://auth.privy.io https://*.privy.io https://www.google-analytics.com https://www.googletagmanager.com;
+                font-src 'self' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app https://auth.privy.io https://*.privy.io;
                 object-src 'none';
                 base-uri 'self';
                 form-action 'self';
                 frame-ancestors 'none';
-                child-src https://challenges.cloudflare.com https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
-                frame-src https://challenges.cloudflare.com https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
-                connect-src 'self' https://challenges.cloudflare.com wss://relay.walletconnect.com wss://relay.walletconnect.org wss://www.walletlink.org https://explorer-api.walletconnect.com https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
-                worker-src 'self' blob: https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
+                child-src https://challenges.cloudflare.com https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app https://auth.privy.io https://*.privy.io https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com https://youtube-nocookie.com;
+                frame-src https://challenges.cloudflare.com https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app https://auth.privy.io https://*.privy.io https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com https://youtube-nocookie.com;
+                connect-src 'self' https://challenges.cloudflare.com wss://relay.walletconnect.com wss://relay.walletconnect.org wss://www.walletlink.org https://explorer-api.walletconnect.com https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app https://auth.privy.io https://*.privy.io https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com;
+                worker-src 'self' blob: https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app https://auth.privy.io https://*.privy.io;
                 manifest-src 'self';
               `.replace(/\s+/g, ' ').trim(),
             },
@@ -40,18 +40,18 @@ const nextConfig = {
             key: "Content-Security-Policy",
               value: `
                 default-src 'self';
-                script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
-                style-src 'self' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
-                img-src 'self' data: blob: https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
-                font-src 'self' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
+                script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app https://auth.privy.io https://*.privy.io https://www.googletagmanager.com;
+                style-src 'self' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app https://auth.privy.io https://*.privy.io;
+                img-src 'self' data: blob: https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app https://auth.privy.io https://*.privy.io https://www.google-analytics.com https://www.googletagmanager.com;
+                font-src 'self' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app https://auth.privy.io https://*.privy.io;
                 object-src 'none';
                 base-uri 'self';
                 form-action 'self';
                 frame-ancestors 'none';
-                child-src https://challenges.cloudflare.com https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
-                frame-src https://challenges.cloudflare.com https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
-                connect-src 'self' https://challenges.cloudflare.com wss://relay.walletconnect.com wss://relay.walletconnect.org wss://www.walletlink.org https://explorer-api.walletconnect.com https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
-                worker-src 'self' blob: https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app;
+                child-src https://challenges.cloudflare.com https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app https://auth.privy.io https://*.privy.io https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com https://youtube-nocookie.com;
+                frame-src https://challenges.cloudflare.com https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app https://auth.privy.io https://*.privy.io https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com https://youtube-nocookie.com;
+                connect-src 'self' https://challenges.cloudflare.com wss://relay.walletconnect.com wss://relay.walletconnect.org wss://www.walletlink.org https://explorer-api.walletconnect.com https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app https://auth.privy.io https://*.privy.io https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com;
+                worker-src 'self' blob: https://*.clerk.accounts.dev https://*.clerk.com https://clerk.imparodefi.xyz https://*.imparodefi.xyz https://id-bot-eight.vercel.app https://auth.privy.io https://*.privy.io;
                 manifest-src 'self';
               `.replace(/\s+/g, ' ').trim(),
           },

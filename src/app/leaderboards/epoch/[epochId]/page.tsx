@@ -56,6 +56,7 @@ export default function EpochLeaderboardPage() {
   const [currentPage, setCurrentPage] = useState(0);
   const [requestStatus, setRequestStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [participationStatus, setParticipationStatus] = useState<'pending' | 'approved' | 'rejected' | null>(null);
+  const [requestError, setRequestError] = useState<string | null>(null);
   const limit = 50;
 
   useEffect(() => {
@@ -65,12 +66,24 @@ export default function EpochLeaderboardPage() {
   }, [epochId, currentPage]);
 
   useEffect(() => {
-    if (!data?.epoch || requestStatus !== 'idle') return;
+    if (!data?.epoch) return;
+    if (requestStatus !== 'idle') return;
     const campaignId = `${data.epoch.projectId}-${data.epoch.campaignIndex}`;
-    fetch(`/api/campaigns/${campaignId}/request-access`)
+    fetch(`/api/campaigns/${campaignId}/request-access`, { credentials: 'include' })
       .then((res) => res.json())
-      .then((body) => setParticipationStatus(body.status ?? null))
-      .catch(() => setParticipationStatus(null));
+      .then((body) => {
+        // Non sovrascrivere 'pending' con null (es. se GET non riconosce la sessione dopo il POST)
+        setParticipationStatus((prev) => {
+          const s = body.status ?? null;
+          if (s !== null) return s;
+          return prev ?? null;
+        });
+        if (body.status) setRequestError(null);
+      })
+      .catch(() => {
+        // Non resettare a null se avevamo già "pending" (richiesta appena inviata)
+        setParticipationStatus((prev) => prev === 'pending' ? 'pending' : null);
+      });
   }, [data?.epoch?.projectId, data?.epoch?.campaignIndex, requestStatus]);
 
   const fetchLeaderboard = async () => {
@@ -112,10 +125,10 @@ export default function EpochLeaderboardPage() {
 
   if (loading && !data) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-primary-50 to-background flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto mb-4"></div>
-          <p className="text-neutral-600">{t('common.loading')}</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-4"></div>
+          <p className="text-slate-600 dark:text-slate-400">{t('common.loading')}</p>
         </div>
       </div>
     );
@@ -123,7 +136,7 @@ export default function EpochLeaderboardPage() {
 
   if (error && !data) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-primary-50 to-background flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center max-w-md mx-auto p-8">
           <div className="text-red-500 mb-4">
             <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -131,17 +144,17 @@ export default function EpochLeaderboardPage() {
             </svg>
           </div>
           <h2 className="text-2xl font-bold gradient-text mb-4">{t('leaderboards.error')}</h2>
-          <p className="text-neutral-600 mb-6">{error}</p>
+          <p className="text-slate-600 dark:text-slate-300 mb-6">{error}</p>
           <div className="flex gap-3 justify-center">
             <button
               onClick={() => router.push('/leaderboards/epoch')}
-              className="bg-neutral-200 text-neutral-700 px-6 py-2 rounded-lg hover:bg-neutral-300 transition-colors"
+              className="bg-slate-200 dark:bg-indigo-900/30 text-slate-700 dark:text-slate-200 px-6 py-2 rounded-lg hover:bg-slate-300 dark:hover:bg-white/10 transition-colors"
             >
               {t('leaderboards.backToSelection')}
             </button>
             <button
               onClick={fetchLeaderboard}
-              className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition-colors"
+              className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-500 transition-colors"
             >
               {t('common.retry')}
             </button>
@@ -152,8 +165,8 @@ export default function EpochLeaderboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-primary-50 to-background">
-      <div className="container-custom py-12">
+    <div className="relative z-10">
+      <div className="container-custom py-8">
         <div className="flex justify-end mb-6">
           <BackToHome />
         </div>
@@ -163,29 +176,29 @@ export default function EpochLeaderboardPage() {
             {t('leaderboards.epochTitle')}
           </h1>
           {data?.epoch && (
-            <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 p-6 max-w-3xl mx-auto mb-8">
+            <div className="bg-white dark:bg-indigo-900/25 rounded-2xl border border-slate-200 dark:border-indigo-500/20 p-6 max-w-3xl mx-auto mb-8">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
                 <div>
-                  <p className="text-sm text-neutral-500 mb-1">{t('leaderboards.project')}</p>
-                  <p className="font-semibold text-neutral-900">{data.epoch.projectId}</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">{t('leaderboards.project')}</p>
+                  <p className="font-semibold text-slate-900 dark:text-white">{data.epoch.projectId}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-neutral-500 mb-1">{t('leaderboards.campaign')}</p>
-                  <p className="font-semibold text-neutral-900">#{data.epoch.campaignIndex}</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">{t('leaderboards.campaign')}</p>
+                  <p className="font-semibold text-slate-900 dark:text-white">#{data.epoch.campaignIndex}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-neutral-500 mb-1">{t('leaderboards.epoch')}</p>
-                  <p className="font-semibold text-neutral-900">#{data.epoch.epochIndex}</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">{t('leaderboards.epoch')}</p>
+                  <p className="font-semibold text-slate-900 dark:text-white">#{data.epoch.epochIndex}</p>
                 </div>
               </div>
-              <div className="mt-4 pt-4 border-t border-neutral-200 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="mt-4 pt-4 border-t border-slate-200 dark:border-indigo-500/20 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-neutral-500 mb-1">{t('leaderboards.startDate')}</p>
-                  <p className="font-semibold text-neutral-900">{formatDate(data.epoch.startDate)}</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">{t('leaderboards.startDate')}</p>
+                  <p className="font-semibold text-slate-900 dark:text-white">{formatDate(data.epoch.startDate)}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-neutral-500 mb-1">{t('leaderboards.endDate')}</p>
-                  <p className="font-semibold text-neutral-900">{formatDate(data.epoch.endDate)}</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">{t('leaderboards.endDate')}</p>
+                  <p className="font-semibold text-slate-900 dark:text-white">{formatDate(data.epoch.endDate)}</p>
                 </div>
               </div>
             </div>
@@ -194,8 +207,8 @@ export default function EpochLeaderboardPage() {
 
         {/* Request access to campaign */}
         {data?.epoch && (
-          <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 p-6 mb-8 max-w-4xl mx-auto">
-            <h2 className="text-xl font-bold text-neutral-900 mb-4">Partecipa alla campagna</h2>
+          <div className="bg-white dark:bg-indigo-900/25 rounded-2xl border border-slate-200 dark:border-indigo-500/20 p-6 mb-8 max-w-4xl mx-auto">
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Partecipa alla campagna</h2>
             {participationStatus === 'approved' ? (
               <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                 <p className="text-green-800 font-medium">Hai accesso a questa campagna. I tuoi tweet con le parole chiave verranno scoperti automaticamente.</p>
@@ -209,29 +222,48 @@ export default function EpochLeaderboardPage() {
                 <p className="text-red-800 font-medium">La tua richiesta è stata rifiutata. Contatta un amministratore per maggiori informazioni.</p>
               </div>
             ) : isEpochOpen(data.epoch.endDate) ? (
-              <button
-                onClick={async () => {
-                  setRequestStatus('loading');
-                  try {
-                    const campaignId = `${data.epoch!.projectId}-${data.epoch!.campaignIndex}`;
-                    const res = await fetch(`/api/campaigns/${campaignId}/request-access`, { method: 'POST' });
-                    const body = await res.json();
-                    if (res.ok) {
-                      setParticipationStatus(body.status ?? 'pending');
-                      setRequestStatus('success');
-                    } else {
-                      setRequestStatus('error');
+              <div className="space-y-2">
+                {requestError && (
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-red-800 text-sm">
+                    {requestError}
+                  </div>
+                )}
+                <button
+                  onClick={async () => {
+                    setRequestStatus('loading');
+                    setRequestError(null);
+                    try {
+                      const campaignId = `${data.epoch!.projectId}-${data.epoch!.campaignIndex}`;
+                      const res = await fetch(`/api/campaigns/${campaignId}/request-access`, {
+                        method: 'POST',
+                        credentials: 'include',
+                        headers: { 'Content-Type': 'application/json' },
+                      });
+                      const body = await res.json().catch(() => ({}));
+                      if (res.ok && (res.status === 200 || res.status === 201)) {
+                        setParticipationStatus(body.status ?? 'pending');
+                        setRequestError(null);
+                        setRequestStatus('idle');
+                      } else {
+                        setRequestStatus('idle');
+                        if (res.status === 401) {
+                          setRequestError('Accedi con il tuo account per richiedere partecipazione.');
+                        } else {
+                          setRequestError(body?.error ?? 'Errore durante l\'invio della richiesta. Riprova.');
+                        }
+                      }
+                    } catch {
+                      setRequestStatus('idle');
+                      setRequestError('Errore di connessione. Riprova.');
                     }
-                  } catch {
-                    setRequestStatus('error');
-                  }
-                }}
-                disabled={requestStatus === 'loading'}
-                className="inline-flex items-center gap-2 bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors disabled:opacity-50"
-              >
-                <UserPlus className="w-5 h-5" />
-                {requestStatus === 'loading' ? 'Invio...' : 'Richiedi accesso alla campagna'}
-              </button>
+                  }}
+                  disabled={requestStatus === 'loading'}
+                  className="inline-flex items-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-500 transition-colors disabled:opacity-50"
+                >
+                  <UserPlus className="w-5 h-5" />
+                  {requestStatus === 'loading' ? 'Invio...' : 'Richiedi accesso alla campagna'}
+                </button>
+              </div>
             ) : (
               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                 <p className="text-yellow-800 font-medium">
@@ -245,38 +277,38 @@ export default function EpochLeaderboardPage() {
         {data && (
           <>
             {/* Leaderboard Table */}
-            <div className="bg-white rounded-2xl shadow-lg border border-neutral-200 overflow-hidden mb-8">
+            <div className="bg-white dark:bg-indigo-900/25 rounded-2xl border border-slate-200 dark:border-indigo-500/20 overflow-hidden mb-8">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-primary-50">
+                  <thead className="bg-indigo-50 dark:bg-indigo-900/40">
                     <tr>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">{t('leaderboards.rank')}</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">{t('leaderboards.user')}</th>
-                      <th className="px-6 py-4 text-right text-sm font-semibold text-neutral-700">{t('leaderboards.points')}</th>
-                      <th className="px-6 py-4 text-right text-sm font-semibold text-neutral-700 hidden md:table-cell">{t('leaderboards.tweets')}</th>
-                      <th className="px-6 py-4 text-right text-sm font-semibold text-neutral-700 hidden lg:table-cell">{t('leaderboards.likes')}</th>
-                      <th className="px-6 py-4 text-right text-sm font-semibold text-neutral-700 hidden lg:table-cell">{t('leaderboards.replies')}</th>
-                      <th className="px-6 py-4 text-right text-sm font-semibold text-neutral-700 hidden xl:table-cell">{t('leaderboards.retweets')}</th>
-                      <th className="px-6 py-4 text-right text-sm font-semibold text-neutral-700 hidden xl:table-cell">{t('leaderboards.quotes')}</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700 dark:text-slate-200">{t('leaderboards.rank')}</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700 dark:text-slate-200">{t('leaderboards.user')}</th>
+                      <th className="px-6 py-4 text-right text-sm font-semibold text-slate-700 dark:text-slate-200">{t('leaderboards.points')}</th>
+                      <th className="px-6 py-4 text-right text-sm font-semibold text-slate-700 dark:text-slate-200 hidden md:table-cell">{t('leaderboards.tweets')}</th>
+                      <th className="px-6 py-4 text-right text-sm font-semibold text-slate-700 dark:text-slate-200 hidden lg:table-cell">{t('leaderboards.likes')}</th>
+                      <th className="px-6 py-4 text-right text-sm font-semibold text-slate-700 dark:text-slate-200 hidden lg:table-cell">{t('leaderboards.replies')}</th>
+                      <th className="px-6 py-4 text-right text-sm font-semibold text-slate-700 dark:text-slate-200 hidden xl:table-cell">{t('leaderboards.retweets')}</th>
+                      <th className="px-6 py-4 text-right text-sm font-semibold text-slate-700 dark:text-slate-200 hidden xl:table-cell">{t('leaderboards.quotes')}</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-neutral-200">
+                  <tbody className="divide-y divide-slate-200 dark:divide-indigo-500/20">
                     {data.leaderboard.length === 0 ? (
                       <tr>
-                        <td colSpan={8} className="px-6 py-12 text-center text-neutral-500">
+                        <td colSpan={8} className="px-6 py-12 text-center text-slate-500 dark:text-slate-400">
                           {t('leaderboards.noData')}
                         </td>
                       </tr>
                     ) : (
                       data.leaderboard.map((entry) => (
-                        <tr key={entry.userId} className="hover:bg-primary-50/50 transition-colors">
+                        <tr key={entry.userId} className="hover:bg-indigo-50/60 dark:hover:bg-white/5 transition-colors">
                           <td className="px-6 py-4">
                             <div className="flex items-center">
                               <span className={`text-lg font-bold ${
                                 entry.rank === 1 ? 'text-yellow-500' :
                                 entry.rank === 2 ? 'text-gray-400' :
                                 entry.rank === 3 ? 'text-amber-600' :
-                                'text-neutral-600'
+                                'text-slate-600 dark:text-slate-300'
                               }`}>
                                 #{entry.rank}
                               </span>
@@ -289,33 +321,33 @@ export default function EpochLeaderboardPage() {
                           </td>
                           <td className="px-6 py-4">
                             <div className="flex flex-col">
-                              <span className="font-semibold text-neutral-900">{getDisplayName(entry)}</span>
+                              <span className="font-semibold text-slate-900 dark:text-white">{getDisplayName(entry)}</span>
                               {entry.walletAddress && (
-                                <span className="text-xs text-neutral-500 font-mono">
+                                <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">
                                   {entry.walletAddress.slice(0, 6)}...{entry.walletAddress.slice(-4)}
                                 </span>
                               )}
                             </div>
                           </td>
                           <td className="px-6 py-4 text-right">
-                            <span className="font-bold text-primary-600 text-lg">
+                            <span className="font-bold text-indigo-600 dark:text-indigo-300 text-lg">
                               {formatNumber(entry.points)}
                             </span>
                           </td>
                           <td className="px-6 py-4 text-right hidden md:table-cell">
-                            <span className="text-neutral-600">{formatNumber(entry.tweetCount)}</span>
+                            <span className="text-slate-600 dark:text-slate-300">{formatNumber(entry.tweetCount)}</span>
                           </td>
                           <td className="px-6 py-4 text-right hidden lg:table-cell">
-                            <span className="text-neutral-600">{formatNumber(entry.totalLikes)}</span>
+                            <span className="text-slate-600 dark:text-slate-300">{formatNumber(entry.totalLikes)}</span>
                           </td>
                           <td className="px-6 py-4 text-right hidden lg:table-cell">
-                            <span className="text-neutral-600">{formatNumber(entry.totalReplies)}</span>
+                            <span className="text-slate-600 dark:text-slate-300">{formatNumber(entry.totalReplies)}</span>
                           </td>
                           <td className="px-6 py-4 text-right hidden xl:table-cell">
-                            <span className="text-neutral-600">{formatNumber(entry.totalRetweets)}</span>
+                            <span className="text-slate-600 dark:text-slate-300">{formatNumber(entry.totalRetweets)}</span>
                           </td>
                           <td className="px-6 py-4 text-right hidden xl:table-cell">
-                            <span className="text-neutral-600">{formatNumber(entry.totalQuotes)}</span>
+                            <span className="text-slate-600 dark:text-slate-300">{formatNumber(entry.totalQuotes)}</span>
                           </td>
                         </tr>
                       ))
@@ -327,22 +359,22 @@ export default function EpochLeaderboardPage() {
 
             {/* Pagination */}
             {data.pagination.total > 0 && (
-              <div className="flex items-center justify-between bg-white rounded-2xl shadow-lg border border-neutral-200 p-6">
-                <div className="text-sm text-neutral-600">
+              <div className="flex items-center justify-between bg-white dark:bg-indigo-900/25 rounded-2xl border border-slate-200 dark:border-indigo-500/20 p-6">
+                <div className="text-sm text-slate-600 dark:text-slate-300">
                   {t('leaderboards.showing')} {data.pagination.offset + 1} - {Math.min(data.pagination.offset + data.pagination.limit, data.pagination.total)} {t('leaderboards.of')} {formatNumber(data.pagination.total)}
                 </div>
                 <div className="flex gap-2">
                   <button
                     onClick={() => setCurrentPage(prev => Math.max(0, prev - 1))}
                     disabled={currentPage === 0}
-                    className="px-4 py-2 rounded-lg border border-neutral-200 bg-white text-neutral-700 hover:bg-primary-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="px-4 py-2 rounded-lg border border-slate-200 dark:border-indigo-500/30 bg-white dark:bg-indigo-900/30 text-slate-700 dark:text-slate-200 hover:bg-indigo-50 dark:hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     {t('common.previous')}
                   </button>
                   <button
                     onClick={() => setCurrentPage(prev => prev + 1)}
                     disabled={!data.pagination.hasMore}
-                    className="px-4 py-2 rounded-lg border border-neutral-200 bg-white text-neutral-700 hover:bg-primary-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="px-4 py-2 rounded-lg border border-slate-200 dark:border-indigo-500/30 bg-white dark:bg-indigo-900/30 text-slate-700 dark:text-slate-200 hover:bg-indigo-50 dark:hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     {t('common.next')}
                   </button>

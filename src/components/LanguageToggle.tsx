@@ -6,18 +6,20 @@ import { useLanguage } from '../contexts/LanguageContext';
 const LanguageToggle: React.FC = () => {
   const { language, setLanguage } = useLanguage();
 
-  const toggleLanguage = () => {
-    setLanguage(language === 'it' ? 'en' : 'it');
-  };
-
   return (
-    <button
-      onClick={toggleLanguage}
-      className="px-3 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-      title={language === 'it' ? 'Switch to English' : 'Passa all\'italiano'}
-    >
-      {language === 'it' ? 'ITA' : 'ENG'}
-    </button>
+    <label className="relative inline-flex items-center">
+      <select
+        value={language}
+        onChange={(e) => setLanguage(e.target.value as "it" | "en")}
+        className="h-10 w-[52px] appearance-none rounded-md border border-indigo-400/35 bg-indigo-950/50 pl-2 pr-5 text-[15px] font-semibold text-white outline-none focus:border-indigo-300"
+        title={language === 'it' ? 'Passa a Inglese' : 'Switch to Italian'}
+        aria-label="Selettore lingua"
+      >
+        <option value="it">🇮🇹</option>
+        <option value="en">🇬🇧</option>
+      </select>
+      <span className="pointer-events-none absolute right-2 top-[46%] -translate-y-1/2 text-white/90 leading-none">⌄</span>
+    </label>
   );
 };
 

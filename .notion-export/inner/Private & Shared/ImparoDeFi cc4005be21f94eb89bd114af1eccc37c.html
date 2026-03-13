@@ -1,0 +1,716 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>ImparoDeFi</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="cc4005be-21f9-4eb8-9bd1-14af1eccc37c" class="page sans"><header><img class="page-cover-image" src="ImparoDeFi/imparodefi-banner.jpg" style="object-position:center 50%"/><div class="page-header-icon page-header-icon-with-cover"><img class="icon" src="ImparoDeFi/imparodefi-logo-whitebg.jpg"/></div><h1 class="page-title" dir="auto">ImparoDeFi</h1><p class="page-description" dir="auto"></p></header><div class="page-body"><div style="display:contents" dir="auto"><p id="ac37abea-1c6a-4a0c-9260-794ed2dfeada" class="">Il Manuale Imparodefi ti guiderà passo per passo dall’acquisto delle tue prime criptovalute, allo spostamento di esse in un portafoglio digitale non-custodial come Metamask, all’utilizzo della finanza decentralizzata (”<em>DeFi</em>”), come navigare il mondo degli NFT, e molto altro ancora. </p></div><div style="display:contents" dir="ltr"><figure id="bb737dbc-20de-4f25-a649-7375e014c9cb" class="link-to-page"><a href="ImparoDeFi/Manuale%20A-Z%20ImparoDeFi%20bb737dbc20de4f25a6497375e014c9cb.html"><span class="icon">📗</span>Manuale A-Z ImparoDeFi</a></figure></div><div style="display:contents" dir="ltr"><figure id="10c8a35d-2f90-800e-a72a-d8042eceeb44"><a href="https://www.youtube.com/@imparodefi/videos" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">imparodefi (ITA)</div><div class="bookmark-description">Share your videos with friends, family, and the world</div></div><div class="bookmark-href"><img src="https://www.youtube.com/s/desktop/997e740c/img/logos/favicon_144x144.png" class="icon bookmark-icon"/>https://www.youtube.com/@imparodefi/videos</div></div><img src="https://yt3.googleusercontent.com/06-Ad5xN90onpFOhfq1P4aIe4cOEIq5mHN3bcjYo3pJbF_xkp5rQVUWFhioLtEIpu6tlYagf1g=s900-c-k-c0x00ffffff-no-rj" class="bookmark-image"/></a></figure></div><div style="display:contents" dir="ltr"><div id="e024ed00-1bbc-4fa8-bf0a-8ff9cf95fb2a" class="collection-content"><h4 class="collection-title">imparodefi gallery</h4><table class="collection-content"><thead><tr><th><span class="icon property-icon"><img src="https://www.notion.so/icons/font_gray.svg" style="width:14px;height:14px;display:block"/></span>Name</th></tr></thead><tbody><tr id="664f2e6a-1eb0-44e9-8275-28ccebc219dd"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20gallery/Il%20Mondo%20Web3%20Introduzione%20alle%20Blockchain,%20Cripto%20664f2e6a1eb044e9827528ccebc219dd.html"><img class="icon" src="ImparoDeFi/imparodefi%20gallery/Il%20Mondo%20Web3%20Introduzione%20alle%20Blockchain,%20Cripto/web3-logo.png"/>Il Mondo Web3: Introduzione alle Blockchain, Criptovalute, DeFi ed NFT</a></td></tr><tr id="4d172102-4600-4b66-836b-87df277f6139"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20gallery/Le%20Blockchain%204d17210246004b66836b87df277f6139.html"><img class="icon" src="ImparoDeFi/imparodefi%20gallery/Le%20Blockchain/Screenshot_2024-05-30_at_14.09.05.png"/>Le Blockchain</a></td></tr><tr id="f2378fe9-42a2-4d6a-997d-b3cd1135e016"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20gallery/Compra%20e%20Vendi%20Crypto%20f2378fe942a24d6a997db3cd1135e016.html"><img class="icon" src="ImparoDeFi/imparodefi%20gallery/Compra%20e%20Vendi%20Crypto/compra-vendi-crypto-logo.png"/>Compra e Vendi Crypto</a></td></tr><tr id="bfe757d4-8a96-41e1-91bd-7d6b575ec8dd"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20gallery/Portafogli(%E2%80%9DWallet%E2%80%9D)%20Non-Custodial%20bfe757d48a9641e191bd7d6b575ec8dd.html"><img class="icon" src="ImparoDeFi/imparodefi%20gallery/Portafogli(%E2%80%9DWallet%E2%80%9D)%20Non-Custodial/mmlogo.png"/>Portafogli(”Wallet”) Non-Custodial</a></td></tr><tr id="8e4a5e18-262d-44bc-b25b-9498d318835e"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20gallery/DeFi%208e4a5e18262d44bcb25b9498d318835e.html"><img class="icon" src="ImparoDeFi/imparodefi%20gallery/DeFi/uniswap-logo.png"/>DeFi</a></td></tr><tr id="0b96dfcb-6a68-42bf-a51c-e75ed2785b2a"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20gallery/Airdrop%200b96dfcb6a6842bfa51ce75ed2785b2a.html"><span class="icon">🪂</span>Airdrop</a></td></tr><tr id="cdf20c2c-1252-4379-a117-66f772b2bee5"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20gallery/Memecoin%20cdf20c2c12524379a11766f772b2bee5.html"><img class="icon" src="ImparoDeFi/imparodefi%20gallery/Memecoin/memecoins-logo.png"/>Memecoin</a></td></tr><tr id="1c37705e-0898-4210-8b3f-d7c54ca2fa29"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20gallery/NFT%201c37705e089842108b3fd7c54ca2fa29.html"><img class="icon" src="ImparoDeFi/imparodefi%20gallery/NFT/cryptopunk1.jpeg"/>NFT</a></td></tr><tr id="9cb2a614-683e-496e-aeae-659d28ea6510"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20gallery/Strumenti%20Utili%209cb2a614683e496eaeae659d28ea6510.html"><span class="icon">🌐</span>Strumenti Utili</a></td></tr><tr id="6643d381-3b1f-47dd-b77f-a81c7eebb902"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20gallery/Mercati%20di%20Predizione%206643d3813b1f47ddb77fa81c7eebb902.html"><span class="icon">🎲</span>Mercati di Predizione</a></td></tr><tr id="2b78a35d-2f90-8074-855b-fcac228221ea"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20gallery/Giochi%20Web3%202b78a35d2f908074855bfcac228221ea.html"><span class="icon">🎮</span>Giochi Web3</a></td></tr><tr id="f6bd3414-8834-4c9d-b107-94a996b5a3c5"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20gallery/ImparoDeFi%20Notizie%20f6bd341488344c9db10794a996b5a3c5.html"><span class="icon">🧠</span>ImparoDeFi Notizie</a></td></tr><tr id="2b78a35d-2f90-80da-84c2-c0d090ebd3b7"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20gallery/SocialFi%202b78a35d2f9080da84c2c0d090ebd3b7.html"><span class="icon">🌎</span>SocialFi</a></td></tr><tr id="a133ab3c-9ded-4d96-83e5-53990ac6ae8e"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20gallery/Metaversi%20a133ab3c9ded4d9683e553990ac6ae8e.html"><img class="icon" src="ImparoDeFi/imparodefi%20gallery/Metaversi/niftyisland-logo.jpeg"/>Metaversi</a></td></tr><tr id="14bf7518-b039-4bc7-88e0-715926cb21d3"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20gallery/Eventi%20Storici%2014bf7518b0394bc788e0715926cb21d3.html"><span class="icon">🏛️</span>Eventi Storici</a></td></tr><tr id="776e1f84-86ca-4fb8-beae-bc749c3cc769"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20gallery/Account%20da%20seguire%20776e1f8486ca4fb8beaebc749c3cc769.html"><span class="icon">🗣️</span>Account da seguire</a></td></tr><tr id="51b250aa-abab-4bcf-99f1-7959211c46f3"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20gallery/Lavora%20nel%20Mondo%20Web3%2051b250aaabab4bcf99f17959211c46f3.html"><span class="icon">💼</span>Lavora nel Mondo Web3</a></td></tr><tr id="4b1b6431-2751-4076-ac0b-614d25ddc374"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20gallery/Corsi%20di%20Programmazione%20Web3%204b1b643127514076ac0b614d25ddc374.html"><span class="icon">💻</span>Corsi di Programmazione Web3 </a></td></tr></tbody></table><br/><br/></div></div><div style="display:contents" dir="auto"><p id="cf517aa0-7c7e-4857-8922-06b509710cff" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="d0272d36-7801-4c15-9262-bdea87a4021f" class=""><strong>DATABASE IMPARODEFI (TUTTI I MIGLIORI PROGETTI WEB3)</strong></h1></div><div style="display:contents" dir="ltr"><div id="52c63abe-1b61-44da-80c3-87cd84a37d9a" class="collection-content"><h4 class="collection-title">imparodefi db ITA</h4><table class="collection-content"><thead><tr><th><span class="icon property-icon"><img src="https://www.notion.so/icons/font_gray.svg" style="width:14px;height:14px;display:block"/></span>Name</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>Tags</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Sito Web</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Profilo Twitter/X</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Token/NFT</th></tr></thead><tbody><tr id="b96879b2-c10a-4625-8ec9-8723b3d5bd73"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Coinbase%20b96879b2c10a46258ec98723b3d5bd73.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Coinbase/Screenshot_2024-03-21_at_16.29.41.png"/>Coinbase</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Carta Cripto</span><span class="selected-value select-value-color-red">Exchange Centralizzato (CEX)</span></td><td class="cell-zl^h"><a href="https://www.coinbase.com/" class="url-value">https://www.coinbase.com/</a></td><td class="cell-\}jJ"><a href="https://twitter.com/coinbase" class="url-value">https://twitter.com/coinbase</a></td><td class="cell-TaD\"></td></tr><tr id="440e1b57-9447-4fd6-a4a7-c75868658022"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Kraken%20440e1b5794474fd6a4a7c75868658022.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Kraken/Screenshot_2024-03-21_at_16.30.43.png"/>Kraken</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-red">Exchange Centralizzato (CEX)</span></td><td class="cell-zl^h"><a href="https://www.kraken.com/" class="url-value">https://www.kraken.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/krakenfx" class="url-value">https://x.com/krakenfx</a></td><td class="cell-TaD\"></td></tr><tr id="4164c281-a4ae-46b4-a662-7bae18013372"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Binance%204164c281a4ae46b4a6627bae18013372.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Binance/Screenshot_2024-03-21_at_16.31.54.png"/>Binance</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Carta Cripto</span><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-red">Exchange Centralizzato (CEX)</span></td><td class="cell-zl^h"><a href="https://www.binance.com" class="url-value">https://www.binance.com</a></td><td class="cell-\}jJ"><a href="https://x.com/binance" class="url-value">https://x.com/binance</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/bnb" class="url-value">https://www.coingecko.com/en/coins/bnb</a></td></tr><tr id="d9724213-a5c9-46cd-868d-e35344b4ef09"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Holyheld%20d9724213a5c946cd868de35344b4ef09.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Holyheld/Screenshot_2024-03-21_at_16.41.34.png"/>Holyheld</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Banca Digitale Web3</span><span class="selected-value select-value-color-green">Carta Cripto</span></td><td class="cell-zl^h"><a href="https://holyheld.com/" class="url-value">https://holyheld.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/holyheld" class="url-value">https://x.com/holyheld</a></td><td class="cell-TaD\"></td></tr><tr id="0ce82f47-9137-4f1a-9722-1c0c2772b04d"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Transak%200ce82f4791374f1a97221c0c2772b04d.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Transak/transak-logo.png"/>Transak</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-red">On-ramp</span></td><td class="cell-zl^h"><a href="https://transak.com/" class="url-value">https://transak.com/</a></td><td class="cell-\}jJ"><a href="https://twitter.com/Transak" class="url-value">https://twitter.com/Transak</a></td><td class="cell-TaD\"></td></tr><tr id="7be54d7d-39fe-4946-9a56-eef9ee8f34b5"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Crypto%20com%207be54d7d39fe49469a56eef9ee8f34b5.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Crypto%20com/Screenshot_2024-03-21_at_16.32.50.png"/>Crypto.com</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Carta Cripto</span><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-red">Exchange Centralizzato (CEX)</span></td><td class="cell-zl^h"><a href="https://crypto.com/" class="url-value">https://crypto.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/cryptocom" class="url-value">https://x.com/cryptocom</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/cronos" class="url-value">https://www.coingecko.com/en/coins/cronos</a></td></tr><tr id="620c9ee8-b60b-4c26-9ffa-4fbfbddafb62"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Wirex%20620c9ee8b60b4c269ffa4fbfbddafb62.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Wirex/wirex-logo.jpg"/>Wirex</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Carta Cripto</span><span class="selected-value select-value-color-red">On-ramp</span></td><td class="cell-zl^h"><a href="https://wirexapp.com/" class="url-value">https://wirexapp.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/wirexapp" class="url-value">https://x.com/wirexapp</a></td><td class="cell-TaD\"></td></tr><tr id="f06b1afd-3692-4225-9739-9649bb26f632"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Young%20Platform%20f06b1afd3692422597399649bb26f632.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Young%20Platform/youngplatform-logo.jpg"/>Young Platform</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-red">Exchange Centralizzato (CEX)</span></td><td class="cell-zl^h"><a href="https://exchange.youngplatform.com/" class="url-value">https://exchange.youngplatform.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/youngplatform" class="url-value">https://x.com/youngplatform</a></td><td class="cell-TaD\"></td></tr><tr id="f130d92d-8f03-443d-a25f-3a38768c857f"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Rabby%20f130d92d8f03443da25f3a38768c857f.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Rabby/rabbylogo.jpeg"/>Rabby</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Portafoglio &quot;Wallet&quot; Non-custodial (Extension)</span></td><td class="cell-zl^h"><a href="https://rabby.io/" class="url-value">https://rabby.io/</a></td><td class="cell-\}jJ"><a href="https://x.com/Rabby_io" class="url-value">https://x.com/Rabby_io</a></td><td class="cell-TaD\"></td></tr><tr id="c985509d-f18c-4603-a97f-14cc8dc48b7c"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Metamask%20c985509df18c4603a97f14cc8dc48b7c.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Metamask/mmlogo.png"/>Metamask</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-yellow">Portafoglio &quot;Wallet&quot; Non-custodial (Extension)</span></td><td class="cell-zl^h"><a href="https://metamask.io/" class="url-value">https://metamask.io/</a></td><td class="cell-\}jJ"><a href="https://twitter.com/MetaMask" class="url-value">https://twitter.com/MetaMask</a></td><td class="cell-TaD\"></td></tr><tr id="aa9c0846-9800-4848-8055-77f2b094a222"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Phantom%20aa9c084698004848805577f2b094a222.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Phantom/phantomlogo1.png"/>Phantom</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-yellow">Portafoglio &quot;Wallet&quot; Non-custodial (Extension)</span></td><td class="cell-zl^h"><a href="https://phantom.app/" class="url-value">https://phantom.app/</a></td><td class="cell-\}jJ"><a href="https://x.com/phantom" class="url-value">https://x.com/phantom</a></td><td class="cell-TaD\"></td></tr><tr id="20828b2a-e2aa-4ded-a62f-289fd33d0ce9"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Rainbow%2020828b2ae2aa4deda62f289fd33d0ce9.html"><span class="icon">🌈</span>Rainbow</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Portafoglio &quot;Wallet&quot; Non-custodial (Extension)</span></td><td class="cell-zl^h"><a href="https://rainbow.me/" class="url-value">https://rainbow.me/</a></td><td class="cell-\}jJ"><a href="https://x.com/rainbowdotme" class="url-value">https://x.com/rainbowdotme</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/rainbow-3" class="url-value">https://www.coingecko.com/en/coins/rainbow-3</a></td></tr><tr id="8ebdb207-8101-4e03-9047-685b2f3dcaf5"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Bitcoin%208ebdb20781014e039047685b2f3dcaf5.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Bitcoin/Screenshot_2024-03-21_at_16.33.33.png"/>Bitcoin</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-blue">Criptovaluta</span></td><td class="cell-zl^h"><a href="https://bitcoin.org/bitcoin.pdf" class="url-value">https://bitcoin.org/bitcoin.pdf</a></td><td class="cell-\}jJ"><a href="https://x.com/bitcoin" class="url-value">https://x.com/bitcoin</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/bitcoin" class="url-value">https://www.coingecko.com/en/coins/bitcoin</a></td></tr><tr id="9d7542b4-423e-410a-a7c9-7779db5a0b3e"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Ethereum%209d7542b4423e410aa7c97779db5a0b3e.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Ethereum/ethlogo1.png"/>Ethereum</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-blue">Criptovaluta</span></td><td class="cell-zl^h"><a href="https://ethereum.org/it/" class="url-value">https://ethereum.org/it/</a></td><td class="cell-\}jJ"><a href="https://x.com/ethereum" class="url-value">https://x.com/ethereum</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/ethereum" class="url-value">https://www.coingecko.com/en/coins/ethereum</a></td></tr><tr id="7c668379-ddba-4779-8048-380a2acf62c7"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Solana%207c668379ddba47798048380a2acf62c7.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Solana/Screenshot_2024-03-21_at_16.34.48.png"/>Solana</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-blue">Criptovaluta</span></td><td class="cell-zl^h"><a href="https://solana.com/" class="url-value">https://solana.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/solana" class="url-value">https://x.com/solana</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/solana" class="url-value">https://www.coingecko.com/en/coins/solana</a></td></tr><tr id="6d4a669c-2a1f-41aa-9a68-92687b9cb6af"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Arbitrum%206d4a669c2a1f41aa9a6892687b9cb6af.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Arbitrum/Screenshot_2024-03-21_at_16.44.55.png"/>Arbitrum</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-gray">L2</span></td><td class="cell-zl^h"><a href="https://arbitrum.foundation/" class="url-value">https://arbitrum.foundation/</a></td><td class="cell-\}jJ"><a href="https://x.com/arbitrum" class="url-value">https://x.com/arbitrum</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/arbitrum" class="url-value">https://www.coingecko.com/en/coins/arbitrum</a></td></tr><tr id="a8cec6e4-d503-45d2-9484-2b2cfb07f0ad"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Optimism%20a8cec6e4d50345d294842b2cfb07f0ad.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Optimism/oplogo1.png"/>Optimism</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-gray">L2</span></td><td class="cell-zl^h"><a href="https://www.optimism.io/" class="url-value">https://www.optimism.io/</a></td><td class="cell-\}jJ"><a href="https://twitter.com/Optimism" class="url-value">https://twitter.com/Optimism</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/optimism" class="url-value">https://www.coingecko.com/en/coins/optimism</a></td></tr><tr id="5a55e520-269a-45b7-9883-9447dc3a4de0"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Base%205a55e520269a45b798839447dc3a4de0.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Base/Screenshot_2024-03-21_at_16.40.58.png"/>Base</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-gray">L2</span></td><td class="cell-zl^h"><a href="https://www.base.org/" class="url-value">https://www.base.org/</a></td><td class="cell-\}jJ"><a href="https://x.com/base" class="url-value">https://x.com/base</a></td><td class="cell-TaD\"></td></tr><tr id="6f569e5a-a86b-42f6-917f-8f7a0cc1fc05"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Polygon%206f569e5aa86b42f6917f8f7a0cc1fc05.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Polygon/polygon-logo.jpg"/>Polygon</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-gray">L2</span></td><td class="cell-zl^h"><a href="https://polygon.technology/" class="url-value">https://polygon.technology/</a></td><td class="cell-\}jJ"><a href="https://x.com/0xPolygon" class="url-value">https://x.com/0xPolygon</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/polygon" class="url-value">https://www.coingecko.com/en/coins/polygon</a></td></tr><tr id="6521552c-a644-4471-b473-2c5c8a687ea8"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/LayerZero%206521552ca6444471b4732c5c8a687ea8.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/LayerZero/layerzero-logo.jpg"/>LayerZero</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-orange">Interoperabilità (Cross-Chain)</span></td><td class="cell-zl^h"><a href="https://layerzero.network/" class="url-value">https://layerzero.network/</a></td><td class="cell-\}jJ"><a href="https://x.com/LayerZero_Labs" class="url-value">https://x.com/LayerZero_Labs</a></td><td class="cell-TaD\"></td></tr><tr id="be2069bb-e554-4425-8aea-d153b25628cc"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Zora%20be2069bbe55444258aead153b25628cc.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Zora/zora-logo.jpg"/>Zora</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-gray">L2</span><span class="selected-value select-value-color-yellow">Marketplace NFT</span></td><td class="cell-zl^h"><a href="https://zora.co/" class="url-value">https://zora.co/</a></td><td class="cell-\}jJ"><a href="https://x.com/ourZORA" class="url-value">https://x.com/ourZORA</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/zora" class="url-value">https://www.coingecko.com/en/coins/zora</a></td></tr><tr id="2ff435dc-30aa-4fc8-bfe4-364e9999d1f9"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/zkSync%202ff435dc30aa4fc8bfe4364e9999d1f9.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/zkSync/Screenshot_2024-03-21_at_16.43.08.png"/>zkSync</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-gray">L2</span></td><td class="cell-zl^h"><a href="https://zksync.io/" class="url-value">https://zksync.io/</a></td><td class="cell-\}jJ"><a href="https://x.com/zksync" class="url-value">https://x.com/zksync</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/zksync" class="url-value">https://www.coingecko.com/en/coins/zksync</a></td></tr><tr id="5d03f122-e9b2-475a-b8aa-32f98d79f4b2"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Linea%205d03f122e9b2475ab8aa32f98d79f4b2.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Linea/Screenshot_2024-03-21_at_17.02.19.png"/>Linea</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-gray">L2</span></td><td class="cell-zl^h"><a href="https://linea.build/" class="url-value">https://linea.build/</a></td><td class="cell-\}jJ"><a href="https://x.com/LineaBuild" class="url-value">https://x.com/LineaBuild</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/linea" class="url-value">https://www.coingecko.com/en/coins/linea</a></td></tr><tr id="e9a048d0-7bb8-415e-aed7-061a7a21d6c6"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Scroll%20e9a048d07bb8415eaed7061a7a21d6c6.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Scroll/scroll-logo.jpg"/>Scroll</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-gray">L2</span></td><td class="cell-zl^h"><a href="https://scroll.io/" class="url-value">https://scroll.io/</a></td><td class="cell-\}jJ"><a href="https://x.com/Scroll_ZKP" class="url-value">https://x.com/Scroll_ZKP</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/scroll" class="url-value">https://www.coingecko.com/en/coins/scroll</a></td></tr><tr id="1b97b298-74ed-45ea-a807-e90b69c49344"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Hyperlane%201b97b29874ed45eaa807e90b69c49344.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Hyperlane/hyperlane-logo.jpg"/>Hyperlane</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-orange">Interoperabilità (Cross-Chain)</span></td><td class="cell-zl^h"><a href="https://www.hyperlane.xyz/" class="url-value">https://www.hyperlane.xyz/</a></td><td class="cell-\}jJ"><a href="https://x.com/hyperlane" class="url-value">https://x.com/hyperlane</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/hyperlane" class="url-value">https://www.coingecko.com/en/coins/hyperlane</a></td></tr><tr id="5106c58a-5c33-4c97-82c1-f29eae3cb116"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Berachain%205106c58a5c334c9782c1f29eae3cb116.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Berachain/berachainlogo1.png"/>Berachain</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-gray">L2</span></td><td class="cell-zl^h"><a href="https://www.berachain.com/" class="url-value">https://www.berachain.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/berachain" class="url-value">https://x.com/berachain</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/berachain" class="url-value">https://www.coingecko.com/en/coins/berachain</a></td></tr><tr id="5ee97911-019a-4ecd-980e-af7cfbd3b9f3"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Polygon%20zkEVM%205ee97911019a4ecd980eaf7cfbd3b9f3.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Polygon%20zkEVM/Screenshot_2024-03-21_at_16.43.55.png"/>Polygon zkEVM</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-gray">L2</span></td><td class="cell-zl^h"><a href="https://polygon.technology/" class="url-value">https://polygon.technology/</a></td><td class="cell-\}jJ"><a href="https://x.com/0xpolygondefi" class="url-value">https://x.com/0xpolygondefi</a></td><td class="cell-TaD\"></td></tr><tr id="8b98e134-2fe1-4bdf-8615-25e3b02ff755"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Blast%208b98e1342fe14bdf861525e3b02ff755.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Blast/blast-logo.jpg"/>Blast</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-gray">L2</span></td><td class="cell-zl^h"><a href="blast.io" class="url-value">blast.io</a></td><td class="cell-\}jJ"><a href="https://x.com/Blast_L2" class="url-value">https://x.com/Blast_L2</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/blast" class="url-value">https://www.coingecko.com/en/coins/blast</a></td></tr><tr id="f9db98d5-7c53-42fb-bb03-e1c4a380c0cc"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Layer3%20f9db98d57c5342fbbb03e1c4a380c0cc.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Layer3/layer3-logo.jpg"/>Layer3</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-purple">Bridge</span><span class="selected-value select-value-color-orange">Interoperabilità (Cross-Chain)</span><span class="selected-value select-value-color-purple">L3</span></td><td class="cell-zl^h"><a href="https://layer3.xyz/" class="url-value">https://layer3.xyz/</a></td><td class="cell-\}jJ"><a href="https://x.com/layer3xyz" class="url-value">https://x.com/layer3xyz</a></td><td class="cell-TaD\"></td></tr><tr id="a269cb3e-1abb-495c-a275-b989d3737846"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Chainlink%20a269cb3e1abb495ca275b989d3737846.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Chainlink/chainlink-logo.jpg"/>Chainlink</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-orange">Interoperabilità (Cross-Chain)</span></td><td class="cell-zl^h"><a href="https://chain.link/" class="url-value">https://chain.link/</a></td><td class="cell-\}jJ"><a href="https://x.com/chainlink" class="url-value">https://x.com/chainlink</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/chainlink" class="url-value">https://www.coingecko.com/en/coins/chainlink</a></td></tr><tr id="c191746b-544a-4273-a7b6-ab5d223c9fa8"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Relay%20Bridge%20c191746b544a4273a7b6ab5d223c9fa8.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Relay%20Bridge/relay_logo.jpg"/>Relay Bridge</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-purple">Bridge</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-orange">Interoperabilità (Cross-Chain)</span></td><td class="cell-zl^h"><a href="https://relay.link/" class="url-value">https://relay.link/</a></td><td class="cell-\}jJ"><a href="https://x.com/RelayProtocol" class="url-value">https://x.com/RelayProtocol</a></td><td class="cell-TaD\"></td></tr><tr id="ee077537-7556-40a7-adcf-2fdbfdcec9b6"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Jumper%20ee077537755640a7adcf2fdbfdcec9b6.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Jumper/Screenshot_2024-03-21_at_16.38.08.png"/>Jumper</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-purple">Bridge</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-pink">Exchange Decentralizzato (DEX)</span></td><td class="cell-zl^h"><a href="https://jumper.exchange/" class="url-value">https://jumper.exchange/</a></td><td class="cell-\}jJ"><a href="https://x.com/JumperExchange" class="url-value">https://x.com/JumperExchange</a></td><td class="cell-TaD\"></td></tr><tr id="a6de97a7-0f21-4ad9-9fff-64ebc2b6cbaf"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/deBridge%20a6de97a70f214ad99fff64ebc2b6cbaf.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/deBridge/debridge-logo.png"/>deBridge</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">Bridge</span><span class="selected-value select-value-color-orange">DeFi</span></td><td class="cell-zl^h"><a href="https://debridge.finance/" class="url-value">https://debridge.finance/</a></td><td class="cell-\}jJ"><a href="https://x.com/deBridgeFinance" class="url-value">https://x.com/deBridgeFinance</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/debridge" class="url-value">https://www.coingecko.com/en/coins/debridge</a></td></tr><tr id="c3cfaec6-1c1c-4dfd-87d9-2c20d3916042"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Stargate%20c3cfaec61c1c4dfd87d92c20d3916042.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Stargate/Screenshot_2024-03-21_at_16.39.34.png"/>Stargate</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">Bridge</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-pink">Exchange Decentralizzato (DEX)</span></td><td class="cell-zl^h"><a href="https://stargate.finance/" class="url-value">https://stargate.finance/</a></td><td class="cell-\}jJ"><a href="https://x.com/StargateFinance" class="url-value">https://x.com/StargateFinance</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/stargate-finance" class="url-value">https://www.coingecko.com/en/coins/stargate-finance</a></td></tr><tr id="a076bed3-645a-4344-b3dc-2df3f14d5060"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Orbiter%20a076bed3645a4344b3dc2df3f14d5060.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Orbiter/Screenshot_2024-03-21_at_16.37.23.png"/>Orbiter</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">Bridge</span><span class="selected-value select-value-color-orange">DeFi</span></td><td class="cell-zl^h"><a href="https://www.orbiter.finance/" class="url-value">https://www.orbiter.finance/</a></td><td class="cell-\}jJ"><a href="https://x.com/Orbiter_Finance" class="url-value">https://x.com/Orbiter_Finance</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/orbiter-finance" class="url-value">https://www.coingecko.com/en/coins/orbiter-finance</a></td></tr><tr id="f4c76acd-973c-4a28-bfe5-abbc2f087da8"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Uniswap%20f4c76acd973c4a28bfe5abbc2f087da8.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Uniswap/uniswap-logo.png"/>Uniswap</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-pink">Exchange Decentralizzato (DEX)</span></td><td class="cell-zl^h"><a href="https://app.uniswap.org/swap" class="url-value">https://app.uniswap.org/swap</a></td><td class="cell-\}jJ"><a href="https://x.com/Uniswap" class="url-value">https://x.com/Uniswap</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/uniswap" class="url-value">https://www.coingecko.com/en/coins/uniswap</a></td></tr><tr id="5ea1591b-c5a2-4b7d-9b3b-1b4220b9bb28"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Curve%205ea1591bc5a24b7d9b3b1b4220b9bb28.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Curve/crvlogo.png"/>Curve</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-pink">Exchange Decentralizzato (DEX)</span><span class="selected-value select-value-color-brown">Stablecoin</span></td><td class="cell-zl^h"><a href="https://curve.fi/" class="url-value">https://curve.fi/</a></td><td class="cell-\}jJ"><a href="https://x.com/CurveFinance" class="url-value">https://x.com/CurveFinance</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/curve-dao-token" class="url-value">https://www.coingecko.com/en/coins/curve-dao-token</a></td></tr><tr id="ca9a79c3-f1b5-4d76-b08b-c7ef0544ee1e"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Balancer%20ca9a79c3f1b54d76b08bc7ef0544ee1e.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Balancer/balancer-logo.png"/>Balancer</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-pink">Exchange Decentralizzato (DEX)</span></td><td class="cell-zl^h"><a href="https://balancer.fi/" class="url-value">https://balancer.fi/</a></td><td class="cell-\}jJ"><a href="https://x.com/Balancer" class="url-value">https://x.com/Balancer</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/balancer" class="url-value">https://www.coingecko.com/en/coins/balancer</a></td></tr><tr id="f355fc81-059e-4653-a11c-aef7c96ee22c"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Hyperliquid%20f355fc81059e4653a11caef7c96ee22c.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Hyperliquid/hyperliquidlogo.png"/>Hyperliquid</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-red">DEX Trading (Perpetuals)</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-pink">Exchange Decentralizzato (DEX)</span></td><td class="cell-zl^h"><a href="https://app.hyperliquid.xyz/join/HL4567" class="url-value">https://app.hyperliquid.xyz/join/HL4567</a></td><td class="cell-\}jJ"><a href="https://twitter.com/HyperliquidX" class="url-value">https://twitter.com/HyperliquidX</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/purr-2" class="url-value">https://www.coingecko.com/en/coins/purr-2</a></td></tr><tr id="d5b21be1-93d1-4a4d-a997-dc55b6f7e805"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Jupiter%20d5b21be193d14a4da997dc55b6f7e805.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Jupiter/jupiter-logo.jpg"/>Jupiter</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-pink">Exchange Decentralizzato (DEX)</span></td><td class="cell-zl^h"><a href="jup.ag" class="url-value">jup.ag</a></td><td class="cell-\}jJ"><a href="https://x.com/JupiterExchange" class="url-value">https://x.com/JupiterExchange</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/jupiter" class="url-value">https://www.coingecko.com/en/coins/jupiter</a></td></tr><tr id="12abb080-db06-4a61-8ee3-8bccbfce00ec"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Raydium%2012abb080db064a618ee38bccbfce00ec.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Raydium/raydium-logo.jpg"/>Raydium</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-pink">Exchange Decentralizzato (DEX)</span></td><td class="cell-zl^h"><a href="raydium.io" class="url-value">raydium.io</a></td><td class="cell-\}jJ"><a href="https://x.com/RaydiumProtocol" class="url-value">https://x.com/RaydiumProtocol</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/raydium" class="url-value">https://www.coingecko.com/en/coins/raydium</a></td></tr><tr id="2bd25282-0208-460b-8b77-82575844a575"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Camelot%202bd252820208460b8b7782575844a575.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Camelot/camelot-logo.jpg"/>Camelot</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-pink">Exchange Decentralizzato (DEX)</span></td><td class="cell-zl^h"><a href="https://app.camelot.exchange/" class="url-value">https://app.camelot.exchange/</a></td><td class="cell-\}jJ"><a href="https://x.com/CamelotDEX" class="url-value">https://x.com/CamelotDEX</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/camelot-token" class="url-value">https://www.coingecko.com/en/coins/camelot-token</a></td></tr><tr id="2f48a35d-2f90-80c8-b446-f31ee0034663"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Tokenomist%202f48a35d2f9080c8b446f31ee0034663.html">Tokenomist</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span><span class="selected-value select-value-color-yellow">Unlocks Tracker</span></td><td class="cell-zl^h"><a href="https://tokenomist.ai/" class="url-value">https://tokenomist.ai/</a></td><td class="cell-\}jJ"><a href="https://x.com/Tokenomist_ai" class="url-value">https://x.com/Tokenomist_ai</a></td><td class="cell-TaD\"></td></tr><tr id="2858a35d-2f90-80f2-9ff7-e537878f5870"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Codec%202858a35d2f9080f29ff7e537878f5870.html">Codec</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-orange">Robotica</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"><a href="https://x.com/codecopenflow" class="url-value">https://x.com/codecopenflow</a></td><td class="cell-TaD\"><a href="https://dexscreener.com/solana/hh4d2z7skbtos2dawzs1xcwsrwybk14knueu1khmzcev" class="url-value">https://dexscreener.com/solana/hh4d2z7skbtos2dawzs1xcwsrwybk14knueu1khmzcev</a></td></tr><tr id="d630fbfb-6000-40b8-9cd2-9639ea0cd8e1"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/The%20Honey%20Jar%20d630fbfb600040b89cd29639ea0cd8e1.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/The%20Honey%20Jar/SzbuWvjo_400x400.jpg"/>The Honey Jar</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span><span class="selected-value select-value-color-pink">Community</span><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://hub.xyz/honeyjar" class="url-value">https://hub.xyz/honeyjar</a></td><td class="cell-\}jJ"><a href="https://x.com/0xhoneyjar" class="url-value">https://x.com/0xhoneyjar</a></td><td class="cell-TaD\"><a href="https://opensea.io/collection/honey-comb-2" class="url-value">https://opensea.io/collection/honey-comb-2</a></td></tr><tr id="bf0cf4db-b6f7-4cc4-9840-2ffecabd4ee1"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Cow%20Swap%20bf0cf4dbb6f74cc498402ffecabd4ee1.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Cow%20Swap/cowswap-logo.png"/>Cow Swap</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-pink">Exchange Decentralizzato (DEX)</span><span class="selected-value select-value-color-purple">Protezione MEV</span></td><td class="cell-zl^h"><a href="https://cow.fi/" class="url-value">https://cow.fi/</a></td><td class="cell-\}jJ"><a href="https://x.com/CoWSwap" class="url-value">https://x.com/CoWSwap</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/cow-protocol" class="url-value">https://www.coingecko.com/en/coins/cow-protocol</a></td></tr><tr id="ea6a9d53-6199-41af-8046-56cac3b0c639"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/PropellerSwap%20ea6a9d53619941af804656cac3b0c639.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/PropellerSwap/propeller-logo.jpg"/>PropellerSwap</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-pink">Exchange Decentralizzato (DEX)</span><span class="selected-value select-value-color-purple">Protezione MEV</span></td><td class="cell-zl^h"><a href="https://www.propellerheads.xyz/" class="url-value">https://www.propellerheads.xyz/</a></td><td class="cell-\}jJ"><a href="https://x.com/propellerswap" class="url-value">https://x.com/propellerswap</a></td><td class="cell-TaD\"></td></tr><tr id="50d70457-27ed-45f3-99d4-e7768351365c"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Liquity%2050d7045727ed45f399d4e7768351365c.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Liquity/liquity-logo.jpg"/>Liquity</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-blue">Prestiti Decentralizzati</span></td><td class="cell-zl^h"><a href="liquity.org" class="url-value">liquity.org</a></td><td class="cell-\}jJ"><a href="https://x.com/LiquityProtocol" class="url-value">https://x.com/LiquityProtocol</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/liquity" class="url-value">https://www.coingecko.com/en/coins/liquity</a></td></tr><tr id="e2c485cf-8a17-4525-b2d5-03ae63b13929"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/AAVE%20e2c485cf8a174525b2d503ae63b13929.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/AAVE/Screenshot_2024-03-21_at_16.56.05.png"/>AAVE</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-blue">Prestiti Decentralizzati</span></td><td class="cell-zl^h"><a href="https://app.aave.com/" class="url-value">https://app.aave.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/aave" class="url-value">https://x.com/aave</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/aave" class="url-value">https://www.coingecko.com/en/coins/aave</a></td></tr><tr id="f36e50ac-e746-45d4-a4f4-c27624726c7a"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Compound%20f36e50ace74645d4a4f4c27624726c7a.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Compound/COMP.webp"/>Compound</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-blue">Prestiti Decentralizzati</span></td><td class="cell-zl^h"><a href="https://compound.finance/" class="url-value">https://compound.finance/</a></td><td class="cell-\}jJ"><a href="https://x.com/compoundfinance" class="url-value">https://x.com/compoundfinance</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/compound" class="url-value">https://www.coingecko.com/en/coins/compound</a></td></tr><tr id="3c749985-da08-4874-a7f7-20a7ef644143"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Moonwell%203c749985da084874a7f720a7ef644143.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Moonwell/moonwell-logo.png"/>Moonwell</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-blue">Prestiti Decentralizzati</span></td><td class="cell-zl^h"><a href="https://moonwell.fi/" class="url-value">https://moonwell.fi/</a></td><td class="cell-\}jJ"><a href="https://x.com/MoonwellDeFi" class="url-value">https://x.com/MoonwellDeFi</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/moonwell" class="url-value">https://www.coingecko.com/en/coins/moonwell</a></td></tr><tr id="24f95f85-5ca9-4ee5-abe7-d555f4a03e72"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Tapioca%2024f95f855ca94ee5abe7d555f4a03e72.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Tapioca/tapiocalogo.png"/>Tapioca</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-orange">Interoperabilità (Cross-Chain)</span><span class="selected-value select-value-color-blue">Prestiti Decentralizzati</span><span class="selected-value select-value-color-brown">Stablecoin</span></td><td class="cell-zl^h"><a href="https://genesis.permissionless.one/" class="url-value">https://genesis.permissionless.one/</a></td><td class="cell-\}jJ"><a href="https://x.com/tapioca_dao" class="url-value">https://x.com/tapioca_dao</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/tapioca-dao-token" class="url-value">https://www.coingecko.com/en/coins/tapioca-dao-token</a></td></tr><tr id="10b8a35d-2f90-80b4-a019-f14bc9d3ef60"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Mirror%2010b8a35d2f9080b4a019f14bc9d3ef60.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Mirror/mirrorlogo.png"/>Mirror</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-pink">Community</span><span class="selected-value select-value-color-yellow">Piattaforma per Creatori</span></td><td class="cell-zl^h"><a href="https://mirror.xyz/" class="url-value">https://mirror.xyz/</a></td><td class="cell-\}jJ"><a href="https://x.com/viamirror" class="url-value">https://x.com/viamirror</a></td><td class="cell-TaD\"></td></tr><tr id="f7fbe9bd-3546-483a-90de-a11d37670139"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Marginfi%20f7fbe9bd3546483a90dea11d37670139.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Marginfi/marginfi-logo.jpg"/>Marginfi</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-pink">Exchange Decentralizzato (DEX)</span><span class="selected-value select-value-color-blue">Prestiti Decentralizzati</span></td><td class="cell-zl^h"><a href="https://www.marginfi.com/" class="url-value">https://www.marginfi.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/marginfi" class="url-value">https://x.com/marginfi</a></td><td class="cell-TaD\"></td></tr><tr id="5132f0d0-a9b0-42f3-93e3-a947be87838b"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Kamino%205132f0d0a9b042f393e3a947be87838b.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Kamino/kamino-logo.jpg"/>Kamino</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-blue">Prestiti Decentralizzati</span></td><td class="cell-zl^h"><a href="https://app.kamino.finance/" class="url-value">https://app.kamino.finance/</a></td><td class="cell-\}jJ"><a href="https://x.com/KaminoFinance" class="url-value">https://x.com/KaminoFinance</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/kamino" class="url-value">https://www.coingecko.com/en/coins/kamino</a></td></tr><tr id="3b627bfa-76b9-4f71-90d0-03d4a6d4f87b"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/OpenSea%203b627bfa76b94f7190d003d4a6d4f87b.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/OpenSea/opensea-logo.png"/>OpenSea</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-yellow">Marketplace NFT</span></td><td class="cell-zl^h"><a href="https://opensea.io/" class="url-value">https://opensea.io/</a></td><td class="cell-\}jJ"><a href="https://x.com/opensea" class="url-value">https://x.com/opensea</a></td><td class="cell-TaD\"></td></tr><tr id="49768823-dde9-4ef5-bae9-c4522eb59bbd"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Blur%2049768823dde94ef5bae9c4522eb59bbd.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Blur/blur-logo.jpg"/>Blur</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-yellow">Marketplace NFT</span></td><td class="cell-zl^h"><a href="https://blur.io/" class="url-value">https://blur.io/</a></td><td class="cell-\}jJ"><a href="https://x.com/blur_io" class="url-value">https://x.com/blur_io</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/blur" class="url-value">https://www.coingecko.com/en/coins/blur</a></td></tr><tr id="64392445-3afb-4280-89dc-25b1c7414b83"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Sudoswap%20643924453afb428089dc25b1c7414b83.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Sudoswap/sudoswap-logo.jpg"/>Sudoswap</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-yellow">Marketplace NFT</span></td><td class="cell-zl^h"><a href="sudoswap.xyz" class="url-value">sudoswap.xyz</a></td><td class="cell-\}jJ"><a href="https://x.com/sudoswap" class="url-value">https://x.com/sudoswap</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/sudoswap" class="url-value">https://www.coingecko.com/en/coins/sudoswap</a></td></tr><tr id="98669f38-6046-43ae-831d-39675da1acee"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Polymarket%2098669f38604643ae831d39675da1acee.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Polymarket/polymarket-logo.jpg"/>Polymarket</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-default">Predizioni</span></td><td class="cell-zl^h"><a href="https://polymarket.com/" class="url-value">https://polymarket.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/Polymarket" class="url-value">https://x.com/Polymarket</a></td><td class="cell-TaD\"></td></tr><tr id="e98d5df0-4786-4c3d-8eb4-0ef98aff7e1c"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Syncswap%20e98d5df047864c3d8eb40ef98aff7e1c.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Syncswap/syncswaplogo.png"/>Syncswap</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-pink">Exchange Decentralizzato (DEX)</span></td><td class="cell-zl^h"><a href="https://syncswap.xyz/" class="url-value">https://syncswap.xyz/</a></td><td class="cell-\}jJ"><a href="https://twitter.com/syncswap" class="url-value">https://twitter.com/syncswap</a></td><td class="cell-TaD\"></td></tr><tr id="ee2edcac-c9d2-48e7-9585-210a85650840"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Crypto%20Punks%20ee2edcacc9d248e79585210a85650840.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Crypto%20Punks/cryptopunk1.jpeg"/>Crypto Punks</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://cryptopunks.app/" class="url-value">https://cryptopunks.app/</a></td><td class="cell-\}jJ"><a href="https://x.com/cryptopunksnfts" class="url-value">https://x.com/cryptopunksnfts</a></td><td class="cell-TaD\"><a href="https://cryptopunks.app/" class="url-value">https://cryptopunks.app/</a></td></tr><tr id="2b799377-7998-4e0e-b8c0-1c1cea704321"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Bong%20Bears%20&amp;%20Rebase%202b79937779984e0eb8c01c1cea704321.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Bong%20Bears%20&amp;%20Rebase/bongbears.jpeg"/>Bong Bears &amp; Rebase</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://www.berachain.com/" class="url-value">https://www.berachain.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/BongBearsNFT" class="url-value">https://x.com/BongBearsNFT</a></td><td class="cell-TaD\"><a href="https://opensea.io/collection/bongbears" class="url-value">https://opensea.io/collection/bongbears</a></td></tr><tr id="7afc27fb-d3fc-438f-b6ca-6aa3185a13e7"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Shroomiez%207afc27fbd3fc438fb6ca6aa3185a13e7.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Shroomiez/logo_color.jpg"/>Shroomiez</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="shroomiez.world" class="url-value">shroomiez.world</a></td><td class="cell-\}jJ"><a href="https://x.com/ShroomiezNFTs" class="url-value">https://x.com/ShroomiezNFTs</a></td><td class="cell-TaD\"><a href="https://opensea.io/collection/shroomieznfts" class="url-value">https://opensea.io/collection/shroomieznfts</a></td></tr><tr id="c06b16f9-91fc-4638-bedb-85c194d968e7"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Milady%20c06b16f991fc4638bedb85c194d968e7.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Milady/milady.jpeg"/>Milady</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://miladymaker.net/" class="url-value">https://miladymaker.net/</a></td><td class="cell-\}jJ"><a href="https://x.com/miladymaker" class="url-value">https://x.com/miladymaker</a></td><td class="cell-TaD\"><a href="https://opensea.io/collection/milady" class="url-value">https://opensea.io/collection/milady</a></td></tr><tr id="0519f89f-a93c-4163-9018-9564dcba6753"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Radbro%200519f89fa93c416390189564dcba6753.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Radbro/radbro-logo.jpg"/>Radbro</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://radbro.xyz/" class="url-value">https://radbro.xyz/</a></td><td class="cell-\}jJ"><a href="https://x.com/radbro_webring" class="url-value">https://x.com/radbro_webring</a></td><td class="cell-TaD\"><a href="https://opensea.io/collection/radbro-webring" class="url-value">https://opensea.io/collection/radbro-webring</a></td></tr><tr id="b4f0a766-0077-4128-8b9a-d48f6db19cc4"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Tubby%20Cats%20b4f0a766007741288b9ad48f6db19cc4.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Tubby%20Cats/tubby.jpeg"/>Tubby Cats</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://hub.xyz/tubby-cats" class="url-value">https://hub.xyz/tubby-cats</a></td><td class="cell-\}jJ"><a href="https://x.com/tubbycatsnft" class="url-value">https://x.com/tubbycatsnft</a></td><td class="cell-TaD\"><a href="https://opensea.io/collection/tubby-cats" class="url-value">https://opensea.io/collection/tubby-cats</a></td></tr><tr id="94c09741-82de-43ad-ab34-666a1d955865"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Pudgy%20Penguins%2094c0974182de43adab34666a1d955865.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Pudgy%20Penguins/pudgy-logo.jpg"/>Pudgy Penguins</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://www.pudgypenguins.com/" class="url-value">https://www.pudgypenguins.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/pudgypenguins" class="url-value">https://x.com/pudgypenguins</a></td><td class="cell-TaD\"><a href="https://opensea.io/collection/pudgypenguins" class="url-value">https://opensea.io/collection/pudgypenguins</a></td></tr><tr id="a7116ed2-df36-4af5-8976-8afac1c9dd25"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Farcaster%20a7116ed2df364af589768afac1c9dd25.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Farcaster/Screenshot_2024-03-24_at_11.35.08.png"/>Farcaster</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-yellow">Social Media Decentralizzato</span></td><td class="cell-zl^h"><a href="https://farcaster.xyz/" class="url-value">https://farcaster.xyz/</a></td><td class="cell-\}jJ"><a href="https://twitter.com/warpcast_" class="url-value">https://twitter.com/warpcast_</a></td><td class="cell-TaD\"></td></tr><tr id="a604d230-45ca-43c5-9353-d51df73ffa2e"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Gitcoin%20a604d23045ca43c59353d51df73ffa2e.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Gitcoin/Screenshot_2024-03-21_at_17.03.09.png"/>Gitcoin</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span><span class="selected-value select-value-color-brown">Grants</span></td><td class="cell-zl^h"><a href="https://www.gitcoin.co/" class="url-value">https://www.gitcoin.co/</a></td><td class="cell-\}jJ"><a href="https://twitter.com/gitcoin" class="url-value">https://twitter.com/gitcoin</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/gitcoin" class="url-value">https://www.coingecko.com/en/coins/gitcoin</a></td></tr><tr id="f1f464d3-7684-44ee-a1ae-f2557fa1af64"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Getgrass%20f1f464d3768444eea1aef2557fa1af64.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Getgrass/Screenshot_2024-03-21_at_16.54.29.png"/>Getgrass</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">DePIN</span></td><td class="cell-zl^h"><a href="https://www.getgrass.io/" class="url-value">https://www.getgrass.io/</a></td><td class="cell-\}jJ"><a href="https://x.com/getgrass_io" class="url-value">https://x.com/getgrass_io</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/grass" class="url-value">https://www.coingecko.com/en/coins/grass</a></td></tr><tr id="2d061b00-49f5-47ee-893c-3976d84f4d9a"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Dogecoin%202d061b0049f547ee893c3976d84f4d9a.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Dogecoin/dogecoin-logo.png"/>Dogecoin</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"><a href="https://dogecoin.com/" class="url-value">https://dogecoin.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/dogecoin" class="url-value">https://x.com/dogecoin</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/dogecoin" class="url-value">https://www.coingecko.com/en/coins/dogecoin</a></td></tr><tr id="2cb86bf8-be80-4aec-8e75-2307cf0e87b0"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Pepe%20(coin)%202cb86bf8be804aec8e752307cf0e87b0.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Pepe%20(coin)/pepe-logo.jpg"/>Pepe (coin)</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"><a href="https://www.pepe.vip/" class="url-value">https://www.pepe.vip/</a></td><td class="cell-\}jJ"><a href="https://x.com/pepecoineth" class="url-value">https://x.com/pepecoineth</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/pepe" class="url-value">https://www.coingecko.com/en/coins/pepe</a></td></tr><tr id="e72c654c-97f4-4e20-be38-af4d3c7ed10f"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Apu%20e72c654c97f44e20be38af4d3c7ed10f.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Apu/apu-logo.jpg"/>Apu</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"><a href="https://apu.com/" class="url-value">https://apu.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/ApusCoin" class="url-value">https://x.com/ApusCoin</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/apu-apustaja" class="url-value">https://www.coingecko.com/en/coins/apu-apustaja</a></td></tr><tr id="4416c708-468e-4dc8-af8d-073ef87c5c2b"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Degen%204416c708468e4dc8af8d073ef87c5c2b.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Degen/degen-logo.jpg"/>Degen</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-purple">L3</span><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"><a href="degen.tips" class="url-value">degen.tips</a></td><td class="cell-\}jJ"><a href="https://x.com/degentokenbase" class="url-value">https://x.com/degentokenbase</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/degen-base" class="url-value">https://www.coingecko.com/en/coins/degen-base</a></td></tr><tr id="ce70e987-f2d8-46e7-be70-b39d9dc360de"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Higher%20ce70e987f2d846e7be70b39d9dc360de.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Higher/higher-logo.jpg"/>Higher</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"><a href="https://www.aimhigher.net/" class="url-value">https://www.aimhigher.net/</a></td><td class="cell-\}jJ"><a href="https://x.com/higheronchain" class="url-value">https://x.com/higheronchain</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/higher" class="url-value">https://www.coingecko.com/en/coins/higher</a></td></tr><tr id="38c1c36b-ac64-4b37-b2f4-60e0478888c8"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/TN100X%20(Ham%20TheLP)%2038c1c36bac644b37b2f460e0478888c8.html"><span class="icon">🍖</span>TN100X (Ham / TheLP)</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-pink">Memecoin</span><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://ham.fun/" class="url-value">https://ham.fun/</a></td><td class="cell-\}jJ"><a href="https://x.com/HamOnWarpcast" class="url-value">https://x.com/HamOnWarpcast</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/tn100x" class="url-value">https://www.coingecko.com/en/coins/tn100x</a></td></tr><tr id="dcce004d-4301-4c14-9386-b16cb5b34d6e"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Dogwifhat%20(WIF)%20dcce004d43014c149386b16cb5b34d6e.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Dogwifhat%20(WIF)/wif-logo.jpg"/>Dogwifhat (WIF)</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"><a href="Dogwifcoin.org" class="url-value">Dogwifcoin.org</a></td><td class="cell-\}jJ"><a href="https://x.com/dogwifcoin" class="url-value">https://x.com/dogwifcoin</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/dogwifhat" class="url-value">https://www.coingecko.com/en/coins/dogwifhat</a></td></tr><tr id="10a7cf28-e1c3-4a61-8981-795e9a5542c8"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Shark%20Cat%2010a7cf28e1c34a618981795e9a5542c8.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Shark%20Cat/sharkcat-logo.jpg"/>Shark Cat</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"><a href="sharkcatsolana.com" class="url-value">sharkcatsolana.com</a></td><td class="cell-\}jJ"><a href="https://x.com/SharkCatSolana" class="url-value">https://x.com/SharkCatSolana</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/shark-cat" class="url-value">https://www.coingecko.com/en/coins/shark-cat</a></td></tr><tr id="01a46c9e-8aa4-48cc-97d1-8c7c49805a95"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Tremp%2001a46c9e8aa448cc97d18c7c49805a95.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Tremp/tremp-logo.jpg"/>Tremp</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"><a href="tremp.xyz" class="url-value">tremp.xyz</a></td><td class="cell-\}jJ"><a href="https://x.com/dolandtremp_sol" class="url-value">https://x.com/dolandtremp_sol</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/doland-tremp" class="url-value">https://www.coingecko.com/en/coins/doland-tremp</a></td></tr><tr id="25f910d6-0e6d-4ccc-a08c-921758f43c5e"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Boden%2025f910d60e6d4ccca08c921758f43c5e.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Boden/boden-logo.jpg"/>Boden</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"><a href="boden4pres.com" class="url-value">boden4pres.com</a></td><td class="cell-\}jJ"><a href="https://x.com/boden4pres" class="url-value">https://x.com/boden4pres</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/jeo-boden" class="url-value">https://www.coingecko.com/en/coins/jeo-boden</a></td></tr><tr id="1a77918c-c833-42ae-80d8-5ccdf2ad4a1c"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Kenidy%201a77918cc83342ae80d85ccdf2ad4a1c.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Kenidy/boden-logo.jpg"/>Kenidy</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"><a href="kenidy.io" class="url-value">kenidy.io</a></td><td class="cell-\}jJ"><a href="https://x.com/kenidy_on_sol" class="url-value">https://x.com/kenidy_on_sol</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/ruburt-f-kenidy-jr" class="url-value">https://www.coingecko.com/en/coins/ruburt-f-kenidy-jr</a></td></tr><tr id="d24645b4-f233-4a33-accf-cc5182378082"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Retardio%20d24645b4f2334a33accfcc5182378082.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Retardio/retardio-logo.jpg"/>Retardio</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"><a href="https://retardio.xyz/" class="url-value">https://retardio.xyz/</a></td><td class="cell-\}jJ"><a href="https://x.com/retardiosolana" class="url-value">https://x.com/retardiosolana</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/retardio" class="url-value">https://www.coingecko.com/en/coins/retardio</a></td></tr><tr id="87691ceb-285a-444c-bf21-d16c8b6d3cc6"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Treasure%2087691ceb285a444cbf21d16c8b6d3cc6.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Treasure/treasure-logo.jpg"/>Treasure</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-purple">L3</span><span class="selected-value select-value-color-purple">Web3 Game</span></td><td class="cell-zl^h"><a href="https://treasure.lol/" class="url-value">https://treasure.lol/</a></td><td class="cell-\}jJ"><a href="https://x.com/Treasure_DAO" class="url-value">https://x.com/Treasure_DAO</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/magic" class="url-value">https://www.coingecko.com/en/coins/magic</a></td></tr><tr id="94294013-6853-46c4-ae59-11dff23c34bf"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Decentraland%2094294013685346c4ae5911dff23c34bf.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Decentraland/decentraland-logo.jpg"/>Decentraland</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-blue">Metaverso</span><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://decentraland.org/" class="url-value">https://decentraland.org/</a></td><td class="cell-\}jJ"><a href="https://x.com/decentraland" class="url-value">https://x.com/decentraland</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/decentraland" class="url-value">https://www.coingecko.com/en/coins/decentraland</a></td></tr><tr id="1b827de9-9ea6-49b5-9335-929ab78e57a3"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/The%20Sandbox%201b827de99ea649b59335929ab78e57a3.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/The%20Sandbox/sandbox-logo.jpg"/>The Sandbox</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Criptovaluta</span><span class="selected-value select-value-color-blue">Metaverso</span><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://x.com/TheSandboxGame" class="url-value">https://x.com/TheSandboxGame</a></td><td class="cell-\}jJ"><a href="https://x.com/TheSandboxGame" class="url-value">https://x.com/TheSandboxGame</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/the-sandbox" class="url-value">https://www.coingecko.com/en/coins/the-sandbox</a></td></tr><tr id="0d63dae7-9cf8-48e5-984f-c4a80c492478"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Nifty%20Island%200d63dae79cf848e5984fc4a80c492478.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Nifty%20Island/nifty-logo.jpg"/>Nifty Island</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-blue">Metaverso</span><span class="selected-value select-value-color-purple">Web3 Game</span></td><td class="cell-zl^h"><a href="niftyisland.com" class="url-value">niftyisland.com</a></td><td class="cell-\}jJ"><a href="https://x.com/Nifty_Island" class="url-value">https://x.com/Nifty_Island</a></td><td class="cell-TaD\"><a href="https://opensea.io/collection/nifty-island-legendary-palms" class="url-value">https://opensea.io/collection/nifty-island-legendary-palms</a></td></tr><tr id="5072d44d-e0c0-46dd-8267-fc6fca46f4b0"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Ledger%205072d44de0c046dd8267fc6fca46f4b0.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Ledger/ledger-logo.jpg"/>Ledger</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Portafoglio Non-custodial (Hardware Wallet)</span></td><td class="cell-zl^h"><a href="https://shop.ledger.com/" class="url-value">https://shop.ledger.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/Ledger" class="url-value">https://x.com/Ledger</a></td><td class="cell-TaD\"></td></tr><tr id="dc502fae-4276-41f8-a926-d6d3f0d7e6bf"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Trezor%20dc502fae427641f8a926d6d3f0d7e6bf.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Trezor/trezor-logo.jpg"/>Trezor</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Portafoglio Non-custodial (Hardware Wallet)</span></td><td class="cell-zl^h"><a href="https://trezor.io/" class="url-value">https://trezor.io/</a></td><td class="cell-\}jJ"><a href="https://x.com/Trezor" class="url-value">https://x.com/Trezor</a></td><td class="cell-TaD\"></td></tr><tr id="4fa3b7fe-7bd6-485b-ade8-651e364fac55"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Safe%204fa3b7fe7bd6485bade8651e364fac55.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Safe/safe-logo.jpg"/>Safe</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-yellow">Multi-sig</span></td><td class="cell-zl^h"><a href="https://safe.global/" class="url-value">https://safe.global/</a></td><td class="cell-\}jJ"><a href="https://x.com/safe" class="url-value">https://x.com/safe</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/safe" class="url-value">https://www.coingecko.com/en/coins/safe</a></td></tr><tr id="0b66e15b-0930-4aa7-8393-195f55fcdf69"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Snapshot%200b66e15b09304aa78393195f55fcdf69.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Snapshot/snapshot-logo.jpg"/>Snapshot</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-brown">Governance</span></td><td class="cell-zl^h"><a href="snapshot.org" class="url-value">snapshot.org</a></td><td class="cell-\}jJ"><a href="https://x.com/SnapshotLabs" class="url-value">https://x.com/SnapshotLabs</a></td><td class="cell-TaD\"></td></tr><tr id="2f875f83-9a20-4f72-a3d8-884cabfaa8b2"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Coingecko%202f875f839a204f72a3d8884cabfaa8b2.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Coingecko/coingecko-logo.jpg"/>Coingecko</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span><span class="selected-value select-value-color-pink">Analisi di Mercato</span><span class="selected-value select-value-color-default">Portfolio Tracker</span></td><td class="cell-zl^h"><a href="coingecko.com" class="url-value">coingecko.com</a></td><td class="cell-\}jJ"><a href="https://x.com/coingecko" class="url-value">https://x.com/coingecko</a></td><td class="cell-TaD\"></td></tr><tr id="5db29425-4aa1-43b7-9b00-1ea2810d6988"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Dexscreener%205db294254aa143b79b001ea2810d6988.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Dexscreener/dexscreener-logo.jpg"/>Dexscreener</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span></td><td class="cell-zl^h"><a href="dexscreener.com" class="url-value">dexscreener.com</a></td><td class="cell-\}jJ"><a href="https://x.com/dexscreener" class="url-value">https://x.com/dexscreener</a></td><td class="cell-TaD\"></td></tr><tr id="2227399e-a912-4179-a387-96adab14789b"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Defillama%202227399ea9124179a38796adab14789b.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Defillama/Screenshot_2024-03-21_at_16.48.29.png"/>Defillama</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span><span class="selected-value select-value-color-brown">Bridge Aggregator</span><span class="selected-value select-value-color-orange">DEX Aggregator</span><span class="selected-value select-value-color-orange">DeFi</span></td><td class="cell-zl^h"><a href="https://defillama.com/" class="url-value">https://defillama.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/DefiLlama" class="url-value">https://x.com/DefiLlama</a></td><td class="cell-TaD\"></td></tr><tr id="fd043e28-cd3d-4e17-b8b5-afff158e8e1a"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Token%20Terminal%20fd043e28cd3d4e17b8b5afff158e8e1a.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Token%20Terminal/Screenshot_2024-03-21_at_16.50.20.png"/>Token Terminal</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span><span class="selected-value select-value-color-pink">Analisi di Mercato</span></td><td class="cell-zl^h"><a href="https://tokenterminal.com/" class="url-value">https://tokenterminal.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/tokenterminal" class="url-value">https://x.com/tokenterminal</a></td><td class="cell-TaD\"></td></tr><tr id="46baf37a-2e7e-4f1e-a5a8-0348e4f612e2"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/DeBank%2046baf37a2e7e4f1ea5a80348e4f612e2.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/DeBank/debank-logo.jpg"/>DeBank</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-orange">DEX Aggregator</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-default">Portfolio Tracker</span></td><td class="cell-zl^h"><a href="DeBank.com" class="url-value">DeBank.com</a></td><td class="cell-\}jJ"><a href="https://x.com/DeBankDeFi" class="url-value">https://x.com/DeBankDeFi</a></td><td class="cell-TaD\"></td></tr><tr id="d55e2ea4-ab23-42f2-8baa-b318d8c98cad"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Cielo%20d55e2ea4ab2342f28baab318d8c98cad.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Cielo/cielo-logo.jpg"/>Cielo</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span><span class="selected-value select-value-color-default">Portfolio Tracker</span></td><td class="cell-zl^h"><a href="https://cielo.finance/" class="url-value">https://cielo.finance/</a></td><td class="cell-\}jJ"><a href="https://x.com/cielofinance" class="url-value">https://x.com/cielofinance</a></td><td class="cell-TaD\"></td></tr><tr id="25482b3e-2f83-4779-a932-2cb8f71f3506"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Core%20Explorer%20(allbridge)%2025482b3e2f834779a9322cb8f71f3506.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Core%20Explorer%20(allbridge)/coreexplorer-debridge-logo.png"/>Core Explorer (allbridge)</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span></td><td class="cell-zl^h"><a href="https://core.allbridge.io/explorer" class="url-value">https://core.allbridge.io/explorer</a></td><td class="cell-\}jJ"><a href="https://x.com/Allbridge_io" class="url-value">https://x.com/Allbridge_io</a></td><td class="cell-TaD\"></td></tr><tr id="767df14c-e6e6-45ba-829b-467ddd064814"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Socketscan%20767df14ce6e645ba829b467ddd064814.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Socketscan/socketscan-logo.jpg"/>Socketscan</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span><span class="selected-value select-value-color-orange">Bridge Explorer</span></td><td class="cell-zl^h"><a href="https://www.socketscan.io/" class="url-value">https://www.socketscan.io/</a></td><td class="cell-\}jJ"><a href="https://x.com/SocketDotTech" class="url-value">https://x.com/SocketDotTech</a></td><td class="cell-TaD\"></td></tr><tr id="29146752-f14a-4baf-ac47-56bdfe14a884"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Symbiosis%2029146752f14a4bafac4756bdfe14a884.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Symbiosis/Symbiosis-logo.jpg"/>Symbiosis</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-orange">DeFi</span></td><td class="cell-zl^h"><a href="https://app.symbiosis.finance/" class="url-value">https://app.symbiosis.finance/</a></td><td class="cell-\}jJ"><a href="https://x.com/symbiosis_fi" class="url-value">https://x.com/symbiosis_fi</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/symbiosis" class="url-value">https://www.coingecko.com/en/coins/symbiosis</a></td></tr><tr id="9e6a36ce-2660-49a1-b57c-518b4abaec1a"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Symbiosis%20Explorer%209e6a36ce266049a1b57c518b4abaec1a.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Symbiosis%20Explorer/symbiosis-logo.png"/>Symbiosis Explorer</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span><span class="selected-value select-value-color-orange">Bridge Explorer</span></td><td class="cell-zl^h"><a href="https://explorer.symbiosis.finance/" class="url-value">https://explorer.symbiosis.finance/</a></td><td class="cell-\}jJ"><a href="https://x.com/symbiosis_fi" class="url-value">https://x.com/symbiosis_fi</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/symbiosis" class="url-value">https://www.coingecko.com/en/coins/symbiosis</a></td></tr><tr id="f2419f5c-0232-45ec-ba74-7bf779ad065c"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Zapper%20f2419f5c023245ecba747bf779ad065c.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Zapper/zapper-logo.jpg"/>Zapper</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-orange">DEX Aggregator</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-default">Portfolio Tracker</span></td><td class="cell-zl^h"><a href="https://zapper.xyz/" class="url-value">https://zapper.xyz/</a></td><td class="cell-\}jJ"><a href="https://x.com/zapper_fi" class="url-value">https://x.com/zapper_fi</a></td><td class="cell-TaD\"></td></tr><tr id="da8812d5-1bcd-44f6-9dab-f35a9d038767"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Zerion%20da8812d51bcd44f69dabf35a9d038767.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Zerion/zerion-logo.jpg"/>Zerion</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-brown">Bridge Aggregator</span><span class="selected-value select-value-color-orange">DEX Aggregator</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-default">Portfolio Tracker</span></td><td class="cell-zl^h"><a href="https://zerion.io/" class="url-value">https://zerion.io/</a></td><td class="cell-\}jJ"><a href="https://x.com/zerion" class="url-value">https://x.com/zerion</a></td><td class="cell-TaD\"></td></tr><tr id="c21b959b-ca78-4786-b693-35345b222a7a"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Smol%20Refuel%20c21b959bca784786b69335345b222a7a.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Smol%20Refuel/smolrefuel-logo.jpg"/>Smol Refuel</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">Bridge</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-orange">Interoperabilità (Cross-Chain)</span></td><td class="cell-zl^h"><a href="https://smolrefuel.com/" class="url-value">https://smolrefuel.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/smolrefuel" class="url-value">https://x.com/smolrefuel</a></td><td class="cell-TaD\"></td></tr><tr id="abdf1e33-b913-4787-89ee-7a83818a81a6"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Gas%20zip%20abdf1e33b913478789ee7a83818a81a6.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Gas%20zip/gaszip-logo.jpg"/>Gas.zip</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">Bridge</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-orange">Interoperabilità (Cross-Chain)</span></td><td class="cell-zl^h"><a href="https://www.gas.zip/" class="url-value">https://www.gas.zip/</a></td><td class="cell-\}jJ"><a href="https://x.com/gasdotzip" class="url-value">https://x.com/gasdotzip</a></td><td class="cell-TaD\"></td></tr><tr id="af2beac9-b77b-44b2-aede-10d17e87cd1e"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Token%20Unlocks%20af2beac9b77b44b2aede10d17e87cd1e.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Token%20Unlocks/tokenunlocks-logo.jpg"/>Token Unlocks</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span><span class="selected-value select-value-color-yellow">Unlocks Tracker</span></td><td class="cell-zl^h"><a href="https://token.unlocks.app/" class="url-value">https://token.unlocks.app/</a></td><td class="cell-\}jJ"><a href="https://x.com/Token_Unlocks" class="url-value">https://x.com/Token_Unlocks</a></td><td class="cell-TaD\"></td></tr><tr id="e07f84cf-c37d-400e-9071-7bea74164687"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Nansen%20e07f84cfc37d400e90717bea74164687.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Nansen/nansen-logo.jpg"/>Nansen</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span><span class="selected-value select-value-color-yellow">Unlocks Tracker</span></td><td class="cell-zl^h"><a href="https://www.nansen.ai/" class="url-value">https://www.nansen.ai/</a></td><td class="cell-\}jJ"><a href="https://x.com/nansen_ai" class="url-value">https://x.com/nansen_ai</a></td><td class="cell-TaD\"></td></tr><tr id="e62c4929-830e-433a-a177-b37356c93f09"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/ENS%20e62c4929830e433aa177b37356c93f09.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/ENS/ens-logo.jpg"/>ENS</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Marketplace NFT</span></td><td class="cell-zl^h"><a href="https://ens.domains/" class="url-value">https://ens.domains/</a></td><td class="cell-\}jJ"><a href="https://x.com/ensdomains" class="url-value">https://x.com/ensdomains</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/ethereum-name-service" class="url-value">https://www.coingecko.com/en/coins/ethereum-name-service</a></td></tr><tr id="c6e04721-0d28-4113-81b6-62a28f82d1f2"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Defined%20c6e047210d28411381b662a28f82d1f2.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Defined/defined-logo.png"/>Defined</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span></td><td class="cell-zl^h"><a href="https://www.defined.fi/" class="url-value">https://www.defined.fi/</a></td><td class="cell-\}jJ"><a href="https://x.com/definedfi" class="url-value">https://x.com/definedfi</a></td><td class="cell-TaD\"></td></tr><tr id="6110b905-e5a4-4677-9b5b-e54cb2f47a0a"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Lido%20Finance%206110b905e5a446779b5be54cb2f47a0a.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Lido%20Finance/lido-logo.jpg"/>Lido Finance</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-orange">Restaking (LST)</span></td><td class="cell-zl^h"><a href="https://lido.fi/" class="url-value">https://lido.fi/</a></td><td class="cell-\}jJ"><a href="https://x.com/LidoFinance" class="url-value">https://x.com/LidoFinance</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/lido-dao" class="url-value">https://www.coingecko.com/en/coins/lido-dao</a></td></tr><tr id="38b691e0-b8e0-45c0-b799-96af64271af5"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Redacted%20Remilio%20Babies%2038b691e0b8e045c0b79996af64271af5.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Redacted%20Remilio%20Babies/remilio-logo.jpg"/>Redacted Remilio Babies</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"><a href="https://remilio.org/" class="url-value">https://remilio.org/</a></td><td class="cell-\}jJ"><a href="https://x.com/RemilioBaby" class="url-value">https://x.com/RemilioBaby</a></td><td class="cell-TaD\"><a href="https://opensea.io/collection/remilio-babies" class="url-value">https://opensea.io/collection/remilio-babies</a></td></tr><tr id="dcac669a-97f0-498c-8b42-04a5139d40d6"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Yearn%20Finance%20dcac669a97f0498c8b4204a5139d40d6.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Yearn%20Finance/yearn-logo.jpg"/>Yearn Finance</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-default">Rendimento (Yield Farming)</span></td><td class="cell-zl^h"><a href="https://yearn.fi/" class="url-value">https://yearn.fi/</a></td><td class="cell-\}jJ"><a href="https://x.com/yearnfi" class="url-value">https://x.com/yearnfi</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/yearn-finance" class="url-value">https://www.coingecko.com/en/coins/yearn-finance</a></td></tr><tr id="fbc9f260-02b8-426d-927e-c2578a1014cc"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Fractional%20Uprising%20(FU)%20fbc9f26002b8426d927ec2578a1014cc.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Fractional%20Uprising%20(FU)/fu-logo.jpg"/>Fractional Uprising (FU)</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">Web3 Game</span></td><td class="cell-zl^h"><a href="https://www.fustudios.io/" class="url-value">https://www.fustudios.io/</a></td><td class="cell-\}jJ"><a href="https://x.com/FU_STUDIOS" class="url-value">https://x.com/FU_STUDIOS</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/fu-money" class="url-value">https://www.coingecko.com/en/coins/fu-money</a></td></tr><tr id="48b85f3c-e5b6-42ca-a608-e7fd8ae083f4"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Defiant%20News%2048b85f3ce5b642caa608e7fd8ae083f4.html">Defiant News</a></td><td class="cell-{Bbh"></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-TaD\"></td></tr><tr id="b8045a81-5dd8-4394-b664-b78c12bde534"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Unchained%20Podcast%20b8045a815dd84394b664b78c12bde534.html">Unchained Podcast</a></td><td class="cell-{Bbh"></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-TaD\"></td></tr><tr id="e0f96009-bca2-4ee9-9754-b0bc1550888f"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Cointelegraph%20e0f96009bca24ee99754b0bc1550888f.html">Cointelegraph</a></td><td class="cell-{Bbh"></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-TaD\"></td></tr><tr id="9dac9832-1cd7-4da9-a9a0-fd1d1aa67644"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Floppa%209dac98321cd74da9a9a0fd1d1aa67644.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Floppa/floppa-logo.jpg"/>Floppa</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"><a href="https://floppa.wtf/" class="url-value">https://floppa.wtf/</a></td><td class="cell-\}jJ"><a href="https://x.com/floppa/" class="url-value">https://x.com/floppa/</a></td><td class="cell-TaD\"><a href="https://dexscreener.com/base/0x6caa62e48a2d9f3a8eacaadca2462ed5dfe0c685" class="url-value">https://dexscreener.com/base/0x6caa62e48a2d9f3a8eacaadca2462ed5dfe0c685</a></td></tr><tr id="c0bca11d-0b03-4bf5-8a7a-15a44853ccca"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/MakerDao%20c0bca11d0b034bf58a7a15a44853ccca.html">MakerDao</a></td><td class="cell-{Bbh"></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-TaD\"></td></tr><tr id="bc6904f5-a7a2-4fed-9c5e-705d62a5cef1"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Synthetix%20bc6904f5a7a24fed9c5e705d62a5cef1.html">Synthetix</a></td><td class="cell-{Bbh"></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-TaD\"></td></tr><tr id="1bcc04ff-5521-42c8-a044-73e1f7b3e8d7"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/OhBabyGames%201bcc04ff552142c8a04473e1f7b3e8d7.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/OhBabyGames/ohbabygames.jpg"/>OhBabyGames</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">Web3 Game</span></td><td class="cell-zl^h"><a href="https://www.ohbabygames.com/" class="url-value">https://www.ohbabygames.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/OhBabyGames" class="url-value">https://x.com/OhBabyGames</a></td><td class="cell-TaD\"></td></tr><tr id="22615899-0732-4ab6-9869-23f3b738cc50"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Smilee%202261589907324ab6986923f3b738cc50.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Smilee/smilee-logo.jpg"/>Smilee</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-orange">DeFi</span></td><td class="cell-zl^h"><a href="https://app.smilee.finance/" class="url-value">https://app.smilee.finance/</a></td><td class="cell-\}jJ"><a href="https://x.com/SmileeFinance" class="url-value">https://x.com/SmileeFinance</a></td><td class="cell-TaD\"><a href="https://opensea.io/collection/smilee-beras" class="url-value">https://opensea.io/collection/smilee-beras</a></td></tr><tr id="1028a35d-2f90-80b2-b864-dc65bbce4dba"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Sonic%20(rename)%201028a35d2f9080b2b864dc65bbce4dba.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Sonic%20(rename)/fantom-logo.png"/>Sonic (rename)</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span></td><td class="cell-zl^h"><a href="https://www.soniclabs.com/" class="url-value">https://www.soniclabs.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/FantomFDN" class="url-value">https://x.com/FantomFDN</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/fantom" class="url-value">https://www.coingecko.com/en/coins/fantom</a></td></tr><tr id="1028a35d-2f90-8093-82ac-d5080a02be49"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Equalizer%201028a35d2f90809382acd5080a02be49.html">Equalizer</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-pink">Exchange Decentralizzato (DEX)</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/equalizer-dex" class="url-value">https://www.coingecko.com/en/coins/equalizer-dex</a></td></tr><tr id="1078a35d-2f90-80d9-ab42-e02bb8bd186b"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Bunni%201078a35d2f9080d9ab42e02bb8bd186b.html">Bunni</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-pink">Exchange Decentralizzato (DEX)</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"><a href="https://x.com/bunni_xyz" class="url-value">https://x.com/bunni_xyz</a></td><td class="cell-TaD\"></td></tr><tr id="10c8a35d-2f90-80e9-82a6-e0ab3497078a"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Avalanche%2010c8a35d2f9080e982a6e0ab3497078a.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Avalanche/2Y42289I_400x400.jpg"/>Avalanche</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-gray">L2</span></td><td class="cell-zl^h"><a href="https://www.avax.network/" class="url-value">https://www.avax.network/</a></td><td class="cell-\}jJ"><a href="https://x.com/avax" class="url-value">https://x.com/avax</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/avalanche" class="url-value">https://www.coingecko.com/en/coins/avalanche</a></td></tr><tr id="10c8a35d-2f90-80ba-abe8-db505b52ead7"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Smilee%20Beras%2010c8a35d2f9080baabe8db505b52ead7.html">Smilee Beras</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-TaD\"><a href="https://opensea.io/collection/smilee-beras" class="url-value">https://opensea.io/collection/smilee-beras</a></td></tr><tr id="10c8a35d-2f90-8058-a618-cfdec5c5939e"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Trader%20Joe%2010c8a35d2f908058a618cfdec5c5939e.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Trader%20Joe/trader-joe-logo.png"/>Trader Joe</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-orange">DeFi</span></td><td class="cell-zl^h"><a href="https://lfj.gg/avalanche" class="url-value">https://lfj.gg/avalanche</a></td><td class="cell-\}jJ"><a href="https://x.com/traderjoe_xyz" class="url-value">https://x.com/traderjoe_xyz</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/joe" class="url-value">https://www.coingecko.com/en/coins/joe</a></td></tr><tr id="24e8a35d-2f90-8095-8843-dfd934a10c8f"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Coinglass%2024e8a35d2f9080958843dfd934a10c8f.html">Coinglass</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span></td><td class="cell-zl^h"><a href="https://www.coinglass.com/" class="url-value">https://www.coinglass.com/</a></td><td class="cell-\}jJ"></td><td class="cell-TaD\"></td></tr><tr id="24f8a35d-2f90-8004-9aea-c8d0ce1c5a33"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Abstract%2024f8a35d2f9080049aeac8d0ce1c5a33.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Abstract/abstract_logo.jpg"/>Abstract</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span></td><td class="cell-zl^h"><a href="https://www.abs.xyz/" class="url-value">https://www.abs.xyz/</a></td><td class="cell-\}jJ"><a href="https://x.com/AbstractChain" class="url-value">https://x.com/AbstractChain</a></td><td class="cell-TaD\"></td></tr><tr id="2528a35d-2f90-805d-b3dd-e7ceaa9c5bf7"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Pacifica%202528a35d2f90805db3dde7ceaa9c5bf7.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Pacifica/pacifica_logo.jpg"/>Pacifica</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-red">DEX Trading (Perpetuals)</span><span class="selected-value select-value-color-orange">DeFi</span></td><td class="cell-zl^h"><a href="https://app.pacifica.fi/" class="url-value">https://app.pacifica.fi/</a></td><td class="cell-\}jJ"><a href="https://x.com/pacifica_fi" class="url-value">https://x.com/pacifica_fi</a></td><td class="cell-TaD\"></td></tr><tr id="2528a35d-2f90-8066-8184-f5e4bbf3bb5c"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Perpetual%20Pulse%202528a35d2f9080668184f5e4bbf3bb5c.html">Perpetual Pulse</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span></td><td class="cell-zl^h"><a href="https://www.perpetualpulse.xyz/" class="url-value">https://www.perpetualpulse.xyz/</a></td><td class="cell-\}jJ"></td><td class="cell-TaD\"></td></tr><tr id="2638a35d-2f90-8023-b6fe-f92cef3b54ec"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Audioglyphs%202638a35d2f908023b6fef92cef3b54ec.html">Audioglyphs</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-TaD\"><a href="https://opensea.io/collection/autoglyphs" class="url-value">https://opensea.io/collection/autoglyphs</a></td></tr><tr id="2638a35d-2f90-8014-b707-d9b3fa012ede"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Lil%20Pudgys%202638a35d2f908014b707d9b3fa012ede.html">Lil Pudgys</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-TaD\"><a href="https://opensea.io/collection/lilpudgys" class="url-value">https://opensea.io/collection/lilpudgys</a></td></tr><tr id="2638a35d-2f90-8078-a7c1-c81375e14a81"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Sproto%20Gremlins%202638a35d2f908078a7c1c81375e14a81.html">Sproto Gremlins</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-TaD\"><a href="https://opensea.io/collection/sproto-gremlins" class="url-value">https://opensea.io/collection/sproto-gremlins</a></td></tr><tr id="2638a35d-2f90-809d-957e-fceb267380d9"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Hypio%20Babies%202638a35d2f90809d957efceb267380d9.html">Hypio Babies</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-TaD\"><a href="https://drip.trade/collections/hypio" class="url-value">https://drip.trade/collections/hypio</a></td></tr><tr id="2638a35d-2f90-80e2-a978-f57b6a3ad984"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Pip%20&amp;%20Friends%202638a35d2f9080e2a978f57b6a3ad984.html">Pip &amp; Friends</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-purple">NFT</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-TaD\"><a href="https://drip.trade/collections/pip" class="url-value">https://drip.trade/collections/pip</a></td></tr><tr id="2718a35d-2f90-80db-8cb4-f90a030bc23b"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Lighter%202718a35d2f9080db8cb4f90a030bc23b.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Lighter/lighter_logo.jpg"/>Lighter</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-red">DEX Trading (Perpetuals)</span><span class="selected-value select-value-color-orange">DeFi</span></td><td class="cell-zl^h"><a href="app.lighter.xyz/?referral=3SEU75MYUJ5C" class="url-value">app.lighter.xyz/?referral=3SEU75MYUJ5C</a></td><td class="cell-\}jJ"><a href="https://x.com/Lighter_xyz" class="url-value">https://x.com/Lighter_xyz</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/lighter" class="url-value">https://www.coingecko.com/en/coins/lighter</a></td></tr><tr id="2728a35d-2f90-8089-b83d-c58197af2a8e"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Moonpay%202728a35d2f908089b83dc58197af2a8e.html">Moonpay</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-red">Exchange Centralizzato (CEX)</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-TaD\"></td></tr><tr id="2728a35d-2f90-8054-9aee-df46458368ef"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Hyperbeat%202728a35d2f9080549aeedf46458368ef.html">Hyperbeat</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Carta Cripto</span><span class="selected-value select-value-color-red">On-ramp</span><span class="selected-value select-value-color-default">Rendimento (Yield Farming)</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-TaD\"></td></tr><tr id="2768a35d-2f90-8015-bf36-d4ffaced4438"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Kast%202768a35d2f908015bf36d4ffaced4438.html">Kast</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Carta Cripto</span><span class="selected-value select-value-color-red">On-ramp</span></td><td class="cell-zl^h"><a href="https://www.kast.xyz/" class="url-value">https://www.kast.xyz/</a></td><td class="cell-\}jJ"><a href="https://x.com/KASTcard" class="url-value">https://x.com/KASTcard</a></td><td class="cell-TaD\"></td></tr><tr id="2768a35d-2f90-803a-993d-ffd493682a0a"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Kalshi%202768a35d2f90803a993dffd493682a0a.html">Kalshi</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Predizioni</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-TaD\"></td></tr><tr id="27f8a35d-2f90-8070-927a-c93b8f58d8dc"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Extended%2027f8a35d2f908070927ac93b8f58d8dc.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Extended/extended_logo.jpg"/>Extended</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-red">DEX Trading (Perpetuals)</span></td><td class="cell-zl^h"><a href="https://app.extended.exchange/join/EXTEND777" class="url-value">https://app.extended.exchange/join/EXTEND777</a></td><td class="cell-\}jJ"><a href="https://x.com/extendedapp" class="url-value">https://x.com/extendedapp</a></td><td class="cell-TaD\"></td></tr><tr id="27f8a35d-2f90-80b2-b5fd-ca983d304253"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Hibachi%2027f8a35d2f9080b2b5fdca983d304253.html">Hibachi</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-red">DEX Trading (Perpetuals)</span></td><td class="cell-zl^h"><a href="https://hibachi.xyz/" class="url-value">https://hibachi.xyz/</a></td><td class="cell-\}jJ"></td><td class="cell-TaD\"></td></tr><tr id="27f8a35d-2f90-8015-940a-df0d9b4d3239"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Limitless%2027f8a35d2f908015940adf0d9b4d3239.html">Limitless</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-default">Predizioni</span></td><td class="cell-zl^h"><a href="https://limitless.exchange/advanced" class="url-value">https://limitless.exchange/advanced</a></td><td class="cell-\}jJ"><a href="https://x.com/trylimitless" class="url-value">https://x.com/trylimitless</a></td><td class="cell-TaD\"></td></tr><tr id="2808a35d-2f90-8038-a5c1-ee2034ad76d7"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Avantis%202808a35d2f908038a5c1ee2034ad76d7.html">Avantis</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-red">DEX Trading (Perpetuals)</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"><a href="https://x.com/avantisfi" class="url-value">https://x.com/avantisfi</a></td><td class="cell-TaD\"></td></tr><tr id="2808a35d-2f90-80ed-b057-f8d8da859ec1"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Ostium%202808a35d2f9080edb057f8d8da859ec1.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Ostium/ostium_logo.jpg"/>Ostium</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-red">DEX Trading (Perpetuals)</span></td><td class="cell-zl^h"><a href="https://app.ostium.com/trade?from=SPX&amp;to=USD&amp;ref=QR69Q" class="url-value">https://app.ostium.com/trade?from=SPX&amp;to=USD&amp;ref=QR69Q</a></td><td class="cell-\}jJ"><a href="https://x.com/OstiumLabs" class="url-value">https://x.com/OstiumLabs</a></td><td class="cell-TaD\"></td></tr><tr id="28a8a35d-2f90-80bc-91e4-f3821ffd687d"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Variational%2028a8a35d2f9080bc91e4f3821ffd687d.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Variational/variational_logo.jpg"/>Variational</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-red">DEX Trading (Perpetuals)</span></td><td class="cell-zl^h"><a href="https://omni.variational.io/?ref=OMNIFALS5KIJ" class="url-value">https://omni.variational.io/?ref=OMNIFALS5KIJ</a></td><td class="cell-\}jJ"><a href="https://x.com/variational_io" class="url-value">https://x.com/variational_io</a></td><td class="cell-TaD\"></td></tr><tr id="28a8a35d-2f90-808f-8fa4-dc689ee49bc5"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Derive%2028a8a35d2f90808f8fa4dc689ee49bc5.html">Derive</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-orange">Opzioni</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"><a href="https://x.com/DeriveXYZ" class="url-value">https://x.com/DeriveXYZ</a></td><td class="cell-TaD\"></td></tr><tr id="28b8a35d-2f90-80df-84da-d95b95de2a71"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Rysk%2028b8a35d2f9080df84dad95b95de2a71.html">Rysk</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-orange">Opzioni</span></td><td class="cell-zl^h"><a href="https://app.rysk.finance/" class="url-value">https://app.rysk.finance/</a></td><td class="cell-\}jJ"><a href="https://x.com/ryskfinance" class="url-value">https://x.com/ryskfinance</a></td><td class="cell-TaD\"></td></tr><tr id="2bb8a35d-2f90-8040-a6d9-d79d9682560c"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/HyperEVM%202bb8a35d2f908040a6d9d79d9682560c.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/HyperEVM/hyperliquidlogo.png"/>HyperEVM</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Blockchain</span></td><td class="cell-zl^h"><a href="https://hyperfoundation.org/" class="url-value">https://hyperfoundation.org/</a></td><td class="cell-\}jJ"><a href="https://x.com/HyperliquidX" class="url-value">https://x.com/HyperliquidX</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/hyperliquid" class="url-value">https://www.coingecko.com/en/coins/hyperliquid</a></td></tr><tr id="2bb8a35d-2f90-8050-8e77-cce77cd7a7b0"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Felix%202bb8a35d2f9080508e77cce77cd7a7b0.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Felix/felix_logo.jpg"/>Felix</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-blue">Prestiti Decentralizzati</span></td><td class="cell-zl^h"><a href="https://www.usefelix.xyz?ref=EBB69FF2" class="url-value">https://www.usefelix.xyz?ref=EBB69FF2</a></td><td class="cell-\}jJ"><a href="https://x.com/felixprotocol" class="url-value">https://x.com/felixprotocol</a></td><td class="cell-TaD\"></td></tr><tr id="2c08a35d-2f90-803b-9292-fd7e1ab24780"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Truemarkets%202c08a35d2f90803b9292fd7e1ab24780.html">Truemarkets</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-default">Predizioni</span></td><td class="cell-zl^h"><a href="https://truemarkets.org/" class="url-value">https://truemarkets.org/</a></td><td class="cell-\}jJ"><a href="https://x.com/truemarkets" class="url-value">https://x.com/truemarkets</a></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/truemarkets" class="url-value">https://www.coingecko.com/en/coins/truemarkets</a></td></tr><tr id="2f18a35d-2f90-809f-add4-d2a2d890cb3b"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Hyperlend%202f18a35d2f90809fadd4d2a2d890cb3b.html">Hyperlend</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-blue">Prestiti Decentralizzati</span><span class="selected-value select-value-color-default">Rendimento (Yield Farming)</span></td><td class="cell-zl^h"><a href="https://hyperlend.finance/" class="url-value">https://hyperlend.finance/</a></td><td class="cell-\}jJ"><a href="https://x.com/hyperlendx" class="url-value">https://x.com/hyperlendx</a></td><td class="cell-TaD\"><a href="https://dexscreener.com/hyperevm/0x594d610a042a70a21cd17124ad62cb746737e589" class="url-value">https://dexscreener.com/hyperevm/0x594d610a042a70a21cd17124ad62cb746737e589</a></td></tr><tr id="2f18a35d-2f90-80d0-a548-f5d68302ebbd"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Drip%20trade%202f18a35d2f9080d0a548f5d68302ebbd.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Drip%20trade/driptrade-logo.png"/>Drip.trade</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Marketplace NFT</span><span class="selected-value select-value-color-green">Piattaforma Lancio NFT</span></td><td class="cell-zl^h"><a href="drip.trade" class="url-value">drip.trade</a></td><td class="cell-\}jJ"><a href="https://x.com/drip__trade" class="url-value">https://x.com/drip__trade</a></td><td class="cell-TaD\"></td></tr><tr id="2f18a35d-2f90-80d0-aa8d-d65995bc1d04"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/HypurrFi%202f18a35d2f9080d0aa8dd65995bc1d04.html">HypurrFi</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-orange">DeFi</span><span class="selected-value select-value-color-blue">Prestiti Decentralizzati</span><span class="selected-value select-value-color-default">Rendimento (Yield Farming)</span></td><td class="cell-zl^h"><a href="https://www.hypurr.fi/" class="url-value">https://www.hypurr.fi/</a></td><td class="cell-\}jJ"><a href="https://x.com/HypurrFi" class="url-value">https://x.com/HypurrFi</a></td><td class="cell-TaD\"></td></tr><tr id="2f18a35d-2f90-8037-84a4-ea230898a9e0"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Ink%202f18a35d2f90803784a4ea230898a9e0.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Ink/ink_logo.jpg"/>Ink</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-green">Airdrop</span><span class="selected-value select-value-color-default">Blockchain</span><span class="selected-value select-value-color-gray">L2</span></td><td class="cell-zl^h"><a href="https://inkonchain.com/" class="url-value">https://inkonchain.com/</a></td><td class="cell-\}jJ"><a href="https://x.com/inkonchain" class="url-value">https://x.com/inkonchain</a></td><td class="cell-TaD\"></td></tr><tr id="2f58a35d-2f90-8038-a9b4-cd6b4727945b"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Bonk%202f58a35d2f908038a9b4cd6b4727945b.html"><img class="icon" src="ImparoDeFi/imparodefi%20db%20ITA/Bonk/bonk_logo.jpg"/>Bonk</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/bonk" class="url-value">https://www.coingecko.com/en/coins/bonk</a></td></tr><tr id="2f58a35d-2f90-80d1-9db5-e44ab884f142"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Trump%202f58a35d2f9080d19db5e44ab884f142.html">Trump</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/official-trump" class="url-value">https://www.coingecko.com/en/coins/official-trump</a></td></tr><tr id="2f68a35d-2f90-8012-9e07-d1a8d41996d9"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Pengu%202f68a35d2f9080129e07d1a8d41996d9.html">Pengu</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/pudgy-penguins" class="url-value">https://www.coingecko.com/en/coins/pudgy-penguins</a></td></tr><tr id="2f68a35d-2f90-8070-b30b-c7bc979417a5"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Spx6900%202f68a35d2f908070b30bc7bc979417a5.html">Spx6900</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/spx6900" class="url-value">https://www.coingecko.com/en/coins/spx6900</a></td></tr><tr id="2f68a35d-2f90-807f-b5d1-e2e7834b5816"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Toshi%202f68a35d2f90807fb5d1e2e7834b5816.html">Toshi</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/toshi" class="url-value">https://www.coingecko.com/en/coins/toshi</a></td></tr><tr id="2f68a35d-2f90-80e5-9bec-ca463f64f309"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Mog%202f68a35d2f9080e59becca463f64f309.html">Mog</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-pink">Memecoin</span></td><td class="cell-zl^h"></td><td class="cell-\}jJ"></td><td class="cell-TaD\"><a href="https://www.coingecko.com/en/coins/mog-coin" class="url-value">https://www.coingecko.com/en/coins/mog-coin</a></td></tr><tr id="30c8a35d-2f90-80a5-b8f9-fe06bb5bf0c9"><td class="cell-title"><a href="ImparoDeFi/imparodefi%20db%20ITA/Gecko%20Terminal%2030c8a35d2f9080a5b8f9fe06bb5bf0c9.html">Gecko Terminal</a></td><td class="cell-{Bbh"><span class="selected-value select-value-color-yellow">Aggregatore di Dati</span></td><td class="cell-zl^h"><a href="https://www.geckoterminal.com/" class="url-value">https://www.geckoterminal.com/</a></td><td class="cell-\}jJ"></td><td class="cell-TaD\"></td></tr></tbody></table><br/><br/></div></div><div style="display:contents" dir="auto"><p id="1048a35d-2f90-80cc-9a9f-eb4d6e5ab5cd" class="">
+</p></div><div style="display:contents" dir="auto"><p id="1048a35d-2f90-80fc-8911-c14565918077" class="">
+</p></div><div style="display:contents" dir="ltr"><figure id="77cea15d-4553-4e73-a377-b3324b40979f" class="link-to-page"><a href="ImparoDeFi/Super%20Beginner%2077cea15d45534e73a377b3324b40979f.html"><span class="icon">💻</span>Super Beginner</a></figure></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

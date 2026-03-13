@@ -1,16 +1,16 @@
 export function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="w-full border-t border-neutral-200 bg-white/60 backdrop-blur">
+    <footer className="w-full border-t border-neutral-200 dark:border-indigo-500/20 bg-white/60 dark:bg-transparent backdrop-blur">
       <div className="container-custom py-8 text-center">
-        <p className="text-neutral-600 text-sm mb-4">ImparoDeFi © {year}. All rights reserved.</p>
+        <p className="text-neutral-600 dark:text-white text-sm mb-4">ImparoDeFi © {year}. All rights reserved.</p>
         
         <div className="flex justify-center items-center space-x-4">
           <a 
             href="https://x.com/imparodefi" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="text-neutral-600 hover:text-primary-600 transition-colors duration-200"
+            className="text-neutral-600 dark:text-white hover:text-primary-600 dark:hover:text-indigo-300 transition-colors duration-200"
             aria-label="Seguici su X (Twitter)"
           >
             <svg 
@@ -26,7 +26,7 @@ export function Footer() {
             href="https://www.instagram.com/imparodefi/" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="text-neutral-600 hover:text-primary-600 transition-colors duration-200"
+            className="text-neutral-600 dark:text-white hover:text-primary-600 dark:hover:text-indigo-300 transition-colors duration-200"
             aria-label="Seguici su Instagram"
           >
             <svg 
@@ -42,7 +42,7 @@ export function Footer() {
             href="https://t.me/+tW7AdFOF4E05YzI8" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="text-neutral-600 hover:text-primary-600 transition-colors duration-200"
+            className="text-neutral-600 dark:text-white hover:text-primary-600 dark:hover:text-indigo-300 transition-colors duration-200"
             aria-label="Unisciti al canale Telegram Imparo DeFi"
           >
             <svg 
@@ -58,7 +58,7 @@ export function Footer() {
             href="https://discord.gg/eRpURHGv2U" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="text-neutral-600 hover:text-primary-600 transition-colors duration-200"
+            className="text-neutral-600 dark:text-white hover:text-primary-600 dark:hover:text-indigo-300 transition-colors duration-200"
             aria-label="Unisciti al server Discord Imparo DeFi"
           >
             <svg 

@@ -1,0 +1,713 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Coinbase</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="b96879b2-c10a-4625-8ec9-8723b3d5bd73" class="page sans"><header><div class="page-header-icon undefined"><img class="icon" src="Coinbase/Screenshot_2024-03-21_at_16.29.41.png"/></div><h1 class="page-title" dir="auto">Coinbase</h1><p class="page-description" dir="auto"></p><table class="properties"><tbody><tr class="property-row property-row-multi_select"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>Tags</th><td><span class="selected-value select-value-color-green">Carta Cripto</span><span class="selected-value select-value-color-red">Exchange Centralizzato (CEX)</span></td></tr><tr class="property-row property-row-url"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Profilo Twitter/X</th><td><a href="https://twitter.com/coinbase" class="url-value">https://twitter.com/coinbase</a></td></tr><tr class="property-row property-row-url"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/link_gray.svg" style="width:14px;height:14px;display:block"/></span>Sito Web</th><td><a href="https://www.coinbase.com/" class="url-value">https://www.coinbase.com/</a></td></tr><tr class="property-row property-row-date"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/calendar_gray.svg" style="width:14px;height:14px;display:block"/></span>Last Updated</th><td><time>@May 28, 2024 3:43 PM</time></td></tr><tr class="property-row property-row-multi_select"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>Blockchain Supportate</th><td></td></tr></tbody></table></header><div class="page-body"><div style="display:contents" dir="auto"><p id="e60225aa-e265-46f6-8e0c-03daf5e2b9dd" class=""><strong>Coinbase</strong> è uno degli exchange più grandi del mondo e l&#x27;unico a essere quotato al Nasdaq.  Questa caratteristica lo porta a essere relativamente stabile e regolamentato, garantendo maggior sicurezza al cliente rispetto ad altre exchange.</p></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong>Coinbase Pro (trading con leva)</strong></summary><div class="indented"><div style="display:contents" dir="auto"><p id="a4d0fb1c-98e4-4bb4-bdea-01454cc941ae" class="">Coinbase Pro è una piattaforma di trading professionale offerta da Coinbase, le cui principali funzionalità includono:</p></div><div style="display:contents" dir="auto"><ol type="1" id="51098fc1-f006-469b-85ae-01d2accc944f" class="numbered-list" start="1"><li><strong>Strumenti di trading avanzati</strong>: Offre libri degli ordini in tempo reale, strumenti di grafico, cronologia delle transazioni e un processo di ordine semplice.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="419427f0-54a6-4e99-9b39-874fc389e340" class="numbered-list" start="2"><li><strong>Commissioni più basse</strong>: Presenta una struttura a commissioni ridotte rispetto alla piattaforma standard di Coinbase, con tariffe basate sul volume di trading.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="061dd2a5-ff12-4944-8483-c46a09697d46" class="numbered-list" start="3"><li><strong>Varietà di tipi di ordini</strong>: Supporta ordini di mercato, limite e stop per diverse strategie di trading.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="553ae243-0812-462c-b55b-9c7afddf16a4" class="numbered-list" start="4"><li><strong>Accesso API</strong>: Permette agli sviluppatori di integrare funzionalità di trading con applicazioni personalizzate.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="604e2032-273c-42b0-bf3c-3bd4a6d9a5e4" class="numbered-list" start="5"><li><strong>Sicurezza</strong>: Misure di sicurezza avanzate, inclusa l&#x27;autenticazione a due fattori e lo storage a freddo per gli asset digitali.</li></ol></div><div style="display:contents" dir="auto"><p id="38b9cc3c-819a-4ec2-873c-dfacd7512562" class="">Per ulteriori dettagli, visita il <a href="https://pro.coinbase.com">sito di Coinbase Pro</a>.</p></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Tutorial </summary><div class="indented"><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Tutorial Scritto</summary></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Tutorial Video</summary></details></div></div></details></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Coinbase Wallet (wallet non-custodial)</summary><div class="indented"><div style="display:contents" dir="auto"><p id="12202ddf-7743-4387-8b3f-22ecb5d4d5fc" class=""><strong>Coinbase Wallet</strong> è un&#x27;applicazione mobile e un&#x27;estensione browser che permette agli utenti di gestire le proprie criptovalute e interagire con le applicazioni decentralizzate (dApp).</p></div><div style="display:contents" dir="auto"><h3 id="7f71d95f-e1bb-4a43-8f8c-9b818f6d05d7" class=""><strong>Funzionalità Principali:</strong></h3></div><div style="display:contents" dir="auto"><ol type="1" id="7c6b379f-5ebe-47b7-8730-e19e0a53a8b8" class="numbered-list" start="1"><li><strong>Gestione Criptovalute</strong>:<div style="display:contents" dir="auto"><ul id="c88843ca-d4c1-48b3-952e-de6b766fcee8" class="bulleted-list"><li style="list-style-type:disc">Supporta una vasta gamma di criptovalute.</li></ul></div><div style="display:contents" dir="auto"><ul id="b394bef0-4be9-4891-9c68-305bd0d61298" class="bulleted-list"><li style="list-style-type:disc">Consente di inviare, ricevere e archiviare in sicurezza le criptovalute.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="60155ac8-dd63-468c-88cd-f057e0685c74" class="numbered-list" start="2"><li><strong>Interazione con dApp</strong>:<div style="display:contents" dir="auto"><ul id="f669d781-983d-4920-87e9-e67ac65e8c18" class="bulleted-list"><li style="list-style-type:disc">Permette di esplorare e interagire con dApp direttamente dall&#x27;app.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="7bf49dac-6733-4245-9a2d-ac6e57722dfb" class="numbered-list" start="3"><li><strong>Sicurezza</strong>:<div style="display:contents" dir="auto"><ul id="368f5c00-da03-4d01-87b0-2c5a416c9ea5" class="bulleted-list"><li style="list-style-type:disc">Utilizza chiavi private memorizzate sul dispositivo dell&#x27;utente.</li></ul></div><div style="display:contents" dir="auto"><ul id="c669f49a-f3da-42cd-a583-48c039350a08" class="bulleted-list"><li style="list-style-type:disc">Offre backup sicuri tramite frasi di recupero.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="3d5c9e2b-0f97-49bf-bfc6-8fee8ae759b1" class="numbered-list" start="4"><li><strong>Estensione Browser</strong>:<div style="display:contents" dir="auto"><ul id="145a3836-372c-4dd0-88ba-9f7abcdeffc4" class="bulleted-list"><li style="list-style-type:disc">Facilita l&#x27;accesso alle dApp direttamente dal browser.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><p id="5bac2f6e-1de1-4f97-a7a9-5ca04a9df7e5" class="">Per maggiori dettagli, visita <a href="https://www.coinbase.com/wallet">Coinbase Wallet</a>.</p></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Tutorial</summary><div class="indented"><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Tutorial Scritto</summary><div class="indented"><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong>Coinbase Wallet - Estensione Browser</strong></summary><div class="indented"><div style="display:contents" dir="auto"><ol type="1" id="860815ed-9d11-4ebd-942e-d0dde71c7587" class="numbered-list" start="1"><li><strong>Download e Installazione</strong><div style="display:contents" dir="auto"><ul id="29ad5dc5-f894-4e0b-b457-73d525e57de2" class="bulleted-list"><li style="list-style-type:disc">Vai al sito ufficiale: Coinbase Wallet Extension.</li></ul></div><div style="display:contents" dir="auto"><ul id="e4bc0a13-90b9-4f35-9e89-8953a3f05b82" class="bulleted-list"><li style="list-style-type:disc">Clicca su &quot;Aggiungi a Chrome&quot; (o il tuo browser preferito) e installa l&#x27;estensione.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="bfc04ae8-7c12-4f40-bbc6-507248249f8f" class="numbered-list" start="2"><li><strong>Creazione di un Nuovo Wallet</strong><div style="display:contents" dir="auto"><ul id="b7778369-6b6e-4aed-a31f-c2e6a1777478" class="bulleted-list"><li style="list-style-type:disc">Apri l&#x27;estensione e clicca su &quot;Create New Wallet&quot;.</li></ul></div><div style="display:contents" dir="auto"><ul id="98c51d65-b05a-4452-a418-d740f1e4ab89" class="bulleted-list"><li style="list-style-type:disc">Imposta una password sicura.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="efbc5665-41c9-41a1-a2c6-f61a09e15240" class="numbered-list" start="3"><li><strong>Generazione e Memorizzazione della Seed Phrase</strong><div style="display:contents" dir="auto"><ul id="35a6e3dd-d7ad-463a-83de-31bd2fe1bb5a" class="bulleted-list"><li style="list-style-type:disc">Salva la tua frase di recupero (seed phrase) in un luogo sicuro e non condividerla con nessuno.</li></ul></div><div style="display:contents" dir="auto"><ul id="7dc9ec25-2544-40c7-9af7-b8af0b556a67" class="bulleted-list"><li style="list-style-type:disc">Conferma la frase di recupero seguendo le istruzioni.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="dbf00292-84f8-4c28-af9e-12c1599be0ae" class="numbered-list" start="4"><li><strong>Utilizzo del Wallet</strong><div style="display:contents" dir="auto"><ul id="f86767ec-91da-42c0-b31b-9aff5ef10a41" class="bulleted-list"><li style="list-style-type:disc">Puoi ora inviare e ricevere criptovalute.</li></ul></div><div style="display:contents" dir="auto"><ul id="6c1b0114-677e-475c-88ad-9bca8eba9cdd" class="bulleted-list"><li style="list-style-type:disc">Usa l&#x27;estensione per accedere a dApp direttamente dal browser.</li></ul></div></li></ol></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong>Coinbase Wallet - App Mobile</strong></summary><div class="indented"><div style="display:contents" dir="auto"><ol type="1" id="bc3b08e2-cbb9-4141-ba15-66b252bcccf5" class="numbered-list" start="1"><li>Installa l&#x27;estensione <a href="https://chromewebstore.google.com/detail/coinbase-wallet-extension/hnfanknocfeofbddgcijnmhnfnkdnaad?hl=en&amp;authuser=0">Coinbase Wallet dal Chrome Web Store</a>.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="398640c8-5a8e-468b-9825-89fd354474df" class="numbered-list" start="2"><li>Scegli &quot;Crea nuovo wallet&quot;.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="4758e904-2cf9-4780-b71b-9dcb5ac2a27d" class="numbered-list" start="3"><li>Fai un backup sicuro della tua frase di recupero a 12 parole. Consigliamo di memorizzarla in un luogo sicuro, come un gestore di password, o di scriverla e conservarla in un posto sicuro. Questa è la chiave per accedere al tuo wallet e Coinbase non può recuperarla per te.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="ae7a8e74-66fa-4306-b2fd-3ae774b5cbb6" class="numbered-list" start="4"><li>Verifica di aver salvato la frase di recupero prima di passare al passo successivo.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="6b0084d5-cc9d-4281-bf32-c2c40bafb425" class="numbered-list" start="5"><li>Crea una password per accedere al tuo wallet. Conservala in un posto sicuro, poiché ti servirà per accedere regolarmente al wallet. Coinbase non può recuperare la tua password per te!</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2fd3bea6-7be9-45a3-9e6e-7fe10072abc4" class="numbered-list" start="6"><li>Richiedi il tuo nome utente web3 gratuito. Questo è il modo in cui altri utenti di Coinbase Wallet possono trovarti e inviarti criptovaluta. Se salti questo passaggio, verrà generato automaticamente un nome utente per te.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="4090f532-8261-456c-8171-5d99ee4689e6" class="numbered-list" start="7"><li>Tutto fatto! La tua estensione Coinbase Wallet è pronta per essere utilizzata! Inizia finanziando la tua estensione Wallet.</li></ol></div></div></details></div><div style="display:contents" dir="auto"><h3 id="a710a600-8366-4541-8c8e-357f55f77628" class=""><strong>Consigli di Sicurezza</strong></h3></div><div style="display:contents" dir="auto"><ul id="17f557b9-50bb-425a-ac42-2962d9d7e102" class="bulleted-list"><li style="list-style-type:disc"><strong>Backup</strong>: Memorizza la tua seed phrase in un luogo sicuro offline.</li></ul></div><div style="display:contents" dir="auto"><ul id="1894e634-121c-4cbd-b440-83d401f7cd5e" class="bulleted-list"><li style="list-style-type:disc"><strong>Autenticazione</strong>: Utilizza l&#x27;autenticazione a due fattori (2FA) se possibile.</li></ul></div></div></details></div></div></details></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Carta di Debito (Coinbase Card)</summary><div class="indented"><div style="display:contents" dir="auto"><p id="c2d69357-bf93-4dfc-a52c-d279b3e89410" class="">La Coinbase Card è una carta di debito Visa che permette di spendere criptovalute e valute locali ovunque siano accettate le carte Visa. Ecco una guida su come utilizzarla, sia per la versione mobile che per quella fisica.</p></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong>Funzionalità Principali</strong></summary><div class="indented"><div style="display:contents" dir="auto"><ol type="1" id="54256d86-3196-4062-bf25-2b0f01660068" class="numbered-list" start="1"><li><strong>Spendere Criptovalute e Valute Locali</strong>: Puoi utilizzare la Coinbase Card per effettuare acquisti e prelevare contanti da qualsiasi ATM che accetta Visa.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="dad04846-e374-471c-9474-f817ccfa87b1" class="numbered-list" start="2"><li><strong>Nessuna Commissione Nascosta</strong>: La carta non ha commissioni di spesa e non richiede un controllo del credito per la richiesta.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="290dba28-421a-49cb-946c-ff57cc3b301c" class="numbered-list" start="3"><li><strong>Ricompense in Criptovaluta</strong>: Guadagna criptovalute su ogni acquisto. Puoi scegliere le ricompense che preferisci e cambiarle in qualsiasi momento.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="30d2657d-c21b-4b6e-8336-cdc2d8140e54" class="numbered-list" start="4"><li><strong>Sicurezza Avanzata</strong>: Include funzionalità di sicurezza come l&#x27;autenticazione a due fattori, il blocco della carta e la possibilità di cambiare il PIN.</li></ol></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong>Come Richiedere e Attivare la Coinbase Card</strong></summary><div class="indented"><div style="display:contents" dir="auto"><ol type="1" id="b3e7c1fa-806a-4e65-b5f4-bb096c613a38" class="numbered-list" start="1"><li><strong>Richiesta della Carta</strong><div style="display:contents" dir="auto"><ul id="3ec10e20-8214-4189-88cd-21a3cc4cbd70" class="bulleted-list"><li style="list-style-type:disc">Vai al sito ufficiale di <a href="https://help.coinbase.com/en-gb/coinbase/trading-and-funding/coinbase-card/cb-card">Coinbase Card</a> e richiedi la carta.</li></ul></div><div style="display:contents" dir="auto"><ul id="2852afd5-59ad-42a6-8fe3-8f4b831d5ffb" class="bulleted-list"><li style="list-style-type:disc">Compila il modulo di richiesta senza bisogno di un controllo del credito.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="b870a01c-82ac-4255-8c48-a334b1118df7" class="numbered-list" start="2"><li><strong>Ricezione della Carta</strong><div style="display:contents" dir="auto"><ul id="e081c7c3-0e2a-4ef1-9f29-499cff009e39" class="bulleted-list"><li style="list-style-type:disc">Riceverai la carta fisica entro 2-3 settimane.</li></ul></div><div style="display:contents" dir="auto"><ul id="08cacb18-947c-4adf-b7da-8e91dd11a86a" class="bulleted-list"><li style="list-style-type:disc">Puoi utilizzare subito il numero della carta per acquisti online.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="52aa7e6c-b481-4ddc-b7d9-865cabe19bae" class="numbered-list" start="3"><li><strong>Attivazione della Carta</strong><div style="display:contents" dir="auto"><ul id="1f9c54bc-b981-49c2-9fbe-56fff0e1f1b9" class="bulleted-list"><li style="list-style-type:disc">Accedi al tuo account su Coinbase.com o tramite l&#x27;app mobile Coinbase.</li></ul></div><div style="display:contents" dir="auto"><ul id="0a3595f4-31e4-4f73-84b3-0cc0faa0dd9c" class="bulleted-list"><li style="list-style-type:disc">Vai alla sezione &quot;Card&quot; nella barra di navigazione.</li></ul></div><div style="display:contents" dir="auto"><ul id="685b3f90-ed24-42a6-8b63-1e5d4170524c" class="bulleted-list"><li style="list-style-type:disc">Seleziona &quot;Attiva la tua carta fisica&quot; e inserisci il numero della carta e il CVV a 3 cifre.</li></ul></div><div style="display:contents" dir="auto"><ul id="72f9de83-42db-42aa-ae46-dd2689a51b22" class="bulleted-list"><li style="list-style-type:disc">Crea o modifica il PIN seguendo le istruzioni nell&#x27;app.</li></ul></div></li></ol></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong>Utilizzo della Carta</strong></summary><div class="indented"><div style="display:contents" dir="auto"><ol type="1" id="af8f63ac-e31e-4477-bc67-8bc3bcb89ea8" class="numbered-list" start="1"><li><strong>Finanziare la Carta</strong><div style="display:contents" dir="auto"><ul id="37b874e2-3afb-43d7-a286-def00e79b21e" class="bulleted-list"><li style="list-style-type:disc">Collega il tuo conto bancario, PayPal, Apple Pay o Google Pay al tuo account Coinbase per finanziare la tua carta.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="cdf3dba7-829e-4f72-8304-174eec31c32f" class="numbered-list" start="2"><li><strong>Acquisti Online</strong><div style="display:contents" dir="auto"><ul id="ab67d3f1-a19c-4aab-8f6a-29ea9b55d75a" class="bulleted-list"><li style="list-style-type:disc">Utilizza immediatamente la carta visualizzando il numero attraverso il tuo account Coinbase o aggiungendo la carta a Apple Pay o Google Pay.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="cea647af-c6f0-4b5e-8072-bb1dffdb4468" class="numbered-list" start="3"><li><strong>Acquisti in Negozio</strong><div style="display:contents" dir="auto"><ul id="1493f990-1d90-4567-8839-79264ba2c5ab" class="bulleted-list"><li style="list-style-type:disc">La carta può essere utilizzata in oltre 40 milioni di punti vendita in tutto il mondo che accettano Visa.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="c4deeab3-7d8e-4133-8e18-7425a404e3bb" class="numbered-list" start="4"><li><strong>Prelievi di Contante</strong><div style="display:contents" dir="auto"><ul id="0368a333-740e-451d-9c9c-b7cb5c86bc8b" class="bulleted-list"><li style="list-style-type:disc">Puoi prelevare contanti dagli ATM utilizzando il PIN della carta.</li></ul></div></li></ol></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong>Controllo dei Limiti di Spesa</strong></summary><div class="indented"><div style="display:contents" dir="auto"><ol type="1" id="fd785dc8-8ff7-49a0-9ce5-5768a08f9148" class="numbered-list" start="1"><li>Accedi al tuo account su Coinbase.com o tramite l&#x27;app mobile Coinbase.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="5fd87ece-7d1e-4c34-997e-7dee9673d613" class="numbered-list" start="2"><li>Vai alla sezione &quot;Card&quot;.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="48e6a4af-d49f-4822-8380-380a73c95615" class="numbered-list" start="3"><li>Seleziona &quot;Support&quot; e poi &quot;View spending and ATM limits&quot; per verificare i tuoi limiti di spesa.</li></ol></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong>Sicurezza e Supporto</strong></summary><div class="indented"><div style="display:contents" dir="auto"><ul id="acfceb70-cd85-4f5e-a5b8-09e32b4e588c" class="bulleted-list"><li style="list-style-type:disc"><strong>Sicurezza</strong>: Blocco della carta, cambio del PIN, autenticazione a due fattori.</li></ul></div><div style="display:contents" dir="auto"><ul id="6187a5b4-6db1-4322-92e1-1d49d378d23e" class="bulleted-list"><li style="list-style-type:disc"><strong>Supporto 24/7</strong>: Supporto dedicato via telefono e email per qualsiasi problema.</li></ul></div></div></details></div><div style="display:contents" dir="auto"><p id="a4746698-5485-44bd-8455-67c06767395d" class="">Per ulteriori dettagli e domande frequenti, puoi visitare il <a href="https://help.coinbase.com/en/coinbase/trading-and-funding/coinbase-card/use-cb-card">Centro Assistenza di Coinbase</a>.</p></div></div></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Tutorial</summary><div class="indented"><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Tutorial Scritti</summary></details></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Tutorial Video</summary><div class="indented"><div style="display:contents" dir="ltr"><figure id="b7aa6cd7-63b0-430e-8a44-2334543753d8"><div class="source"><a href="https://www.youtube.com/watch?v=55LHEhMwEPQ">https://www.youtube.com/watch?v=55LHEhMwEPQ</a></div></figure></div></div></details></div></div></details></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

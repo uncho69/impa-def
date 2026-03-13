@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
+import { db, hasDatabase } from '@/lib/db';
 import { epochs, campaigns } from '@/lib/db/schema';
 import { eq, and, desc, sql } from 'drizzle-orm';
+import { FALLBACK_EPOCHS } from '@/lib/leaderboards-fallback';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,6 +13,22 @@ export async function GET(request: NextRequest) {
     const campaignIndexParam = searchParams.get('campaignIndex');
     const limit = parseInt(searchParams.get('limit') || '20', 10);
     const offset = parseInt(searchParams.get('offset') || '0', 10);
+
+    if (!hasDatabase || !db) {
+      const sliced = FALLBACK_EPOCHS.slice(offset, offset + limit);
+      return NextResponse.json(
+        {
+          epochs: sliced,
+          pagination: {
+            limit,
+            offset,
+            total: FALLBACK_EPOCHS.length,
+            hasMore: offset + limit < FALLBACK_EPOCHS.length,
+          },
+        },
+        { status: 200 }
+      );
+    }
 
     const conditions = [eq(epochs.isActive, 1), sql`${epochs.deletedAt} IS NULL`];
 
@@ -41,13 +58,7 @@ export async function GET(request: NextRequest) {
         campaignName: campaigns.name,
       })
       .from(epochs)
-      .leftJoin(
-        campaigns,
-        and(
-          eq(epochs.projectId, campaigns.projectId),
-          eq(epochs.campaignIndex, campaigns.index)
-        )
-      )
+      .innerJoin(campaigns, and(eq(epochs.projectId, campaigns.projectId), eq(epochs.campaignIndex, campaigns.index)))
       .where(and(...conditions))
       .orderBy(desc(epochs.createdAt))
       .limit(limit)
@@ -59,6 +70,22 @@ export async function GET(request: NextRequest) {
       .where(and(...conditions));
 
     const totalCount = totalCountResult[0]?.count || 0;
+
+    if (process.env.NODE_ENV !== 'production' && totalCount === 0) {
+      const sliced = FALLBACK_EPOCHS.slice(offset, offset + limit);
+      return NextResponse.json(
+        {
+          epochs: sliced,
+          pagination: {
+            limit,
+            offset,
+            total: FALLBACK_EPOCHS.length,
+            hasMore: offset + limit < FALLBACK_EPOCHS.length,
+          },
+        },
+        { status: 200 }
+      );
+    }
 
     return NextResponse.json(
       {

@@ -1,169 +1,223 @@
 "use client";
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-// import { SimpleCard } from '@/components/SimpleCard'; // Non più necessario
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useLanguage } from "@/contexts/LanguageContext";
 
-interface NewsStats {
-  total: number;
-  published: number;
-  drafts: number;
-  views: number;
-  byCategory: { [key: string]: number };
+interface ActivityItem {
+  type: "campaign" | "news";
+  title: string;
+  description: string;
+  actorUserId: string | null;
+  actorUsername: string | null;
+  actorEmail: string | null;
+  timestamp: string;
+}
+
+function formatActor(username: string | null, email: string | null): string {
+  if (username && username.trim()) return username;
+  if (email) {
+    const localPart = email.split("@")[0];
+    return localPart || email;
+  }
+  return "Admin";
+}
+
+function formatDateTime(iso: string): string {
+  const d = new Date(iso);
+  return d.toLocaleString("it-IT", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
 export default function AdminDashboard() {
-  const [stats, setStats] = useState<NewsStats | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { language } = useLanguage();
+  const isEnglish = language === "en";
+  const [activity, setActivity] = useState<ActivityItem[]>([]);
+  const [activityError, setActivityError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchStats();
-  }, []);
-
-  const fetchStats = async () => {
-    try {
-      const response = await fetch('/api/admin/stats');
-      const data = await response.json();
-      setStats(data);
-    } catch (error) {
-      console.error('Errore nel caricamento statistiche:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="text-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-        <p className="text-gray-600">Caricamento statistiche...</p>
-      </div>
-    );
-  }
+    const fetchActivity = async () => {
+      try {
+        const res = await fetch("/api/admin/activity");
+        if (!res.ok) {
+          setActivityError(isEnglish ? "Unable to load admin logs." : "Impossibile caricare i log admin.");
+          return;
+        }
+        const data = await res.json();
+        setActivity(data.activities ?? []);
+      } catch {
+        setActivityError(isEnglish ? "Network error while loading admin logs." : "Errore di rete durante il caricamento dei log admin.");
+      }
+    };
+    fetchActivity();
+  }, [isEnglish]);
 
   return (
     <div className="space-y-8">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-600 mt-2">Panoramica del sistema di gestione news</p>
-        </div>
-        <Link
-          href="/admin/news/new"
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
-        >
-          ➕ Nuovo Articolo
-        </Link>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
-          <div className="flex items-center">
-            <div className="p-3 bg-blue-100 rounded-lg">
-              <span className="text-2xl">📰</span>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm text-gray-600">Totale Articoli</p>
-              <p className="text-2xl font-bold text-gray-900">{stats?.total || 0}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
-          <div className="flex items-center">
-            <div className="p-3 bg-green-100 rounded-lg">
-              <span className="text-2xl">✅</span>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm text-gray-600">Pubblicati</p>
-              <p className="text-2xl font-bold text-gray-900">{stats?.published || 0}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
-          <div className="flex items-center">
-            <div className="p-3 bg-yellow-100 rounded-lg">
-              <span className="text-2xl">📝</span>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm text-gray-600">Bozze</p>
-              <p className="text-2xl font-bold text-gray-900">{stats?.drafts || 0}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
-          <div className="flex items-center">
-            <div className="p-3 bg-purple-100 rounded-lg">
-              <span className="text-2xl">👀</span>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm text-gray-600">Visualizzazioni</p>
-              <p className="text-2xl font-bold text-gray-900">{stats?.views || 0}</p>
-            </div>
-          </div>
+          <p className="text-slate-300">
+            {isEnglish
+              ? "Welcome to the ImparoDeFi admin panel. Choose what to manage below."
+              : "Benvenuto nel pannello admin di ImparoDeFi. Scegli cosa gestire qui sotto."}
+          </p>
         </div>
       </div>
 
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Recent Actions */}
-        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Azioni Rapide</h2>
-          <div className="space-y-3">
-            <Link
-              href="/admin/news/new"
-              className="block p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
-            >
-              <div className="flex items-center">
-                <span className="text-lg mr-3">➕</span>
-                <div>
-                  <p className="font-medium text-gray-900">Crea Nuovo Articolo</p>
-                  <p className="text-sm text-gray-600">Scrivi e pubblica una nuova news</p>
-                </div>
-              </div>
-            </Link>
-            
-            <Link
-              href="/admin/news?status=draft"
-              className="block p-3 bg-yellow-50 hover:bg-yellow-100 rounded-lg transition-colors"
-            >
-              <div className="flex items-center">
-                <span className="text-lg mr-3">📝</span>
-                <div>
-                  <p className="font-medium text-gray-900">Gestisci Bozze</p>
-                  <p className="text-sm text-gray-600">Completa e pubblica le bozze</p>
-                </div>
-              </div>
-            </Link>
-
+      {/* Azioni principali */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-indigo-900/25 rounded-xl border border-indigo-500/20 p-6 flex flex-col justify-between backdrop-blur">
+          <div>
+            <h2 className="text-xl font-bold text-white mb-2">{isEnglish ? "Articles" : "Articoli"}</h2>
+            <p className="text-slate-300 text-sm mb-4">
+              {isEnglish
+                ? "Manage news and drafts. From Articles you can also update the site's \"What's new\" section."
+                : "Gestisci news e bozze. Dalla pagina Articoli puoi anche accedere alla sezione \"Cosa c'è di nuovo\" del sito."}
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
             <Link
               href="/admin/news"
-              className="block p-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors"
+              className="inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-500 transition-colors"
             >
-              <div className="flex items-center">
-                <span className="text-lg mr-3">📋</span>
-                <div>
-                  <p className="font-medium text-gray-900">Tutti gli Articoli</p>
-                  <p className="text-sm text-gray-600">Visualizza e modifica tutti gli articoli</p>
-                </div>
-              </div>
+              {isEnglish ? "Go to Articles" : "Vai ad Articoli"}
             </Link>
+          </div>
+        </div>
 
+        <div className="bg-indigo-900/25 rounded-xl border border-indigo-500/20 p-6 flex flex-col justify-between backdrop-blur">
+          <div>
+            <h2 className="text-xl font-bold text-white mb-2">{isEnglish ? "Campaigns" : "Campagne"}</h2>
+            <p className="text-slate-300 text-sm mb-4">
+              {isEnglish
+                ? "Create and manage campaigns, epochs, participation requests, and leaderboard refreshes."
+                : "Crea e gestisci campagne, epoch, richieste di partecipazione e refresh delle leaderboard."}
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
             <Link
-              href="/admin/whatsnew"
-              className="block p-3 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors"
+              href="/admin/campaigns"
+              className="inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-500 transition-colors"
             >
-              <div className="flex items-center">
-                <span className="text-lg mr-3">🚀</span>
-                <div>
-                  <p className="font-medium text-gray-900">Gestisci Cosa c'è di nuovo</p>
-                  <p className="text-sm text-gray-600">Crea e modifica le card delle novità</p>
-                </div>
-              </div>
+              {isEnglish ? "Go to Campaigns" : "Vai a Campagne"}
+            </Link>
+          </div>
+        </div>
+
+        <div className="bg-indigo-900/25 rounded-xl border border-indigo-500/20 p-6 flex flex-col justify-between backdrop-blur">
+          <div>
+            <h2 className="text-xl font-bold text-white mb-2">{isEnglish ? "Manage projects" : "Gestisci progetti"}</h2>
+            <p className="text-slate-300 text-sm mb-4">
+              {isEnglish
+                ? "List all projects (Bitcoin, Ethereum, Solana, Hyperliquid, Base, etc.) with search and category filters."
+                : "Lista di tutti i progetti (Bitcoin, Ethereum, Solana, Hyperliquid, Base, ecc.) con search e filtri per categoria."}
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href="/admin/projects"
+              className="inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-500 transition-colors"
+            >
+              {isEnglish ? "Go to Manage projects" : "Vai a Gestisci progetti"}
+            </Link>
+          </div>
+        </div>
+
+        <div className="bg-indigo-900/25 rounded-xl border border-indigo-500/20 p-6 flex flex-col justify-between backdrop-blur">
+          <div>
+            <h2 className="text-xl font-bold text-white mb-2">{isEnglish ? "Support" : "Supporto"}</h2>
+            <p className="text-slate-300 text-sm mb-4">
+              {isEnglish ? "Manage user support requests and reply to open chats." : "Gestisci le richieste di supporto degli utenti e rispondi alle chat aperte."}
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href="/admin/support"
+              className="inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-500 transition-colors"
+            >
+              {isEnglish ? "Go to Support" : "Vai al Supporto"}
+            </Link>
+          </div>
+        </div>
+
+        <div className="bg-indigo-900/25 rounded-xl border border-indigo-500/20 p-6 flex flex-col justify-between backdrop-blur">
+          <div>
+            <h2 className="text-xl font-bold text-white mb-2">Hacks &amp; Scams Alerts</h2>
+            <p className="text-slate-300 text-sm mb-4">
+              {isEnglish
+                ? "Manage security alerts shown on the homepage with active state, priority, and deep links."
+                : "Gestisci gli avvisi di sicurezza mostrati nella homepage, con stato attivo, priorità e link di approfondimento."}
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href="/admin/hacks-scams"
+              className="inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-500 transition-colors"
+            >
+              {isEnglish ? "Go to Hacks & Scams" : "Vai a Hacks & Scams"}
+            </Link>
+          </div>
+        </div>
+
+        <div className="bg-indigo-900/25 rounded-xl border border-indigo-500/20 p-6 flex flex-col justify-between backdrop-blur">
+          <div>
+            <h2 className="text-xl font-bold text-white mb-2">Learning &amp; Badge</h2>
+            <p className="text-slate-300 text-sm mb-4">
+              {isEnglish
+                ? "Configure level missions, temporary special campaigns, and user-claimable rewards."
+                : "Configura missioni di livello, campagne speciali temporanee e reward claimabili dagli utenti."}
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href="/admin/learning-badges"
+              className="inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-500 transition-colors"
+            >
+              {isEnglish ? "Go to Learning & Badge" : "Vai a Learning & Badge"}
+            </Link>
+          </div>
+        </div>
+
+        <div className="bg-indigo-900/25 rounded-xl border border-indigo-500/20 p-6 flex flex-col justify-between backdrop-blur">
+          <div>
+            <h2 className="text-xl font-bold text-white mb-2">{isEnglish ? "Trending Tokens" : "Token in Tendenza"}</h2>
+            <p className="text-slate-300 text-sm mb-4">
+              {isEnglish
+                ? "Add or remove project tokens shown on the homepage. Prices are updated every minute via CoinGecko."
+                : "Aggiungi o rimuovi i token progetto mostrati in homepage. I prezzi sono aggiornati ogni minuto via CoinGecko."}
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href="/admin/trending-tokens"
+              className="inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-500 transition-colors"
+            >
+              {isEnglish ? "Go to Trending Tokens" : "Vai a Token in Tendenza"}
+            </Link>
+          </div>
+        </div>
+
+        <div className="bg-indigo-900/25 rounded-xl border border-indigo-500/20 p-6 flex flex-col justify-between backdrop-blur">
+          <div>
+            <h2 className="text-xl font-bold text-white mb-2">Footer &amp; Legal</h2>
+            <p className="text-slate-300 text-sm mb-4">
+              {isEnglish
+                ? "Edit footer links and the content of Privacy Policy and Terms of Service pages."
+                : "Modifica i link del footer e i contenuti delle pagine Privacy Policy e Terms of Service."}
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href="/admin/site-settings"
+              className="inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-500 transition-colors"
+            >
+              {isEnglish ? "Go to Footer & Legal" : "Vai a Footer & Legal"}
             </Link>
 
             <Link
@@ -181,23 +235,66 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Stats by Category */}
-        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Articoli per Categoria</h2>
-          <div className="space-y-3">
-            {stats?.byCategory && Object.entries(stats.byCategory).map(([category, count]) => (
-              <div key={category} className="flex justify-between items-center">
-                <span className="text-gray-700 capitalize">{category.toLowerCase()}</span>
-                <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-sm font-medium">
-                  {count}
-                </span>
-              </div>
-            ))}
-            {(!stats?.byCategory || Object.keys(stats.byCategory).length === 0) && (
-              <p className="text-gray-500 text-center py-4">Nessun articolo ancora creato</p>
-            )}
+        <div className="bg-indigo-900/25 rounded-xl border border-indigo-500/20 p-6 flex flex-col justify-between backdrop-blur">
+          <div>
+            <h2 className="text-xl font-bold text-white mb-2">{isEnglish ? "Beta Access" : "Accesso Beta"}</h2>
+            <p className="text-slate-300 text-sm mb-4">
+              {isEnglish
+                ? "Review public form requests, check profession/crypto level/social data, and approve or reject users."
+                : "Visualizza le richieste del form pubblico, leggi professione/livello crypto/social e approva o rifiuta gli utenti."}
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href="/admin/access-requests"
+              className="inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-500 transition-colors"
+            >
+              {isEnglish ? "Go to access requests" : "Vai a richieste accesso"}
+            </Link>
+            <Link
+              href="/beta-access"
+              target="_blank"
+              className="inline-flex items-center px-4 py-2 rounded-lg border border-indigo-400/35 text-indigo-100 text-sm font-medium hover:bg-indigo-500/15 transition-colors"
+            >
+              {isEnglish ? "Open public form" : "Apri form pubblico"}
+            </Link>
           </div>
         </div>
+      </div>
+
+      {/* Admin Logs */}
+      <div className="bg-indigo-900/25 rounded-xl border border-indigo-500/20 p-6 backdrop-blur">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold text-white">Admin Logs</h2>
+          <span className="text-xs uppercase tracking-wide text-slate-400">{isEnglish ? "Administrative activity" : "Attività amministrative"}</span>
+        </div>
+        {activityError && (
+          <p className="text-sm text-red-300 mb-2">{activityError}</p>
+        )}
+        {activity.length === 0 && !activityError ? (
+          <p className="text-sm text-slate-400">{isEnglish ? "No recent activity." : "Nessuna attività recente."}</p>
+        ) : (
+          <div className="max-h-80 overflow-y-auto">
+            <ul className="divide-y divide-indigo-500/20">
+              {activity.map((item, idx) => (
+                <li key={idx} className="py-3 flex items-start justify-between">
+                  <div>
+                    <p className="text-sm text-slate-200">
+                      <span className="font-semibold">
+                        {formatActor(item.actorUsername, item.actorEmail)}
+                      </span>{" "}
+                      {item.description}
+                    </p>
+                    <p className="text-xs text-slate-400 mt-1">
+                      {item.type === "campaign" ? (isEnglish ? "Campaign" : "Campagna") : isEnglish ? "Article" : "Articolo"} ·{" "}
+                      {formatDateTime(item.timestamp)}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   );
