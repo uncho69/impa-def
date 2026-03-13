@@ -7,6 +7,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getUserIdFromRequest } from '@/lib/auth/middleware';
 import { randomBytes, createHash } from 'crypto';
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 const X_AUTHORIZE_URL = 'https://x.com/i/oauth2/authorize';
 const SCOPES = 'tweet.read users.read offline.access';
 const CODE_VERIFIER_COOKIE = 'x_oauth_code_verifier';
