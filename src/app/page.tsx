@@ -8,7 +8,6 @@ import { UnifiedAuthControls } from "@/components/auth/UnifiedAuthControls";
 import { SearchBar } from "@/components/SearchBar";
 import { CollapsibleSidebar } from "@/components/CollapsibleSidebar";
 import { useAppAuth } from "@/lib/auth/useAppAuth";
-import { isAdminEmail } from "@/lib/admin-emails";
 import LanguageToggle from "@/components/LanguageToggle";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -152,30 +151,13 @@ function formatChange(value: number): string {
   return `${value >= 0 ? "+" : "-"}${abs}%`;
 }
 
-function extractPrivyEmail(
-  linkedAccounts: Array<Record<string, unknown>> | undefined
-): string {
-  if (!Array.isArray(linkedAccounts)) return "";
-  for (const account of linkedAccounts) {
-    const candidates = [account?.address, account?.email, account?.emailAddress];
-    for (const value of candidates) {
-      if (typeof value === "string" && value.includes("@")) {
-        return value.toLowerCase();
-      }
-    }
-  }
-  return "";
-}
-
 export default function Home() {
   const pathname = usePathname();
   const router = useRouter();
   const { language } = useLanguage();
   const isEnglish = language === "en";
   const { user, isLoaded, isSignedIn } = useAppAuth();
-  const linkedAccounts = (Array.isArray(user?.linkedAccounts) ? user.linkedAccounts : []) as Array<Record<string, unknown>>;
-  const userEmail = extractPrivyEmail(linkedAccounts);
-  const [isAdmin, setIsAdmin] = useState(Boolean(userEmail && isAdminEmail(userEmail)));
+  const [isAdmin, setIsAdmin] = useState(false);
   const [theme, setTheme] = useState<Theme>("dark");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
@@ -189,11 +171,6 @@ export default function Home() {
     if (!isLoaded) return;
     if (!isSignedIn) {
       setIsAdmin(false);
-      return;
-    }
-
-    if (userEmail && isAdminEmail(userEmail)) {
-      setIsAdmin(true);
       return;
     }
 
@@ -214,7 +191,7 @@ export default function Home() {
     return () => {
       cancelled = true;
     };
-  }, [isLoaded, isSignedIn, userEmail]);
+  }, [isLoaded, isSignedIn]);
 
   useEffect(() => {
     const stored = localStorage.getItem("imparodefi-theme") as Theme | null;

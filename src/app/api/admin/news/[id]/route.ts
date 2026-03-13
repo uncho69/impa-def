@@ -4,14 +4,7 @@ import { db } from '@/lib/db';
 import { news } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { updateNews, getNewsById, deleteNews } from '@/lib/news';
-
-// Lista degli admin autorizzati
-const ADMIN_EMAILS = [
-  "jeffben69zos@gmail.com",
-  "admin@imparodefi.com", 
-  "cofounder@imparodefi.com",
-  "lordbaconf@gmail.com"
-];
+import { isAdminEmail } from '@/lib/admin-emails';
 
 async function checkAdmin() {
   try {
@@ -27,13 +20,12 @@ async function checkAdmin() {
       return false;
     }
     
-    // Check if user's email is in the admin list
     const userEmail = user.emailAddresses?.[0]?.emailAddress;
     if (!userEmail) {
       return false;
     }
-    
-    return ADMIN_EMAILS.includes(userEmail.toLowerCase());
+
+    return isAdminEmail(userEmail);
   } catch (error) {
     console.error('Errore auth:', error);
     return false;

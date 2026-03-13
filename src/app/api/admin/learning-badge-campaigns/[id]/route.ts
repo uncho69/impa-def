@@ -2,13 +2,7 @@ import { NextResponse } from "next/server";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { readLearningCampaigns, writeLearningCampaigns } from "@/lib/learning-badges/campaign-storage";
 import type { LearningCampaign } from "@/lib/learning-badges/campaigns";
-
-const ADMIN_EMAILS = [
-  "jeffben69zos@gmail.com",
-  "admin@imparodefi.com",
-  "cofounder@imparodefi.com",
-  "lordbaconf@gmail.com",
-];
+import { isAdminEmail } from "@/lib/admin-emails";
 
 async function checkAdmin() {
   try {
@@ -26,7 +20,7 @@ async function checkAdmin() {
     if (!userId) return false;
     const user = await currentUser();
     const userEmail = user?.emailAddresses?.[0]?.emailAddress?.toLowerCase();
-    return Boolean(userEmail && ADMIN_EMAILS.includes(userEmail));
+    return Boolean(userEmail && isAdminEmail(userEmail));
   } catch (error) {
     console.error("Errore auth admin learning campaigns [id]:", error);
     return false;

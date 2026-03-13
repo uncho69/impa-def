@@ -1,13 +1,18 @@
+import "server-only";
+
 /**
- * Lista admin e check email. Modulo client-safe (nessun import server).
- * Usare questo file nei Client Component; usare admin-auth.ts solo nei Server Component/API.
+ * Lista admin da env e check email.
+ * Valori supportati: ADMIN_EMAILS o admin_emails (comma-separated).
+ * Nessun fallback hardcoded per evitare di esporre email nel repository.
  */
-const ADMIN_EMAILS = [
-  "jeffben69zos@gmail.com",
-  "admin@imparodefi.com",
-  "cofounder@imparodefi.com",
-  "lordbaconf@gmail.com",
-];
+const ADMIN_EMAILS = (
+  process.env.ADMIN_EMAILS ??
+  process.env.admin_emails ??
+  ""
+)
+  .split(",")
+  .map((email) => email.trim().toLowerCase())
+  .filter(Boolean);
 
 export function isAdminEmail(email: string): boolean {
   return ADMIN_EMAILS.includes(email.toLowerCase());

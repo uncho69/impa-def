@@ -3,16 +3,9 @@ import { auth, currentUser } from '@clerk/nextjs/server';
 import { db } from '@/lib/db';
 import { news } from '@/lib/db/schema';
 import { eq, sql, count, and } from 'drizzle-orm';
+import { isAdminEmail } from '@/lib/admin-emails';
 
 export const dynamic = 'force-dynamic';
-
-// Lista degli admin autorizzati
-const ADMIN_EMAILS = [
-  "jeffben69zos@gmail.com",
-  "admin@imparodefi.com", 
-  "cofounder@imparodefi.com",
-  "lordbaconf@gmail.com"
-];
 
 async function checkAdmin() {
   try {
@@ -28,13 +21,12 @@ async function checkAdmin() {
       return false;
     }
     
-    // Check if user's email is in the admin list
     const userEmail = user.emailAddresses?.[0]?.emailAddress;
     if (!userEmail) {
       return false;
     }
-    
-    return ADMIN_EMAILS.includes(userEmail.toLowerCase());
+
+    return isAdminEmail(userEmail);
   } catch (error) {
     console.error('Errore auth:', error);
     return false;

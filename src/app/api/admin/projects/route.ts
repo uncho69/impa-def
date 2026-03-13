@@ -5,15 +5,10 @@ import { projects, projectCatalog, projectMetadata } from '@/lib/db/schema';
 import { eq, sql } from 'drizzle-orm';
 import { PLATFORM_PROJECTS } from '@/lib/platform-projects';
 import { parseProjectMetadataTags, stringifyProjectMetadataTags, type ProjectTokenConfig } from '@/lib/project-page-overrides';
+import { isAdminEmail } from '@/lib/admin-emails';
 
 export const dynamic = 'force-dynamic';
 
-const ADMIN_EMAILS = [
-  'jeffben69zos@gmail.com',
-  'admin@imparodefi.com',
-  'cofounder@imparodefi.com',
-  'lordbaconf@gmail.com',
-];
 const EXCLUDED_PROJECT_IDS = new Set(['imparodefi']);
 
 async function checkAdmin(): Promise<boolean> {
@@ -33,7 +28,7 @@ async function checkAdmin(): Promise<boolean> {
     const user = await currentUser();
     if (!user?.emailAddresses?.[0]?.emailAddress) return false;
     const email = user.emailAddresses[0].emailAddress.toLowerCase();
-    return ADMIN_EMAILS.some((e) => e.toLowerCase() === email);
+    return isAdminEmail(email);
   } catch {
     return false;
   }
