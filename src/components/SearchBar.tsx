@@ -9,6 +9,29 @@ type IndexedPage = {
   content: string;
 };
 
+function normalizeAndDedupeIndex(pages: IndexedPage[]): IndexedPage[] {
+  const byUrl = new Map<string, IndexedPage>();
+  for (const page of pages) {
+    const normalizedUrl = page.url.trim();
+    if (!normalizedUrl) continue;
+    const previous = byUrl.get(normalizedUrl);
+    if (!previous) {
+      byUrl.set(normalizedUrl, {
+        url: normalizedUrl,
+        title: page.title.trim(),
+        content: page.content.trim(),
+      });
+      continue;
+    }
+    byUrl.set(normalizedUrl, {
+      url: normalizedUrl,
+      title: previous.title || page.title.trim(),
+      content: `${previous.content} ${page.content}`.trim(),
+    });
+  }
+  return Array.from(byUrl.values());
+}
+
 
 export function SearchBar() {
   const router = useRouter();
@@ -27,7 +50,7 @@ export function SearchBar() {
     setIsIndexing(true);
     try {
       // Usa indice statico invece di crawling dinamico
-      const pages = getStaticIndex();
+      const pages = normalizeAndDedupeIndex(getStaticIndex());
       console.log("Loaded static index:", pages.length, "pages");
       setIndexed(pages);
     } catch (err) {
@@ -236,12 +259,21 @@ function getStaticIndex(): IndexedPage[] {
       title: "Solana - Blockchain ad alta velocità",
       content: "solana SOL proof of history high throughput low fees phantom wallet raydium jupiter"
     },
-    
+    {
+      url: "/blockchain/railgun",
+      title: "RAILGUN - Privacy on-chain",
+      content: "railgun privacy protocol shielding private defi zk rail token"
+    },
+    {
+      url: "/blockchain/zcash",
+      title: "Zcash - Privacy coin",
+      content: "zcash ZEC privacy coin shielded transactions zero knowledge"
+    },
     // DeFi
     {
       url: "/defi",
       title: "DeFi - Finanza Decentralizzata",
-      content: "defi finanza decentralizzata uniswap aave compound curve balancer lido yearn jupiter raydium traderjoe camelot stargate layerzero orbiter jumper debridge hyperliquid syncswap"
+      content: "defi finanza decentralizzata uniswap aave compound curve balancer lido yearn jupiter raydium traderjoe camelot stargate layerzero orbiter jumper debridge hyperliquid syncswap usdc usdt derive rysk stablecoin derivatives"
     },
     {
       url: "/defi/hyperliquid",
@@ -252,6 +284,26 @@ function getStaticIndex(): IndexedPage[] {
       url: "/defi/uniswap",
       title: "Uniswap - DEX leader",
       content: "uniswap UNI automated market maker AMM liquidity pools swap token exchange ethereum"
+    },
+    {
+      url: "/defi/usdc",
+      title: "USDC - Stablecoin",
+      content: "usdc usd coin stablecoin pagamenti tesoreria defi circle fiat collateralized market cap"
+    },
+    {
+      url: "/defi/usdt",
+      title: "USDT - Stablecoin",
+      content: "usdt tether stablecoin dollaro liquidità trading exchange defi market cap"
+    },
+    {
+      url: "/defi/derive",
+      title: "Derive - Derivatives",
+      content: "derive derivatives perpetual options on-chain trading defi"
+    },
+    {
+      url: "/defi/rysk",
+      title: "Rysk - Options Strategies",
+      content: "rysk options premium yield on-chain defi strategies"
     },
     
     // Wallet
@@ -396,6 +448,11 @@ function getStaticIndex(): IndexedPage[] {
       url: "/strumentiutili",
       title: "Strumenti Utili",
       content: "tool dashboard analisi coingecko defillama debank nansen"
+    },
+    {
+      url: "/strumentiutili/defillama",
+      title: "DeFiLlama - Dashboard analytics",
+      content: "defillama analytics tvl fees protocols chain dashboard research strumenti utili"
     },
     {
       url: "/giochi",
