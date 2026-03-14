@@ -109,6 +109,7 @@ export default function BetaAccessPage() {
   const [submissionPosition, setSubmissionPosition] = useState<number | null>(null);
   const [eligibleFirst30, setEligibleFirst30] = useState(false);
   const [xConnected, setXConnected] = useState(false);
+  const [guestXLinked, setGuestXLinked] = useState(false);
   const [linkingX, setLinkingX] = useState(false);
   const [socialLinkError, setSocialLinkError] = useState<string | null>(null);
   const [professionPickerOpen, setProfessionPickerOpen] = useState(false);
@@ -232,6 +233,43 @@ export default function BetaAccessPage() {
 
   const handleLinkX = async () => {
     setSocialLinkError(null);
+    const parseXHandle = (value: string): string => {
+      const raw = value.trim();
+      if (!raw) return "";
+      if (raw.startsWith("@")) return raw.slice(1);
+      try {
+        const url = new URL(raw);
+        const host = url.hostname.toLowerCase();
+        if (host !== "x.com" && !host.endsWith(".x.com") && host !== "twitter.com" && !host.endsWith(".twitter.com")) {
+          return "";
+        }
+        const firstSegment = url.pathname.split("/").filter(Boolean)[0] ?? "";
+        return firstSegment.replace(/^@/, "");
+      } catch {
+        return "";
+      }
+    };
+
+    if (!isSignedIn) {
+      if (socialProvider !== "x") {
+        setSocialProvider("x");
+      }
+      const parsedHandle = parseXHandle(socialUrl);
+      if (!parsedHandle) {
+        setSocialLinkError(
+          isEnglish
+            ? "Enter a valid X profile URL first (e.g. https://x.com/username)."
+            : "Inserisci prima un link valido del profilo X (es. https://x.com/username).",
+        );
+        return;
+      }
+      if (!socialHandle.trim()) {
+        setSocialHandle(`@${parsedHandle}`);
+      }
+      setGuestXLinked(true);
+      setSocialLinkError(null);
+      return;
+    }
     setLinkingX(true);
     try {
       await linkTwitter();
@@ -240,6 +278,7 @@ export default function BetaAccessPage() {
       const accounts = (socialData?.accounts ?? []) as SocialAccount[];
       const hasVerifiedX = accounts.some((account) => account.provider === "x" && account.status === "verified");
       setXConnected(hasVerifiedX);
+      if (hasVerifiedX) setGuestXLinked(false);
     } catch (error) {
       setSocialLinkError(error instanceof Error && error.message ? error.message : "Impossibile collegare X. Riprova.");
     } finally {
@@ -523,7 +562,11 @@ export default function BetaAccessPage() {
                   }`}
                 >
                   <p className="font-semibold text-white">X</p>
-                  <p className="mt-1 text-xs text-slate-300">{xConnected ? (isEnglish ? "Connected" : "Collegato") : (isEnglish ? "Not connected" : "Non collegato")}</p>
+                  <p className="mt-1 text-xs text-slate-300">
+                    {xConnected || guestXLinked
+                      ? (isEnglish ? "Connected" : "Collegato")
+                      : (isEnglish ? "Not connected" : "Non collegato")}
+                  </p>
                 </button>
                 <button
                   type="button"
@@ -564,10 +607,14 @@ export default function BetaAccessPage() {
                   <button
                     type="button"
                     onClick={handleLinkX}
-                    disabled={linkingX || !isSignedIn}
+                    disabled={linkingX}
                     className="mt-2 rounded-lg border border-amber-300/45 px-3 py-1.5 text-xs text-amber-100 hover:bg-amber-500/15 disabled:opacity-60"
                   >
-                    {linkingX ? (isEnglish ? "Connecting X..." : "Collegamento X...") : (isEnglish ? "Connect X now" : "Collega X ora")}
+                    {linkingX
+                      ? (isEnglish ? "Connecting X..." : "Collegamento X...")
+                      : !isSignedIn
+                        ? (isEnglish ? "Confirm X profile" : "Conferma profilo X")
+                        : (isEnglish ? "Connect X now" : "Collega X ora")}
                   </button>
                   {socialLinkError ? <p className="mt-2 text-xs text-rose-200">{socialLinkError}</p> : null}
                 </div>
