@@ -31,6 +31,7 @@ export const PLATFORM_PROJECTS: {
   { id: 'layer3', name: 'Layer3' },
   { id: 'linea', name: 'Linea' },
   { id: 'llamaswap', name: 'LlamaSwap' },
+  { id: 'rysk', name: 'Rysk' },
   { id: 'optimism', name: 'Optimism', tokenConfig: { coingeckoId: 'optimism', symbol: 'OP' } },
   { id: 'polygon', name: 'Polygon', tokenConfig: { coingeckoId: 'polygon-ecosystem-token', symbol: 'POL' } },
   { id: 'polygon_zkEVM', name: 'Polygon zkEVM' },

@@ -111,6 +111,7 @@ import hypurrfiLogo from "@/assets/hypurrfi-logo.png";
 import usdcLogo from "@/assets/usdc-logo.svg";
 import usdtLogo from "@/assets/usdt-logo.svg";
 import deriveLogo from "@/assets/derive-logo.png";
+import ryskLogo from "@/assets/rysk-logo.png";
 import placeholderLogo from "@/assets/placeholder.svg";
 
 export const PROJECT_LOGO: Record<string, StaticImageData> = {
@@ -181,6 +182,7 @@ export const PROJECT_LOGO: Record<string, StaticImageData> = {
   defillama: defillamaLogo,
   llamaswap: defillamaLogo,
   derive: deriveLogo,
+  rysk: ryskLogo,
   liquity: liquityLogo,
   decentraland: decentralandLogo,
   snapshot: snapshotLogo,

@@ -522,6 +522,18 @@ export const PROJECT_PAGE_DATA: Record<string, Omit<ProjectPageData, "slug" | "l
     coinId: null,
     docsUrl: "https://docs.derive.xyz",
   }),
+  rysk: buildDefiData({
+    slug: "rysk",
+    name: "Rysk",
+    category: "Derivatives",
+    tokenSymbol: "—",
+    description: "Protocollo DeFi per strategie su opzioni on-chain con rendimento da premium.",
+    appUrl: "https://app.rysk.finance",
+    websiteUrl: "https://app.rysk.finance",
+    twitterUrl: "https://x.com/ryskfinance",
+    coinId: null,
+    docsUrl: "https://docs.rysk.finance",
+  }),
   traderjoe: buildDefiData({
     slug: "traderjoe",
     name: "Trader Joe",

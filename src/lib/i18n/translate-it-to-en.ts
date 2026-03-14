@@ -121,6 +121,7 @@ const PHRASE_REPLACEMENTS: Array<[string, string]> = [
   ["USDT e gestione liquidita in DeFi", "USDT and liquidity management in DeFi"],
   ["Aggregatore swap di DeFiLlama per trovare route efficienti tra DEX e reti diverse.", "DeFiLlama swap aggregator to find efficient routes across DEXs and networks."],
   ["Piattaforma DeFi per trading di derivati on-chain con focus su perpetual e opzioni.", "DeFi platform for on-chain derivatives trading focused on perpetuals and options."],
+  ["Protocollo DeFi per strategie su opzioni on-chain con rendimento da premium.", "DeFi protocol for on-chain options strategies with premium yield."],
   ["Accedi a link ufficiali e prepara un piano operativo.", "Access official links and prepare an operating plan."],
   ["Valuta volume, spread e profondita first di entrare.", "Evaluate volume, spread, and depth before entering."],
   ["Use size piccole e regole di gestione risk.", "Use smaller size and risk-management rules."],
