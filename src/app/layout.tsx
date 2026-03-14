@@ -9,6 +9,7 @@ import { PrivyClientProvider } from "@/components/PrivyClientProvider";
 import { PrivyAuthBridge } from "@/components/auth/PrivyAuthBridge";
 import { AnalyticsConsentManager } from "@/components/analytics/AnalyticsConsentManager";
 import { LanguageAutoTranslate } from "@/components/LanguageAutoTranslate";
+import { AccessGateOverlay } from "@/components/AccessGateOverlay";
 
 export const metadata: Metadata = {
   title: "ImparoDeFi",
@@ -39,6 +40,7 @@ export default function RootLayout({
             <LanguageAutoTranslate />
             <AIBotAuthModal />
             <AnalyticsConsentManager />
+            <AccessGateOverlay />
             <div id="app-content-root" className="w-full">
               <LayoutWithConditionalNav>{children}</LayoutWithConditionalNav>
             </div>
