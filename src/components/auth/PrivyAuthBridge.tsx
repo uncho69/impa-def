@@ -6,6 +6,19 @@ import { trackEvent } from "@/lib/analytics";
 
 const MIGRATION_SOURCE_USER_ID_KEY = "idf_merge_from_user_id";
 
+function extractLinkedEmail(linkedAccounts: Array<Record<string, unknown>> | undefined): string | null {
+  if (!Array.isArray(linkedAccounts)) return null;
+  for (const account of linkedAccounts) {
+    const candidates = [account?.address, account?.email, account?.emailAddress];
+    for (const candidate of candidates) {
+      if (typeof candidate === "string" && candidate.includes("@")) {
+        return candidate.trim().toLowerCase();
+      }
+    }
+  }
+  return null;
+}
+
 export function PrivyAuthBridge() {
   const { ready, authenticated, user, getAccessToken } = usePrivy();
   const { wallets } = useWallets();
@@ -22,8 +35,7 @@ export function PrivyAuthBridge() {
       if (!accessToken) return;
 
       const walletAddress = wallets?.[0]?.address ?? null;
-      const emailAccount = user?.linkedAccounts?.find((a) => a.type === "email");
-      const email = emailAccount && "address" in emailAccount ? (emailAccount.address as string) : null;
+      const email = extractLinkedEmail(user?.linkedAccounts as Array<Record<string, unknown>> | undefined);
       const twitterAccount = user?.linkedAccounts?.find((a) => a.type === "twitter_oauth") as
         | { subject?: string | null; username?: string | null }
         | undefined;
