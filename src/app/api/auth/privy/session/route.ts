@@ -19,6 +19,19 @@ const X_USERNAME_COOKIE = "idf_x_username";
 const PRIVY_USER_COOKIE = "idf_privy_user_id";
 let usersTwitterIdColumnCache: boolean | null = null;
 
+function isUsersEmailUniqueViolation(error: unknown): boolean {
+  const err = error as { code?: string; constraint?: string; message?: string } | null;
+  const code = err?.code ?? "";
+  const constraint = (err?.constraint ?? "").toLowerCase();
+  const message = (err?.message ?? "").toLowerCase();
+  return (
+    code === "23505" &&
+    (constraint.includes("users_email_unique") ||
+      message.includes("users_email_unique") ||
+      message.includes("duplicate key value") && message.includes("email"))
+  );
+}
+
 async function usersTableHasTwitterIdColumn(): Promise<boolean> {
   if (!pool) return false;
   if (usersTwitterIdColumnCache !== null) return usersTwitterIdColumnCache;
@@ -260,36 +273,73 @@ export async function POST(request: NextRequest) {
       }
 
       if (hasTwitterIdColumn) {
-        await pool.query(
-          `
-          INSERT INTO users (id, email, wallet_address, twitter_id, is_active, created_at, updated_at)
-          VALUES ($1, $2, $3, $4, 1, now(), now())
-          ON CONFLICT (id)
-          DO UPDATE SET
-            email = COALESCE(EXCLUDED.email, users.email),
-            wallet_address = COALESCE(EXCLUDED.wallet_address, users.wallet_address),
-            is_active = 1,
-            deleted_at = NULL,
-            twitter_id = COALESCE(EXCLUDED.twitter_id, users.twitter_id),
-            updated_at = now()
-          `,
-          [sessionUserId, resolvedEmail, body.walletAddress ?? null, body.twitterSubject ?? null]
-        );
+        try {
+          await pool.query(
+            `
+            INSERT INTO users (id, email, wallet_address, twitter_id, is_active, created_at, updated_at)
+            VALUES ($1, $2, $3, $4, 1, now(), now())
+            ON CONFLICT (id)
+            DO UPDATE SET
+              email = COALESCE(EXCLUDED.email, users.email),
+              wallet_address = COALESCE(EXCLUDED.wallet_address, users.wallet_address),
+              is_active = 1,
+              deleted_at = NULL,
+              twitter_id = COALESCE(EXCLUDED.twitter_id, users.twitter_id),
+              updated_at = now()
+            `,
+            [sessionUserId, resolvedEmail, body.walletAddress ?? null, body.twitterSubject ?? null]
+          );
+        } catch (usersUpsertError) {
+          if (!resolvedEmail || !isUsersEmailUniqueViolation(usersUpsertError)) throw usersUpsertError;
+          await pool.query(
+            `
+            INSERT INTO users (id, email, wallet_address, twitter_id, is_active, created_at, updated_at)
+            VALUES ($1, $2, $3, $4, 1, now(), now())
+            ON CONFLICT (id)
+            DO UPDATE SET
+              email = COALESCE(EXCLUDED.email, users.email),
+              wallet_address = COALESCE(EXCLUDED.wallet_address, users.wallet_address),
+              is_active = 1,
+              deleted_at = NULL,
+              twitter_id = COALESCE(EXCLUDED.twitter_id, users.twitter_id),
+              updated_at = now()
+            `,
+            [sessionUserId, null, body.walletAddress ?? null, body.twitterSubject ?? null]
+          );
+        }
       } else {
-        await pool.query(
-          `
-          INSERT INTO users (id, email, wallet_address, is_active, created_at, updated_at)
-          VALUES ($1, $2, $3, 1, now(), now())
-          ON CONFLICT (id)
-          DO UPDATE SET
-            email = COALESCE(EXCLUDED.email, users.email),
-            wallet_address = COALESCE(EXCLUDED.wallet_address, users.wallet_address),
-            is_active = 1,
-            deleted_at = NULL,
-            updated_at = now()
-          `,
-          [sessionUserId, resolvedEmail, body.walletAddress ?? null]
-        );
+        try {
+          await pool.query(
+            `
+            INSERT INTO users (id, email, wallet_address, is_active, created_at, updated_at)
+            VALUES ($1, $2, $3, 1, now(), now())
+            ON CONFLICT (id)
+            DO UPDATE SET
+              email = COALESCE(EXCLUDED.email, users.email),
+              wallet_address = COALESCE(EXCLUDED.wallet_address, users.wallet_address),
+              is_active = 1,
+              deleted_at = NULL,
+              updated_at = now()
+            `,
+            [sessionUserId, resolvedEmail, body.walletAddress ?? null]
+          );
+        } catch (usersUpsertError) {
+          if (!resolvedEmail || !isUsersEmailUniqueViolation(usersUpsertError)) throw usersUpsertError;
+          await pool.query(
+            `
+            INSERT INTO users (id, email, wallet_address, is_active, created_at, updated_at)
+            VALUES ($1, $2, $3, 1, now(), now())
+            ON CONFLICT (id)
+            DO UPDATE SET
+              email = COALESCE(EXCLUDED.email, users.email),
+              wallet_address = COALESCE(EXCLUDED.wallet_address, users.wallet_address),
+              is_active = 1,
+              deleted_at = NULL,
+              updated_at = now()
+            `,
+            [sessionUserId, null, body.walletAddress ?? null]
+          );
+        }
       }
 
       await pool.query(

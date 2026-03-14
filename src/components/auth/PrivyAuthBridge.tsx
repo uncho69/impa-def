@@ -46,9 +46,6 @@ export function PrivyAuthBridge() {
       const syncSignature = `${userId}|${walletAddress ?? ""}|${email ?? ""}|${twitterSubject ?? ""}|${twitterUsername ?? ""}`;
       if (lastSyncedSignatureRef.current === syncSignature) return;
 
-      // #region agent log
-      fetch('http://127.0.0.1:7427/ingest/53de14af-f544-4874-907d-9c3852d2c5f6',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'933492'},body:JSON.stringify({sessionId:'933492',runId:'run6',hypothesisId:'H15',location:'src/components/auth/PrivyAuthBridge.tsx:run:beforeSessionPost',message:'privy bridge preparing session sync',data:{ready,authenticated,hasUserId:Boolean(userId),hasAccessToken:Boolean(accessToken),hasWalletAddress:Boolean(walletAddress),hasTwitterSubject:Boolean(twitterSubject),hasMigrationFromUserId:Boolean(migrationFromUserId)},timestamp:Date.now()})}).catch(()=>{});
-      // #endregion
       const res = await fetch("/api/auth/privy/session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -61,9 +58,6 @@ export function PrivyAuthBridge() {
           migrationFromUserId,
         }),
       }).catch(() => null);
-      // #region agent log
-      fetch('http://127.0.0.1:7427/ingest/53de14af-f544-4874-907d-9c3852d2c5f6',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'933492'},body:JSON.stringify({sessionId:'933492',runId:'run6',hypothesisId:'H15',location:'src/components/auth/PrivyAuthBridge.tsx:run:afterSessionPost',message:'privy bridge session sync response',data:{status:res?.status ?? null,ok:Boolean(res?.ok)},timestamp:Date.now()})}).catch(()=>{});
-      // #endregion
       if (res?.ok && typeof window !== "undefined" && migrationFromUserId) {
         window.localStorage.removeItem(MIGRATION_SOURCE_USER_ID_KEY);
       }
@@ -81,9 +75,6 @@ export function PrivyAuthBridge() {
       typeof window !== "undefined" && Boolean(window.localStorage.getItem(MIGRATION_SOURCE_USER_ID_KEY));
     if (migrationInProgress) return;
     lastSyncedSignatureRef.current = null;
-    // #region agent log
-    fetch('http://127.0.0.1:7427/ingest/53de14af-f544-4874-907d-9c3852d2c5f6',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'933492'},body:JSON.stringify({sessionId:'933492',runId:'run6',hypothesisId:'H18',location:'src/components/auth/PrivyAuthBridge.tsx:effect:deleteSession',message:'privy bridge clearing session on unauthenticated state',data:{ready,authenticated,migrationInProgress},timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
     fetch("/api/auth/privy/session", { method: "DELETE" }).catch(() => null);
   }, [ready, authenticated]);
 
