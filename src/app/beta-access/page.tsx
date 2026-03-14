@@ -67,28 +67,8 @@ const CRYPTO_LEVEL_OPTIONS: Array<{ id: CryptoLevel; itTitle: string; itDescript
   },
 ];
 
-type ExistingRequest = {
-  status: "pending" | "approved" | "rejected";
-  socialProvider: SocialProvider;
-  socialUrl: string;
-  professions: string[];
-  cryptoLevel: CryptoLevel;
-  goals: string[];
-  concerns: string | null;
-  weeklyTime: string | null;
-  previousExperience: string | null;
-  adminReviewNotes: string | null;
-  createdAt: string;
-};
-
-type SocialAccount = {
-  provider: string;
-  providerUserId: string | null;
-  status: string;
-};
-
 export default function BetaAccessPage() {
-  const { isLoaded, isSignedIn, login } = useAppAuth();
+  const { isLoaded, isSignedIn, login, user } = useAppAuth();
   const { linkTwitter } = usePrivy();
   const { language } = useLanguage();
   const isEnglish = language === "en";
@@ -105,16 +85,12 @@ export default function BetaAccessPage() {
   const [socialHandle, setSocialHandle] = useState("");
   const [contactEmail, setContactEmail] = useState("");
 
-  const [existingRequest, setExistingRequest] = useState<ExistingRequest | null>(null);
-  const [submissionPosition, setSubmissionPosition] = useState<number | null>(null);
-  const [eligibleFirst30, setEligibleFirst30] = useState(false);
   const [xConnected, setXConnected] = useState(false);
   const [linkingX, setLinkingX] = useState(false);
   const [socialLinkError, setSocialLinkError] = useState<string | null>(null);
   const [professionPickerOpen, setProfessionPickerOpen] = useState(false);
   const professionPickerRef = useRef<HTMLDivElement | null>(null);
 
-  const [loadingRequest, setLoadingRequest] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
@@ -140,9 +116,6 @@ export default function BetaAccessPage() {
       submit: isEnglish ? "Submit request" : "Invia richiesta",
       update: isEnglish ? "Update request" : "Aggiorna richiesta",
       submitting: isEnglish ? "Submitting..." : "Invio...",
-      status: isEnglish ? "Request status" : "Stato richiesta",
-      position: isEnglish ? "Submission position" : "Posizione invio",
-      notes: isEnglish ? "Admin notes" : "Note admin",
     }),
     [isEnglish],
   );
@@ -161,57 +134,43 @@ export default function BetaAccessPage() {
   };
 
   useEffect(() => {
-    if (!isLoaded || !isSignedIn) return;
-    let cancelled = false;
-
-    const load = async () => {
-      setLoadingRequest(true);
-      try {
-        const [requestRes, socialRes] = await Promise.all([
-          fetch("/api/access-requests", { cache: "no-store" }),
-          fetch("/api/social-accounts/me", { cache: "no-store" }),
-        ]);
-
-        const requestData = await requestRes.json().catch(() => ({}));
-        if (!cancelled && requestRes.ok) {
-          setExistingRequest((requestData?.request as ExistingRequest | null) ?? null);
-          setSubmissionPosition(typeof requestData?.submissionPosition === "number" ? requestData.submissionPosition : null);
-          setEligibleFirst30(Boolean(requestData?.eligibleFirst30));
-        }
-
-        const socialData = await socialRes.json().catch(() => ({}));
-        const accounts = (socialData?.accounts ?? []) as SocialAccount[];
-        const verifiedXAccount = accounts.find(
-          (account) => account.provider === "x" && account.status === "verified",
-        );
-        const hasVerifiedX = Boolean(verifiedXAccount);
-        if (!cancelled) {
-          setXConnected(hasVerifiedX);
-          if (hasVerifiedX) {
-            const xUrl = buildXProfileUrlFromId(verifiedXAccount?.providerUserId);
-            setSocialUrl(xUrl);
-            if (verifiedXAccount?.providerUserId) {
-              setSocialHandle(`@${String(verifiedXAccount.providerUserId).replace(/^@+/, "")}`);
-            }
-          }
-        }
-      } finally {
-        if (!cancelled) setLoadingRequest(false);
-      }
-    };
-
-    void load();
-    return () => {
-      cancelled = true;
-    };
-  }, [isLoaded, isSignedIn]);
-
-  const statusLabel = useMemo(() => {
-    if (!existingRequest) return null;
-    if (existingRequest.status === "approved") return isEnglish ? "Approved (beta access active)" : "Approvato (accesso beta attivo)";
-    if (existingRequest.status === "rejected") return isEnglish ? "Not approved" : "Non approvato";
-    return isEnglish ? "Under review" : "In revisione";
-  }, [existingRequest, isEnglish]);
+    if (!isLoaded || !isSignedIn) {
+      setXConnected(false);
+      return;
+    }
+    const linkedAccounts = Array.isArray((user as { linkedAccounts?: unknown[] } | null)?.linkedAccounts)
+      ? ((user as { linkedAccounts?: Array<Record<string, unknown>> }).linkedAccounts ?? [])
+      : [];
+    const xAccount = linkedAccounts.find(
+      (account) =>
+        account?.type === "twitter_oauth" ||
+        account?.type === "twitter" ||
+        account?.type === "x",
+    );
+    if (!xAccount) {
+      setXConnected(false);
+      return;
+    }
+    setXConnected(true);
+    const username =
+      (typeof xAccount.username === "string" && xAccount.username.trim()) ||
+      (typeof xAccount.subject === "string" && xAccount.subject.trim()) ||
+      "";
+    if (username) {
+      const normalized = username.replace(/^@+/, "");
+      setSocialHandle(`@${normalized}`);
+      setSocialUrl(`https://x.com/${normalized}`);
+      return;
+    }
+    const accountId =
+      (typeof xAccount.id === "string" && xAccount.id.trim()) ||
+      (typeof xAccount.subject === "string" && xAccount.subject.trim()) ||
+      (typeof xAccount.providerUserId === "string" && xAccount.providerUserId.trim()) ||
+      "";
+    if (accountId) {
+      setSocialUrl(buildXProfileUrlFromId(accountId));
+    }
+  }, [isLoaded, isSignedIn, user]);
 
   const toggleValue = (value: string, current: string[], setState: (next: string[]) => void) => {
     if (current.includes(value)) {
@@ -250,33 +209,21 @@ export default function BetaAccessPage() {
   const handleLinkX = async () => {
     setSocialLinkError(null);
     if (!isSignedIn) {
-      login();
+      await login({ loginMethods: ["twitter"] });
       return;
     }
     setLinkingX(true);
     try {
       await linkTwitter();
-      const socialRes = await fetch("/api/social-accounts/me", { cache: "no-store" });
-      const socialData = await socialRes.json().catch(() => ({}));
-      const accounts = (socialData?.accounts ?? []) as SocialAccount[];
-      const verifiedXAccount = accounts.find(
-        (account) => account.provider === "x" && account.status === "verified",
-      );
-      const hasVerifiedX = Boolean(verifiedXAccount);
-      setXConnected(hasVerifiedX);
-      if (hasVerifiedX) {
-        const xUrl = buildXProfileUrlFromId(verifiedXAccount?.providerUserId);
-        setSocialUrl(xUrl);
-        if (verifiedXAccount?.providerUserId) {
-          setSocialHandle(`@${String(verifiedXAccount.providerUserId).replace(/^@+/, "")}`);
-        }
-      } else {
-        setSocialLinkError(
-          isEnglish ? "X connection not found yet. Try again." : "Connessione X non rilevata ancora. Riprova.",
-        );
-      }
+      setXConnected(true);
     } catch (error) {
-      setSocialLinkError(error instanceof Error && error.message ? error.message : "Impossibile collegare X. Riprova.");
+      const raw = error instanceof Error && error.message ? error.message : "";
+      if (raw.toLowerCase().includes("already has an account of type twitter linked")) {
+        setXConnected(true);
+        setSocialLinkError(null);
+      } else {
+        setSocialLinkError(raw || "Impossibile collegare X. Riprova.");
+      }
     } finally {
       setLinkingX(false);
     }
@@ -317,9 +264,6 @@ export default function BetaAccessPage() {
         setMessage(String(data?.error ?? (isEnglish ? "Submission failed. Please retry." : "Invio non riuscito. Riprova.")));
         return;
       }
-      setExistingRequest((data?.request as ExistingRequest | null) ?? null);
-      setSubmissionPosition(typeof data?.submissionPosition === "number" ? data.submissionPosition : null);
-      setEligibleFirst30(Boolean(data?.eligibleFirst30));
       setMessage(isEnglish ? "Request sent successfully. We will update you after admin review." : "Richiesta inviata con successo. Ti aggiorneremo dopo revisione admin.");
     } catch {
       setMessage(isEnglish ? "Network error during submission." : "Errore di rete durante l'invio.");
@@ -375,34 +319,6 @@ export default function BetaAccessPage() {
       </section>
 
       <>
-          {isSignedIn && existingRequest ? (
-            <section className="rounded-2xl border border-indigo-500/20 bg-indigo-900/25 p-6">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div>
-                  <p className="text-sm text-slate-300">{copy.status}</p>
-                  <p className="text-lg font-semibold text-white">{statusLabel}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-xs text-slate-400">{copy.position}</p>
-                  <p className="text-sm font-medium text-slate-200">{submissionPosition ?? "-"}</p>
-                </div>
-              </div>
-              <p className="mt-3 text-sm text-slate-300">
-                {eligibleFirst30
-                  ? (isEnglish ? "You are within the first 30 submissions." : "Sei nella fascia dei primi 30 invii.")
-                  : (isEnglish
-                    ? "You are currently outside the first-30 range (waitlist until approval)."
-                    : "Al momento sei fuori dalla fascia primi 30 (resti in waitlist finché non approvato).")}
-              </p>
-              {existingRequest.adminReviewNotes ? (
-                <div className="mt-3 rounded-lg border border-indigo-400/25 bg-indigo-950/35 p-3 text-sm text-slate-200">
-                  <p className="font-medium text-white">{copy.notes}</p>
-                  <p className="mt-1">{existingRequest.adminReviewNotes}</p>
-                </div>
-              ) : null}
-            </section>
-          ) : null}
-
           <form onSubmit={submit} className="space-y-6 rounded-2xl border border-indigo-500/20 bg-indigo-900/25 p-6">
             <section>
               <h2 className="text-xl font-semibold text-white">{copy.emailTitle}</h2>
@@ -605,10 +521,10 @@ export default function BetaAccessPage() {
             <div className="flex items-center gap-3">
               <button
                 type="submit"
-                disabled={submitting || loadingRequest}
+                disabled={submitting}
                 className="rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-60"
               >
-                {submitting ? copy.submitting : existingRequest ? copy.update : copy.submit}
+                {submitting ? copy.submitting : copy.submit}
               </button>
               {message ? <p className="text-sm text-slate-300">{message}</p> : null}
             </div>
