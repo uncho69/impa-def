@@ -4,6 +4,7 @@ import { createRemoteJWKSet } from "jose";
 export type VerifiedPrivyAccessToken = {
   userId: string;
   sessionId?: string;
+  email?: string | null;
 };
 
 function decodeJwtPayloadUnsafe(token: string): Record<string, unknown> | null {
@@ -14,6 +15,38 @@ function decodeJwtPayloadUnsafe(token: string): Record<string, unknown> | null {
   } catch {
     return null;
   }
+}
+
+function pickEmailCandidate(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  const normalized = value.trim().toLowerCase();
+  return normalized.includes("@") ? normalized : null;
+}
+
+function extractEmailFromUnknown(source: unknown): string | null {
+  if (!source) return null;
+  if (typeof source === "string") return pickEmailCandidate(source);
+  if (Array.isArray(source)) {
+    for (const item of source) {
+      const nested = extractEmailFromUnknown(item);
+      if (nested) return nested;
+    }
+    return null;
+  }
+  if (typeof source === "object") {
+    const rec = source as Record<string, unknown>;
+    const direct = [rec.email, rec.emailAddress, rec.address, rec.user_email, rec.primary_email];
+    for (const item of direct) {
+      const candidate = pickEmailCandidate(item);
+      if (candidate) return candidate;
+    }
+    const nested = [rec.linked_accounts, rec.linkedAccounts, rec.user, rec.claims, rec.profile];
+    for (const item of nested) {
+      const candidate = extractEmailFromUnknown(item);
+      if (candidate) return candidate;
+    }
+  }
+  return null;
 }
 
 export async function verifyPrivyAccessToken(accessToken: string): Promise<VerifiedPrivyAccessToken | null> {
@@ -34,9 +67,11 @@ export async function verifyPrivyAccessToken(accessToken: string): Promise<Verif
         app_id: appId,
         verification_key: verificationInput,
       });
+      const verifiedPayload = verified as unknown as Record<string, unknown>;
       return {
         userId: verified.user_id,
         sessionId: verified.session_id,
+        email: extractEmailFromUnknown(verifiedPayload),
       };
     } catch {
       return null;
@@ -49,6 +84,6 @@ export async function verifyPrivyAccessToken(accessToken: string): Promise<Verif
   const payload = decodeJwtPayloadUnsafe(accessToken);
   const maybeUserId = payload?.sub ?? payload?.user_id;
   if (typeof maybeUserId !== "string" || maybeUserId.length === 0) return null;
-  return { userId: maybeUserId };
+  return { userId: maybeUserId, email: extractEmailFromUnknown(payload) };
 }
 

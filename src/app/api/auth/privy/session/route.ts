@@ -206,8 +206,15 @@ export async function POST(request: NextRequest) {
     if (!verified?.userId) {
       return NextResponse.json({ error: "Invalid Privy token" }, { status: 401 });
     }
+    const resolvedEmail = (() => {
+      const bodyEmail = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
+      if (bodyEmail.includes("@")) return bodyEmail;
+      const tokenEmail = typeof verified.email === "string" ? verified.email.trim().toLowerCase() : "";
+      if (tokenEmail.includes("@")) return tokenEmail;
+      return null;
+    })();
     // #region agent log
-    fetch('http://127.0.0.1:7427/ingest/53de14af-f544-4874-907d-9c3852d2c5f6',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'933492'},body:JSON.stringify({sessionId:'933492',runId:'run2',hypothesisId:'H5',location:'src/app/api/auth/privy/session/route.ts:POST:verified',message:'privy session payload flags',data:{hasDatabase,hasPool:Boolean(pool),hasTwitterSubject:Boolean(body.twitterSubject),hasWalletAddress:Boolean(body.walletAddress),hasEmail:Boolean(body.email),userId:verified.userId},timestamp:Date.now()})}).catch(()=>{});
+    fetch('http://127.0.0.1:7427/ingest/53de14af-f544-4874-907d-9c3852d2c5f6',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'933492'},body:JSON.stringify({sessionId:'933492',runId:'run2',hypothesisId:'H5',location:'src/app/api/auth/privy/session/route.ts:POST:verified',message:'privy session payload flags',data:{hasDatabase,hasPool:Boolean(pool),hasTwitterSubject:Boolean(body.twitterSubject),hasWalletAddress:Boolean(body.walletAddress),hasEmail:Boolean(body.email),hasTokenEmail:Boolean(verified.email),hasResolvedEmail:Boolean(resolvedEmail),userId:verified.userId},timestamp:Date.now()})}).catch(()=>{});
     // #endregion
     // #region agent log
     fetch('http://127.0.0.1:7427/ingest/53de14af-f544-4874-907d-9c3852d2c5f6',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'933492'},body:JSON.stringify({sessionId:'933492',runId:'run6',hypothesisId:'H19',location:'src/app/api/auth/privy/session/route.ts:POST:requestContext',message:'privy session request context',data:{origin:request.headers.get('origin') ?? null,host:request.headers.get('host') ?? null,hasIncomingSessionCookie:Boolean(request.cookies.get(getSessionCookieName())?.value),hasIncomingPrivyCookie:Boolean(request.cookies.get(PRIVY_USER_COOKIE)?.value)},timestamp:Date.now()})}).catch(()=>{});
@@ -266,7 +273,7 @@ export async function POST(request: NextRequest) {
             twitter_id = COALESCE(EXCLUDED.twitter_id, users.twitter_id),
             updated_at = now()
           `,
-          [sessionUserId, body.email ?? null, body.walletAddress ?? null, body.twitterSubject ?? null]
+          [sessionUserId, resolvedEmail, body.walletAddress ?? null, body.twitterSubject ?? null]
         );
       } else {
         await pool.query(
@@ -281,7 +288,7 @@ export async function POST(request: NextRequest) {
             deleted_at = NULL,
             updated_at = now()
           `,
-          [sessionUserId, body.email ?? null, body.walletAddress ?? null]
+          [sessionUserId, resolvedEmail, body.walletAddress ?? null]
         );
       }
 
@@ -307,7 +314,7 @@ export async function POST(request: NextRequest) {
           is_active = 1,
           updated_at = now()
         `,
-        [sessionUserId, verified.userId, body.walletAddress ?? null, body.email ?? null]
+        [sessionUserId, verified.userId, body.walletAddress ?? null, resolvedEmail]
       );
 
       if (body.twitterSubject) {
