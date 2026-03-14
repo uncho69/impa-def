@@ -2,11 +2,16 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Check, ChevronDown } from "lucide-react";
 import { BorderBeam } from "@/components/ui/border-beam";
+import { useAppAuth } from "@/lib/auth/useAppAuth";
 
 type StatusResponse = {
   unlocked?: boolean;
+  reason?: "not_authenticated" | "not_approved";
+  requestStatus?: "none" | "pending" | "approved" | "rejected" | null;
+  requestAccessPath?: string;
 };
 
 type Lang = "it" | "en";
@@ -19,6 +24,13 @@ const copy = {
     submitting: "Verifica...",
     errorInvalid: "Password non valida o gia usata.",
     errorNetwork: "Errore di rete. Riprova.",
+    login: "Accedi",
+    requestAccess: "Richiedi accesso",
+    accessDenied: "Questo account non ha ancora accesso alla beta.",
+    pendingReview: "La tua richiesta e in revisione. Ti notificheremo appena viene valutata.",
+    rejected: "La tua richiesta non e stata approvata al momento. Puoi aggiornarla e inviarla di nuovo.",
+    noRequest: "Per entrare senza password devi prima inviare la richiesta accesso.",
+    switchAccount: "Cambia account",
   },
   en: {
     title: "Enter password",
@@ -27,16 +39,28 @@ const copy = {
     submitting: "Verifying...",
     errorInvalid: "Invalid or already used password.",
     errorNetwork: "Network error. Try again.",
+    login: "Login",
+    requestAccess: "Request access",
+    accessDenied: "This account has not been granted beta access yet.",
+    pendingReview: "Your request is under review. We will notify you as soon as it is evaluated.",
+    rejected: "Your request was not approved at the moment. You can update and submit it again.",
+    noRequest: "To enter without a password, submit an access request first.",
+    switchAccount: "Switch account",
   },
 };
 
 export function AccessGateOverlay() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { isLoaded: authLoaded, isSignedIn, login, logout } = useAppAuth();
   const [lang, setLang] = useState<Lang>("it");
   const [langOpen, setLangOpen] = useState(false);
   const langSwitcherRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
   const [unlocked, setUnlocked] = useState(false);
+  const [gateReason, setGateReason] = useState<StatusResponse["reason"]>(undefined);
+  const [requestStatus, setRequestStatus] = useState<StatusResponse["requestStatus"]>(null);
+  const [requestAccessPath, setRequestAccessPath] = useState("/beta-access");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [errorKey, setErrorKey] = useState<"invalid" | "network" | null>(null);
@@ -67,9 +91,16 @@ export function AccessGateOverlay() {
         const data: StatusResponse = await res.json().catch(() => ({}));
         if (cancelled) return;
         setUnlocked(Boolean(data?.unlocked));
+        setGateReason(data?.reason);
+        setRequestStatus(data?.requestStatus ?? null);
+        if (typeof data?.requestAccessPath === "string" && data.requestAccessPath.trim()) {
+          setRequestAccessPath(data.requestAccessPath);
+        }
       } catch {
         if (cancelled) return;
         setUnlocked(false);
+        setGateReason(undefined);
+        setRequestStatus(null);
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -89,6 +120,14 @@ export function AccessGateOverlay() {
     document.addEventListener("click", close);
     return () => document.removeEventListener("click", close);
   }, [langOpen]);
+
+  useEffect(() => {
+    if (shouldSkipOverlay) return;
+    if (loading) return;
+    if (!isSignedIn) return;
+    if (gateReason !== "not_approved") return;
+    router.push(requestAccessPath);
+  }, [gateReason, isSignedIn, loading, requestAccessPath, router, shouldSkipOverlay]);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -118,6 +157,13 @@ export function AccessGateOverlay() {
   if (shouldSkipOverlay || (!loading && unlocked)) {
     return null;
   }
+
+  const statusHint =
+    requestStatus === "pending"
+      ? t.pendingReview
+      : requestStatus === "rejected"
+      ? t.rejected
+      : t.noRequest;
 
   return (
     <div className="fixed inset-0 z-[100]">
@@ -219,6 +265,48 @@ export function AccessGateOverlay() {
               {submitting ? t.submitting : t.submit}
             </button>
           </form>
+
+          <div className="my-4 h-px w-full bg-indigo-400/20" />
+
+          <div className="space-y-2">
+            {!isSignedIn ? (
+              <button
+                type="button"
+                onClick={() => login()}
+                disabled={!authLoaded}
+                className="w-full rounded-xl border border-indigo-300/35 bg-indigo-500/20 px-4 py-2.5 text-sm font-semibold text-indigo-100 transition-colors hover:bg-indigo-500/30 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {t.login}
+              </button>
+            ) : null}
+
+            {isSignedIn && gateReason === "not_approved" ? (
+              <div className="rounded-xl border border-amber-400/35 bg-amber-500/10 p-3 text-left">
+                <p className="text-sm font-semibold text-amber-100">{t.accessDenied}</p>
+                <p className="mt-1 text-xs text-amber-100/90">{statusHint}</p>
+              </div>
+            ) : null}
+
+            <button
+              type="button"
+              onClick={() => router.push(requestAccessPath)}
+              className="w-full rounded-xl border border-indigo-300/35 bg-white/5 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+            >
+              {t.requestAccess}
+            </button>
+
+            {isSignedIn ? (
+              <button
+                type="button"
+                onClick={() => {
+                  logout();
+                }}
+                className="w-full rounded-xl border border-white/20 bg-transparent px-4 py-2.5 text-sm font-medium text-slate-300 transition-colors hover:bg-white/5"
+              >
+                {t.switchAccount}
+              </button>
+            ) : null}
+          </div>
 
           <BorderBeam
             duration={6}

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import crypto from "crypto";
 import { getUserIdFromRequest } from "@/lib/auth/middleware";
 import { ensureBetaAccessRequestsTable } from "@/lib/db/ensure-beta-access-table";
 import { ensureAccessControlTables } from "@/lib/db/ensure-access-control-tables";
@@ -11,6 +12,7 @@ type CryptoLevel = "zero" | "beginner" | "intermediate" | "advanced";
 type SocialProvider = "x" | "instagram";
 
 type AccessRequestPayload = {
+  contactEmail?: string;
   professions: string[];
   cryptoLevel: CryptoLevel;
   goals: string[];
@@ -55,6 +57,21 @@ function sanitizeArray(value: unknown, max = 8): string[] {
 function sanitizeText(value: unknown, max = 500): string {
   if (typeof value !== "string") return "";
   return value.trim().slice(0, max);
+}
+
+function normalizeEmail(value: unknown): string {
+  if (typeof value !== "string") return "";
+  return value.trim().toLowerCase();
+}
+
+function isValidEmail(value: string): boolean {
+  if (!value) return false;
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+function buildGuestUserId(email: string): string {
+  const digest = crypto.createHash("sha256").update(email).digest("hex").slice(0, 32);
+  return `beta_guest_${digest}`;
 }
 
 function parseProvider(value: unknown): SocialProvider | null {
@@ -206,12 +223,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const userId = await getUserIdFromRequest(request);
-  if (!userId) {
-    return NextResponse.json({ error: "Unauthorized. Effettua login prima di inviare il form." }, { status: 401 });
-  }
-
+  const authUserId = await getUserIdFromRequest(request);
   const body = (await request.json().catch(() => ({}))) as Partial<AccessRequestPayload>;
+  const contactEmail = normalizeEmail(body.contactEmail);
   const professions = sanitizeArray(body.professions, 12);
   const goals = sanitizeArray(body.goals, 8);
   const concerns = sanitizeText(body.concerns, 600);
@@ -222,6 +236,9 @@ export async function POST(request: NextRequest) {
   const socialProvider = parseProvider(body.socialProvider);
   const cryptoLevel = parseCryptoLevel(body.cryptoLevel);
 
+  if (!authUserId && !isValidEmail(contactEmail)) {
+    return NextResponse.json({ error: "Inserisci una email valida per inviare la richiesta." }, { status: 400 });
+  }
   if (professions.length === 0) {
     return NextResponse.json({ error: "Seleziona almeno una professione." }, { status: 400 });
   }
@@ -235,8 +252,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Inserisci un link social valido (https)." }, { status: 400 });
   }
 
-  if (hasDatabase && pool && socialProvider === "x") {
-    const verifiedX = await hasVerifiedX(userId);
+  if (hasDatabase && pool && socialProvider === "x" && authUserId) {
+    const verifiedX = await hasVerifiedX(authUserId);
     if (!verifiedX) {
       return NextResponse.json(
         { error: "Per usare X devi prima collegare il tuo account X nel profilo." },
@@ -245,13 +262,17 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  let requestUserId = authUserId || buildGuestUserId(contactEmail);
+  let resolvedEmail: string | null = null;
+
   if (!hasDatabase || !pool) {
+    resolvedEmail = authUserId ? (contactEmail || null) : contactEmail;
     const nowIso = new Date().toISOString();
     const store = readMemoryStore();
-    const existing = store.get(userId);
+    const existing = store.get(requestUserId);
     const payload: StoredAccessRequest = {
-      userId,
-      email: existing?.email ?? null,
+      userId: requestUserId,
+      email: resolvedEmail || existing?.email || null,
       professions,
       cryptoLevel,
       goals,
@@ -268,8 +289,8 @@ export async function POST(request: NextRequest) {
       createdAt: existing?.createdAt ?? nowIso,
       updatedAt: nowIso,
     };
-    store.set(userId, payload);
-    const submissionPosition = Array.from(store.keys()).indexOf(userId) + 1;
+    store.set(requestUserId, payload);
+    const submissionPosition = Array.from(store.keys()).indexOf(requestUserId) + 1;
     return NextResponse.json({
       ok: true,
       request: payload,
@@ -279,7 +300,43 @@ export async function POST(request: NextRequest) {
   }
 
   await ensureBetaAccessRequestsTable();
-  const email = await getUserEmail(userId);
+  if (authUserId) {
+    resolvedEmail = (await getUserEmail(authUserId)) ?? null;
+    if (!resolvedEmail && isValidEmail(contactEmail)) {
+      resolvedEmail = contactEmail;
+    }
+  } else {
+    const existingUser = await pool.query<{ id: string }>(
+      `
+      SELECT id
+      FROM users
+      WHERE LOWER(email) = LOWER($1)
+      LIMIT 1
+      `,
+      [contactEmail],
+    );
+    if (existingUser.rows[0]?.id) {
+      requestUserId = existingUser.rows[0].id;
+    }
+    resolvedEmail = contactEmail;
+    try {
+      await pool.query(
+        `
+        INSERT INTO users (id, email, is_active, created_at, updated_at)
+        VALUES ($1, $2, 1, now(), now())
+        ON CONFLICT (id)
+        DO UPDATE SET
+          email = COALESCE(EXCLUDED.email, users.email),
+          is_active = 1,
+          deleted_at = NULL,
+          updated_at = now()
+        `,
+        [requestUserId, resolvedEmail],
+      );
+    } catch {
+      // Ignore user row conflicts and continue storing the request.
+    }
+  }
 
   await pool.query(
     `
@@ -327,8 +384,8 @@ export async function POST(request: NextRequest) {
       updated_at = now()
     `,
     [
-      userId,
-      email,
+      requestUserId,
+      resolvedEmail,
       socialProvider,
       socialUrl,
       socialHandle || null,
@@ -365,10 +422,10 @@ export async function POST(request: NextRequest) {
     WHERE user_id = $1
     LIMIT 1
     `,
-    [userId],
+    [requestUserId],
   );
 
-  const submissionPosition = await getSubmissionPosition(userId);
+  const submissionPosition = await getSubmissionPosition(requestUserId);
   return NextResponse.json({
     ok: true,
     request: payload.rows[0] ?? null,

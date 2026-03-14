@@ -4,6 +4,11 @@ import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useAppAuth } from "@/lib/auth/useAppAuth";
 import { usePrivy } from "@privy-io/react-auth";
 import { useLanguage } from "@/contexts/LanguageContext";
+import Link from "next/link";
+import Image from "next/image";
+import logo from "@/assets/imparodefi-logo-nobg.webp";
+import LanguageToggle from "@/components/LanguageToggle";
+import { SiteFooter } from "@/components/SiteFooter";
 
 type CryptoLevel = "zero" | "beginner" | "intermediate" | "advanced";
 type SocialProvider = "x" | "instagram";
@@ -83,7 +88,7 @@ type SocialAccount = {
 };
 
 export default function BetaAccessPage() {
-  const { isLoaded, isSignedIn, login } = useAppAuth();
+  const { isLoaded, isSignedIn } = useAppAuth();
   const { linkTwitter } = usePrivy();
   const { language } = useLanguage();
   const isEnglish = language === "en";
@@ -98,6 +103,7 @@ export default function BetaAccessPage() {
   const [socialProvider, setSocialProvider] = useState<SocialProvider>("x");
   const [socialUrl, setSocialUrl] = useState("");
   const [socialHandle, setSocialHandle] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
 
   const [existingRequest, setExistingRequest] = useState<ExistingRequest | null>(null);
   const [submissionPosition, setSubmissionPosition] = useState<number | null>(null);
@@ -118,8 +124,11 @@ export default function BetaAccessPage() {
       heroSubtitle: isEnglish
         ? "We are building a tailor-made path to help newcomers enter Web3 with clarity, practicality, and safety."
         : "Stiamo costruendo un percorso tailor-made per aiutare i normies a entrare nel Web3 in modo chiaro, pratico e sicuro.",
-      loginRequired: isEnglish ? "You must log in to complete the form." : "Per compilare il form devi fare login.",
-      loginButton: isEnglish ? "Login" : "Accedi",
+      emailTitle: isEnglish ? "Contact email" : "Email di contatto",
+      emailHint: isEnglish
+        ? "Use an email you check often. We will use it for approval updates."
+        : "Usa un'email che controlli spesso. La useremo per aggiornarti sull'approvazione.",
+      emailPlaceholder: isEnglish ? "name@email.com" : "nome@email.com",
       professionTitle: isEnglish ? "1) Profession" : "1) Professione",
       professionHint: isEnglish
         ? "Select one or more professions to help us personalize your path."
@@ -247,6 +256,7 @@ export default function BetaAccessPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          contactEmail,
           professions: selectedProfessions,
           cryptoLevel,
           goals: selectedGoals,
@@ -275,7 +285,20 @@ export default function BetaAccessPage() {
   };
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-indigo-950 via-slate-900/95 to-indigo-950 text-white">
+      <header className="sticky top-0 z-40 border-b border-indigo-500/20 bg-indigo-950/55 backdrop-blur">
+        <div className="mx-auto flex h-[72px] w-full max-w-6xl items-center justify-between px-4 md:px-6">
+          <Link href="/" className="flex items-center gap-2">
+            <Image src={logo} alt="ImparoDeFi Logo" width={38} height={38} className="h-9 w-9" priority />
+            <span className="text-2xl font-bold tracking-tight">ImparoDeFi</span>
+            <span className="rounded bg-white/10 px-1.5 py-0.5 text-xs text-slate-300">BETA</span>
+          </Link>
+          <LanguageToggle />
+        </div>
+      </header>
+
+      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 md:px-6">
+      <div className="mx-auto max-w-5xl space-y-6">
       <section className="rounded-2xl border border-indigo-500/20 bg-indigo-900/25 p-6">
         <h1 className="text-3xl font-bold text-white">{copy.heroTitle}</h1>
         <p className="mt-2 text-slate-300">{copy.heroSubtitle}</p>
@@ -307,22 +330,8 @@ export default function BetaAccessPage() {
         </div>
       </section>
 
-      {!isLoaded ? (
-        <section className="rounded-2xl border border-indigo-500/20 bg-indigo-900/25 p-6 text-slate-300">{isEnglish ? "Loading..." : "Caricamento..."}</section>
-      ) : !isSignedIn ? (
-        <section className="rounded-2xl border border-indigo-500/20 bg-indigo-900/25 p-6">
-          <p className="text-slate-200">{copy.loginRequired}</p>
-          <button
-            type="button"
-            onClick={() => login()}
-            className="mt-4 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
-          >
-            {copy.loginButton}
-          </button>
-        </section>
-      ) : (
-        <>
-          {existingRequest ? (
+      <>
+          {isSignedIn && existingRequest ? (
             <section className="rounded-2xl border border-indigo-500/20 bg-indigo-900/25 p-6">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
@@ -351,6 +360,18 @@ export default function BetaAccessPage() {
           ) : null}
 
           <form onSubmit={submit} className="space-y-6 rounded-2xl border border-indigo-500/20 bg-indigo-900/25 p-6">
+            <section>
+              <h2 className="text-xl font-semibold text-white">{copy.emailTitle}</h2>
+              <p className="mt-1 text-sm text-slate-300">{copy.emailHint}</p>
+              <input
+                type="email"
+                value={contactEmail}
+                onChange={(e) => setContactEmail(e.target.value)}
+                placeholder={copy.emailPlaceholder}
+                className="mt-3 w-full rounded-lg border border-indigo-500/30 bg-slate-950/40 px-3 py-2 text-sm text-white outline-none focus:border-indigo-400"
+                required
+              />
+            </section>
             <section>
               <h2 className="text-xl font-semibold text-white">{copy.professionTitle}</h2>
               <p className="mt-1 text-sm text-slate-300">{copy.professionHint}</p>
@@ -533,11 +554,17 @@ export default function BetaAccessPage() {
 
               {!xConnected && socialProvider === "x" ? (
                 <div className="mt-2 rounded-lg border border-amber-400/35 bg-amber-500/10 p-3">
-                  <p className="text-xs text-amber-100">{isEnglish ? "X is not connected. Connect it directly from this form." : "X non risulta collegato. Collegalo direttamente da questo form."}</p>
+                  <p className="text-xs text-amber-100">
+                    {isSignedIn
+                      ? (isEnglish ? "X is not connected. Connect it directly from this form." : "X non risulta collegato. Collegalo direttamente da questo form.")
+                      : (isEnglish
+                        ? "If you are not logged in, you can still continue by providing your X profile URL."
+                        : "Se non fai login, puoi comunque continuare inserendo il link del tuo profilo X.")}
+                  </p>
                   <button
                     type="button"
                     onClick={handleLinkX}
-                    disabled={linkingX}
+                    disabled={linkingX || !isSignedIn}
                     className="mt-2 rounded-lg border border-amber-300/45 px-3 py-1.5 text-xs text-amber-100 hover:bg-amber-500/15 disabled:opacity-60"
                   >
                     {linkingX ? (isEnglish ? "Connecting X..." : "Collegamento X...") : (isEnglish ? "Connect X now" : "Collega X ora")}
@@ -558,8 +585,12 @@ export default function BetaAccessPage() {
               {message ? <p className="text-sm text-slate-300">{message}</p> : null}
             </div>
           </form>
-        </>
-      )}
+      </>
+    </div>
+      </main>
+      <div className="mt-auto">
+        <SiteFooter isDark />
+      </div>
     </div>
   );
 }

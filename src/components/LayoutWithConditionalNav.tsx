@@ -15,8 +15,9 @@ export function LayoutWithConditionalNav({
   const isBlockchain = pathname === "/blockchain" || pathname.startsWith("/blockchain/");
   const isEsploraApp = pathname === "/esplora-app";
   const isAirdrops = pathname === "/airdrops" || pathname.startsWith("/airdrops/");
+  const isBetaAccess = pathname === "/beta-access" || pathname.startsWith("/beta-access/");
 
-  if (isHome || isDefi || isManuale || isBlockchain || isEsploraApp || isAirdrops) {
+  if (isHome || isDefi || isManuale || isBlockchain || isEsploraApp || isAirdrops || isBetaAccess) {
     return <main className="w-full flex-grow min-h-screen">{children}</main>;
   }
 
