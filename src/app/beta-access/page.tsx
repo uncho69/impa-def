@@ -88,7 +88,7 @@ type SocialAccount = {
 };
 
 export default function BetaAccessPage() {
-  const { isLoaded, isSignedIn } = useAppAuth();
+  const { isLoaded, isSignedIn, login } = useAppAuth();
   const { linkTwitter } = usePrivy();
   const { language } = useLanguage();
   const isEnglish = language === "en";
@@ -100,7 +100,7 @@ export default function BetaAccessPage() {
   const [concerns, setConcerns] = useState("");
   const [weeklyTime, setWeeklyTime] = useState("");
   const [previousExperience, setPreviousExperience] = useState("");
-  const [socialProvider, setSocialProvider] = useState<SocialProvider>("x");
+  const [socialProvider] = useState<SocialProvider>("x");
   const [socialUrl, setSocialUrl] = useState("");
   const [socialHandle, setSocialHandle] = useState("");
   const [contactEmail, setContactEmail] = useState("");
@@ -109,7 +109,6 @@ export default function BetaAccessPage() {
   const [submissionPosition, setSubmissionPosition] = useState<number | null>(null);
   const [eligibleFirst30, setEligibleFirst30] = useState(false);
   const [xConnected, setXConnected] = useState(false);
-  const [guestXLinked, setGuestXLinked] = useState(false);
   const [linkingX, setLinkingX] = useState(false);
   const [socialLinkError, setSocialLinkError] = useState<string | null>(null);
   const [professionPickerOpen, setProfessionPickerOpen] = useState(false);
@@ -154,6 +153,13 @@ export default function BetaAccessPage() {
     return isEnglish ? found.en : found.it;
   };
 
+  const buildXProfileUrlFromId = (xId: string | null | undefined): string => {
+    const value = (xId ?? "").trim();
+    if (!value) return "";
+    if (/^\d+$/.test(value)) return `https://x.com/i/user/${value}`;
+    return `https://x.com/${value.replace(/^@+/, "")}`;
+  };
+
   useEffect(() => {
     if (!isLoaded || !isSignedIn) return;
     let cancelled = false;
@@ -175,9 +181,19 @@ export default function BetaAccessPage() {
 
         const socialData = await socialRes.json().catch(() => ({}));
         const accounts = (socialData?.accounts ?? []) as SocialAccount[];
-        const hasVerifiedX = accounts.some((account) => account.provider === "x" && account.status === "verified");
+        const verifiedXAccount = accounts.find(
+          (account) => account.provider === "x" && account.status === "verified",
+        );
+        const hasVerifiedX = Boolean(verifiedXAccount);
         if (!cancelled) {
           setXConnected(hasVerifiedX);
+          if (hasVerifiedX) {
+            const xUrl = buildXProfileUrlFromId(verifiedXAccount?.providerUserId);
+            setSocialUrl(xUrl);
+            if (verifiedXAccount?.providerUserId) {
+              setSocialHandle(`@${String(verifiedXAccount.providerUserId).replace(/^@+/, "")}`);
+            }
+          }
         }
       } finally {
         if (!cancelled) setLoadingRequest(false);
@@ -233,41 +249,8 @@ export default function BetaAccessPage() {
 
   const handleLinkX = async () => {
     setSocialLinkError(null);
-    const parseXHandle = (value: string): string => {
-      const raw = value.trim();
-      if (!raw) return "";
-      if (raw.startsWith("@")) return raw.slice(1);
-      try {
-        const url = new URL(raw);
-        const host = url.hostname.toLowerCase();
-        if (host !== "x.com" && !host.endsWith(".x.com") && host !== "twitter.com" && !host.endsWith(".twitter.com")) {
-          return "";
-        }
-        const firstSegment = url.pathname.split("/").filter(Boolean)[0] ?? "";
-        return firstSegment.replace(/^@/, "");
-      } catch {
-        return "";
-      }
-    };
-
     if (!isSignedIn) {
-      if (socialProvider !== "x") {
-        setSocialProvider("x");
-      }
-      const parsedHandle = parseXHandle(socialUrl);
-      if (!parsedHandle) {
-        setSocialLinkError(
-          isEnglish
-            ? "Enter a valid X profile URL first (e.g. https://x.com/username)."
-            : "Inserisci prima un link valido del profilo X (es. https://x.com/username).",
-        );
-        return;
-      }
-      if (!socialHandle.trim()) {
-        setSocialHandle(`@${parsedHandle}`);
-      }
-      setGuestXLinked(true);
-      setSocialLinkError(null);
+      login();
       return;
     }
     setLinkingX(true);
@@ -276,9 +259,22 @@ export default function BetaAccessPage() {
       const socialRes = await fetch("/api/social-accounts/me", { cache: "no-store" });
       const socialData = await socialRes.json().catch(() => ({}));
       const accounts = (socialData?.accounts ?? []) as SocialAccount[];
-      const hasVerifiedX = accounts.some((account) => account.provider === "x" && account.status === "verified");
+      const verifiedXAccount = accounts.find(
+        (account) => account.provider === "x" && account.status === "verified",
+      );
+      const hasVerifiedX = Boolean(verifiedXAccount);
       setXConnected(hasVerifiedX);
-      if (hasVerifiedX) setGuestXLinked(false);
+      if (hasVerifiedX) {
+        const xUrl = buildXProfileUrlFromId(verifiedXAccount?.providerUserId);
+        setSocialUrl(xUrl);
+        if (verifiedXAccount?.providerUserId) {
+          setSocialHandle(`@${String(verifiedXAccount.providerUserId).replace(/^@+/, "")}`);
+        }
+      } else {
+        setSocialLinkError(
+          isEnglish ? "X connection not found yet. Try again." : "Connessione X non rilevata ancora. Riprova.",
+        );
+      }
     } catch (error) {
       setSocialLinkError(error instanceof Error && error.message ? error.message : "Impossibile collegare X. Riprova.");
     } finally {
@@ -290,6 +286,15 @@ export default function BetaAccessPage() {
     event.preventDefault();
     setSubmitting(true);
     setMessage(null);
+    if (!xConnected || !socialUrl.trim()) {
+      setMessage(
+        isEnglish
+          ? "Please connect X before submitting the request."
+          : "Collega X prima di inviare la richiesta.",
+      );
+      setSubmitting(false);
+      return;
+    }
     try {
       const res = await fetch("/api/access-requests", {
         method: "POST",
@@ -550,59 +555,20 @@ export default function BetaAccessPage() {
               <h2 className="text-xl font-semibold text-white">{isEnglish ? "4) Required social (anti-bot)" : "4) Social richiesto (anti-bot)"}</h2>
               <p className="mt-1 text-sm text-slate-300">
                 {isEnglish
-                  ? "You must provide at least one social account: X or Instagram. Instagram direct connect will be enabled soon in Privy."
-                  : "Devi collegare almeno un social: X o Instagram. Instagram connect arrivera presto su Privy, intanto puoi inserire il tuo profilo."}
+                  ? "Connect at least one social account. X is active now, Instagram is shown here and will be enabled via Privy soon."
+                  : "Collega almeno un social. X e attivo ora, Instagram e mostrato qui e verra abilitato su Privy a breve."}
               </p>
-              <div className="mt-3 grid gap-2 md:grid-cols-2">
-                <button
-                  type="button"
-                  onClick={() => setSocialProvider("x")}
+              <div className="mt-3 grid gap-3 md:grid-cols-2">
+                <div
                   className={`rounded-lg border p-3 text-left ${
-                    socialProvider === "x" ? "border-indigo-300/60 bg-indigo-500/20" : "border-indigo-500/25 bg-indigo-900/20"
+                    xConnected ? "border-emerald-300/60 bg-emerald-500/20" : "border-indigo-500/25 bg-indigo-900/20"
                   }`}
                 >
                   <p className="font-semibold text-white">X</p>
                   <p className="mt-1 text-xs text-slate-300">
-                    {xConnected || guestXLinked
+                    {xConnected
                       ? (isEnglish ? "Connected" : "Collegato")
                       : (isEnglish ? "Not connected" : "Non collegato")}
-                  </p>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSocialProvider("instagram")}
-                  className={`rounded-lg border p-3 text-left ${
-                    socialProvider === "instagram" ? "border-indigo-300/60 bg-indigo-500/20" : "border-indigo-500/25 bg-indigo-900/20"
-                  }`}
-                >
-                  <p className="font-semibold text-white">Instagram</p>
-                  <p className="mt-1 text-xs text-slate-300">{isEnglish ? "Insert profile URL (manual admin verification)" : "Inserisci il profilo (verifica manuale admin)"}</p>
-                </button>
-              </div>
-
-              <div className="mt-3 grid gap-3 md:grid-cols-2">
-                <input
-                  value={socialUrl}
-                  onChange={(e) => setSocialUrl(e.target.value)}
-                    placeholder={socialProvider === "x" ? "https://x.com/yourprofile" : "https://instagram.com/yourprofile"}
-                  className="w-full rounded-lg border border-indigo-500/30 bg-slate-950/40 px-3 py-2 text-sm text-white outline-none focus:border-indigo-400"
-                />
-                <input
-                  value={socialHandle}
-                  onChange={(e) => setSocialHandle(e.target.value)}
-                    placeholder={socialProvider === "x" ? (isEnglish ? "@x_handle (optional)" : "@handle_x (opzionale)") : (isEnglish ? "@instagram_handle (optional)" : "@handle_instagram (opzionale)")}
-                  className="w-full rounded-lg border border-indigo-500/30 bg-slate-950/40 px-3 py-2 text-sm text-white outline-none focus:border-indigo-400"
-                />
-              </div>
-
-              {!xConnected && socialProvider === "x" ? (
-                <div className="mt-2 rounded-lg border border-amber-400/35 bg-amber-500/10 p-3">
-                  <p className="text-xs text-amber-100">
-                    {isSignedIn
-                      ? (isEnglish ? "X is not connected. Connect it directly from this form." : "X non risulta collegato. Collegalo direttamente da questo form.")
-                      : (isEnglish
-                        ? "If you are not logged in, you can still continue by providing your X profile URL."
-                        : "Se non fai login, puoi comunque continuare inserendo il link del tuo profilo X.")}
                   </p>
                   <button
                     type="button"
@@ -613,12 +579,27 @@ export default function BetaAccessPage() {
                     {linkingX
                       ? (isEnglish ? "Connecting X..." : "Collegamento X...")
                       : !isSignedIn
-                        ? (isEnglish ? "Confirm X profile" : "Conferma profilo X")
+                        ? (isEnglish ? "Login and connect X" : "Accedi e collega X")
                         : (isEnglish ? "Connect X now" : "Collega X ora")}
                   </button>
-                  {socialLinkError ? <p className="mt-2 text-xs text-rose-200">{socialLinkError}</p> : null}
                 </div>
-              ) : null}
+
+                <div className="rounded-lg border border-indigo-500/25 bg-indigo-900/20 p-3 text-left">
+                  <p className="font-semibold text-white">Instagram</p>
+                  <p className="mt-1 text-xs text-slate-300">
+                    {isEnglish ? "Not connected yet" : "Non collegato"}
+                  </p>
+                  <button
+                    type="button"
+                    disabled
+                    className="mt-2 rounded-lg border border-indigo-300/35 px-3 py-1.5 text-xs text-slate-300 opacity-80"
+                  >
+                    {isEnglish ? "Coming soon on Privy" : "In arrivo su Privy"}
+                  </button>
+                </div>
+              </div>
+
+              {socialLinkError ? <p className="mt-2 text-xs text-rose-200">{socialLinkError}</p> : null}
             </section>
 
             <div className="flex items-center gap-3">
