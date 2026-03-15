@@ -74,6 +74,48 @@ function buildGuestUserId(email: string): string {
   return `beta_guest_${digest}`;
 }
 
+function buildAuthFallbackUserId(seed: string): string {
+  const digest = crypto.createHash("sha256").update(seed).digest("hex").slice(0, 44);
+  return `auth_${digest}`;
+}
+
+async function resolveRequestUserId(authUserId: string | null, contactEmail: string): Promise<string> {
+  if (!authUserId) return buildGuestUserId(contactEmail);
+  if (authUserId.length <= 50) return authUserId;
+  if (!pool) return buildAuthFallbackUserId(authUserId);
+
+  try {
+    const byPrivyId = await pool.query<{ id: string }>(
+      `
+      SELECT id
+      FROM users
+      WHERE privy_id = $1
+      LIMIT 1
+      `,
+      [authUserId],
+    );
+    const candidateByPrivy = byPrivyId.rows[0]?.id ?? "";
+    if (candidateByPrivy && candidateByPrivy.length <= 50) return candidateByPrivy;
+
+    const byAuthAccount = await pool.query<{ user_id: string }>(
+      `
+      SELECT user_id
+      FROM auth_accounts
+      WHERE provider = 'privy'
+        AND provider_account_id = $1
+      LIMIT 1
+      `,
+      [authUserId],
+    );
+    const candidateByAccount = byAuthAccount.rows[0]?.user_id ?? "";
+    if (candidateByAccount && candidateByAccount.length <= 50) return candidateByAccount;
+  } catch {
+    // Fallback below.
+  }
+
+  return buildAuthFallbackUserId(authUserId);
+}
+
 function parseProvider(value: unknown): SocialProvider | null {
   if (value === "x" || value === "instagram") return value;
   return null;
@@ -289,14 +331,18 @@ export async function POST(request: NextRequest) {
     if (hasDatabase && pool && socialProvider === "x" && authUserId) {
       const verifiedX = await hasVerifiedX(authUserId);
       if (!verifiedX) {
-        return NextResponse.json(
-          { error: "Per usare X devi prima collegare il tuo account X nel profilo." },
-          { status: 400 },
-        );
+        const canonicalUserId = await resolveRequestUserId(authUserId, contactEmail);
+        const verifiedOnCanonical = canonicalUserId !== authUserId ? await hasVerifiedX(canonicalUserId) : false;
+        if (!verifiedOnCanonical) {
+          return NextResponse.json(
+            { error: "Per usare X devi prima collegare il tuo account X nel profilo." },
+            { status: 400 },
+          );
+        }
       }
     }
 
-    let requestUserId = authUserId || buildGuestUserId(contactEmail);
+    let requestUserId = await resolveRequestUserId(authUserId, contactEmail);
     let resolvedEmail: string | null = null;
 
     if (!hasDatabase || !pool) {
