@@ -110,6 +110,21 @@ function extractLinkedXHandle(linkedAccounts: Array<Record<string, unknown>>): s
   return normalized ? `@${normalized}` : null;
 }
 
+function extractLinkedWalletAddresses(linkedAccounts: Array<Record<string, unknown>>): string[] {
+  const addresses: string[] = [];
+  for (const account of linkedAccounts) {
+    if (account.type !== "wallet") continue;
+    const candidates = [account.address, account.walletAddress];
+    for (const value of candidates) {
+      if (typeof value === "string") {
+        const normalized = value.trim().toLowerCase();
+        if (normalized) addresses.push(normalized);
+      }
+    }
+  }
+  return Array.from(new Set(addresses));
+}
+
 type SignableWallet = {
   type?: string;
 };
@@ -296,12 +311,21 @@ export default function ProfiloPage() {
       setData(payload);
       setUsernameInput(payload.profile.customUsername || "");
       setShowWalletPublic(Boolean(payload.profile.showWalletAddressPublic));
-      const initialWallets = Array.isArray(payload.profile.walletAddresses)
+      const savedWallets = Array.isArray(payload.profile.walletAddresses)
         ? payload.profile.walletAddresses
         : payload.profile.walletAddress
           ? [payload.profile.walletAddress]
           : [];
-      setWalletAddresses(initialWallets);
+      const linkedAccounts = (Array.isArray(user?.linkedAccounts) ? user.linkedAccounts : []) as Array<Record<string, unknown>>;
+      const trustedWallets = new Set<string>([
+        ...extractLinkedWalletAddresses(linkedAccounts),
+        ...(payload.profile.walletAddress ? [payload.profile.walletAddress.toLowerCase()] : []),
+      ]);
+      const initialWallets =
+        trustedWallets.size > 0
+          ? savedWallets.map((item) => String(item).toLowerCase()).filter((item) => trustedWallets.has(item))
+          : savedWallets.map((item) => String(item).toLowerCase());
+      setWalletAddresses(Array.from(new Set(initialWallets)));
       setPendingWalletAddresses([]);
       pendingWalletKindsRef.current = {};
       setInstagramInput(payload.profile.instagramUrl || "");
@@ -319,33 +343,6 @@ export default function ProfiloPage() {
     if (isLoaded && isSignedIn) loadProfile();
     if (isLoaded && !isSignedIn) setLoading(false);
   }, [isLoaded, isSignedIn]);
-
-  useEffect(() => {
-    if (!privyReady) return;
-    const connectedWalletAddresses = (wallets || [])
-      .map((wallet) => String(wallet?.address ?? "").trim().toLowerCase())
-      .filter((address) => address.length > 0);
-    if (connectedWalletAddresses.length === 0) return;
-
-    const connectedSet = new Set(connectedWalletAddresses);
-    for (const dismissed of Array.from(dismissedPendingWalletsRef.current)) {
-      if (!connectedSet.has(dismissed)) {
-        dismissedPendingWalletsRef.current.delete(dismissed);
-      }
-    }
-
-    setPendingWalletAddresses((prev) => {
-      const next = [...prev];
-      for (const address of connectedWalletAddresses) {
-        if (walletAddresses.includes(address)) continue;
-        if (next.includes(address)) continue;
-        if (dismissedPendingWalletsRef.current.has(address)) continue;
-        pendingWalletKindsRef.current[address] = "privy";
-        next.push(address);
-      }
-      return next;
-    });
-  }, [privyReady, wallets, walletAddresses]);
 
   async function handleSave() {
     setSaving(true);
