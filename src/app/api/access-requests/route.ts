@@ -112,8 +112,7 @@ async function getUserEmail(userId: string): Promise<string | null> {
 
 async function ensureUserRow(userId: string, email: string | null): Promise<void> {
   if (!pool) return;
-  await pool.query(
-    `
+  const upsertSql = `
     INSERT INTO users (id, email, is_active, created_at, updated_at)
     VALUES ($1, $2, 1, now(), now())
     ON CONFLICT (id)
@@ -122,9 +121,26 @@ async function ensureUserRow(userId: string, email: string | null): Promise<void
       is_active = 1,
       deleted_at = NULL,
       updated_at = now()
-    `,
-    [userId, email],
-  );
+  `;
+  const isEmailUniqueViolation = (error: unknown): boolean => {
+    const err = error as { code?: string; constraint?: string; message?: string } | null;
+    const code = err?.code ?? "";
+    const constraint = (err?.constraint ?? "").toLowerCase();
+    const message = (err?.message ?? "").toLowerCase();
+    return (
+      code === "23505" &&
+      (constraint.includes("users_email_unique") ||
+        message.includes("users_email_unique") ||
+        (message.includes("duplicate key value") && message.includes("email")))
+    );
+  };
+
+  try {
+    await pool.query(upsertSql, [userId, email]);
+  } catch (error) {
+    if (!email || !isEmailUniqueViolation(error)) throw error;
+    await pool.query(upsertSql, [userId, null]);
+  }
 }
 
 async function hasVerifiedX(userId: string): Promise<boolean> {
