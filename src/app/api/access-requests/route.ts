@@ -418,14 +418,10 @@ export async function POST(request: NextRequest) {
       concerns,
       weekly_time,
       previous_experience,
-      x_profile_url,
-      instagram_profile_url,
       updated_at
     )
     VALUES (
       $1, $2, 'pending', $3, $4, $5, $6::jsonb, $7, $8::jsonb, $9, $10, $11,
-      CASE WHEN $3 = 'x' THEN $4 ELSE NULL END,
-      CASE WHEN $3 = 'instagram' THEN $4 ELSE NULL END,
       now()
     )
     ON CONFLICT (user_id)
@@ -441,8 +437,6 @@ export async function POST(request: NextRequest) {
       concerns = EXCLUDED.concerns,
       weekly_time = EXCLUDED.weekly_time,
       previous_experience = EXCLUDED.previous_experience,
-      x_profile_url = EXCLUDED.x_profile_url,
-      instagram_profile_url = EXCLUDED.instagram_profile_url,
       admin_review_notes = CASE WHEN beta_access_requests.status = 'approved' THEN beta_access_requests.admin_review_notes ELSE NULL END,
       reviewed_at = CASE WHEN beta_access_requests.status = 'approved' THEN beta_access_requests.reviewed_at ELSE NULL END,
       reviewed_by = CASE WHEN beta_access_requests.status = 'approved' THEN beta_access_requests.reviewed_by ELSE NULL END,
