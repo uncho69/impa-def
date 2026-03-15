@@ -12,6 +12,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 
 type CryptoLevel = "zero" | "beginner" | "intermediate" | "advanced";
 type SocialProvider = "x" | "instagram";
+const BETA_ACCESS_DRAFT_KEY = "idf_beta_access_form_draft_v1";
 
 const PROFESSIONS = [
   { value: "Studente", it: "Studente", en: "Student" },
@@ -126,6 +127,65 @@ export default function BetaAccessPage() {
     return isEnglish ? found.en : found.it;
   };
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const raw = window.localStorage.getItem(BETA_ACCESS_DRAFT_KEY);
+      if (!raw) return;
+      const draft = JSON.parse(raw) as Partial<{
+        contactEmail: string;
+        professions: string[];
+        cryptoLevel: CryptoLevel;
+        goals: string[];
+        concerns: string;
+        weeklyTime: string;
+        previousExperience: string;
+      }>;
+      if (typeof draft.contactEmail === "string") setContactEmail(draft.contactEmail);
+      if (Array.isArray(draft.professions)) {
+        setSelectedProfessions(draft.professions.filter((item) => typeof item === "string"));
+      }
+      if (
+        draft.cryptoLevel === "zero" ||
+        draft.cryptoLevel === "beginner" ||
+        draft.cryptoLevel === "intermediate" ||
+        draft.cryptoLevel === "advanced"
+      ) {
+        setCryptoLevel(draft.cryptoLevel);
+      }
+      if (Array.isArray(draft.goals)) {
+        setSelectedGoals(draft.goals.filter((item) => typeof item === "string"));
+      }
+      if (typeof draft.concerns === "string") setConcerns(draft.concerns);
+      if (typeof draft.weeklyTime === "string") setWeeklyTime(draft.weeklyTime);
+      if (typeof draft.previousExperience === "string") setPreviousExperience(draft.previousExperience);
+    } catch {
+      // Ignore corrupted local draft.
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const payload = {
+      contactEmail,
+      professions: selectedProfessions,
+      cryptoLevel,
+      goals: selectedGoals,
+      concerns,
+      weeklyTime,
+      previousExperience,
+    };
+    window.localStorage.setItem(BETA_ACCESS_DRAFT_KEY, JSON.stringify(payload));
+  }, [
+    contactEmail,
+    selectedProfessions,
+    cryptoLevel,
+    selectedGoals,
+    concerns,
+    weeklyTime,
+    previousExperience,
+  ]);
+
   const buildXProfileUrlFromId = (xId: string | null | undefined): string => {
     const value = (xId ?? "").trim();
     if (!value) return "";
@@ -209,6 +269,18 @@ export default function BetaAccessPage() {
   const handleLinkX = async () => {
     setSocialLinkError(null);
     if (!isSignedIn) {
+      if (typeof window !== "undefined") {
+        const payload = {
+          contactEmail,
+          professions: selectedProfessions,
+          cryptoLevel,
+          goals: selectedGoals,
+          concerns,
+          weeklyTime,
+          previousExperience,
+        };
+        window.localStorage.setItem(BETA_ACCESS_DRAFT_KEY, JSON.stringify(payload));
+      }
       await login({ loginMethods: ["twitter"] });
       return;
     }
@@ -263,6 +335,9 @@ export default function BetaAccessPage() {
       if (!res.ok) {
         setMessage(String(data?.error ?? (isEnglish ? "Submission failed. Please retry." : "Invio non riuscito. Riprova.")));
         return;
+      }
+      if (typeof window !== "undefined") {
+        window.localStorage.removeItem(BETA_ACCESS_DRAFT_KEY);
       }
       setMessage(isEnglish ? "Request sent successfully. We will update you after admin review." : "Richiesta inviata con successo. Ti aggiorneremo dopo revisione admin.");
     } catch {

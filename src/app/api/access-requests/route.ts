@@ -344,15 +344,17 @@ export async function POST(request: NextRequest) {
 
     let requestUserId = await resolveRequestUserId(authUserId, contactEmail);
     let resolvedEmail: string | null = null;
+    let requestEmail: string | null = null;
 
     if (!hasDatabase || !pool) {
       resolvedEmail = authUserId ? (contactEmail || null) : contactEmail;
+      requestEmail = isValidEmail(contactEmail) ? contactEmail : resolvedEmail;
       const nowIso = new Date().toISOString();
       const store = readMemoryStore();
       const existing = store.get(requestUserId);
       const payload: StoredAccessRequest = {
         userId: requestUserId,
-        email: resolvedEmail || existing?.email || null,
+        email: requestEmail || existing?.email || null,
         professions,
         cryptoLevel,
         goals,
@@ -385,6 +387,7 @@ export async function POST(request: NextRequest) {
       if (!resolvedEmail && isValidEmail(contactEmail)) {
         resolvedEmail = contactEmail;
       }
+      requestEmail = isValidEmail(contactEmail) ? contactEmail : resolvedEmail;
       await ensureUserRow(requestUserId, resolvedEmail);
     } else {
       const existingUser = await pool.query<{ id: string }>(
@@ -400,6 +403,7 @@ export async function POST(request: NextRequest) {
         requestUserId = existingUser.rows[0].id;
       }
       resolvedEmail = contactEmail;
+      requestEmail = contactEmail;
       await ensureUserRow(requestUserId, resolvedEmail);
     }
 
@@ -444,7 +448,7 @@ export async function POST(request: NextRequest) {
     `,
     [
       requestUserId,
-      resolvedEmail,
+      requestEmail,
       socialProvider,
       socialUrl,
       socialHandle || null,
