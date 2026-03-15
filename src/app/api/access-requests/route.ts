@@ -110,6 +110,23 @@ async function getUserEmail(userId: string): Promise<string | null> {
   return row.rows[0]?.email ?? null;
 }
 
+async function ensureUserRow(userId: string, email: string | null): Promise<void> {
+  if (!pool) return;
+  await pool.query(
+    `
+    INSERT INTO users (id, email, is_active, created_at, updated_at)
+    VALUES ($1, $2, 1, now(), now())
+    ON CONFLICT (id)
+    DO UPDATE SET
+      email = COALESCE(EXCLUDED.email, users.email),
+      is_active = 1,
+      deleted_at = NULL,
+      updated_at = now()
+    `,
+    [userId, email],
+  );
+}
+
 async function hasVerifiedX(userId: string): Promise<boolean> {
   if (!pool) return false;
   await ensureAccessControlTables();
@@ -223,122 +240,108 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const authUserId = await getUserIdFromRequest(request);
-  const body = (await request.json().catch(() => ({}))) as Partial<AccessRequestPayload>;
-  const contactEmail = normalizeEmail(body.contactEmail);
-  const professions = sanitizeArray(body.professions, 12);
-  const goals = sanitizeArray(body.goals, 8);
-  const concerns = sanitizeText(body.concerns, 600);
-  const weeklyTime = sanitizeText(body.weeklyTime, 60);
-  const previousExperience = sanitizeText(body.previousExperience, 600);
-  const socialHandle = sanitizeText(body.socialHandle, 120);
-  const socialUrl = sanitizeText(body.socialUrl, 512);
-  const socialProvider = parseProvider(body.socialProvider);
-  const cryptoLevel = parseCryptoLevel(body.cryptoLevel);
+  try {
+    const authUserId = await getUserIdFromRequest(request);
+    const body = (await request.json().catch(() => ({}))) as Partial<AccessRequestPayload>;
+    const contactEmail = normalizeEmail(body.contactEmail);
+    const professions = sanitizeArray(body.professions, 12);
+    const goals = sanitizeArray(body.goals, 8);
+    const concerns = sanitizeText(body.concerns, 600);
+    const weeklyTime = sanitizeText(body.weeklyTime, 60);
+    const previousExperience = sanitizeText(body.previousExperience, 600);
+    const socialHandle = sanitizeText(body.socialHandle, 120);
+    const socialUrl = sanitizeText(body.socialUrl, 512);
+    const socialProvider = parseProvider(body.socialProvider);
+    const cryptoLevel = parseCryptoLevel(body.cryptoLevel);
 
-  if (!authUserId && !isValidEmail(contactEmail)) {
-    return NextResponse.json({ error: "Inserisci una email valida per inviare la richiesta." }, { status: 400 });
-  }
-  if (professions.length === 0) {
-    return NextResponse.json({ error: "Seleziona almeno una professione." }, { status: 400 });
-  }
-  if (!cryptoLevel) {
-    return NextResponse.json({ error: "Seleziona il tuo livello di esperienza crypto." }, { status: 400 });
-  }
-  if (!socialProvider) {
-    return NextResponse.json({ error: "Seleziona un social (X o Instagram)." }, { status: 400 });
-  }
-  if (!socialUrl || !isValidSocialUrl(socialProvider, socialUrl)) {
-    return NextResponse.json({ error: "Inserisci un link social valido (https)." }, { status: 400 });
-  }
-
-  if (hasDatabase && pool && socialProvider === "x" && authUserId) {
-    const verifiedX = await hasVerifiedX(authUserId);
-    if (!verifiedX) {
-      return NextResponse.json(
-        { error: "Per usare X devi prima collegare il tuo account X nel profilo." },
-        { status: 400 },
-      );
+    if (!authUserId && !isValidEmail(contactEmail)) {
+      return NextResponse.json({ error: "Inserisci una email valida per inviare la richiesta." }, { status: 400 });
     }
-  }
-
-  let requestUserId = authUserId || buildGuestUserId(contactEmail);
-  let resolvedEmail: string | null = null;
-
-  if (!hasDatabase || !pool) {
-    resolvedEmail = authUserId ? (contactEmail || null) : contactEmail;
-    const nowIso = new Date().toISOString();
-    const store = readMemoryStore();
-    const existing = store.get(requestUserId);
-    const payload: StoredAccessRequest = {
-      userId: requestUserId,
-      email: resolvedEmail || existing?.email || null,
-      professions,
-      cryptoLevel,
-      goals,
-      concerns,
-      weeklyTime,
-      previousExperience,
-      socialProvider,
-      socialUrl,
-      socialHandle,
-      status: existing?.status === "approved" ? "approved" : "pending",
-      reviewedAt: existing?.status === "approved" ? existing.reviewedAt : null,
-      reviewedBy: existing?.status === "approved" ? existing.reviewedBy : null,
-      adminReviewNotes: existing?.status === "approved" ? existing.adminReviewNotes : null,
-      createdAt: existing?.createdAt ?? nowIso,
-      updatedAt: nowIso,
-    };
-    store.set(requestUserId, payload);
-    const submissionPosition = Array.from(store.keys()).indexOf(requestUserId) + 1;
-    return NextResponse.json({
-      ok: true,
-      request: payload,
-      submissionPosition,
-      eligibleFirst30: submissionPosition > 0 && submissionPosition <= 30,
-    });
-  }
-
-  await ensureBetaAccessRequestsTable();
-  if (authUserId) {
-    resolvedEmail = (await getUserEmail(authUserId)) ?? null;
-    if (!resolvedEmail && isValidEmail(contactEmail)) {
-      resolvedEmail = contactEmail;
+    if (professions.length === 0) {
+      return NextResponse.json({ error: "Seleziona almeno una professione." }, { status: 400 });
     }
-  } else {
-    const existingUser = await pool.query<{ id: string }>(
-      `
-      SELECT id
-      FROM users
-      WHERE LOWER(email) = LOWER($1)
-      LIMIT 1
-      `,
-      [contactEmail],
-    );
-    if (existingUser.rows[0]?.id) {
-      requestUserId = existingUser.rows[0].id;
+    if (!cryptoLevel) {
+      return NextResponse.json({ error: "Seleziona il tuo livello di esperienza crypto." }, { status: 400 });
     }
-    resolvedEmail = contactEmail;
-    try {
-      await pool.query(
+    if (!socialProvider) {
+      return NextResponse.json({ error: "Seleziona un social (X o Instagram)." }, { status: 400 });
+    }
+    if (!socialUrl || !isValidSocialUrl(socialProvider, socialUrl)) {
+      return NextResponse.json({ error: "Inserisci un link social valido (https)." }, { status: 400 });
+    }
+
+    if (hasDatabase && pool && socialProvider === "x" && authUserId) {
+      const verifiedX = await hasVerifiedX(authUserId);
+      if (!verifiedX) {
+        return NextResponse.json(
+          { error: "Per usare X devi prima collegare il tuo account X nel profilo." },
+          { status: 400 },
+        );
+      }
+    }
+
+    let requestUserId = authUserId || buildGuestUserId(contactEmail);
+    let resolvedEmail: string | null = null;
+
+    if (!hasDatabase || !pool) {
+      resolvedEmail = authUserId ? (contactEmail || null) : contactEmail;
+      const nowIso = new Date().toISOString();
+      const store = readMemoryStore();
+      const existing = store.get(requestUserId);
+      const payload: StoredAccessRequest = {
+        userId: requestUserId,
+        email: resolvedEmail || existing?.email || null,
+        professions,
+        cryptoLevel,
+        goals,
+        concerns,
+        weeklyTime,
+        previousExperience,
+        socialProvider,
+        socialUrl,
+        socialHandle,
+        status: existing?.status === "approved" ? "approved" : "pending",
+        reviewedAt: existing?.status === "approved" ? existing.reviewedAt : null,
+        reviewedBy: existing?.status === "approved" ? existing.reviewedBy : null,
+        adminReviewNotes: existing?.status === "approved" ? existing.adminReviewNotes : null,
+        createdAt: existing?.createdAt ?? nowIso,
+        updatedAt: nowIso,
+      };
+      store.set(requestUserId, payload);
+      const submissionPosition = Array.from(store.keys()).indexOf(requestUserId) + 1;
+      return NextResponse.json({
+        ok: true,
+        request: payload,
+        submissionPosition,
+        eligibleFirst30: submissionPosition > 0 && submissionPosition <= 30,
+      });
+    }
+
+    await ensureBetaAccessRequestsTable();
+    if (authUserId) {
+      resolvedEmail = (await getUserEmail(authUserId)) ?? null;
+      if (!resolvedEmail && isValidEmail(contactEmail)) {
+        resolvedEmail = contactEmail;
+      }
+      await ensureUserRow(requestUserId, resolvedEmail);
+    } else {
+      const existingUser = await pool.query<{ id: string }>(
         `
-        INSERT INTO users (id, email, is_active, created_at, updated_at)
-        VALUES ($1, $2, 1, now(), now())
-        ON CONFLICT (id)
-        DO UPDATE SET
-          email = COALESCE(EXCLUDED.email, users.email),
-          is_active = 1,
-          deleted_at = NULL,
-          updated_at = now()
+        SELECT id
+        FROM users
+        WHERE LOWER(email) = LOWER($1)
+        LIMIT 1
         `,
-        [requestUserId, resolvedEmail],
+        [contactEmail],
       );
-    } catch {
-      // Ignore user row conflicts and continue storing the request.
+      if (existingUser.rows[0]?.id) {
+        requestUserId = existingUser.rows[0].id;
+      }
+      resolvedEmail = contactEmail;
+      await ensureUserRow(requestUserId, resolvedEmail);
     }
-  }
 
-  await pool.query(
+    await pool.query(
     `
     INSERT INTO beta_access_requests (
       user_id,
@@ -396,9 +399,9 @@ export async function POST(request: NextRequest) {
       weeklyTime || null,
       previousExperience || null,
     ],
-  );
+    );
 
-  const payload = await pool.query(
+    const payload = await pool.query(
     `
     SELECT
       user_id,
@@ -423,13 +426,20 @@ export async function POST(request: NextRequest) {
     LIMIT 1
     `,
     [requestUserId],
-  );
+    );
 
-  const submissionPosition = await getSubmissionPosition(requestUserId);
-  return NextResponse.json({
-    ok: true,
-    request: payload.rows[0] ?? null,
-    submissionPosition,
-    eligibleFirst30: typeof submissionPosition === "number" && submissionPosition <= 30,
-  });
+    const submissionPosition = await getSubmissionPosition(requestUserId);
+    return NextResponse.json({
+      ok: true,
+      request: payload.rows[0] ?? null,
+      submissionPosition,
+      eligibleFirst30: typeof submissionPosition === "number" && submissionPosition <= 30,
+    });
+  } catch (error) {
+    console.error("Failed to submit beta access request:", error);
+    return NextResponse.json(
+      { error: "Invio non riuscito. Riprova tra qualche secondo." },
+      { status: 500 },
+    );
+  }
 }
